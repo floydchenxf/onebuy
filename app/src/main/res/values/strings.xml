@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">一元购</string>
+    <string name="action_settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="index_page">首页</string>
+    <string name="my_page">我的</string>
+    <string name="message_page">消息</string>
+    <string name="phone_login">手机号登录</string>
+    <string name="phone_reg">注册</string>
+    <string name="phone_num">手机号</string>
+    <string name="phone_pwd">密码</string>
+    <string name="login">登录</string>
+    <string name="forgot_pwd_text">忘记密码</string>
+    <string name="reset_password">重设密码</string>
+    <string name="new_password">输入新密码</string>
+    <string name="finish">完成</string>
+    <string name="seller">模特</string>
+    <string name="next_step">下一步</string>
+    <string name="up_step">上一步</string>
+
+    <string name="crop_save_text">选取</string>
+    <string name="crop_discard_text">取消</string>
+
+    <string name="setting_hint">提示</string>
+    <string name="setting_updateing_avator">正在上传头像</string>
+    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
+    <string name="pull_to_refresh_release_label">Release to refresh...</string>
+    <string name="pull_to_refresh_refreshing_label">Loading...</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_reg">RegActivity</string>
+    <string name="title_activity_phone_login">PhoneLoginActivity</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
+    <string name="title_activity_reg2">Reg2Activity</string>
+    <string name="edit_profile">编辑个人信息</string>
+    <string name="edit_head">修改头像</string>
+    <string name="read_picture_error">载入图片失败</string>
+    <string name="runningFaceDetection">开始运行脸部检测</string>
+
+    <string name="aliwx_pull_to_refresh_pull_label">向下滑动加载更多&#8230;</string>
+    <string name="aliwx_pull_to_refresh_release_label">释放立即刷新&#8230;</string>
+    <string name="aliwx_pull_to_refresh_refreshing_label">正在加载&#8230;</string>
+    <string name="aliwx_pull_to_refresh_from_bottom_pull_label">向上滑动加载更多&#8230;</string>
+    <string name="aliwx_pull_to_refresh_from_bottom_release_label">@string/aliwx_pull_to_refresh_release_label</string>
+    <string name="aliwx_pull_to_refresh_from_bottom_refreshing_label">@string/aliwx_pull_to_refresh_refreshing_label</string>
+    <string name="aliwx_refresh_fail">刷新失败</string>
+    <string name="aliwx_refresh_success">刷新成功</string>
+    <string name="aliwx_release_stop_record">松开取消发送</string>
+    <string name="aliwx_releast_send">松开发送</string>
+    <string name="aliwx_reload_again">重新加载</string>
+    <string name="aliwx_last_update_time">上次刷新时间</string>
+    <string name="lsloading">正在努力加载中&#8230;</string>
+    <string name="title_activity_mote_detail">MoteDetailActivity</string>
+    <string name="title_activity_mote_more_info">MoteMoreInfoActivity</string>
+    <string name="insert_sdcard">请插入sdcard</string>
+    <string name="aliwx_multi_image_brower">%1$d/%2$d</string>
+    <string name="aliwx_multi_delete_image_title">图片%1$d/%2$d</string>
+    <string name="null_image">没有获取到图片</string>
+    <string name="image_saved">图片已经保存</string>
+    <string name="image_save_fail">图片保存失败</string>
+    <string name="title_activity_product_type">ProductTypeActivity</string>
+    <string name="female_type">女装</string>
+    <string name="male_type">男装</string>
+    <string name="baby_type">童装</string>
+    <string name="multi_type">综合</string>
+    <string name="title_activity_new_task">NewTaskActivity</string>
+    <string name="confirm_order">继续抢单</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="title_activity_my_task">MyTaskActivity</string>
+    <string name="title_activity_task_process">TaskProcessActivity</string>
+    <string name="title_activity_my_pic">MyPicActivity</string>
+    <string name="net_null">哎呀，怎么没网络了，请联网后试试！</string>
+    <string name="aliwx_send_original">原图</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="title_activity_profile_address">ProfileAddressActivity</string>
+    <string name="title_activity_mote_auth">MoteAuthActivity</string>
+    <string name="title_activity_mote_card">MoteCardActivity</string>
+    <string name="title_activity_alipay">AlipayActivity</string>
+    <string name="title_activity_exit">exitActivity</string>
+    <string name="title_activity_seller_task">SellerTaskActivity</string>
+    <string name="title_activity_seller_info">SellerInfoActivity</string>
+    <string name="title_activity_seller_person_info">SellerPersonInfoActivity</string>
+    <string name="title_activity_set_return_item_mobile">SetReturnItemMobileActivity</string>
+    <string name="title_activity_mote_wallet_records">MoteWalletRecordsActivity</string>
+    <string name="title_activity_seller_wallet">SellerWalletActivity</string>
+    <string name="wallet">我的钱包</string>
+    <string name="draw_money">提现</string>
+    <string name="pay_record">账户明细</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
+    <string name="title_feedback">意见反馈</string>
+    <string name="title_activity_about_us">AboutUsActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_express">物流信息</string>
+    <string name="title_activity_h5">H5Activity</string>
+    <string name="title_activity_seller_wallet_record">SellerWalletRecordActivity</string>
+    <string name="title_activity_logo">LogoActivity</string>
+
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
+
+    </resources>

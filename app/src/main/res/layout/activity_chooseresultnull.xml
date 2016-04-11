@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#55000000">
+    <TextView
+        android:id="@+id/back_null"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#d4377e"
+        android:layout_gravity="top"
+        android:drawableLeft="@drawable/jiantou_back"
+        android:paddingLeft="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="很遗憾，没有找到符合你条件的模特"
+            android:textColor="#d4377e"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/lookother"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="去看看其他优质模特..."
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:textColor="#d4377e"/>
+    </LinearLayout>
+
+
+</LinearLayout>

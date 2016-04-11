@@ -1,0 +1,94 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/moteLayout1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/moteImage1"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="1dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tuqian" />
+
+        <TextView
+            android:id="@+id/moteNick1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="middle"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/moteLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/moteImage2"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="1dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tuqian" />
+
+        <TextView
+            android:id="@+id/moteNick2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="middle"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/moteLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/moteImage3"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="1dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tuqian" />
+
+        <TextView
+            android:id="@+id/moteNick3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="middle"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

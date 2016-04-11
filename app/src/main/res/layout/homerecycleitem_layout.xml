@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:id="@+id/homerecycle_img"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:background="@drawable/homeshape"
+        />
+    <TextView
+        android:id="@+id/count_home"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/homecircle"
+        android:text="3"
+        android:textSize="8sp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:layout_alignRight="@id/homerecycle_img"/>
+
+</RelativeLayout>

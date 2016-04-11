@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:rsb="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:background="#d4377e">
+
+        <LinearLayout
+            android:id="@+id/guide"
+            android:layout_width="80dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="10dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_vertical|left"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/jiantou_back" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="筛选条件"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dip"
+                android:layout_marginTop="12dip"
+                android:text="性别"
+                android:textColor="#3d3d3d"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/boy"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="男"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/girl"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="女"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:text="年龄"
+                android:textColor="#3d3d3d"
+                android:textSize="14sp" />
+
+            <com.floyd.diamond.bean.RangeSeekBar
+                android:id="@+id/seekBar_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                app:absoluteMaxValue="60"
+                app:absoluteMinValue="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:text="身高(cm)"
+                android:textColor="#3d3d3d"
+                android:textSize="14sp" />
+
+            <com.floyd.diamond.bean.RangeSeekBar
+                android:id="@+id/seekBar_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                app:absoluteMaxValue="200"
+                app:absoluteMinValue="50"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:text="身型"
+                android:textColor="#3d3d3d"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/gugan"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="1"
+                    android:text="骨感"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/biaozhi"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="2"
+                    android:text="标致"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/fengman"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="3"
+                    android:text="丰满"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="16dp"
+                android:text="满意度(%)"
+                android:textColor="#3d3d3d"
+                android:textSize="14sp" />
+
+            <com.floyd.diamond.bean.RangeSeekBar
+                android:id="@+id/seekBar_credit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:text="地域"
+                android:textColor="#3d3d3d"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/zhejiang"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="330000"
+                    android:text="浙江"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/jiangsu"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="320000"
+                    android:text="江苏"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/shanghai"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="310000"
+                    android:text="上海"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/anhui"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="340000"
+                    android:text="安徽"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="12dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <CheckBox
+                    android:id="@+id/shandong"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="370000"
+                    android:text="山东"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/fujian"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="350000"
+                    android:text="福建"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/guangdong"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="440000"
+                    android:text="广东"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/guangxi"
+                    android:layout_width="0dp"
+                    android:layout_height="28dip"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:tag="450000"
+                    android:text="广西"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="14sp" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom">
+
+                    <ImageView
+                        android:id="@+id/moreProvince"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="12dp"
+                        android:src="@drawable/jiantou_down" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/changeProvince"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/hainan"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="460000"
+                        android:text="海南"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/henan"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="410000"
+                        android:text="河南"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/hunan"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="430000"
+                        android:text="湖南"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/hubei"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="420000"
+                        android:text="湖北"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/jiangxi"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="360000"
+                        android:text="江西"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/beijing"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="110000"
+                        android:text="北京"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/tianjin"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="120000"
+                        android:text="天津"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/hebei"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="130000"
+                        android:text="河北"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/shanxi1"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="140000"
+                        android:text="山西"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/neimenggu"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="150000"
+                        android:text="内蒙"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/liaoning"
+                        android:layout_width="0dp"
+                        android:layout_height="28dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="210000"
+                        android:text="辽宁"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+
+                    <CheckBox
+                        android:id="@+id/jilin"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="220000"
+                        android:text="吉林"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/heilongjiang"
+                        android:layout_width="0dp"
+                        android:layout_height="28dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="230000"
+                        android:text="黑龙江"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/sichuan"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="510000"
+                        android:text="四川"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/chongqing"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="500000"
+                        android:text="重庆"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/guizhou"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="520000"
+                        android:text="贵州"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/yunnan"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="530000"
+                        android:text="云南"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/xizang"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="540000"
+                        android:text="西藏"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/ningxia"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="640000"
+                        android:text="宁夏"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/qinghai"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="630000"
+                        android:text="青海"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+
+                    <CheckBox
+                        android:id="@+id/shanxi3"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="610000"
+                        android:text="陕西"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/gansu"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="620000"
+                        android:text="甘肃"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+
+                    <CheckBox
+                        android:id="@+id/xinjiang"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="650000"
+                        android:text="新疆"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+
+                    <CheckBox
+                        android:id="@+id/allChoose"
+                        android:layout_width="0dp"
+                        android:layout_height="28dip"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:tag="000000"
+                        android:text="全选"
+                        android:textColor="@drawable/text_selector"
+                        android:textSize="14sp" />
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageView
+                            android:id="@+id/jiantou_up"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="12dp"
+                            android:src="@drawable/jiantou_up" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/buttonpress_shape"
+                android:gravity="center"
+                android:text="搜索"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

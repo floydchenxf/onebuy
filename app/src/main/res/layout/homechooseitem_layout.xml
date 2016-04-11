@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+    <ImageView
+        android:id="@+id/masonry_item_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@drawable/button_shape"
+        android:scaleType="centerCrop"
+        android:src="@drawable/zhanweifu" />
+
+    <TextView
+        android:id="@+id/bg_recycle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/duihao_bg" />
+
+    <CheckBox
+        android:id="@+id/likecount"
+        android:layout_width="44dp"
+        android:layout_height="22dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/count_shape"
+        android:button="@null"
+        android:drawableLeft="@drawable/heart_selector"
+        android:gravity="center"
+        android:text="1024"
+        android:textColor="#ffffff"
+        android:textSize="8sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_alignParentBottom="true"
+        android:background="#55000000">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="yoyo"
+            android:textColor="#ffffff"
+            android:textSize="9sp"
+            app:layout_marginLeftPercent="3%" />
+
+        <TextView
+            android:id="@+id/place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/goodsinfo_address"
+            android:text="黑龙江"
+            android:textColor="#ffffff"
+            android:textSize="9sp"
+            app:layout_marginRightPercent="5%" />
+    </RelativeLayout>
+
+</RelativeLayout>

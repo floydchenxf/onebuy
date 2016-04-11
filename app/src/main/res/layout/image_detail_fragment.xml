@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/image_detail_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.floyd.diamond.ui.multiimage.TouchImageView
+        android:id="@+id/image_detail_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name" />
+
+    <com.floyd.diamond.ui.multiimage.MutliImageGifView
+        android:id="@+id/gif_image_detail_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:background="@color/white"
+        android:contentDescription="@string/app_name" />
+
+    <ImageView
+        android:id="@+id/image_detail_default_view"
+        android:layout_width="106dip"
+        android:layout_height="106dip"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/default_image" />
+
+    <ImageView
+        android:id="@+id/image_detail_download_fail_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/image_download_fail_view" />
+
+    <TextView
+        android:id="@+id/image_detail_download_fail_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image_detail_download_fail_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="下载图片失败"
+        android:textColor="#7f7f7f"
+        android:textSize="12sp" />
+
+    <com.floyd.diamond.ui.multiimage.ProgressWheel
+        xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/image_detail_progress"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerInParent="true"/>
+
+    <RelativeLayout
+        android:id="@+id/vote_pic_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="12dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/round_bg" />
+
+        <CheckedTextView
+            android:id="@+id/vote_pic_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:drawableTop="@drawable/zan_nomal"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:text="30"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+    </RelativeLayout>
+
+
+
+
+
+</RelativeLayout>
