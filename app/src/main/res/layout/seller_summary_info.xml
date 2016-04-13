@@ -9,7 +9,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/mine_name"
+        android:layout_below="@+id/mine_name"
         android:background="#dddddd" />
 
 
@@ -36,10 +36,10 @@
                 android:id="@+id/shop"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:layout_marginLeft="10dp"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:singleLine="true"
                 android:text="0"
                 android:textColor="#dddddd" />
 

@@ -38,6 +38,30 @@
             android:textColor="@drawable/word_selector"/>
 
         <RadioButton
+            android:id="@+id/tab_new_owner"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:button="@null"
+            android:layout_weight="1.0"
+            android:drawableTop="@drawable/tg_selector"
+            android:gravity="center"
+            android:paddingTop="6dp"
+            android:text="最新揭晓"
+            android:textColor="@drawable/word_selector"/>
+
+        <RadioButton
+            android:id="@+id/tab_buy_car"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:button="@null"
+            android:layout_weight="1.0"
+            android:drawableTop="@drawable/tg_selector"
+            android:gravity="center"
+            android:paddingTop="6dp"
+            android:text="购物车"
+            android:textColor="@drawable/word_selector"/>
+
+        <RadioButton
             android:id="@+id/tab_my"
             android:layout_width="0dp"
             android:layout_height="fill_parent"

@@ -13,13 +13,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
-        <com.floyd.diamond.ui.view.LoopViewPager
-        android:id="@+id/loopViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white" />
+        <com.floyd.onebuy.view.LoopViewPager
+            android:id="@+id/loopViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
 
-        <com.floyd.diamond.ui.pageindicator.CircleLoopPageIndicator
+        <com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator
             android:id="@+id/indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,264 +27,77 @@
             android:layout_marginBottom="8dp"
             android:padding="1dp"
             app:radius="3dp" />
-
-
     </FrameLayout>
 
-    <ScrollView
-        android:id="@+id/product_type_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
         android:layout_below="@+id/pager_layout"
-        android:scrollbars="none">
+        android:background="#ffffff"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/ten_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="十元区"
+            android:textSize="14sp" />
 
-        <LinearLayout
-            android:id="@+id/product_type"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+        <TextView
+            android:id="@+id/hundred_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="百元区"
+            android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/public_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="公益"
+            android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+        <TextView
+            android:id="@+id/fri_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="快乐星期五"
+            android:textSize="14sp" />
 
-                <RelativeLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerInParent="true">
+        <TextView
+            android:id="@+id/share_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="晒单"
+            android:textSize="14sp" />
+    </LinearLayout>
 
-                    <com.android.volley.toolbox.NetworkImageView
-                        android:id="@+id/female_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/weixinhaoyou" />
-
-                    <RelativeLayout
-                        android:id="@+id/redHot1_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:id="@+id/red_hot_1"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/aliwx_news_background" />
-
-                        <TextView
-                            android:id="@+id/women_num_view"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:gravity="center"
-                            android:text="99+"
-                            android:textColor="@color/white"
-                            android:textSize="8dp" />
-                    </RelativeLayout>
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="5dp"
-                    android:paddingTop="30dp"
-                    android:text="女装"
-                    android:textColor="#ffffff"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <RelativeLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerInParent="true">
-
-                    <com.android.volley.toolbox.NetworkImageView
-                        android:id="@+id/male_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/penyouquan" />
-
-                    <RelativeLayout
-                        android:id="@+id/redHot2_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:id="@+id/red_hot_2"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/aliwx_news_background" />
-
-                        <TextView
-                            android:id="@+id/men_num_view"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:gravity="center"
-                            android:text="99+"
-                            android:textColor="@color/white"
-                            android:textSize="8dp" />
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="5dp"
-                    android:paddingTop="30dp"
-                    android:text="男装"
-                    android:textColor="#ffffff"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <RelativeLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerInParent="true">
-
-                    <com.android.volley.toolbox.NetworkImageView
-                        android:id="@+id/baby_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/qqkonjing" />
-
-                    <RelativeLayout
-                        android:id="@+id/redHot3_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:id="@+id/red_hot_3"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/aliwx_news_background" />
-
-                        <TextView
-                            android:id="@+id/baby_num_view"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:gravity="center"
-                            android:text="99+"
-                            android:textColor="@color/white"
-                            android:textSize="8dp" />
-                    </RelativeLayout>
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="5dp"
-                    android:paddingTop="30dp"
-                    android:text="童装"
-                    android:textColor="#ffffff"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-
-                <RelativeLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerInParent="true">
-
-                    <com.android.volley.toolbox.NetworkImageView
-                        android:id="@+id/multi_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/tengxunweib" />
-
-                    <RelativeLayout
-                        android:id="@+id/redHot4_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:id="@+id/red_hot_4"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/aliwx_news_background" />
-
-                        <TextView
-                            android:id="@+id/other_num_view"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:gravity="center"
-                            android:text="99+"
-                            android:textColor="@color/white"
-                            android:textSize="8dp" />
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="5dp"
-                    android:paddingTop="30dp"
-                    android:text="综合"
-                    android:textColor="#ffffff"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
+    <ViewFlipper
+        android:id="@+id/viewflipper"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/category"
+        />
 
     <LinearLayout
         android:id="@+id/navigation_container"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/product_type_layout"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/viewflipper"
         android:background="#ffffff"
-        android:gravity="center_vertical"
-        android:visibility="gone">
+        android:gravity="center_vertical">
 
         <CheckedTextView
             android:id="@+id/female_colther"

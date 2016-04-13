@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:text="全民模特"
+            android:text="苏城云购"
             android:textColor="@color/white"
             android:textSize="16sp" />
         <LinearLayout
@@ -45,9 +45,6 @@
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>
-
-
-
     </FrameLayout>
 
 
@@ -62,43 +59,6 @@
         android:listSelector="#00000000"
         android:layout_height="fill_parent"
         android:layout_below="@+id/title" />
-
-    <LinearLayout
-        android:id="@+id/fake_navigation_container"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/title"
-        android:background="#ffffff"
-        android:gravity="center_vertical"
-        android:visibility="visible">
-
-        <CheckedTextView
-            android:id="@+id/female_colther_new"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/blue_line_button_bg"
-            android:text="女模" />
-
-        <CheckedTextView
-            android:id="@+id/male_colther_new"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/blue_line_button_bg"
-            android:gravity="center"
-            android:text="男模" />
-
-        <CheckedTextView
-            android:id="@+id/baby_colther_new"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/blue_line_button_bg"
-            android:gravity="center"
-            android:text="童模" />
-    </LinearLayout>
 
    <include layout="@layout/diamod_data_loading"/>
 

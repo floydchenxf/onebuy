@@ -14,9 +14,11 @@ import android.widget.Toast;
 import com.floyd.onebuy.R;
 import com.floyd.onebuy.ui.fragment.AllProductFragemnt;
 import com.floyd.onebuy.ui.fragment.BackHandledFragment;
+import com.floyd.onebuy.ui.fragment.BuyCarFragment;
 import com.floyd.onebuy.ui.fragment.FragmentTabAdapter;
 import com.floyd.onebuy.ui.fragment.IndexFragment;
 import com.floyd.onebuy.ui.fragment.MyFragment;
+import com.floyd.onebuy.ui.fragment.NewOwnerFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         fragments.add(new IndexFragment());
         fragments.add(new AllProductFragemnt());
+        fragments.add(new NewOwnerFragment());
+        fragments.add(new BuyCarFragment());
         fragments.add(new MyFragment());
 
         myButton = (RadioButton) findViewById(R.id.tab_my);
@@ -79,17 +83,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tab_my:
-//                boolean isLogin = LoginManager.isLogin(this);
-//                if (!isLogin) {
                 int currentTab = tabAdapter.getCurrentTab();
                 if (currentTab == 0) {
                     rgs.check(R.id.tab_index_page);
                 } else if (currentTab == 1) {
                     rgs.check(R.id.tab_all_product);
+                } else if (currentTab == 2){
+                    rgs.check(R.id.tab_new_owner);
+                } else if (currentTab == 3) {
+                    rgs.check(R.id.tab_buy_car);
                 } else {
                     rgs.check(R.id.tab_my);
                 }
-//                }
 
                 break;
             default:
