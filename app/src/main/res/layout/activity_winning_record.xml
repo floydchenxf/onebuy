@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_frame" />
+
+    <LinearLayout
+        android:id="@+id/status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/title_layout"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <CheckedTextView
+            android:id="@+id/doing_status"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:checked="true"
+            android:text="进行中"
+            android:textColor="#666666" />
+
+        <CheckedTextView
+            android:id="@+id/confirm_status"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:text="待确定"
+            android:textColor="#666666" />
+
+        <CheckedTextView
+            android:id="@+id/done_status"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:text="已结束"
+            android:textColor="#666666" />
+    </LinearLayout>
+
+    <com.floyd.pullrefresh.widget.PullToRefreshListView
+        android:id="@+id/winning_record_list"
+        android:layout_width="fill_parent"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:divider="#c0c0c0"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none"
+        android:listSelector="#00000000"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/status_layout" />
+
+    <include layout="@layout/diamod_data_loading" />
+
+</RelativeLayout>

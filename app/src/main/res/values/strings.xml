@@ -101,5 +101,6 @@
 
     <string name="demo_min_label">Min</string>
     <string name="demo_max_label">Max</string>
+    <string name="title_activity_winning_record">WinningRecordActivity</string>
 
     </resources>
