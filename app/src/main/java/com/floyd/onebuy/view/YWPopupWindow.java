@@ -28,12 +28,11 @@ public class YWPopupWindow {
 
     public void initView(final View v, int layout, int height, ViewInit viewInit) {
         this.v = v;
-//        screanHeight = context.getWindowManager().getDefaultDisplay().getHeight();
         if (menuBg == null) {
             View view = View.inflate(context, R.layout.common_popup_bg, null);
             menuBg = new PopupWindow(view, LayoutParams.MATCH_PARENT,
                     LayoutParams.MATCH_PARENT); //50dp是v的height
-            menuBg.setBackgroundDrawable(new BitmapDrawable());
+            menuBg.setBackgroundDrawable(new BitmapDrawable(context.getResources()));
             view.setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -48,7 +47,6 @@ public class YWPopupWindow {
             if (viewInit != null) {
                 viewInit.initView(view);
             }
-//            int h = (int) v.getContext().getResources().getDimension(height);
             menu = new PopupWindow(view, LayoutParams.MATCH_PARENT, height);
         }
     }

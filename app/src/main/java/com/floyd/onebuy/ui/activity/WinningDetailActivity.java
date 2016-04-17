@@ -3,7 +3,9 @@ package com.floyd.onebuy.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
 import com.floyd.onebuy.view.LoopViewPager;
+import com.floyd.onebuy.view.MyPopupWindow;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
@@ -64,6 +67,14 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private View joinLayout;
     private View gotoJoinLayout;
 
+    private TextView addBuyCarView;
+    private MyPopupWindow buyCarPopup;
+
+    private TextView buyCarSubView;
+    private TextView buyCarAddView;
+    private EditText buyCarNumberView;
+    private TextView buyCarAddButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +88,13 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
         initListViewHeader();
         joinLayout = findViewById(R.id.join_layout);
+        addBuyCarView = (TextView)joinLayout.findViewById(R.id.join_buy_car_view);
+        addBuyCarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyCarPopup.showPopUpWindow();
+            }
+        });
         gotoJoinLayout = findViewById(R.id.goto_join_layout);
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.join_list);
@@ -99,8 +117,52 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         mListView.addHeaderView(mHeaderView);
         adapter = new JoinRecordAdapter(this, new ArrayList<JoinVO>());
         mListView.setAdapter(adapter);
+        buyCarPopup = new MyPopupWindow(this);
+        buyCarPopup.initView(R.layout.choose_number,new MyPopupWindow.ViewInit() {
+            @Override
+            public void initView(View v) {
+                buyCarAddButton = (TextView) v.findViewById(R.id.operate_button);
+                buyCarAddView = (TextView) v.findViewById(R.id.add);
+                buyCarSubView = (TextView) v.findViewById(R.id.sub);
+                buyCarNumberView = (EditText) v.findViewById(R.id.add_number);
+                buyCarNumberView.setSelection(buyCarNumberView.getText().toString().length());
+
+                buyCarAddView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String numStr = buyCarNumberView.getText().toString();
+                        int num = Integer.parseInt(TextUtils.isEmpty(numStr) ? "0" : numStr);
+                        buyCarNumberView.setText(++num + "");
+                        buyCarNumberView.setSelection((num + "").length());
+                    }
+                });
+
+                buyCarSubView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String numStr = buyCarNumberView.getText().toString();
+                        int num = Integer.parseInt(TextUtils.isEmpty(numStr) ? "0" : numStr);
+                        if (num > 1) {
+                            buyCarNumberView.setText(--num + "");
+                        }
+                        buyCarNumberView.setSelection((num+"").length());
+                    }
+                });
+
+                buyCarAddButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO 加入购物车
+                        buyCarPopup.hidePopUpWindow();
+                    }
+                });
+            }
+
+        });
         loadData(true);
     }
+
+
 
     private void loadData(final boolean isFirst) {
         if (isFirst) {
