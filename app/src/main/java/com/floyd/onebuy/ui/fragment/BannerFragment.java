@@ -39,13 +39,15 @@ public class BannerFragment extends BaseFragment {
     private int mPosition;
     private NetworkImageView mImageView;
     private int mImageSize;
+    private ImagerClickListener imagerClickListener;
 
     private int mScreenWidth;
 
-    public static BannerFragment newInstance(Bundle args) {
+    public static BannerFragment newInstance(Bundle args, ImagerClickListener imagerClickListener) {
         final BannerFragment f = new BannerFragment();
         f.setArguments(args);
         f.setRetainInstance(false);
+        f.imagerClickListener = imagerClickListener;
         return f;
     }
 
@@ -85,14 +87,14 @@ public class BannerFragment extends BaseFragment {
         mImageView = new NetworkImageView(getActivity());
         mImageView.setDefaultImageResId(R.drawable.tupian);
         mImageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtil.dip2px(getActivity(), height)));
-//        mImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                List<String> actions = new ArrayList<String>();
-//                actions.add(mDataList.getImgUrl());
-//                callAction(actions, "BANNER", mDataList);
-//            }
-//        });
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imagerClickListener != null) {
+                    imagerClickListener.onClick(v, mDataList);
+                }
+            }
+        });
         mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mImageView.setErrorImageResId(R.drawable.pic_loading);
         mImageView.setDefaultImageResId(R.drawable.pic_loading);
@@ -146,6 +148,12 @@ public class BannerFragment extends BaseFragment {
 
     @Override
     public void clearGestureLayout() {
+
+    }
+
+    public static interface ImagerClickListener {
+
+        void onClick(View v, AdvVO advVO);
 
     }
 

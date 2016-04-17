@@ -1,13 +1,9 @@
 package com.floyd.onebuy.ui.fragment;
 
-import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,9 +24,10 @@ import com.floyd.onebuy.biz.manager.IndexManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.IndexVO;
 import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
-import com.floyd.onebuy.ui.DialogCreator;
+import com.floyd.onebuy.biz.vo.winning.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
-import com.floyd.onebuy.ui.adapter.IndexMoteAdapter;
+import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
+import com.floyd.onebuy.ui.adapter.IndexProductAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
@@ -57,7 +54,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     public static final int MIN_JULI = 600;
     public static final int MIN_VELOCITY_X = 130;
 
-    private static int BANNER_HEIGHT_IN_DP = 300;
     public static final int CHANGE_BANNER_HANDLER_MSG_WHAT = 51;
 
     private PullToRefreshListView mPullToRefreshListView;
@@ -73,15 +69,16 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private BannerImageAdapter mBannerImageAdapter;
 
-    private boolean isShowBanner;
-
     private boolean isScrollToUp = false; //ListView滚动的方向
+
+    private boolean isShowBanner;
 
     private DataLoadingView dataLoadingView;
 
-    private IndexMoteAdapter indexMoteAdapter;
+//    private IndexMoteAdapter indexMoteAdapter;
+    private IndexProductAdapter indexProductAdapter;
 
-    private Dialog loadDialog;
+//    private Dialog loadDialog;
 
     private int moteType = 1;
     private int pageNo = 1;
@@ -99,8 +96,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private LinearLayout guide;//操作指引
 
     private ImageLoader mImageLoader;
-
-    private float keydownX1;
 
     private ViewFlipper mFlipper;
 
@@ -140,61 +135,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mImageLoader = ImageLoaderFactory.createImageLoader();
 //        EventBus.getDefault().register(this);
         mTopBannerList = new ArrayList<AdvVO>();
-        loadDialog = DialogCreator.createDataLoadingDialog(this.getActivity());
-        listViewGestureDetector = new GestureDetector(this.getActivity(), new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                Log.i(TAG, "onScroll------------vx:" + distanceX + "----vy:" + distanceY);
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float x1 = keydownX1;
-                Log.i(TAG, "-------x1:" + x1 + "-------x2:" + e2.getX() + "---vx:" + velocityX);
-                if (x1 - e2.getX() > MIN_JULI && Math.abs(velocityX) > MIN_VELOCITY_X) {
-                    pageNo = 1;
-                    needClear = true;
-                    int k = (++moteType - 1) % 3 + 1;
-                    checkMoteType(k);
-                    loadMoteInfo(true);
-                } else if (e2.getX() - x1 > MIN_JULI && Math.abs(velocityX) > MIN_VELOCITY_X) {
-
-                    int k = 1;
-                    if (moteType > 1) {
-                        k = moteType - 1;
-                    } else {
-                        k = 4-moteType;
-                    }
-
-                    pageNo = 1;
-                    needClear = true;
-                    checkMoteType(k);
-                    loadMoteInfo(true);
-                }
-                return false;
-            }
-        });
+//        loadDialog = DialogCreator.createDataLoadingDialog(this.getActivity());
     }
 
     private void checkMoteType(int moteType) {
@@ -242,38 +183,11 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         mListView.addHeaderView(mHeaderView);
 
-        indexMoteAdapter = new IndexMoteAdapter(this.getActivity(), new ArrayList<MoteInfoVO>());
-        mListView.setAdapter(indexMoteAdapter);
+        indexProductAdapter = new IndexProductAdapter(this.getActivity(), new ArrayList<WinningInfo>());
 
-        mListView.setOnTouchListener(new View.OnTouchListener() {
+//        indexMoteAdapter = new IndexMoteAdapter(this.getActivity(), new ArrayList<MoteInfoVO>());
+        mListView.setAdapter(indexProductAdapter);
 
-            float y1, y2;
-            float x1, x2;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        y1 = event.getRawY();
-                        x1 = event.getRawX();
-                        Log.i(TAG, "===========x1:" + event.getX());
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        y2 = event.getRawY();
-                        x2 = event.getRawX();
-                        if (y2 - y1 > 30) {
-                            isScrollToUp = true;
-                        } else if (y2 - y1 < -60) {
-                            isScrollToUp = false;
-                        }
-
-                        break;
-                }
-
-                listViewGestureDetector.onTouchEvent(event);
-                return false;
-            }
-        });
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
@@ -288,32 +202,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             }
         });
 
-        mPullToRefreshListView.setOnTouchListener(new View.OnTouchListener() {
-
-            float y1 = 0, y2 = 0;
-            float x1 = 0, x2 = 0;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        mPullToRefreshListView.setKeydownCallback(new PullToRefreshListView.KeydownCallback() {
-            @Override
-            public void keydown(MotionEvent event) {
-                keydownX1 = event.getX();
-            }
-        });
         return view;
     }
 
@@ -355,13 +243,13 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     public void loadMoteInfo(final boolean needDialog) {
         if (needDialog) {
-            loadDialog.show();
+//            loadDialog.show();
         }
         IndexManager.fetchMoteList(moteType, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<MoteInfoVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (needDialog) {
-                    loadDialog.dismiss();
+//                    loadDialog.dismiss();
                 }
                 Toast.makeText(IndexFragment.this.getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
             }
@@ -369,10 +257,20 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             @Override
             public void onSuccess(List<MoteInfoVO> moteInfoVOs) {
                 if (needDialog) {
-                    loadDialog.dismiss();
+//                    loadDialog.dismiss();
                 }
                 ++pageNo;
-                indexMoteAdapter.addAll(moteInfoVOs, needClear);
+                List<WinningInfo> winningRecordVOs = new ArrayList<WinningInfo>();
+                for(int i = 0; i < 20; i++) {
+                    WinningInfo vo  = new WinningInfo();
+                    vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
+                    vo.left=i+ 1;
+                    vo.id = i;
+                    vo.processPrecent=50+i;
+                    vo.title = "小米手机５｜｜精彩开奖就送苹果";
+                    winningRecordVOs.add(vo);
+                }
+                indexProductAdapter.addAll(winningRecordVOs, needClear);
                 dataLoadingView.loadSuccess();
             }
 
@@ -388,7 +286,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         if (isFirst) {
             dataLoadingView.startLoading();
         } else {
-            loadDialog.show();
+//            loadDialog.show();
         }
         IndexManager.getIndexInfoJob().startUI(new ApiCallback<IndexVO>() {
             @Override
@@ -396,7 +294,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 if (isFirst) {
                     dataLoadingView.loadFail();
                 } else {
-                    loadDialog.dismiss();
+//                    loadDialog.dismiss();
                 }
             }
 
@@ -405,7 +303,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 } else {
-                    loadDialog.dismiss();
+//                    loadDialog.dismiss();
                 }
 
                 mDataList.add("test1");
@@ -418,7 +316,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 mDataList.add("test8");
                 for (String s:mDataList) {
                     TextView tv = new TextView(IndexFragment.this.getActivity());
-                    tv.setTextSize(22);
+                    tv.setTextSize(16);
                     tv.setPadding(10, 10, 10, 10);
                     tv.setTextColor(Color.RED);
                     tv.setText(s);
@@ -446,20 +344,31 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                         stopBannerAutoLoop();
                         startBannerAutoLoop();
                     }
-                    if (needClear) {
-                        gotoTop();
-                    }
+//                    if (needClear) {
+//                        gotoTop();
+//                    }
                 } else {
                     isShowBanner = false;
                     mHeaderView.findViewById(R.id.pager_layout).setVisibility(View.GONE);
-
                 }
 
                 mNavigationContainer.setVisibility(View.VISIBLE);
 
-                List<MoteInfoVO> moteInfoVOs = indexVO.moteVOs;
+//                List<MoteInfoVO> moteInfoVOs = indexVO.moteVOs;
+                List<WinningInfo> winningRecordVOs = new ArrayList<WinningInfo>();
+                for(int i = 0; i < 20; i++) {
+                    WinningInfo vo  = new WinningInfo();
+                    vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
+                    vo.left=i+ 1;
+                    vo.id = i;
+                    vo.processPrecent=50+i;
+                    vo.title = "小米手机５｜｜精彩开奖就送苹果";
+                    winningRecordVOs.add(vo);
+                }
+
                 ++pageNo;
-                indexMoteAdapter.addAll(moteInfoVOs, needClear);
+
+                indexProductAdapter.addAll(winningRecordVOs, needClear);
             }
 
             @Override
@@ -475,17 +384,16 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mViewPagerContainer.setVisibility(View.GONE);
         mFlipper = (ViewFlipper) mHeaderView.findViewById(R.id.viewflipper);
         mFlipper.setFlipInterval(1500);
-        mFlipper.setInAnimation(this.getActivity(), R.anim.abc_slide_in_bottom);
-        mFlipper.setOutAnimation(this.getActivity(), R.anim.abc_slide_out_top);
+        mFlipper.setInAnimation(this.getActivity(), R.anim.public_slide_up);
+        mFlipper.setOutAnimation(this.getActivity(), R.anim.public_slide_up2);
         ViewGroup.LayoutParams mViewPagerContainerLayoutParams = mViewPagerContainer.getLayoutParams();
-        mViewPagerContainerLayoutParams.height = CommonUtil.dip2px(this.getActivity(), BANNER_HEIGHT_IN_DP)-200;
-//        mViewPagerContainerLayoutParams.height =480;
-                mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.loopViewPager);
+        mViewPagerContainerLayoutParams.height = CommonUtil.dip2px(this.getActivity(), BannerImageAdapter.BANNER_HEIGHT_IN_DP) - 200;
+        mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.loopViewPager);
         mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.indicator);
 
         mNavigationContainer = (LinearLayout) mHeaderView.findViewById(R.id.navigation_container);
 
-        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null);
+        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override
@@ -507,7 +415,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             public void dispatchTouchEvent(MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     stopBannerAutoLoop();
-
                 } else if (event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_OUTSIDE
                         || event.getAction() == MotionEvent.ACTION_UP) {
                     startBannerAutoLoop();
@@ -616,57 +523,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     }
 
-    public class BannerImageAdapter extends FragmentPagerAdapter {
-
-        List<AdvVO> dataLists = new ArrayList<AdvVO>();
-
-        public BannerImageAdapter(FragmentManager fm, List<AdvVO> dataList) {
-            super(fm);
-            if (dataList != null && !dataList.isEmpty()) {
-                this.dataLists.addAll(dataList);
-            }
-        }
-
-        public void addItems(List<AdvVO> dataList) {
-            this.dataLists.clear();
-            this.dataLists.addAll(dataList);
-            this.notifyDataSetChanged();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Log.d("test", "BannerImageAdapter getItem");
-            Bundle args = new Bundle();
-            args.putParcelable(BannerFragment.Banner, dataLists.get(position));
-            args.putInt(BannerFragment.Position, position);
-            args.putInt(BannerFragment.Height, BANNER_HEIGHT_IN_DP);
-            return BannerFragment.newInstance(args);
-        }
-
-        @Override
-        public int getCount() {
-            if (dataLists != null) {
-                return dataLists.size();
-            }
-            return 0;
-        }
-
-        public int getItemPosition(Object object) {
-            return super.getItemPosition(object);
-        }
-
-        public long getItemId(int position) {
-            if (position >= 0 && position < dataLists.size()) {
-                AdvVO dataList = dataLists.get(position);
-                if (dataList != null) {
-                    long id = dataList.id;
-                    return id;
-                }
-            }
-            return (long) position;
-        }
-    }
-
     /**
      * 跳转到ListView的最上方
      */
@@ -675,4 +531,5 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             mListView.setSelection(0);
         }
     }
+
 }

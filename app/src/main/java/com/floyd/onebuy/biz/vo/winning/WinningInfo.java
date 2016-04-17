@@ -9,7 +9,7 @@ public class WinningInfo {
     public long id;//奖品id
     public String productUrl;//产品图片url
     public String title; //标题
-    public int precent;//完成百分比
+    public int processPrecent;//完成百分比
     public int left;//剩余组数
 
     public long getId() {
@@ -17,7 +17,7 @@ public class WinningInfo {
     }
 
     public int getPrecent() {
-        return precent;
+        return processPrecent;
     }
 
     public String getProductUrl() {

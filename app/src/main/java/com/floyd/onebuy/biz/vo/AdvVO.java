@@ -11,10 +11,13 @@ import com.floyd.onebuy.utils.CommonUtil;
 public class AdvVO implements Parcelable, IKeepClassForProguard {
     public long id;
     public String title;
-    private String imgUrl;
+    public String imgUrl;
     public long createTime;
     public long updateTime;
     public int type;
+
+    public AdvVO() {
+    }
 
     public AdvVO(Parcel in) {
         id = in.readLong();
@@ -23,10 +26,6 @@ public class AdvVO implements Parcelable, IKeepClassForProguard {
         createTime = in.readLong();
         updateTime = in.readLong();
         type = in.readInt();
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 
     public String getPreviewUrl() {

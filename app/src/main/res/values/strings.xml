@@ -17,7 +17,7 @@
     <string name="seller">模特</string>
     <string name="next_step">下一步</string>
     <string name="up_step">上一步</string>
-
+    <string name="no_join_desc">您还未参与，１元试一下，万一中了呢！</string>
     <string name="crop_save_text">选取</string>
     <string name="crop_discard_text">取消</string>
 
@@ -102,5 +102,6 @@
     <string name="demo_min_label">Min</string>
     <string name="demo_max_label">Max</string>
     <string name="title_activity_winning_record">WinningRecordActivity</string>
+    <string name="title_activity_winning_detail">WinningDetailActivity</string>
 
     </resources>
