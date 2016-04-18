@@ -6,6 +6,7 @@ import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.winning.JoinVO;
 import com.floyd.onebuy.biz.vo.winning.ProgressVO;
 import com.floyd.onebuy.biz.vo.winning.WinningDetailInfo;
+import com.floyd.onebuy.biz.vo.winning.WinningInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,23 @@ public class WinningManager {
         progressVO.id=1;
         info.progressVO = progressVO;
         return JobFactory.createJob(info);
+
+    }
+
+    public static AsyncJob<List<WinningInfo>> fetchBuyCar(long uid, long deviceId) {
+        List<WinningInfo> result = new ArrayList<WinningInfo>();
+        for (int i=0; i<4; i++) {
+            WinningInfo info = new WinningInfo();
+            info.id = i+1;
+            info.title = "手机专选可以发";
+            info.total = 100+i;
+            info.left = 80-i;
+            info.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/2/b6d8e880-bd85-4295-9e17-ae07edb8bce6.png";
+            info.buyCount=10;
+            result.add(info);
+        }
+
+        return JobFactory.createJob(result);
 
     }
 }

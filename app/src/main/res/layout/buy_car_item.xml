@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/product_image_view"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="14dp"
+        android:scaleType="center"
+        android:src="@drawable/default_image" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="14dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/product_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="apple iphone se 64G移动联通电信网络4G手机，颜色随机"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/time_info_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="总需1100,剩余200"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sub_view"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/common_bord"
+                    android:gravity="center"
+                    android:text="-"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/number_view"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/two_line"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:numeric="integer" />
+
+                <TextView
+                    android:id="@+id/add_view"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/common_bord"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/buy_left_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/common_red_round_bord_bg"
+                android:paddingBottom="4dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="4dp"
+                android:text="包尾"
+                android:textColor="#ff4400"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -11,6 +11,8 @@ public class WinningInfo {
     public String title; //标题
     public int processPrecent;//完成百分比
     public int left;//剩余组数
+    public int total;//总共需要
+    public int buyCount;
 
     public long getId() {
         return id;
