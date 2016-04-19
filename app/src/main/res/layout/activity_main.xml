@@ -3,83 +3,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RadioGroup
-        android:id="@+id/id_ly_bottombar"
+    <LinearLayout
+
+        android:id="@+id/bottom_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="#ffffff">
+        android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/tab_index_page"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:button="@null"
-            android:layout_weight="1.0"
-            android:checked="true"
-            android:paddingTop="6dp"
-            android:drawableTop="@drawable/home_selector"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="夺宝"
-            android:textColor="@drawable/word_selector"/>
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cecece" />
 
-        <RadioButton
-            android:id="@+id/tab_all_product"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:button="@null"
-            android:layout_weight="1.0"
-            android:drawableTop="@drawable/tg_selector"
-            android:gravity="center"
-            android:paddingTop="6dp"
-            android:text="商品"
-            android:textColor="@drawable/word_selector"/>
+        <RadioGroup
+            android:id="@+id/id_ly_bottombar"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="#ffffff"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/tab_new_owner"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:button="@null"
-            android:layout_weight="1.0"
-            android:drawableTop="@drawable/tg_selector"
-            android:gravity="center"
-            android:paddingTop="6dp"
-            android:text="最新揭晓"
-            android:textColor="@drawable/word_selector"/>
+            <RadioButton
+                android:id="@+id/tab_index_page"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@drawable/home_selector"
+                android:gravity="center"
+                android:paddingTop="6dp"
+                android:singleLine="true"
+                android:text="夺宝"
+                android:textColor="@drawable/word_selector" />
 
-        <RadioButton
-            android:id="@+id/tab_buy_car"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:button="@null"
-            android:layout_weight="1.0"
-            android:drawableTop="@drawable/tg_selector"
-            android:gravity="center"
-            android:paddingTop="6dp"
-            android:text="购物车"
-            android:textColor="@drawable/word_selector"/>
+            <RadioButton
+                android:id="@+id/tab_all_product"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:button="@null"
+                android:drawableTop="@drawable/tg_selector"
+                android:gravity="center"
+                android:paddingTop="6dp"
+                android:text="商品"
+                android:textColor="@drawable/word_selector" />
 
-        <RadioButton
-            android:id="@+id/tab_my"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.0"
-            android:button="@null"
-            android:drawableTop="@drawable/my_selector"
-            android:gravity="center"
-            android:paddingTop="6dp"
-            android:text="我的"
-            android:textColor="@drawable/word_selector"/>
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/tab_new_owner"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:button="@null"
+                android:drawableTop="@drawable/tg_selector"
+                android:gravity="center"
+                android:paddingTop="6dp"
+                android:text="最新揭晓"
+                android:textColor="@drawable/word_selector" />
 
+            <RadioButton
+                android:id="@+id/tab_buy_car"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:button="@null"
+                android:drawableTop="@drawable/tg_selector"
+                android:gravity="center"
+                android:paddingTop="6dp"
+                android:text="购物车"
+                android:textColor="@drawable/word_selector" />
+
+            <RadioButton
+                android:id="@+id/tab_my"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:button="@null"
+                android:drawableTop="@drawable/my_selector"
+                android:gravity="center"
+                android:paddingTop="6dp"
+                android:text="我的"
+                android:textColor="@drawable/word_selector" />
+        </RadioGroup>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/id_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/id_ly_bottombar"
-         />
+        android:layout_above="@id/bottom_bar_layout" />
 
 </RelativeLayout>

@@ -103,5 +103,6 @@
     <string name="demo_max_label">Max</string>
     <string name="title_activity_winning_record">WinningRecordActivity</string>
     <string name="title_activity_winning_detail">WinningDetailActivity</string>
+    <string name="title_activity_pay">PayActivity</string>
 
     </resources>

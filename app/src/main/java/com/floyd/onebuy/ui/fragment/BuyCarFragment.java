@@ -1,10 +1,13 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.R;
@@ -12,6 +15,7 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.WinningManager;
 import com.floyd.onebuy.biz.vo.winning.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.activity.PayActivity;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -32,6 +36,11 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private BuyCarAdapter mBuyCarAdapter;
     private int pageNo;
     private boolean needClear;
+    private TextView titleNameView;
+
+
+    private TextView totalProductView;//总计view
+    private TextView payView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,15 +63,34 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
             @Override
             public void onPullUpToRefresh() {
-                needClear = false;
-                pageNo++;
-                loadData(false);
+//                needClear = false;
+//                pageNo++;
+//                loadData(false);
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader);
+        mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
+            @Override
+            public void onClick(View v) {
+                int productNum = mBuyCarAdapter.getRecords().size();
+                int totalPrice = 0;
+                for (WinningInfo info:mBuyCarAdapter.getRecords()) {
+                    totalPrice += info.buyCount;
+                }
+
+                totalProductView.setText(Html.fromHtml("共"+productNum+"件商品,总计：<font color=\"red\">"+ totalPrice+ "</font>夺宝币"));
+
+            }
+        });
         mListView.setAdapter(mBuyCarAdapter);
+        totalProductView = (TextView) view.findViewById(R.id.total_product_view);
+        payView = (TextView) view.findViewById(R.id.pay_view);
+        payView.setOnClickListener(this);
+        titleNameView = (TextView)view.findViewById(R.id.title_name);
+        titleNameView.setText("购物车");
+        titleNameView.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.title_back).setVisibility(View.GONE);
         loadData(true);
         return view;
     }
@@ -86,6 +114,14 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     dataLoadingView.loadSuccess();
                 }
                 mBuyCarAdapter.addAll(winningInfos, needClear);
+
+                int productNum = winningInfos.size();
+                int totalPrice = 0;
+                for (WinningInfo info:winningInfos) {
+                    totalPrice += info.buyCount;
+                }
+
+                totalProductView.setText(Html.fromHtml("共"+productNum+"件商品,总计：<font color=\"red\">"+ totalPrice+ "</font>夺宝币"));
             }
 
             @Override
@@ -109,6 +145,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 pageNo = 1;
                 needClear = true;
                 loadData(true);
+                break;
+            case R.id.pay_view:
+                Intent it = new Intent(this.getActivity(), PayActivity.class);
+                startActivity(it);
                 break;
         }
 

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,12 +28,17 @@ public class BuyCarAdapter extends BaseAdapter {
     private ImageLoader mImageLoader;
     private List<WinningInfo> records = new ArrayList<WinningInfo>();
 
-    public BuyCarAdapter(Context context, List<WinningInfo> args, ImageLoader imageLoader) {
+    private BuyClickListener buyClickListener;
+
+
+
+    public BuyCarAdapter(Context context, List<WinningInfo> args, ImageLoader imageLoader, BuyClickListener buyClickListener) {
         this.mContext = context;
         if (args != null && !args.isEmpty()) {
             this.records.addAll(args);
         }
         this.mImageLoader = imageLoader;
+        this.buyClickListener = buyClickListener;
     }
 
     public void addAll(List<WinningInfo> records, boolean needClear) {
@@ -69,7 +75,7 @@ public class BuyCarAdapter extends BaseAdapter {
             holder.subView = (TextView) convertView.findViewById(R.id.sub_view);
             holder.addView = (TextView) convertView.findViewById(R.id.add_view);
             holder.numberView = (EditText) convertView.findViewById(R.id.number_view);
-            holder.buyLeftView = (TextView) convertView.findViewById(R.id.buy_left_view);
+            holder.buyLeftView = (CheckedTextView) convertView.findViewById(R.id.buy_left_view);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -78,7 +84,7 @@ public class BuyCarAdapter extends BaseAdapter {
         final WinningInfo info = getItem(position);
         holder.proudctImageView.setDefaultImageResId(R.drawable.default_image);
         holder.proudctImageView.setImageUrl(info.productUrl, mImageLoader);
-        holder.totalLeftView.setText(Html.fromHtml("总需" + info.total + ", 剩余<font color=\"ffaa66\">" + info.left + "</font>"));
+        holder.totalLeftView.setText(Html.fromHtml("总需" + info.total + "次, 剩余<font color=\"#ffaa66\">" + info.left + "</font>次"));
         holder.numberView.setText(info.buyCount + "");
         holder.subView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,11 +96,16 @@ public class BuyCarAdapter extends BaseAdapter {
                 }
                 if (num <= 0) {
                     holder.numberView.setText("0");
+                    info.buyCount = 0;
                     return;
                 }
 
-                holder.numberView.setText(--num + "");
-
+                int nn = --num;
+                info.buyCount = nn;
+                holder.numberView.setText(nn + "");
+                if (buyClickListener != null) {
+                    buyClickListener.onClick(holder.subView);
+                }
             }
         });
 
@@ -111,10 +122,42 @@ public class BuyCarAdapter extends BaseAdapter {
                     return;
                 }
 
-                holder.numberView.setText(++num + "");
+                int nn = ++num;
+                info.buyCount = nn;
+                holder.numberView.setText(nn + "");
+                if (buyClickListener != null) {
+                    buyClickListener.onClick(holder.addView);
+                }
+            }
+        });
+
+
+        if (info.buyCount >= info.left) {
+            holder.buyLeftView.setChecked(false);
+        } else {
+            holder.buyLeftView.setChecked(true);
+        }
+
+        holder.buyLeftView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                info.buyCount = info.left;
+                holder.numberView.setText(info.buyCount+ "");
+                if (info.buyCount >= info.left) {
+                    holder.buyLeftView.setChecked(false);
+                } else {
+                    holder.buyLeftView.setChecked(true);
+                }
+                if (buyClickListener != null) {
+                    buyClickListener.onClick(holder.buyLeftView);
+                }
             }
         });
         return convertView;
+    }
+
+    public List<WinningInfo> getRecords() {
+        return this.records;
     }
 
     public static class ViewHolder {
@@ -123,7 +166,11 @@ public class BuyCarAdapter extends BaseAdapter {
         public TextView subView;
         public TextView addView;
         public EditText numberView;
-        public TextView buyLeftView;
+        public CheckedTextView buyLeftView;
 
+    }
+
+    public interface BuyClickListener {
+        void onClick(View v);
     }
 }

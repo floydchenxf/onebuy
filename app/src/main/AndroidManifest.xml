@@ -108,7 +108,13 @@
             android:name=".ui.activity.WinningDetailActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"  >
+            android:theme="@style/ContentOverlay" >
+        </activity>
+        <activity
+            android:name=".ui.activity.PayActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" >
         </activity>
     </application>
 

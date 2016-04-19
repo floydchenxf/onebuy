@@ -19,6 +19,51 @@
         android:fadingEdge="none"
         android:listSelector="#00000000" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cecece" />
+
+        <LinearLayout
+            android:id="@+id/pay_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/total_product_view"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="2"
+                android:gravity="center_vertical|left"
+                android:text="总共多少"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/pay_view"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="#ff1100"
+                android:gravity="center"
+                android:text="结算"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
     <include layout="@layout/diamod_data_loading" />
 
 </RelativeLayout>
