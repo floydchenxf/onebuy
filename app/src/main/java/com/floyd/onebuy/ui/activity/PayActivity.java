@@ -7,7 +7,7 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 public class PayActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 

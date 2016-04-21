@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
 import com.floyd.onebuy.ui.webview.DiamondWebViewClient;
 import com.floyd.onebuy.ui.webview.XBlinkUIModel;
 

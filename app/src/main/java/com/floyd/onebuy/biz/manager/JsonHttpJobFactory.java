@@ -37,10 +37,6 @@ public class JsonHttpJobFactory {
                                     return null;
                                 }
                                 Gson gson = new Gson();
-//                                if (GlobalParams.isDebug){
-//                                    Log.d("TAG——数据",data+"");
-//                                }
-
                                 T result = null;
                                 try {
                                     result = gson.fromJson(data, type);

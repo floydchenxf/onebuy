@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.fee.FeeRecordVO;
 

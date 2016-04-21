@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.multiimage.base.MulitImageVO;
 import com.floyd.onebuy.ui.multiimage.base.PicViewObject;
 

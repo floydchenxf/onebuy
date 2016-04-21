@@ -3,10 +3,10 @@ package com.floyd.onebuy.biz.manager;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.vo.AdvVO;
-import com.floyd.onebuy.biz.vo.winning.JoinVO;
-import com.floyd.onebuy.biz.vo.winning.ProgressVO;
-import com.floyd.onebuy.biz.vo.winning.WinningDetailInfo;
-import com.floyd.onebuy.biz.vo.winning.WinningInfo;
+import com.floyd.onebuy.biz.vo.product.JoinVO;
+import com.floyd.onebuy.biz.vo.product.ProgressVO;
+import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
+import com.floyd.onebuy.biz.vo.product.WinningInfo;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,17 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.activity.FeeRecordActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.zxing.MipcaActivityCapture;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -44,6 +47,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private static final int CODE_GALLERY_REQUEST = 80;
     private static final int CROP_PICTURE_REQUEST = 81;
 
+    private static final int SCANNIN_GREQUEST_CODE = 100;
+
     private List<Map<String, Object>> lstImageItem = new ArrayList<Map<String, Object>>();
 
 
@@ -58,6 +63,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private TextView feeView;
     private TextView addFeeView;
     private GridView operateGridView;
+    private ImageView saomiaoView;
 
     private UMSocialService mShare;
 
@@ -201,7 +207,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         userNameView = (TextView) view.findViewById(R.id.user_name);
         feeView = (TextView) view.findViewById(R.id.fee);
         addFeeView = (TextView) view.findViewById(R.id.add_fee);
-        operateGridView = (GridView) view.findViewById(R.id.operate_gridview);
+        operateGridView = (GridView) view.findViewById(R.id.wx_gridview);
 
         SimpleAdapter saImageItems = new SimpleAdapter(this.getActivity(),
                 lstImageItem,
@@ -221,6 +227,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 }
             }
         });
+
+        saomiaoView = (ImageView) view.findViewById(R.id.saomiao_view);
+        saomiaoView.setOnClickListener(this);
 
         loadData(true, true);
         return view;
@@ -248,9 +257,28 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.saomiao_view:
+                Intent intent = new Intent(this.getActivity(), MipcaActivityCapture.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                break;
+        }
 
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SCANNIN_GREQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    //显示扫描到的内容
+//                    layoutExpressNoEditView.setText(bundle.getString("result"));
+                    //显示图片，FIXME　图片会溢出
+//                    mImageView.setImageBitmap((Bitmap) data.getParcelableExtra("bitmap"));
+                }
+                break;
+        }
     }
 }

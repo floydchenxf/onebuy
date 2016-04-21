@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.FeeManager;
 import com.floyd.onebuy.biz.vo.fee.FeeRecordVO;

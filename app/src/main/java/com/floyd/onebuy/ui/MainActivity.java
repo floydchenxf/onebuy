@@ -11,7 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.fragment.AllProductFragemnt;
 import com.floyd.onebuy.ui.fragment.BackHandledFragment;
 import com.floyd.onebuy.ui.fragment.BuyCarFragment;
@@ -23,8 +23,11 @@ import com.floyd.onebuy.ui.fragment.NewOwnerFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, BackHandledInterface {
+
+public class MainActivity extends FragmentActivity implements BackHandledInterface {
 
     private static final String TAG = "MainActivity";
 
@@ -45,14 +48,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        EventBus.getDefault().register(this);
         fragments.add(new IndexFragment());
         fragments.add(new AllProductFragemnt());
         fragments.add(new NewOwnerFragment());
         fragments.add(new BuyCarFragment());
         fragments.add(new MyFragment());
-
-        myButton = (RadioButton) findViewById(R.id.tab_my);
-        myButton.setOnClickListener(this);
 
         rgs = (RadioGroup) findViewById(R.id.id_ly_bottombar);
 
@@ -62,44 +63,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
             }
         });
-
-        tabAdapter.setOnLoginCheck(new FragmentTabAdapter.OnLoginCheck() {
-            @Override
-            public boolean needLogin(RadioGroup radioGroup, int preCheckedId, int idx) {
-//                if (idx == 2) {
-//                    LoginVO loginVO = LoginManager.getLoginInfo(MainActivity.this);
-//                    if (loginVO == null) {
-//                        return true;
-//                    }
-//                    return false;
-//                }
-                return false;
-            }
-        });
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tab_my:
-                int currentTab = tabAdapter.getCurrentTab();
-                if (currentTab == 0) {
-                    rgs.check(R.id.tab_index_page);
-                } else if (currentTab == 1) {
-                    rgs.check(R.id.tab_all_product);
-                } else if (currentTab == 2){
-                    rgs.check(R.id.tab_new_owner);
-                } else if (currentTab == 3) {
-                    rgs.check(R.id.tab_buy_car);
-                } else {
-                    rgs.check(R.id.tab_my);
-                }
-
-                break;
-            default:
-        }
-
     }
 
     @Override
@@ -130,6 +93,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    @Subscribe
+    public void onEventMainThread(TabSwitchEvent event) {
+        if (!this.isFinishing()) {
+            rgs.check(event.tabId);
+        }
+    }
+
 
     @Override
     public void setSelectedFragment(BackHandledFragment selectedFragment) {
@@ -139,5 +109,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

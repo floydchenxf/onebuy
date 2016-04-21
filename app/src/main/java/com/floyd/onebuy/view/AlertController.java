@@ -49,7 +49,7 @@ import android.widget.ScrollView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 import java.lang.ref.WeakReference;
 

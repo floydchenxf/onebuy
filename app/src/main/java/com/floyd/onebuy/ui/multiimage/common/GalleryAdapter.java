@@ -13,7 +13,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.utils.NotificationUtils;
 
 import java.util.ArrayList;

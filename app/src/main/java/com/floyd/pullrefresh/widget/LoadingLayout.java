@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 
 class LoadingLayout extends FrameLayout {

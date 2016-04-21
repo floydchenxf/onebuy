@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.GridView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 /**
  * Created by floyd on 16-4-13.

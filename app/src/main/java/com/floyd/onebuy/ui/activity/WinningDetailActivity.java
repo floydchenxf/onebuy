@@ -10,13 +10,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.WinningManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
-import com.floyd.onebuy.biz.vo.winning.JoinVO;
-import com.floyd.onebuy.biz.vo.winning.ProgressVO;
-import com.floyd.onebuy.biz.vo.winning.WinningDetailInfo;
+import com.floyd.onebuy.biz.vo.product.JoinVO;
+import com.floyd.onebuy.biz.vo.product.ProgressVO;
+import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
+import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -29,6 +30,8 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -74,6 +77,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private TextView buyCarAddView;
     private EditText buyCarNumberView;
     private TextView buyCarAddButton;
+    private TextView buyAtOnceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +93,15 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         initListViewHeader();
         joinLayout = findViewById(R.id.join_layout);
         addBuyCarView = (TextView)joinLayout.findViewById(R.id.join_buy_car_view);
-        addBuyCarView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buyCarPopup.showPopUpWindow();
-            }
-        });
+        addBuyCarView.setOnClickListener(this);
+//        addBuyCarView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                buyCarPopup.showPopUpWindow();
+//            }
+//        });
+        buyAtOnceButton = (TextView) findViewById(R.id.buy_now_view);
+        buyAtOnceButton.setOnClickListener(this);
         gotoJoinLayout = findViewById(R.id.goto_join_layout);
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.join_list);
@@ -305,6 +312,13 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             case R.id.act_ls_fail_layout:
                 pageNo = 1;
                 loadData(true);
+                break;
+            case R.id.join_buy_car_view:
+                buyCarPopup.showPopUpWindow();
+                break;
+            case R.id.buy_now_view:
+                EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car));
+                this.finish();
                 break;
         }
     }

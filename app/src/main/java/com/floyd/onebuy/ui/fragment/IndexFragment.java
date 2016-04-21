@@ -18,13 +18,13 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.IndexManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.IndexVO;
 import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
-import com.floyd.onebuy.biz.vo.winning.WinningInfo;
+import com.floyd.onebuy.biz.vo.product.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.IndexProductAdapter;
@@ -38,8 +38,6 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -452,7 +450,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     @Override

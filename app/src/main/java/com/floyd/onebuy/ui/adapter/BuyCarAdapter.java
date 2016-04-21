@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.floyd.onebuy.R;
-import com.floyd.onebuy.biz.vo.winning.WinningInfo;
+import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.biz.vo.product.WinningInfo;
 
 import java.util.ArrayList;
 import java.util.List;

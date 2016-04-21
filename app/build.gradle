@@ -5,16 +5,43 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.floyd.onebuy"
+        applicationId "com.floyd.onebuy.ui"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            jniLibs.srcDirs = ['./libs']
+            res.srcDirs = ['src/main/res']
+        }
+
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("onebuy.keystore")
+            storePassword "diamondcxf128"
+            keyAlias "diamond"
+            keyPassword "diamondpwd"
+        }
+    }
+
     buildTypes {
         release {
+            debuggable true
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles 'proguard.cfg'
+        }
+
+        debug {
+            debuggable true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

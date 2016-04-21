@@ -11,7 +11,7 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.biz.tools.ThumbnailUtils;
 
 import java.lang.ref.WeakReference;

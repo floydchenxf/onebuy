@@ -9,7 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.PopupWindow;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 import java.lang.reflect.Field;
 

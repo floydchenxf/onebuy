@@ -19,7 +19,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

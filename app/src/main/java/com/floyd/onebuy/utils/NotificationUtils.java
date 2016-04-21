@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 
 public class NotificationUtils {

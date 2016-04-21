@@ -39,7 +39,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.floyd.onebuy.IMChannel;
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.utils.WXUtil;
 

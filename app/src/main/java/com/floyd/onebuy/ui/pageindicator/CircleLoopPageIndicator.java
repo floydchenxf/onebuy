@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 /**
  * @author yanpei

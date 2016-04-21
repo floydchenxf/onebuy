@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -24,18 +23,13 @@
             android:layout_width="fill_parent"
             android:layout_height="40dip">
 
-            <LinearLayout
-                android:id="@+id/back"
-                android:layout_width="80dp"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="10dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical|left"
-                    android:layout_marginLeft="10dip"
-                    android:background="@drawable/jiantou_back" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/saomiao_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/saomiao" />
 
             <TextView
                 android:id="@+id/usernick"
@@ -139,15 +133,15 @@
     </RelativeLayout>
 
     <com.floyd.onebuy.view.LineGridView
-        android:id="@+id/operate_gridview"
+        android:id="@+id/wx_gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/top_layout"
         android:layout_margin="10dp"
-        android:padding="1dp"
         android:gravity="center"
         android:listSelector="@null"
         android:numColumns="3"
+        android:padding="1dp"
         android:stretchMode="columnWidth" />
 
 

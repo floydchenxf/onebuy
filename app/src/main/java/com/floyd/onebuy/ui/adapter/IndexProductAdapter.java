@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.floyd.onebuy.R;
-import com.floyd.onebuy.biz.vo.winning.WinningInfo;
+import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.biz.vo.product.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 

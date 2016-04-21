@@ -6,12 +6,10 @@ import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.APIConstants;
-import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.IndexVO;
 import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
-import com.floyd.onebuy.biz.vo.winning.WinningInfo;
+import com.floyd.onebuy.biz.vo.product.WinningInfo;
 import com.floyd.onebuy.channel.request.HttpMethod;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,15 +21,6 @@ import java.util.Map;
  */
 public class IndexManager {
 
-    public static AsyncJob<List<AdvVO>> fetchAdvLists(int count, int type) {
-        String url = APIConstants.HOST + APIConstants.API_GET_ADVERT_LIST;
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("count", count + "");
-        params.put("type", type + "");
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, new TypeToken<ArrayList<AdvVO>>() {
-        }.getType());
-    }
-
     /**
      * 获取首页模特信息
      *
@@ -41,7 +30,7 @@ public class IndexManager {
      * @return
      */
     public static AsyncJob<List<MoteInfoVO>> fetchMoteList(int moteType, int pageNo, int pageSize) {
-        String url = APIConstants.HOST + APIConstants.API_GET_MOTE_LIST;
+        String url = APIConstants.DIAMOND_HOST + APIConstants.API_GET_MOTE_LIST;
         Log.e("TAG", moteType + "," + pageNo + "," + pageSize);
         final Map<String, String> params = new HashMap<String, String>();
         params.put("moteType", moteType + "");
@@ -62,7 +51,7 @@ public class IndexManager {
     }
 
     public static AsyncJob<IndexVO> getIndexInfoJob() {
-        String url = APIConstants.HOST + APIConstants.API_INDEX_INFO;
+        String url = APIConstants.DIAMOND_HOST + APIConstants.API_INDEX_INFO;
         return JsonHttpJobFactory.getJsonAsyncJob(url, null, HttpMethod.POST, IndexVO.class);
 
     }

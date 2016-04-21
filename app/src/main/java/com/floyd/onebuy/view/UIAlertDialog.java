@@ -34,7 +34,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 
 /**

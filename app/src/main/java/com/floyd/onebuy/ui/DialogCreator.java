@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.ProgressBar;
 
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 
 /**
  * Created by floyd on 15-12-23.

@@ -13,7 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.floyd.onebuy.IMChannel;
 import com.floyd.onebuy.IMImageCache;
-import com.floyd.onebuy.R;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.utils.CommonUtil;
