@@ -55,7 +55,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
-
         <activity
             android:name="com.floyd.zxing.MipcaActivityCapture"
             android:configChanges="orientation|keyboardHidden"
@@ -66,7 +65,6 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="567f6cb567e58e65bf000cad" />
-
 
         <!-- ###################注册SDK使用的Activity###################### -->
         <activity
@@ -125,7 +123,7 @@
         <!-- 【可选】APP实现的Receiver，用于接收消息透传和操作结果的回调，请根据需要添加 -->
         <!-- YOUR_PACKAGE_PATH.CustomPushReceiver需要改为自己的Receiver： -->
 
-        <receiver android:name="com.floyd.onebuy.ui.MessageReceiver" >
+        <receiver android:name=".MessageReceiver" >
             <intent-filter>
                 <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE" />
                 <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
@@ -148,7 +146,7 @@
 
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Umeng"></meta-data>
+            android:value="Umeng" />
         <!-- 【必须】 请修改为APP的AccessId，“21”开头的10位数字，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_ID"
@@ -185,6 +183,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" >
         </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" >
+        </activity>
+        <activity
+            android:name=".activity.FeedbackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
     </application>
 
 </manifest>

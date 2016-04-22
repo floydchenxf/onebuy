@@ -19,6 +19,7 @@ import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.activity.FeeRecordActivity;
+import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -66,6 +67,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private ImageView saomiaoView;
 
     private UMSocialService mShare;
+
+    private View shareLayout;
 
     private String[] texts = new String[]{"充值记录", "夺宝记录", "中奖记录", "我的积分", "我的公益", "我的晒单", "快乐星期五", "邀请好友"};
     private int[] images = new int[]{R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon,R.drawable.icon, R.drawable.icon};
@@ -231,6 +234,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         saomiaoView = (ImageView) view.findViewById(R.id.saomiao_view);
         saomiaoView.setOnClickListener(this);
 
+        shareLayout = view.findViewById(R.id.share);
+        shareLayout.setOnClickListener(this);
         loadData(true, true);
         return view;
     }
@@ -262,6 +267,11 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 Intent intent = new Intent(this.getActivity(), MipcaActivityCapture.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                break;
+            case R.id.share:
+                Intent settingIntent = new Intent(this.getActivity(), SettingActivity.class);
+                settingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(settingIntent);
                 break;
         }
 
