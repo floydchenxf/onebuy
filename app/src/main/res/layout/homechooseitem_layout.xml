@@ -5,8 +5,6 @@
     android:layout_height="match_parent">
 
 
-
-
     <ImageView
         android:id="@+id/masonry_item_img"
         android:layout_width="match_parent"
@@ -49,8 +47,7 @@
             android:layout_centerVertical="true"
             android:text="yoyo"
             android:textColor="#ffffff"
-            android:textSize="9sp"
-            app:layout_marginLeftPercent="3%" />
+            android:textSize="9sp" />
 
         <TextView
             android:id="@+id/place"
@@ -61,8 +58,7 @@
             android:drawableLeft="@drawable/goodsinfo_address"
             android:text="黑龙江"
             android:textColor="#ffffff"
-            android:textSize="9sp"
-            app:layout_marginRightPercent="5%" />
+            android:textSize="9sp" />
     </RelativeLayout>
 
 </RelativeLayout>

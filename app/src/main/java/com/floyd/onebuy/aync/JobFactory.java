@@ -13,4 +13,8 @@ public class JobFactory {
             }
         };
     }
+
+    public static <T> AsyncJob<T> createAsyncJob(AsyncJob<T> job) {
+        return job.threadOn();
+    }
 }

@@ -105,5 +105,6 @@
     <string name="title_activity_winning_detail">WinningDetailActivity</string>
     <string name="title_activity_pay">PayActivity</string>
     <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
 
     </resources>

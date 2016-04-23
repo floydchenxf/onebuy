@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import com.floyd.onebuy.biz.vo.IndexVO;
 import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
 import com.floyd.onebuy.biz.vo.product.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.IndexProductAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -206,6 +208,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     public void init(View view) {
         guide = ((LinearLayout) view.findViewById(R.id.guide));
         shuaixuan =  view.findViewById(R.id.right_layout);
+        guide.setOnClickListener(this);
         //跳转到操作指引界面
 //        guide.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -516,6 +519,10 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 pageNo = 1;
                 needClear = true;
                 loadData(true);
+                break;
+            case R.id.guide:
+                Intent it = new Intent(this.getActivity(), SearchActivity.class);
+                startActivity(it);
                 break;
         }
 

@@ -194,6 +194,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay"  >
+        </activity>
     </application>
 
 </manifest>
