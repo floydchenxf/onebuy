@@ -198,7 +198,13 @@
             android:name=".activity.SearchActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"  >
+            android:theme="@style/ContentOverlay" >
+        </activity>
+        <activity
+            android:name=".FridayActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay">
         </activity>
     </application>
 

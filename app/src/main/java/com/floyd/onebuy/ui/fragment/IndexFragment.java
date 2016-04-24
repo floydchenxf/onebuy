@@ -19,6 +19,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.ui.FridayActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.IndexManager;
@@ -423,6 +424,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             }
         });
 
+        mHeaderView.findViewById(R.id.fri_area).setOnClickListener(this);
+
 
     }
 
@@ -523,6 +526,10 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             case R.id.guide:
                 Intent it = new Intent(this.getActivity(), SearchActivity.class);
                 startActivity(it);
+                break;
+            case R.id.fri_area:
+                Intent fridayIntent = new Intent(this.getActivity(), FridayActivity.class);
+                startActivity(fridayIntent);
                 break;
         }
 

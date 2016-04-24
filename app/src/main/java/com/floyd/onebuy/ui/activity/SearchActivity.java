@@ -90,26 +90,30 @@ public class SearchActivity extends Activity implements View.OnClickListener {
                     return;
                 }
 
-                JobFactory.createAsyncJob(new AsyncJob<Boolean>() {
+                JobFactory.createAsyncJob(new AsyncJob<Integer>() {
                     @Override
-                    public void start(ApiCallback<Boolean> callback) {
-                        long id = SearchManager.addSearchRecord(SearchActivity.this, content);
-                        if (id > 0) {
-                            callback.onSuccess(true);
-                        } else {
-                            callback.onError(-1, "");
+                    public void start(ApiCallback<Integer> callback) {
+                        boolean isExists = SearchManager.isExists(SearchActivity.this, content);
+                        if (isExists) {
+                            callback.onSuccess(1);
+                            return;
                         }
+                        SearchManager.addSearchRecord(SearchActivity.this, content);
+                        callback.onSuccess(2);
                     }
-                }).startUI(new ApiCallback<Boolean>() {
+                }).startUI(new ApiCallback<Integer>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(SearchActivity.this, "查询插入失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSuccess(Boolean aBoolean) {
+                    public void onSuccess(Integer a) {
                         Toast.makeText(SearchActivity.this, "查询插入成功", Toast.LENGTH_SHORT).show();
-                        SearchActivity.this.initData();
+                        if (a == 2) {
+                            searchList.add(content);
+                            searchAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
