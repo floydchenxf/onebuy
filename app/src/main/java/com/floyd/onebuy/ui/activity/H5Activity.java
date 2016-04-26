@@ -1,4 +1,4 @@
-package com.floyd.onebuy.ui;
+package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.webview.DiamondWebViewClient;
 import com.floyd.onebuy.ui.webview.XBlinkUIModel;
 

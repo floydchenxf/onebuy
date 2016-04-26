@@ -19,8 +19,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.floyd.onebuy.ui.FridayActivity;
-import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.IndexManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
@@ -28,9 +26,11 @@ import com.floyd.onebuy.biz.vo.IndexVO;
 import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
 import com.floyd.onebuy.biz.vo.product.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.FridayActivity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
-import com.floyd.onebuy.ui.adapter.IndexProductAdapter;
+import com.floyd.onebuy.ui.adapter.ProductAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
@@ -77,7 +77,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private DataLoadingView dataLoadingView;
 
 //    private IndexMoteAdapter indexMoteAdapter;
-    private IndexProductAdapter indexProductAdapter;
+    private ProductAdapter indexProductAdapter;
 
 //    private Dialog loadDialog;
 
@@ -184,7 +184,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         mListView.addHeaderView(mHeaderView);
 
-        indexProductAdapter = new IndexProductAdapter(this.getActivity(), new ArrayList<WinningInfo>());
+        indexProductAdapter = new ProductAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
 
 //        indexMoteAdapter = new IndexMoteAdapter(this.getActivity(), new ArrayList<MoteInfoVO>());
         mListView.setAdapter(indexProductAdapter);
@@ -270,6 +270,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     vo.id = i;
                     vo.processPrecent=50+i;
                     vo.title = "小米手机５｜｜精彩开奖就送苹果";
+                    vo.type = 1;
                     winningRecordVOs.add(vo);
                 }
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
@@ -365,6 +366,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     vo.id = i;
                     vo.processPrecent=50+i;
                     vo.title = "小米手机５｜｜精彩开奖就送苹果";
+                    vo.type = 1;
                     winningRecordVOs.add(vo);
                 }
 

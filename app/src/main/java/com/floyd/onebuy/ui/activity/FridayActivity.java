@@ -1,4 +1,4 @@
-package com.floyd.onebuy.ui;
+package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FridayAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;

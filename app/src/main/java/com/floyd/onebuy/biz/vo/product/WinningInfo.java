@@ -14,6 +14,9 @@ public class WinningInfo {
     public int total;//总共需要
     public int buyCount;
 
+    public long lotteryTime;//开奖时间
+    public int type;//类型 1 选择商品，　２：开奖　３．已开奖
+
     public long getId() {
         return id;
     }

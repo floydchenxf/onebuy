@@ -91,4 +91,34 @@ public class DateUtil {
 
         return result.toString();
     }
+
+    public static String getDateBefore(long end, long start) {
+        if (end <= start) {
+            return null;
+        }
+
+        StringBuilder result = new StringBuilder();
+        long secs = (end-start)/1000;
+        if (secs > 60) {
+            long min = secs/60;
+            result.append(min).append(":");
+            long sec = secs%60;
+            if (sec < 10) {
+                result.append("0").append(sec);
+            } else {
+                result.append(sec);
+            }
+        } else {
+            result.append(secs);
+        }
+
+        result.append(":");
+        long bb = (end-start)%100;
+        if (bb < 10) {
+            result.append("0").append(bb);
+        } else {
+            result.append(bb);
+        }
+        return result.toString();
+    }
 }

@@ -46,7 +46,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".H5Activity"
+            android:name=".activity.H5Activity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
@@ -201,7 +201,7 @@
             android:theme="@style/ContentOverlay" >
         </activity>
         <activity
-            android:name=".FridayActivity"
+            android:name=".activity.FridayActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay">
