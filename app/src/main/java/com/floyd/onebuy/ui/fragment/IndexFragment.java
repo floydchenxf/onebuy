@@ -15,19 +15,18 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.biz.manager.IndexManager;
+import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
-import com.floyd.onebuy.biz.vo.IndexVO;
-import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.NewIndexVO;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.activity.FridayActivity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.ProductAdapter;
@@ -69,27 +68,33 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private List<AdvVO> mTopBannerList;//最上部分左右循环广告条
 
     private BannerImageAdapter mBannerImageAdapter;
-
-    private boolean isScrollToUp = false; //ListView滚动的方向
-
     private boolean isShowBanner;
-
     private DataLoadingView dataLoadingView;
-
-//    private IndexMoteAdapter indexMoteAdapter;
     private ProductAdapter indexProductAdapter;
-
-//    private Dialog loadDialog;
-
-    private int moteType = 1;
+    private int sortType = 1;
     private int pageNo = 1;
-    private int PAGE_SIZE = 18;
-
+    private int PAGE_SIZE = 10;
     private boolean needClear;
 
-    private CheckedTextView  femaleview2;
-    private CheckedTextView  maleView2;
-    private CheckedTextView  babyView2;
+    private CheckedTextView  lastestView;
+    private CheckedTextView  hottestView;
+    private CheckedTextView  fastestView;
+
+    private View categoryLayout;
+    private NetworkImageView typeImageView1;
+    private NetworkImageView typeImageView2;
+    private NetworkImageView typeImageView3;
+    private NetworkImageView typeImageView4;
+    private NetworkImageView typeImageView5;
+
+    private TextView typeTextView1;
+    private TextView typeTextView2;
+    private TextView typeTextView3;
+    private TextView typeTextView4;
+    private TextView typeTextView5;
+
+    private NetworkImageView[] imageViews;
+    private TextView[] typeDeses;
 
     private GestureDetector listViewGestureDetector;
 
@@ -134,29 +139,27 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageLoader = ImageLoaderFactory.createImageLoader();
-//        EventBus.getDefault().register(this);
         mTopBannerList = new ArrayList<AdvVO>();
-//        loadDialog = DialogCreator.createDataLoadingDialog(this.getActivity());
     }
 
-    private void checkMoteType(int moteType) {
-        if (moteType == 1) {
-            femaleview2.setChecked(true);
-            maleView2.setChecked(false);
-            babyView2.setChecked(false);
-            this.moteType = moteType;
+    private void checkSortType(int type) {
+        if (type == 1) {
+            lastestView.setChecked(true);
+            hottestView.setChecked(false);
+            fastestView.setChecked(false);
+            this.sortType = type;
             this.pageNo = 1;
-        } else if (moteType == 2) {
-            femaleview2.setChecked(false);
-            maleView2.setChecked(true);
-            babyView2.setChecked(false);
-            this.moteType = moteType;
+        } else if (type == 2) {
+            lastestView.setChecked(false);
+            hottestView.setChecked(true);
+            fastestView.setChecked(false);
+            this.sortType = type;
             this.pageNo = 1;
-        } else if (moteType == 3) {
-            femaleview2.setChecked(false);
-            maleView2.setChecked(false);
-            babyView2.setChecked(true);
-            this.moteType = moteType;
+        } else if (type == 3) {
+            lastestView.setChecked(false);
+            hottestView.setChecked(false);
+            fastestView.setChecked(true);
+            this.sortType = type;
             this.pageNo = 1;
         }
     }
@@ -173,32 +176,29 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.pic_list);
         mListView = mPullToRefreshListView.getRefreshableView();
         mListView.setOnScrollListener(this);
-
         initListViewHeader();
-
         initButton();
-
         loadData(true);
-
         init(view);
-
         mListView.addHeaderView(mHeaderView);
-
         indexProductAdapter = new ProductAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
-
-//        indexMoteAdapter = new IndexMoteAdapter(this.getActivity(), new ArrayList<MoteInfoVO>());
         mListView.setAdapter(indexProductAdapter);
-
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
+                needClear = true;
+                loadData(false);
+                pageNo = 1;
+                sortType = 1;
+                checkSortType(1);
+                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
             public void onPullUpToRefresh() {
                 needClear = false;
-                loadMoteInfo(false);
+                loadProductLssueVO();
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
@@ -210,6 +210,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         guide = ((LinearLayout) view.findViewById(R.id.guide));
         shuaixuan =  view.findViewById(R.id.right_layout);
         guide.setOnClickListener(this);
+
         //跳转到操作指引界面
 //        guide.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -230,51 +231,27 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private void initButton() {
 
-//        femaleView1 = (CheckedTextView) mFakeNavigationContainer.findViewById(R.id.female_colther_new);
-        femaleview2 = (CheckedTextView) mNavigationContainer.findViewById(R.id.female_colther);
-//        maleView1 = (CheckedTextView) mFakeNavigationContainer.findViewById(R.id.male_colther_new);
-        maleView2 = (CheckedTextView) mNavigationContainer.findViewById(R.id.male_colther);
-//        babyView1 = (CheckedTextView) mFakeNavigationContainer.findViewById(R.id.baby_colther_new);
-        babyView2 = (CheckedTextView) mNavigationContainer.findViewById(R.id.baby_colther);
+        lastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.lastest_view);
+        hottestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.hottest_view);
+        fastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.fastest_view);
 
-        femaleview2.setOnClickListener(this);
-        maleView2.setOnClickListener(this);
-        babyView2.setOnClickListener(this);
-        femaleview2.setChecked(true);
+        lastestView.setOnClickListener(this);
+        hottestView.setOnClickListener(this);
+        fastestView.setOnClickListener(this);
+        lastestView.setChecked(true);
     }
 
-    public void loadMoteInfo(final boolean needDialog) {
-        if (needDialog) {
-//            loadDialog.show();
-        }
-        IndexManager.fetchMoteList(moteType, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<MoteInfoVO>>() {
+    public void loadProductLssueVO() {
+        ProductManager.fetchProductLssueVOs(PAGE_SIZE, pageNo, 3, sortType).startUI(new ApiCallback<List<WinningInfo>>() {
             @Override
             public void onError(int code, String errorInfo) {
-                if (needDialog) {
-//                    loadDialog.dismiss();
-                }
-                Toast.makeText(IndexFragment.this.getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
-            public void onSuccess(List<MoteInfoVO> moteInfoVOs) {
-                if (needDialog) {
-//                    loadDialog.dismiss();
-                }
-                ++pageNo;
-                List<WinningInfo> winningRecordVOs = new ArrayList<WinningInfo>();
-                for(int i = 0; i < 20; i++) {
-                    WinningInfo vo  = new WinningInfo();
-                    vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
-                    vo.left=i+ 1;
-                    vo.id = i;
-                    vo.processPrecent=50+i;
-                    vo.title = "小米手机５｜｜精彩开奖就送苹果";
-                    vo.type = 1;
-                    winningRecordVOs.add(vo);
-                }
+            public void onSuccess(List<WinningInfo> winningRecordVOs) {
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
-                dataLoadingView.loadSuccess();
+                ++pageNo;
             }
 
             @Override
@@ -282,31 +259,25 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
             }
         });
-
     }
 
     private void loadData(final boolean isFirst) {
         if (isFirst) {
             dataLoadingView.startLoading();
-        } else {
-//            loadDialog.show();
         }
-        IndexManager.getIndexInfoJob().startUI(new ApiCallback<IndexVO>() {
+
+        ProductManager.fetchIndexData().startUI(new ApiCallback<NewIndexVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
                     dataLoadingView.loadFail();
-                } else {
-//                    loadDialog.dismiss();
                 }
             }
 
             @Override
-            public void onSuccess(IndexVO indexVO) {
+            public void onSuccess(NewIndexVO indexVO) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
-                } else {
-//                    loadDialog.dismiss();
                 }
 
                 mDataList.add("test1");
@@ -328,8 +299,10 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 mFlipper.setAutoStart(true);
                 mFlipper.startFlipping();
                 mViewPagerContainer.setVisibility(View.VISIBLE);
+
                 mTopBannerList.clear();
-                List<AdvVO> advVOs = indexVO.advertList;
+
+                List<AdvVO> advVOs = indexVO.advertisList;
                 mTopBannerList.addAll(advVOs);
                 mBannerImageAdapter.addItems(mTopBannerList);
 
@@ -347,9 +320,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                         stopBannerAutoLoop();
                         startBannerAutoLoop();
                     }
-//                    if (needClear) {
-//                        gotoTop();
-//                    }
                 } else {
                     isShowBanner = false;
                     mHeaderView.findViewById(R.id.pager_layout).setVisibility(View.GONE);
@@ -357,19 +327,19 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
                 mNavigationContainer.setVisibility(View.VISIBLE);
 
-//                List<MoteInfoVO> moteInfoVOs = indexVO.moteVOs;
-                List<WinningInfo> winningRecordVOs = new ArrayList<WinningInfo>();
-                for(int i = 0; i < 20; i++) {
-                    WinningInfo vo  = new WinningInfo();
-                    vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
-                    vo.left=i+ 1;
-                    vo.id = i;
-                    vo.processPrecent=50+i;
-                    vo.title = "小米手机５｜｜精彩开奖就送苹果";
-                    vo.type = 1;
-                    winningRecordVOs.add(vo);
+                List<ProductTypeVO> typeList = indexVO.typeList;
+                if (typeList == null || typeList.isEmpty()) {
+                    categoryLayout.setVisibility(View.GONE);
+                } else {
+                    categoryLayout.setVisibility(View.VISIBLE);
+                    for(int i =0 ; i < 5; i++) {
+                        ProductTypeVO typeVO = typeList.get(i);
+                        imageViews[i].setImageUrl(typeVO.getTypePic(), mImageLoader);
+                        typeDeses[i].setText(typeVO.CodeName);
+                    }
                 }
 
+                List<WinningInfo> winningRecordVOs = indexVO.theNewList;
                 ++pageNo;
 
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
@@ -426,9 +396,23 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             }
         });
 
-        mHeaderView.findViewById(R.id.fri_area).setOnClickListener(this);
+//        mHeaderView.findViewById(R.id.fri_area).setOnClickListener(this);
 
+        categoryLayout = mHeaderView.findViewById(R.id.category);
+        typeImageView1 = (NetworkImageView) mHeaderView.findViewById(R.id.type1_imageView);
+        typeImageView2 = (NetworkImageView) mHeaderView.findViewById(R.id.type2_imageView);
+        typeImageView3 = (NetworkImageView) mHeaderView.findViewById(R.id.type3_imageView);
+        typeImageView4 = (NetworkImageView) mHeaderView.findViewById(R.id.type4_imageView);
+        typeImageView5 = (NetworkImageView) mHeaderView.findViewById(R.id.type5_imageView);
 
+        typeTextView1 = (TextView) mHeaderView.findViewById(R.id.type1_textView);
+        typeTextView2 = (TextView) mHeaderView.findViewById(R.id.type2_textView);
+        typeTextView3 = (TextView) mHeaderView.findViewById(R.id.type3_textView);
+        typeTextView4 = (TextView) mHeaderView.findViewById(R.id.type4_textView);
+        typeTextView5 = (TextView) mHeaderView.findViewById(R.id.type5_textView);
+
+        imageViews = new NetworkImageView[] {typeImageView1, typeImageView2, typeImageView3,typeImageView4,typeImageView5};
+        typeDeses = new TextView[] {typeTextView1,typeTextView2,typeTextView3,typeTextView4,typeTextView5};
     }
 
     public void stopBannerAutoLoop() {
@@ -490,37 +474,37 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.female_colther:
-                femaleview2.setChecked(true);
-                maleView2.setChecked(false);
-                babyView2.setChecked(false);
-                moteType = 1;
+            case R.id.lastest_view:
+                lastestView.setChecked(true);
+                hottestView.setChecked(false);
+                fastestView.setChecked(false);
+                sortType = 1;
                 pageNo = 1;
                 needClear = true;
-                loadMoteInfo(true);
+                loadProductLssueVO();
                 break;
 
-            case R.id.male_colther:
-                femaleview2.setChecked(false);
-                maleView2.setChecked(true);
-                babyView2.setChecked(false);
-                moteType = 2;
+            case R.id.hottest_view:
+                lastestView.setChecked(false);
+                hottestView.setChecked(true);
+                fastestView.setChecked(false);
+                sortType = 2;
                 pageNo = 1;
                 needClear = true;
-                loadMoteInfo(true);
+                loadProductLssueVO();
                 break;
 
-            case R.id.baby_colther:
-                femaleview2.setChecked(false);
-                maleView2.setChecked(false);
-                babyView2.setChecked(true);
-                moteType = 3;
+            case R.id.fastest_view:
+                lastestView.setChecked(false);
+                hottestView.setChecked(false);
+                fastestView.setChecked(true);
+                sortType = 3;
                 pageNo = 1;
                 needClear = true;
-                loadMoteInfo(true);
+                loadProductLssueVO();
                 break;
             case R.id.act_ls_fail_layout:
-                moteType = 1;
+                sortType = 1;
                 pageNo = 1;
                 needClear = true;
                 loadData(true);
@@ -529,10 +513,10 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 Intent it = new Intent(this.getActivity(), SearchActivity.class);
                 startActivity(it);
                 break;
-            case R.id.fri_area:
-                Intent fridayIntent = new Intent(this.getActivity(), FridayActivity.class);
-                startActivity(fridayIntent);
-                break;
+//            case R.id.fri_area:
+//                Intent fridayIntent = new Intent(this.getActivity(), FridayActivity.class);
+//                startActivity(fridayIntent);
+//                break;
         }
 
     }

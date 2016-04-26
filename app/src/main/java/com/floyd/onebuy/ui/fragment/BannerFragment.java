@@ -7,15 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
-import com.floyd.onebuy.IMChannel;
-import com.floyd.onebuy.IMImageCache;
-import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.utils.CommonUtil;
 
 import org.json.JSONArray;
@@ -56,11 +52,7 @@ public class BannerFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RequestQueue mQueue = Volley.newRequestQueue(this.getActivity());
-        IMImageCache wxImageCache = IMImageCache.findOrCreateCache(
-                IMChannel.getApplication(), EnvConstants.imageRootPath);
-        this.mImageLoader = new ImageLoader(mQueue, wxImageCache);
-        mImageLoader.setBatchedResponseDelay(0);
+        this.mImageLoader = ImageLoaderFactory.createImageLoader();
         DisplayMetrics dm = this.getActivity().getResources()
                 .getDisplayMetrics();
         mScreenWidth = dm.widthPixels;
@@ -99,7 +91,7 @@ public class BannerFragment extends BaseFragment {
         mImageView.setErrorImageResId(R.drawable.pic_loading);
         mImageView.setDefaultImageResId(R.drawable.pic_loading);
         if (mDataList != null) {
-            String fullUrl = mDataList.getImgUrl();
+            String fullUrl = mDataList.imgUrl;
             mImageView.setImageUrl(fullUrl, mImageLoader);
         }
         return mImageView;

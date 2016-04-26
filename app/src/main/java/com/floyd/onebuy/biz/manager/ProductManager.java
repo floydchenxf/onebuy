@@ -4,8 +4,12 @@ import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.vo.AdvVO;
-import com.floyd.onebuy.biz.vo.product.NewsVO;
-import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
+import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
+import com.floyd.onebuy.biz.vo.json.IndexVO;
+import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
+import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
+import com.floyd.onebuy.biz.vo.model.NewIndexVO;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.channel.request.HttpMethod;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,53 +26,107 @@ public class ProductManager {
 
 
     /**
-     * 获取分类列表
+     * 获取首页数据
      *
-     * @return List<ProductTypeVO>
+     * @return
      */
-    public AsyncJob<List<ProductTypeVO>> fetchProductType() {
-        String url = APIConstants.HOST + APIConstants.PRODUCT_MODULE;
+    public static AsyncJob<NewIndexVO> fetchIndexData() {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "getProductTypeList");
-        Type clazz = new TypeToken<ArrayList<ProductTypeVO>>() {
-        }.getType();
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, clazz);
+        params.put("pageType", "IndexData");
+        AsyncJob<IndexVO> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, IndexVO.class);
+        return job.map(new Func<IndexVO, NewIndexVO>() {
+            @Override
+            public NewIndexVO call(IndexVO indexVO) {
+                if (indexVO == null) {
+                    return null;
+                }
+                NewIndexVO vo = new NewIndexVO();
+                vo.typeList = indexVO.typeList;
+                List<IndexAdvVO> adv = indexVO.advertisList;
+                if (adv != null && !adv.isEmpty()) {
+                    List<AdvVO> advList = new ArrayList<AdvVO>();
+                    for (IndexAdvVO a : adv) {
+                        AdvVO b = new AdvVO();
+                        b.title = a.Url;
+                        b.id = a.NewsID;
+                        b.imgUrl = APIConstants.HOST + a.SmallPic;
+                        advList.add(b);
+                    }
+                    vo.advertisList = advList;
+                }
+
+                List<ProductLssueItemVO> productVOs = indexVO.theNewList;
+                if (productVOs != null && !productVOs.isEmpty()) {
+                    List<WinningInfo> winningInfos = new ArrayList<WinningInfo>();
+                    for (ProductLssueItemVO v : productVOs) {
+                        WinningInfo info = new WinningInfo();
+                        info.totalCount = v.TotalCount;
+                        info.joinedCount = v.JoinedCount;
+                        info.processPrecent = v.Percent;
+                        info.productUrl = APIConstants.HOST + v.Pictures;
+                        info.title = v.ProName;
+                        info.id = v.ProID;
+                        info.issueId = v.ProductLssueID;
+                        info.status = 1;
+                        winningInfos.add(info);
+                    }
+                    vo.theNewList = winningInfos;
+                }
+
+                return vo;
+            }
+        });
     }
 
 
     /**
-     * 获取广告
+     * 分页获取期数
      *
+     * @param pageSize
+     * @param pageNum
+     * @param typeId
+     * @param sort
      * @return
      */
-    public AsyncJob<List<AdvVO>> fetchAdvList() {
-        String url = APIConstants.HOST + APIConstants.PRODUCT_MODULE;
+    public static AsyncJob<List<WinningInfo>> fetchProductLssueVOs(int pageSize, int pageNum, int typeId, int sort) {
+
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "getNewsList");
-        Type clazz = new TypeToken<ArrayList<NewsVO>>() {
+        params.put("pageType", "ProductLssueTotal");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("typeID", typeId + "");
+        params.put("sort", sort + "");
+        Type type = new TypeToken<ArrayList<ProductLssueItemVO>>() {
         }.getType();
-        AsyncJob<List<NewsVO>> t = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, clazz);
-        return t.map(new Func<List<NewsVO>, List<AdvVO>>() {
+        AsyncJob<ProductLssueVO> s =  JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, ProductLssueVO.class);
+
+        return s.map(new Func<ProductLssueVO, List<WinningInfo>>() {
             @Override
-            public List<AdvVO> call(List<NewsVO> newsVOs) {
-                ArrayList<AdvVO> result = new ArrayList<AdvVO>();
-                if (newsVOs != null && !newsVOs.isEmpty()) {
-                    for (NewsVO vo : newsVOs) {
-                        AdvVO advVO = new AdvVO();
-                        advVO.type = 1;
-                        advVO.imgUrl = vo.SmallPic;
-                        advVO.title = vo.Url;
-                        advVO.id = Long.parseLong(vo.NewsID);
-                        result.add(advVO);
-                    }
+            public List<WinningInfo> call(ProductLssueVO productLssueVO) {
+                List<WinningInfo> result = new ArrayList<WinningInfo>();
+                if (productLssueVO == null) {
+                    return result;
+                }
+
+                List<ProductLssueItemVO> productLssueVOs = productLssueVO.ProductLssueList;
+                if (productLssueVOs == null || productLssueVOs.isEmpty()) {
+                    return result;
+                }
+
+                for (ProductLssueItemVO vo:productLssueVOs) {
+                    WinningInfo info = new WinningInfo();
+                    info.joinedCount = vo.JoinedCount;
+                    info.totalCount = vo.TotalCount;
+                    info.id = vo.ProID;
+                    info.status = 1;
+                    info.productUrl = APIConstants.HOST + vo.Pictures;
+                    info.title = vo.ProName;
+                    result.add(info);
                 }
                 return result;
             }
         });
-
     }
-
-
-
-
 }

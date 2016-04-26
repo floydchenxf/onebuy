@@ -23,7 +23,7 @@ public class UserManager {
      * @return
      */
     public static AsyncJob<RegUserVO> regUser(String mobile, String password, int userType) {
-        String url = APIConstants.HOST + APIConstants.USER_MODULE;
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "register");
         params.put("mobile", mobile);
@@ -40,7 +40,7 @@ public class UserManager {
      * @return
      */
     public static AsyncJob<UserVO> login(String mobile, String password) {
-        String url = APIConstants.HOST + APIConstants.USER_MODULE;
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "login");
         params.put("mobile", mobile);
@@ -57,7 +57,7 @@ public class UserManager {
      * @return
      */
     public AsyncJob<Boolean> modifyPassword(String mobile, String oldPass, String newPass) {
-        String url = APIConstants.HOST + APIConstants.USER_MODULE;
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "modifyUserPassword");
         params.put("mobile", mobile);

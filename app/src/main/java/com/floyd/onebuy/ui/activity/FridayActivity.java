@@ -7,7 +7,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FridayAdapter;
@@ -54,9 +54,10 @@ public class FridayActivity extends Activity implements View.OnClickListener {
         for(int i = 0; i < 20; i++) {
             WinningInfo vo  = new WinningInfo();
             vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
-            vo.left=i+ 1;
+            vo.joinedCount=i+ 1;
+            vo.totalCount = 100;
             vo.id = i;
-            vo.processPrecent=50+i;
+            vo.processPrecent=(50+i)+"";
             vo.title = "小米手机５｜｜精彩开奖就送苹果";
             winningRecordVOs.add(vo);
         }

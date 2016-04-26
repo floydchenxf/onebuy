@@ -13,7 +13,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.WinningManager;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.activity.PayActivity;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;

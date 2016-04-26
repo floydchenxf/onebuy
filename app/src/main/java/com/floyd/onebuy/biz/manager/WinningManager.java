@@ -6,7 +6,7 @@ import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
 import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,8 +79,8 @@ public class WinningManager {
             WinningInfo info = new WinningInfo();
             info.id = i+1;
             info.title = "手机专选可以发";
-            info.total = 100+i;
-            info.left = 80-i;
+            info.totalCount = 100+i;
+            info.joinedCount = 80-i;
             info.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/2/b6d8e880-bd85-4295-9e17-ae07edb8bce6.png";
             info.buyCount=10;
             result.add(info);

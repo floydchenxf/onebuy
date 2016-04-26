@@ -2,6 +2,7 @@ package com.floyd.onebuy.aync;
 
 import com.floyd.onebuy.IMChannel;
 import com.floyd.onebuy.biz.constants.APIError;
+import com.floyd.onebuy.biz.tools.SignTool;
 import com.floyd.onebuy.channel.request.BaseRequest;
 import com.floyd.onebuy.channel.request.FileItem;
 import com.floyd.onebuy.channel.request.HttpMethod;
@@ -28,6 +29,15 @@ public class HttpJobFactory {
                     return;
                 }
 
+                if (params != null && !params.isEmpty()) {
+                    String noncestr = SignTool.getRandomString(16);
+                    params.put("noncestr", noncestr);
+                }
+
+                String sign = SignTool.generateSign(params);
+                if (sign != null) {
+                    params.put("sign", sign);
+                }
                 new BaseRequest(url, params, httpMethod, new RequestCallback() {
                     @Override
                     public void onProgress(int progress) {

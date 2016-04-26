@@ -8,7 +8,7 @@ import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.vo.IndexVO;
 import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.channel.request.HttpMethod;
 
 import java.util.ArrayList;
@@ -68,25 +68,25 @@ public class IndexManager {
         List<WinningInfo> result = new ArrayList<WinningInfo>();
         WinningInfo info1 = new WinningInfo();
         info1.id = 1l;
-        info1.processPrecent=30;
+        info1.processPrecent="30%";
         info1.title="【第888期】小米手机";
         info1.productUrl="http://qmmt2015.b0.upaiyun.com/2016/3/30/7f1777fa-6ac6-4476-a7f9-39c9c8967016.png";
 
         WinningInfo info2 = new WinningInfo();
         info2.id = 2l;
-        info2.processPrecent=40;
+        info2.processPrecent="40%";
         info2.title="【第888期】红米手机";
         info2.productUrl="http://qmmt2015.b0.upaiyun.com/2016/1/19/21c558ce-e7c3-4947-9a68-5c2373568fc3.jpeg";
 
         WinningInfo info3 = new WinningInfo();
         info3.id = 3l;
-        info3.processPrecent=50;
+        info3.processPrecent="50%";
         info3.title="【第888期】小米手机";
         info3.productUrl="http://qmmt2015.b0.upaiyun.com/2016/4/2/d2af5365-f9e0-4578-8f5a-265db6d77094.jpg";
 
         WinningInfo info4 = new WinningInfo();
         info1.id = 4l;
-        info1.processPrecent=60;
+        info1.processPrecent="60%";
         info1.title="【第888期】小米手机";
         info1.productUrl="http://qmmt2015.b0.upaiyun.com/2016/4/2/d8a49489-9193-47a3-b8ae-b6fc0dcd9542.png";
 

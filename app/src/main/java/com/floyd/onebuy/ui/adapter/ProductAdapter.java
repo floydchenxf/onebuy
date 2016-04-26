@@ -15,7 +15,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 
@@ -62,7 +62,7 @@ public class ProductAdapter extends BaseAdapter {
                         return;
                     }
 
-                    if (itemVO.type != 2) {
+                    if (itemVO.status != 2) {
                         return;
                     }
 
@@ -188,13 +188,14 @@ public class ProductAdapter extends BaseAdapter {
 
             viewHolder.leftTimeView1.setTag(R.id.LEFT_TIME_ID, winningInfo);
             viewHolder.leftTimeView2.setTag(R.id.LEFT_TIME_ID, winningInfo2);
-            if (winningInfo.type == 1) {
+            if (winningInfo.status == 1) {
                 viewHolder.chooseLayout1.setVisibility(View.VISIBLE);
                 viewHolder.lottestLayout1.setVisibility(View.GONE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
-                viewHolder.progressPrecentView1.setProgress(winningInfo.processPrecent);
+                int precent = winningInfo.joinedCount* 100 / winningInfo.totalCount;
+                viewHolder.progressPrecentView1.setProgress(precent);
                 viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
-            } else if (winningInfo.type == 2) {
+            } else if (winningInfo.status == 2) {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);
                 viewHolder.lottestLayout1.setVisibility(View.VISIBLE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
@@ -221,13 +222,14 @@ public class ProductAdapter extends BaseAdapter {
                 //TODO
             }
 
-            if (winningInfo2.type == 1) {
+            if (winningInfo2.status == 1) {
                 viewHolder.chooseLayout2.setVisibility(View.VISIBLE);
                 viewHolder.lottestLayout2.setVisibility(View.GONE);
                 viewHolder.ownerLayout2.setVisibility(View.GONE);
-                viewHolder.progressPrecentView2.setProgress(winningInfo2.processPrecent);
+                int precent = winningInfo2.joinedCount * 100 / winningInfo2.totalCount;
+                viewHolder.progressPrecentView2.setProgress(precent);
                 viewHolder.progressPrecentDescView2.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo2.processPrecent + "</font>"));
-            } else if (winningInfo2.type == 2) {
+            } else if (winningInfo2.status == 2) {
                 long left = winningInfo2.lotteryTime - ServerTimeManager.getServerTime();
                 viewHolder.chooseLayout2.setVisibility(View.GONE);
                 viewHolder.lottestLayout2.setVisibility(View.VISIBLE);
@@ -257,7 +259,7 @@ public class ProductAdapter extends BaseAdapter {
             viewHolder.layout2.setVisibility(View.INVISIBLE);
             viewHolder.productImageView1.setImageUrl(winningInfo.productUrl, mImageLoader);
             viewHolder.productTitleView1.setText(winningInfo.title);
-            
+
             viewHolder.leftTimeView1.setTag(R.id.LEFT_TIME_ID, winningInfo);
             viewHolder.leftTimeView2.setTag(R.id.LEFT_TIME_ID, null);
             viewHolder.layout1.setOnClickListener(new View.OnClickListener() {
@@ -270,13 +272,14 @@ public class ProductAdapter extends BaseAdapter {
             });
             viewHolder.layout2.setOnClickListener(null);
 
-            if (winningInfo.type == 1) {
+            if (winningInfo.status == 1) {
                 viewHolder.chooseLayout1.setVisibility(View.VISIBLE);
                 viewHolder.lottestLayout1.setVisibility(View.GONE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
-                viewHolder.progressPrecentView1.setProgress(winningInfo.processPrecent);
+                int precent = winningInfo.joinedCount * 100 / winningInfo.totalCount;
+                viewHolder.progressPrecentView1.setProgress(precent);
                 viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
-            } else if (winningInfo.type == 2) {
+            } else if (winningInfo.status == 2) {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);
                 viewHolder.lottestLayout1.setVisibility(View.VISIBLE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);

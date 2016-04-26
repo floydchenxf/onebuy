@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.biz.vo.product.WinningInfo;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class BuyCarAdapter extends BaseAdapter {
         final WinningInfo info = getItem(position);
         holder.proudctImageView.setDefaultImageResId(R.drawable.default_image);
         holder.proudctImageView.setImageUrl(info.productUrl, mImageLoader);
-        holder.totalLeftView.setText(Html.fromHtml("总需" + info.total + "次, 剩余<font color=\"#ffaa66\">" + info.left + "</font>次"));
+        holder.totalLeftView.setText(Html.fromHtml("总需" + info.totalCount + "次, 剩余<font color=\"#ffaa66\">" + (info.totalCount - info.joinedCount) + "</font>次"));
         holder.numberView.setText(info.buyCount + "");
         holder.subView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +117,8 @@ public class BuyCarAdapter extends BaseAdapter {
                 if (!TextUtils.isEmpty(numStr)) {
                     num = Integer.parseInt(holder.numberView.getText().toString());
                 }
-                if (num > info.left) {
+                int left = info.totalCount - info.totalCount;
+                if (num > left) {
                     Toast.makeText(mContext, "数字大于尾数!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -132,7 +133,7 @@ public class BuyCarAdapter extends BaseAdapter {
         });
 
 
-        if (info.buyCount >= info.left) {
+        if (info.buyCount >= (info.totalCount - info.joinedCount)) {
             holder.buyLeftView.setChecked(false);
         } else {
             holder.buyLeftView.setChecked(true);
@@ -141,9 +142,10 @@ public class BuyCarAdapter extends BaseAdapter {
         holder.buyLeftView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                info.buyCount = info.left;
+                int left = info.totalCount - info.joinedCount;
+                info.buyCount = left;
                 holder.numberView.setText(info.buyCount+ "");
-                if (info.buyCount >= info.left) {
+                if (info.buyCount >= left) {
                     holder.buyLeftView.setChecked(false);
                 } else {
                     holder.buyLeftView.setChecked(true);

@@ -17,22 +17,13 @@ public abstract class AbstractJsonParser<T> implements Parser<T> {
         JSONObject j = null;
         try {
             j = new JSONObject(s);
-//            int status = j.getInt("status");
-//            if (status == 0) {
-//                String data = j.getString("data");
-//                T r = convert2Obj(data);
-//                apiCallback.onSuccess(r);
-//            } else {
-//                String msg = j.getString("info");
-//                apiCallback.onError(APIError.API_BIZ_ERROR, msg);
-//            }
-            boolean success = j.getBoolean("success");
-            if (success) {
+            int status = j.getInt("status");
+            if (status == 1) {
                 String data = j.getString("data");
                 T r = convert2Obj(data);
                 apiCallback.onSuccess(r);
             } else {
-                String msg = j.getString("msg");
+                String msg = j.getString("info");
                 apiCallback.onError(APIError.API_BIZ_ERROR, msg);
             }
         } catch (JSONException e) {
