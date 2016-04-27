@@ -9,7 +9,9 @@ import java.util.List;
  */
 public class IndexVO {
 
-    public List<IndexAdvVO> advertisList;
-    public List<ProductTypeVO> typeList;
-    public List<ProductLssueItemVO> theNewList;
+    public List<IndexAdvVO> advertisList; //图片广告
+    public List<WordNewsVO> wordList;//文字广告
+    public List<ProductTypeVO> typeList; //类型导航
+    public List<ProductLssueItemVO> theNewList; //期数商品
+    public String Image;//图片广告
 }

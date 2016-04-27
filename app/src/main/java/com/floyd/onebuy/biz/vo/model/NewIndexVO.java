@@ -1,6 +1,7 @@
 package com.floyd.onebuy.biz.vo.model;
 
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.json.WordNewsVO;
 import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 public class NewIndexVO {
 
     public List<AdvVO> advertisList;
+    public List<WordNewsVO> wordList;
     public List<ProductTypeVO> typeList;
     public List<WinningInfo> theNewList;
+    public String newsImageUrl;
 }

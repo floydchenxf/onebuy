@@ -6,9 +6,9 @@ import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.APIConstants;
-import com.floyd.onebuy.biz.vo.IndexVO;
-import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
+import com.floyd.onebuy.biz.vo.json.IndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.biz.vo.mote.MoteInfoVO;
 import com.floyd.onebuy.channel.request.HttpMethod;
 
 import java.util.ArrayList;

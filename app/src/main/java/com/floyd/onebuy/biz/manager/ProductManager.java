@@ -42,7 +42,9 @@ public class ProductManager {
                     return null;
                 }
                 NewIndexVO vo = new NewIndexVO();
+                vo.wordList = indexVO.wordList;
                 vo.typeList = indexVO.typeList;
+                vo.newsImageUrl = APIConstants.HOST + indexVO.Image;
                 List<IndexAdvVO> adv = indexVO.advertisList;
                 if (adv != null && !adv.isEmpty()) {
                     List<AdvVO> advList = new ArrayList<AdvVO>();

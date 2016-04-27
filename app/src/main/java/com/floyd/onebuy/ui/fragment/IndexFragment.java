@@ -1,11 +1,11 @@
 package com.floyd.onebuy.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,16 +17,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.ProductManager;
+import com.floyd.onebuy.biz.tools.FileTools;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.json.WordNewsVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
+import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.H5Activity;
+import com.floyd.onebuy.ui.activity.LoginActivity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.ProductAdapter;
@@ -34,10 +41,12 @@ import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
 import com.floyd.onebuy.utils.CommonUtil;
+import com.floyd.onebuy.utils.WXUtil;
 import com.floyd.onebuy.view.LoopViewPager;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +105,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private NetworkImageView[] imageViews;
     private TextView[] typeDeses;
 
-    private GestureDetector listViewGestureDetector;
+    private NetworkImageView newsImageView;
 
     private View shuaixuan;//筛选模特
     private LinearLayout guide;//操作指引
@@ -104,8 +113,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private ImageLoader mImageLoader;
 
     private ViewFlipper mFlipper;
-
-    private ArrayList<String> mDataList = new ArrayList<String>();
 
     private Handler mChangeViewPagerHandler = new Handler() {
         @Override
@@ -220,13 +227,13 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 //        });
 
         //跳转到筛选模特界面
-//        shuaixuan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                startActivity(new Intent(getActivity(), HomeChooseActivity1.class));
-//            }
-//        });
+        shuaixuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            }
+        });
     }
 
     private void initButton() {
@@ -242,7 +249,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     }
 
     public void loadProductLssueVO() {
-        ProductManager.fetchProductLssueVOs(PAGE_SIZE, pageNo, 3, sortType).startUI(new ApiCallback<List<WinningInfo>>() {
+        ProductManager.fetchProductLssueVOs(PAGE_SIZE, pageNo, 0, sortType).startUI(new ApiCallback<List<WinningInfo>>() {
             @Override
             public void onError(int code, String errorInfo) {
 
@@ -280,22 +287,32 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     dataLoadingView.loadSuccess();
                 }
 
-                mDataList.add("test1");
-                mDataList.add("test2");
-                mDataList.add("test3");
-                mDataList.add("test4");
-                mDataList.add("test5");
-                mDataList.add("test6");
-                mDataList.add("test7");
-                mDataList.add("test8");
-                for (String s:mDataList) {
-                    TextView tv = new TextView(IndexFragment.this.getActivity());
-                    tv.setTextSize(16);
-                    tv.setPadding(10, 10, 10, 10);
-                    tv.setTextColor(Color.RED);
-                    tv.setText(s);
-                    mFlipper.addView(tv);
+                List<WordNewsVO> wordList = indexVO.wordList;
+                if (wordList != null) {
+                    for(final WordNewsVO vo: wordList) {
+                        TextView tv = new TextView(IndexFragment.this.getActivity());
+                        tv.setTextSize(16);
+                        tv.setPadding(10, 10, 10, 10);
+                        tv.setTextColor(Color.RED);
+                        tv.setText(vo.Title);
+                        tv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent h5Activity = new Intent(IndexFragment.this.getActivity(), H5Activity.class);
+                                H5Activity.H5Data h5Data = new H5Activity.H5Data();
+                                h5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                                h5Data.data = vo.Url;
+                                h5Data.showProcess = true;
+                                h5Data.showNav = true;
+                                h5Data.title = "公告";
+                                h5Activity.putExtra(H5Activity.H5Data.H5_DATA, h5Data);
+                                startActivity(h5Activity);
+                            }
+                        });
+                        mFlipper.addView(tv);
+                    }
                 }
+
                 mFlipper.setAutoStart(true);
                 mFlipper.startFlipping();
                 mViewPagerContainer.setVisibility(View.VISIBLE);
@@ -340,9 +357,24 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 }
 
                 List<WinningInfo> winningRecordVOs = indexVO.theNewList;
-                ++pageNo;
-
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
+
+                final String newsImageUrl = indexVO.newsImageUrl;
+                newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
+                    @Override
+                    public Bitmap processBitmpa(final Bitmap bitmap) {
+
+                        WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
+                            @Override
+                            public void run() {
+                                final String md5Name = WXUtil.getMD5FileName(newsImageUrl);
+                                FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
+                            }
+                        });
+                        return bitmap;
+                    }
+                });
+                ++pageNo;
             }
 
             @Override
@@ -413,6 +445,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         imageViews = new NetworkImageView[] {typeImageView1, typeImageView2, typeImageView3,typeImageView4,typeImageView5};
         typeDeses = new TextView[] {typeTextView1,typeTextView2,typeTextView3,typeTextView4,typeTextView5};
+
+        newsImageView = (NetworkImageView) mHeaderView.findViewById(R.id.news_pic_view);
     }
 
     public void stopBannerAutoLoop() {

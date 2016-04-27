@@ -36,19 +36,15 @@ public abstract class AbstractJsonApiCallback<R> implements ApiCallback<String> 
             return;
         }
 
-//        ApiResult<R> result = new ApiResult<R>();
         try {
             JSONObject j = new JSONObject(s);
-            boolean success = j.getBoolean("success");
-            if (success) {
+            int status = j.getInt("status");
+            if (status == 1) {
                 String data = j.getString("data");
-                R r = convert2Obj(s, data);
-//                result.result = r;
-//                result.code = 200;
+                R r = convert2Obj(data);
                 mCallback.onSuccess(r);
             } else {
-                String msg = j.getString("msg");
-//                result.msg = msg;
+                String msg = j.getString("info");
                 mCallback.onError(APIError.API_BIZ_ERROR, msg);
             }
         } catch (JSONException e) {
@@ -57,5 +53,5 @@ public abstract class AbstractJsonApiCallback<R> implements ApiCallback<String> 
         }
     }
 
-    protected abstract R convert2Obj(String s, String data) throws JSONException;
+    protected abstract R convert2Obj(String data) throws JSONException;
 }

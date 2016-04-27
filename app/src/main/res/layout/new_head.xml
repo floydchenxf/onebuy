@@ -334,11 +334,18 @@
         android:layout_below="@+id/category"
         />
 
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/news_pic_view"
+        android:layout_below="@+id/viewflipper"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop" />
+
     <LinearLayout
         android:id="@+id/navigation_container"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/viewflipper"
+        android:layout_below="@+id/news_pic_view"
         android:background="#ffffff"
         android:gravity="center_vertical">
 

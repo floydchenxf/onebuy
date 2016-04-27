@@ -26,7 +26,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.biz.constants.EnvConstants;
+import com.floyd.onebuy.biz.tools.FileTools;
 import com.floyd.onebuy.utils.WXUtil;
+
+import java.io.File;
 
 
 /**
@@ -210,10 +214,10 @@ public class IMImageCache implements ImageLoader.ImageCache {
             return memBitmap;
         } else {
             Log.d("test1", "bitmap memory cache not hit load from sdcard");
-//            memBitmap = FileTools.readBitmap(EnvConstants.imageRootPath + File.separator + md5Name);
-//            if (memBitmap == null) {
-//                Log.d("test1", "bitmap memory cache not hit");
-//            }
+            memBitmap = FileTools.readBitmap(EnvConstants.imageRootPath + File.separator + md5Name);
+            if (memBitmap == null) {
+                Log.d("test1", "bitmap memory cache not hit");
+            }
             return memBitmap;
 
         }
