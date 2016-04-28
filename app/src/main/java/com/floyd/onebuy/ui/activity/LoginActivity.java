@@ -74,7 +74,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         loginEvent.id = userVO.ID;
                         loginEvent.mobile = userVO.Mobile;
                         EventBus.getDefault().post(loginEvent);
-//                        finish();
+                        finish();
                     }
 
                     @Override

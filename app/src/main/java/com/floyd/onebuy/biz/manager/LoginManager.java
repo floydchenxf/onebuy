@@ -1,6 +1,7 @@
 package com.floyd.onebuy.biz.manager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.floyd.onebuy.aync.ApiCallback;
@@ -12,6 +13,7 @@ import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.tools.PrefsTools;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.channel.request.HttpMethod;
+import com.floyd.onebuy.ui.activity.LoginActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -45,6 +47,8 @@ public class LoginManager {
     public static boolean isLogin(Context context) {
         UserVO loginVO = LoginManager.getLoginInfo(context);
         if (loginVO == null) {
+            Intent it = new Intent(context, LoginActivity.class);
+            context.startActivity(it);
             return false;
         }
 

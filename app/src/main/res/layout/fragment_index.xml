@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="筛选模特"
+                android:text="每日签到"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>

@@ -11,6 +11,7 @@ public static final String DIAMOND_HOST = "http://120.27.132.126:9999/mote/";//�
 
     public static final String USER_MODULE = "UserService.ashx";
     public static final String PRODUCT_MODULE = "ProductService.ashx";
+    public static final String JIFENG_MODULE = "JiFengRecordService.ashx";
 
     public static final String API_GET_ADVERT_LIST = "api/index/getAdvertList";//获取广告
     public static final String API_GET_MOTE_LIST = "api/index/getMoteList"; //获取首页模特信息

@@ -83,7 +83,7 @@ public class ProductManager {
 
 
     /**
-     * 分页获取期数
+     * 获取商品列表
      *
      * @param pageSize
      * @param pageNum

@@ -1,11 +1,17 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +21,7 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.android.volley.toolbox.BitmapProcessor;
@@ -22,9 +29,13 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.EnvConstants;
+import com.floyd.onebuy.biz.manager.JiFengManager;
+import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.tools.FileTools;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.json.SignInVO;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.json.WordNewsVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
@@ -33,7 +44,6 @@ import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.H5Activity;
-import com.floyd.onebuy.ui.activity.LoginActivity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.ProductAdapter;
@@ -43,6 +53,7 @@ import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
 import com.floyd.onebuy.utils.CommonUtil;
 import com.floyd.onebuy.utils.WXUtil;
 import com.floyd.onebuy.view.LoopViewPager;
+import com.floyd.onebuy.view.UIAlertDialog;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
@@ -85,9 +96,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private int PAGE_SIZE = 10;
     private boolean needClear;
 
-    private CheckedTextView  lastestView;
-    private CheckedTextView  hottestView;
-    private CheckedTextView  fastestView;
+    private CheckedTextView lastestView;
+    private CheckedTextView hottestView;
+    private CheckedTextView fastestView;
 
     private View categoryLayout;
     private NetworkImageView typeImageView1;
@@ -107,7 +118,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private NetworkImageView newsImageView;
 
-    private View shuaixuan;//筛选模特
+    private View qiandaoView;//每日签到
     private LinearLayout guide;//操作指引
 
     private ImageLoader mImageLoader;
@@ -215,7 +226,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     public void init(View view) {
         guide = ((LinearLayout) view.findViewById(R.id.guide));
-        shuaixuan =  view.findViewById(R.id.right_layout);
+        qiandaoView = view.findViewById(R.id.right_layout);
         guide.setOnClickListener(this);
 
         //跳转到操作指引界面
@@ -227,11 +238,41 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 //        });
 
         //跳转到筛选模特界面
-        shuaixuan.setOnClickListener(new View.OnClickListener() {
+        qiandaoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (LoginManager.isLogin(IndexFragment.this.getActivity())){
+                    UserVO vo = LoginManager.getLoginInfo(IndexFragment.this.getActivity());
+                    JiFengManager.dailySignIn(vo.ID).startUI(new ApiCallback<SignInVO>() {
+                        @Override
+                        public void onError(int code, String errorInfo) {
+                            Toast.makeText(IndexFragment.this.getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                        }
 
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                        @Override
+                        public void onSuccess(SignInVO signInVO) {
+                            UIAlertDialog.Builder clearBuilder = new UIAlertDialog.Builder(IndexFragment.this.getActivity());
+                            SpannableString message = new SpannableString("亲！您签到成功，奖励" + signInVO.AddJF + "积分");
+                            message.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            clearBuilder.setMessage(message)
+                                    .setCancelable(true)
+                                    .setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog dialog2 = clearBuilder.create();
+                            dialog2.show();
+                        }
+
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+                }
             }
         });
     }
@@ -289,7 +330,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
                 List<WordNewsVO> wordList = indexVO.wordList;
                 if (wordList != null) {
-                    for(final WordNewsVO vo: wordList) {
+                    for (final WordNewsVO vo : wordList) {
                         TextView tv = new TextView(IndexFragment.this.getActivity());
                         tv.setTextSize(16);
                         tv.setPadding(10, 10, 10, 10);
@@ -349,7 +390,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     categoryLayout.setVisibility(View.GONE);
                 } else {
                     categoryLayout.setVisibility(View.VISIBLE);
-                    for(int i =0 ; i < 5; i++) {
+                    for (int i = 0; i < 5; i++) {
                         ProductTypeVO typeVO = typeList.get(i);
                         imageViews[i].setImageUrl(typeVO.getTypePic(), mImageLoader);
                         typeDeses[i].setText(typeVO.CodeName);
@@ -443,8 +484,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         typeTextView4 = (TextView) mHeaderView.findViewById(R.id.type4_textView);
         typeTextView5 = (TextView) mHeaderView.findViewById(R.id.type5_textView);
 
-        imageViews = new NetworkImageView[] {typeImageView1, typeImageView2, typeImageView3,typeImageView4,typeImageView5};
-        typeDeses = new TextView[] {typeTextView1,typeTextView2,typeTextView3,typeTextView4,typeTextView5};
+        imageViews = new NetworkImageView[]{typeImageView1, typeImageView2, typeImageView3, typeImageView4, typeImageView5};
+        typeDeses = new TextView[]{typeTextView1, typeTextView2, typeTextView3, typeTextView4, typeTextView5};
 
         newsImageView = (NetworkImageView) mHeaderView.findViewById(R.id.news_pic_view);
     }
@@ -494,7 +535,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (isShowBanner && firstVisibleItem >= mListView.getHeaderViewsCount()) {
             stopBannerAutoLoop();
-            if (mFlipper !=null) {
+            if (mFlipper != null) {
                 mFlipper.stopFlipping();
             }
         } else {
