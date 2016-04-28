@@ -110,7 +110,7 @@ public class LoginManager {
      * @param newPass 　新密码
      * @return
      */
-    public AsyncJob<Boolean> modifyPassword(String mobile, String oldPass, String newPass) {
+    public static AsyncJob<Boolean> modifyPassword(String mobile, String oldPass, String newPass) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "modifyUserPassword");
@@ -120,7 +120,13 @@ public class LoginManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
-    public AsyncJob<Boolean> forgetPassword(String mobile, String smsCode, String newPassword) {
-        return null;
+    public static AsyncJob<String> forgetPassword(String mobile, String smsCode, String newPassword) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "forgetPassword");
+        params.put("mobile", mobile);
+        params.put("newPassword", newPassword);
+        params.put("code", smsCode);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, String.class);
     }
 }

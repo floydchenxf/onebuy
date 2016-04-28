@@ -7,8 +7,8 @@
     <string name="message_page">消息</string>
     <string name="phone_login">手机号登录</string>
     <string name="phone_reg">注册</string>
-    <string name="phone_num">手机号</string>
-    <string name="phone_pwd">密码</string>
+    <string name="phone_num">请输入邮箱或手机号</string>
+    <string name="phone_pwd">输入密码</string>
     <string name="login">登录</string>
     <string name="register">注册云购帐号</string>
     <string name="forgot_pwd_text">忘记密码</string>
@@ -108,5 +108,7 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_friday">FridayActivity</string>
+    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="title_activity_forgot_password2">ForgotPassword2Activity</string>
 
     </resources>

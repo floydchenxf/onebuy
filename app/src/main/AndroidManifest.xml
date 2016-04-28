@@ -208,12 +208,22 @@
             android:name=".activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"/>
+            android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.RegActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"/>
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.ForgotPasswordActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.ForgotPassword2Activity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
     </application>
 
 </manifest>

@@ -28,19 +28,25 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private TextView loginView;
     private LinearLayout backView;
     private TextView regView;
+    private TextView forgetPasswordView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         backView = (LinearLayout) findViewById(R.id.title_back);
+        TextView titleNameView = (TextView)findViewById(R.id.title_name);
+        titleNameView.setText("登录");
+        titleNameView.setVisibility(View.VISIBLE);
         regView = (TextView) findViewById(R.id.regButton);
         userNameView = (EditText) findViewById(R.id.user_name);
         passwordView = (EditText) findViewById(R.id.password);
+        forgetPasswordView = (TextView) findViewById(R.id.forgot_password_view);
         backView.setOnClickListener(this);
         regView.setOnClickListener(this);
         loginView = (TextView) findViewById(R.id.login);
         loginView.setOnClickListener(this);
+        forgetPasswordView.setOnClickListener(this);
     }
 
     @Override
@@ -84,6 +90,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             case R.id.regButton:
                 Intent it = new Intent(LoginActivity.this, RegActivity.class);
                 startActivity(it);
+                this.finish();
+                break;
+            case R.id.forgot_password_view:
+                Intent forgotIntent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(forgotIntent);
                 this.finish();
                 break;
             default:
