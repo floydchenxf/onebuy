@@ -78,9 +78,9 @@ public class JoinRecordAdapter extends BaseAdapter {
 
         JoinVO vo = getItem(position);
         holder.headImage.setDefaultImageResId(R.drawable.default_image);
-        holder.headImage.setImageUrl(vo.headImage, imageLoader);
-        holder.userNameView.setText(vo.userName);
-        holder.joinNumberView.setText(Html.fromHtml("参与了<font color=\"red\">" + vo.joinNumber + "</font>"));
+        holder.headImage.setImageUrl(vo.ClientPic, imageLoader);
+        holder.userNameView.setText(vo.ClientName);
+        holder.joinNumberView.setText(Html.fromHtml("参与了<font color=\"red\">" + vo.Number + "</font>"));
         return convertView;
     }
 

@@ -7,7 +7,7 @@ package com.floyd.onebuy.biz.vo.model;
 public class WinningInfo {
 
     public long id;//奖品id
-    public long issueId;//期数
+    public long lssueId;//期数
     public String productUrl;//产品图片url
     public String title; //标题
     public String processPrecent;//完成百分比

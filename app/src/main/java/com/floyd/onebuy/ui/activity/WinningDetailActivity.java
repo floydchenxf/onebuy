@@ -1,23 +1,31 @@
 package com.floyd.onebuy.ui.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.biz.manager.WinningManager;
+import com.floyd.onebuy.biz.manager.CarManager;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
 import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
 import com.floyd.onebuy.event.TabSwitchEvent;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -36,6 +44,7 @@ import de.greenrobot.event.EventBus;
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
 
     private static final String TAG = "WinningDetailActivity";
+    private static final int PAGE_SIZE = 10;
 
     private Long id;
     private int pageNo = 1;
@@ -115,7 +124,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             @Override
             public void onPullUpToRefresh() {
                 pageNo++;
-                loadData(false);
+                loadJoinedRecords();
                 mPullToRefreshListView.onRefreshComplete(false, true);
 
             }
@@ -170,13 +179,38 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     }
 
 
+    private void loadJoinedRecords() {
+        ProductManager.getProductLssueJoinedList(PAGE_SIZE, pageNo, id).startUI(new ApiCallback<List<JoinVO>>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(List<JoinVO> joinVOs) {
+                adapter.addAll(joinVOs, false);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+    }
+
 
     private void loadData(final boolean isFirst) {
         if (isFirst) {
             dataLoadingView.startLoading();
         }
 
-        WinningManager.fetchWinningDetailInfoById(id).startUI(new ApiCallback<WinningDetailInfo>() {
+        long userId = 0;
+        UserVO userVO = LoginManager.getLoginInfo(this);
+        if (userVO != null) {
+            userId = userVO.ID;
+        }
+
+        ProductManager.fetchProductLssuePageData(id, userId).startUI(new ApiCallback<WinningDetailInfo>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -190,25 +224,35 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     dataLoadingView.loadSuccess();
                 }
 
+                StringBuilder titleAndStatusSb = new StringBuilder();
                 int status = winningDetailInfo.status;
-                if (status == 1) {
+                if (status == 0 || status == 1) {
                     joinLayout.setVisibility(View.VISIBLE);
                     gotoJoinLayout.setVisibility(View.GONE);
                     progressLayout.setVisibility(View.VISIBLE);
                     ProgressVO progressVO = winningDetailInfo.progressVO;
-                    totalView.setText(Html.fromHtml("总需<font color=\"red\">"+progressVO.total+"</font>"));
-                    leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + progressVO.left + "</font>"));
+                    totalView.setText(Html.fromHtml("总需<font color=\"red\">"+progressVO.TotalCount+"</font>"));
+                    leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>"));
                     progressBar.setProgress(progressVO.getPrecent());
                     joinLayout.setVisibility(View.VISIBLE);
                     gotoJoinLayout.setVisibility(View.GONE);
-
-                } else if (status == 3) {
+                    titleAndStatusSb.append("进行中");
+                } else if (status == 2) {
+                    titleAndStatusSb.append("开奖中");
+                }else if (status == 3) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
+                    titleAndStatusSb.append("已揭晓");
                 }
+
+                titleAndStatusSb.append(winningDetailInfo.productTitle);
+
+                SpannableString message = new SpannableString(titleAndStatusSb.toString());
+                message.setSpan(new BackgroundColorSpan(Color.parseColor("#ff00dd")), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                titleAndStatusView.setText(message);
 
                 List<AdvVO> advVOs = winningDetailInfo.advVOList;
                 mBannerImageAdapter.addItems(advVOs);
@@ -230,7 +274,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     noJoinView.setVisibility(View.GONE);
                     userNickView.setVisibility(View.VISIBLE);
                     joinNumberView.setVisibility(View.VISIBLE);
-                    joinNumberView.setText(myJoinedRecords.get(0).joinNumber);
+                    joinNumberView.setText(myJoinedRecords.get(0).Number);
                 }
 
 
@@ -267,6 +311,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+
+        titleAndStatusView = (TextView)mHeaderView.findViewById(R.id.title_and_status_view);
 
         progressLayout = mHeaderView.findViewById(R.id.progress_layout);
         progressBar = (ProgressBar) progressLayout.findViewById(R.id.progress_present_view);
@@ -317,7 +363,25 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 buyCarPopup.showPopUpWindow();
                 break;
             case R.id.buy_now_view:
-                EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car));
+                if (LoginManager.isLogin(this)) {
+                    long userId = LoginManager.getLoginInfo(this).ID;
+                    CarManager.addCar(id, userId).startUI(new ApiCallback<String>() {
+                        @Override
+                        public void onError(int code, String errorInfo) {
+                            Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(String s) {
+                            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car));
+                        }
+
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+                }
                 this.finish();
                 break;
         }

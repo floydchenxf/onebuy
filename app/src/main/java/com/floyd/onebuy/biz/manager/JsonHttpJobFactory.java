@@ -1,6 +1,5 @@
 package com.floyd.onebuy.biz.manager;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.floyd.onebuy.aync.ApiCallback;
@@ -11,7 +10,6 @@ import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.parser.AbstractJsonParser;
 import com.floyd.onebuy.channel.request.FileItem;
 import com.floyd.onebuy.channel.request.HttpMethod;
-import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -33,13 +31,12 @@ public class JsonHttpJobFactory {
                             @Override
                             protected T convert2Obj(String data) {
 
-                                if (TextUtils.isEmpty(data)) {
+                                if (data == null) {
                                     return null;
                                 }
-                                Gson gson = new Gson();
                                 T result = null;
                                 try {
-                                    result = gson.fromJson(data, type);
+                                    result = GsonHelper.getGson().fromJson(data, type);
                                 } catch (Exception e) {
                                     Log.e(TAG, e.getMessage());
                                     result = null;
@@ -63,8 +60,7 @@ public class JsonHttpJobFactory {
                         new AbstractJsonParser<T>() {
                             @Override
                             protected T convert2Obj(String data) {
-                                Gson gson = new Gson();
-                                return gson.fromJson(data, type);
+                                return GsonHelper.getGson().fromJson(data, type);
                             }
                         }.doParse(callback, s);
                     }

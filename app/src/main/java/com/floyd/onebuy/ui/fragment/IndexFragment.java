@@ -119,7 +119,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private NetworkImageView newsImageView;
 
     private View qiandaoView;//每日签到
-    private LinearLayout guide;//操作指引
+    private LinearLayout searchView;//操作指引
 
     private ImageLoader mImageLoader;
 
@@ -225,56 +225,11 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     }
 
     public void init(View view) {
-        guide = ((LinearLayout) view.findViewById(R.id.guide));
-        qiandaoView = view.findViewById(R.id.right_layout);
-        guide.setOnClickListener(this);
-
-        //跳转到操作指引界面
-//        guide.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), GuideActivity.class));
-//            }
-//        });
-
-        //跳转到筛选模特界面
-        qiandaoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LoginManager.isLogin(IndexFragment.this.getActivity())){
-                    UserVO vo = LoginManager.getLoginInfo(IndexFragment.this.getActivity());
-                    JiFengManager.dailySignIn(vo.ID).startUI(new ApiCallback<SignInVO>() {
-                        @Override
-                        public void onError(int code, String errorInfo) {
-                            Toast.makeText(IndexFragment.this.getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onSuccess(SignInVO signInVO) {
-                            UIAlertDialog.Builder clearBuilder = new UIAlertDialog.Builder(IndexFragment.this.getActivity());
-                            SpannableString message = new SpannableString("亲！您签到成功，奖励" + signInVO.AddJF + "积分");
-                            message.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            clearBuilder.setMessage(message)
-                                    .setCancelable(true)
-                                    .setNegativeButton("确认", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            AlertDialog dialog2 = clearBuilder.create();
-                            dialog2.show();
-                        }
-
-                        @Override
-                        public void onProgress(int progress) {
-
-                        }
-                    });
-                }
-            }
-        });
+        searchView = ((LinearLayout) view.findViewById(R.id.right_layout));
+        searchView.setOnClickListener(this);
+        searchView.setVisibility(View.VISIBLE);
+        qiandaoView = view.findViewById(R.id.left_layout);
+        qiandaoView.setOnClickListener(this);
     }
 
     private void initButton() {
@@ -584,7 +539,41 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 needClear = true;
                 loadData(true);
                 break;
-            case R.id.guide:
+            case R.id.left_layout:
+                if (LoginManager.isLogin(IndexFragment.this.getActivity())){
+                    UserVO vo = LoginManager.getLoginInfo(IndexFragment.this.getActivity());
+                    JiFengManager.dailySignIn(vo.ID).startUI(new ApiCallback<SignInVO>() {
+                        @Override
+                        public void onError(int code, String errorInfo) {
+                            Toast.makeText(IndexFragment.this.getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(SignInVO signInVO) {
+                            UIAlertDialog.Builder clearBuilder = new UIAlertDialog.Builder(IndexFragment.this.getActivity());
+                            SpannableString message = new SpannableString("亲！您签到成功，奖励" + signInVO.AddJF + "积分");
+                            message.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            clearBuilder.setMessage(message)
+                                    .setCancelable(true)
+                                    .setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog dialog2 = clearBuilder.create();
+                            dialog2.show();
+                        }
+
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+                }
+                break;
+            case R.id.right_layout:
                 Intent it = new Intent(this.getActivity(), SearchActivity.class);
                 startActivity(it);
                 break;

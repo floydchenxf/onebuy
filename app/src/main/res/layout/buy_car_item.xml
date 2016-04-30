@@ -4,13 +4,22 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <CheckBox
+        android:id="@+id/delete_radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/radio_check"
+        android:button="@null" />
+
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/product_image_view"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="4dp"
         android:layout_marginLeft="14dp"
+        android:layout_marginTop="4dp"
         android:scaleType="center"
         android:src="@drawable/default_image" />
 
@@ -45,8 +54,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <LinearLayout

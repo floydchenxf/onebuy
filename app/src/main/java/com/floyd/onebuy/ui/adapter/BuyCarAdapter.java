@@ -6,18 +6,22 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.ui.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by floyd on 16-4-18.
@@ -29,8 +33,9 @@ public class BuyCarAdapter extends BaseAdapter {
     private List<WinningInfo> records = new ArrayList<WinningInfo>();
 
     private BuyClickListener buyClickListener;
+    private boolean shwoRadio = false;
 
-
+    private Set<Long> deleteList = new HashSet<Long>();
 
     public BuyCarAdapter(Context context, List<WinningInfo> args, ImageLoader imageLoader, BuyClickListener buyClickListener) {
         this.mContext = context;
@@ -46,6 +51,11 @@ public class BuyCarAdapter extends BaseAdapter {
             this.records.clear();
         }
         this.records.addAll(records);
+        this.notifyDataSetChanged();
+    }
+
+    public void showRadiio(boolean showRadio) {
+        this.shwoRadio = showRadio;
         this.notifyDataSetChanged();
     }
 
@@ -65,7 +75,7 @@ public class BuyCarAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(mContext, R.layout.buy_car_item, null);
@@ -76,6 +86,7 @@ public class BuyCarAdapter extends BaseAdapter {
             holder.addView = (TextView) convertView.findViewById(R.id.add_view);
             holder.numberView = (EditText) convertView.findViewById(R.id.number_view);
             holder.buyLeftView = (CheckedTextView) convertView.findViewById(R.id.buy_left_view);
+            holder.radioButton = (CheckBox) convertView.findViewById(R.id.delete_radio);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -86,17 +97,43 @@ public class BuyCarAdapter extends BaseAdapter {
         holder.proudctImageView.setImageUrl(info.productUrl, mImageLoader);
         holder.totalLeftView.setText(Html.fromHtml("总需" + info.totalCount + "次, 剩余<font color=\"#ffaa66\">" + (info.totalCount - info.joinedCount) + "</font>次"));
         holder.numberView.setText(info.buyCount + "");
+        if (shwoRadio) {
+            final long lssueId = info.lssueId;
+            holder.radioButton.setVisibility(View.VISIBLE);
+            holder.radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+                        deleteList.add(lssueId);
+                    } else {
+                        deleteList.remove(lssueId);
+                    }
+                    buttonView.setChecked(isChecked);
+                }
+            });
+
+            if (deleteList.contains(lssueId)) {
+                holder.radioButton.setChecked(true);
+            } else {
+                holder.radioButton.setChecked(false);
+            }
+        } else {
+            holder.radioButton.setVisibility(View.GONE);
+            holder.radioButton.setOnCheckedChangeListener(null);
+        }
+
         holder.subView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int num = 0;
+                int num = 1;
                 String numStr = holder.numberView.getText().toString();
                 if (!TextUtils.isEmpty(numStr)) {
                     num = Integer.parseInt(holder.numberView.getText().toString());
                 }
-                if (num <= 0) {
-                    holder.numberView.setText("0");
-                    info.buyCount = 0;
+                if (num <= 1) {
+                    holder.numberView.setText("1");
+                    info.buyCount = 1;
                     return;
                 }
 
@@ -104,7 +141,7 @@ public class BuyCarAdapter extends BaseAdapter {
                 info.buyCount = nn;
                 holder.numberView.setText(nn + "");
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.subView);
+                    buyClickListener.onClick(holder.subView, info.lssueId, info.buyCount);
                 }
             }
         });
@@ -112,13 +149,13 @@ public class BuyCarAdapter extends BaseAdapter {
         holder.addView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int num = 0;
+                int num = 1;
                 String numStr = holder.numberView.getText().toString();
                 if (!TextUtils.isEmpty(numStr)) {
                     num = Integer.parseInt(holder.numberView.getText().toString());
                 }
-                int left = info.totalCount - info.totalCount;
-                if (num > left) {
+                int left = info.totalCount - info.joinedCount;
+                if (num >= left) {
                     Toast.makeText(mContext, "数字大于尾数!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -127,7 +164,7 @@ public class BuyCarAdapter extends BaseAdapter {
                 info.buyCount = nn;
                 holder.numberView.setText(nn + "");
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.addView);
+                    buyClickListener.onClick(holder.addView, info.lssueId, info.buyCount);
                 }
             }
         });
@@ -151,11 +188,15 @@ public class BuyCarAdapter extends BaseAdapter {
                     holder.buyLeftView.setChecked(true);
                 }
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.buyLeftView);
+                    buyClickListener.onClick(holder.buyLeftView, info.lssueId, info.buyCount);
                 }
             }
         });
         return convertView;
+    }
+
+    public Set<Long> getDeleteList() {
+        return this.deleteList;
     }
 
     public List<WinningInfo> getRecords() {
@@ -169,10 +210,11 @@ public class BuyCarAdapter extends BaseAdapter {
         public TextView addView;
         public EditText numberView;
         public CheckedTextView buyLeftView;
+        public CheckBox radioButton;
 
     }
 
     public interface BuyClickListener {
-        void onClick(View v);
+        void onClick(View v, long lssueId, int buyCount);
     }
 }

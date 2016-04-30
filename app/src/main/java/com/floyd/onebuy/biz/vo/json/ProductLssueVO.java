@@ -1,12 +1,14 @@
 package com.floyd.onebuy.biz.vo.json;
 
-import java.util.List;
-
 /**
- * Created by floyd on 16-4-27.
+ * Created by floyd on 16-4-30.
  */
 public class ProductLssueVO {
 
-    public List<ProductLssueItemVO> ProductLssueList;
-    public int sort;
+    public long ProductLssueID;//商品期数
+    public int TotalCount; //总数
+    public int JoinedCount; //已加入人数
+    public long ProID; //商品id
+    public String ProName; //商品名称
+    public String Pictures; //商品图片,不带前最
 }

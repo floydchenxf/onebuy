@@ -110,5 +110,6 @@
     <string name="title_activity_friday">FridayActivity</string>
     <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
     <string name="title_activity_forgot_password2">ForgotPassword2Activity</string>
+    <string name="title_activity_search_result">SearchResultActivity</string>
 
     </resources>

@@ -69,6 +69,7 @@ public class ProductAdapter extends BaseAdapter {
                     long left = itemVO.lotteryTime - ServerTimeManager.getServerTime();
                     if (left <= 0) {
                         timeView.setText("正在计算...");
+                        return;
 //                        Toast.makeText(mContext, "goto web work...", Toast.LENGTH_SHORT).show();
                     } else {
                         String dateLeft = DateUtil.getDateBefore(itemVO.lotteryTime, ServerTimeManager.getServerTime());
@@ -172,7 +173,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo.id);
+                    it.putExtra("id", winningInfo.lssueId);
                     mContext.startActivity(it);
                 }
             });
@@ -181,7 +182,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo2.id);
+                    it.putExtra("id", winningInfo2.lssueId);
                     mContext.startActivity(it);
                 }
             });
@@ -272,7 +273,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo.id);
+                    it.putExtra("id", winningInfo.lssueId);
                     mContext.startActivity(it);
                 }
             });

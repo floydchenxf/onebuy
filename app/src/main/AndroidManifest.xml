@@ -224,6 +224,10 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.SearchResultActivity"
+            android:label="@string/title_activity_search_result" >
+        </activity>
     </application>
 
 </manifest>
