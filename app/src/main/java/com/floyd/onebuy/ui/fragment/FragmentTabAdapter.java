@@ -20,6 +20,8 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
 
     private OnRgsExtraCheckedChangedListener onRgsExtraCheckedChangedListener; // 用于让调用者在切换tab时候增加新的功能
 
+    private OnLoginCheck onLoginCheck;
+
 
     public FragmentTabAdapter(FragmentActivity fragmentActivity, List<Fragment> fragments, int fragmentContentId, RadioGroup rgs) {
         this.fragments = fragments;
@@ -39,6 +41,14 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
         for (int i = 0; i < rgs.getChildCount(); i++)
             if (rgs.getChildAt(i).getId() == checkedId) {
+
+                if (onLoginCheck != null) {
+                    boolean a = onLoginCheck.needLogin(radioGroup, checkedId, i);
+                    if (a) {
+                        break;
+                    }
+                }
+
                 Fragment fragment = fragments.get(i);
                 FragmentTransaction ft = obtainFragmentTransaction(i);
                 getCurrentFragment().onPause(); // 暂停当前tab
@@ -61,6 +71,9 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
 
     }
 
+    public void setOnLoginCheck(OnLoginCheck onLogincheck) {
+        this.onLoginCheck = onLogincheck;
+    }
 
 
     /*
@@ -122,5 +135,9 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
      */
     public interface OnRgsExtraCheckedChangedListener {
         public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index);
+    }
+
+    public interface OnLoginCheck {
+        public boolean needLogin(RadioGroup radioGroup, int preCheckedId, int idx);
     }
 }

@@ -5,12 +5,12 @@ import android.os.Bundle;
 
 import com.floyd.onebuy.ui.R;
 
-public class SearchResultActivity extends Activity {
+public class AddressManagerActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_result);
+        setContentView(R.layout.activity_address_manager);
     }
 
 }

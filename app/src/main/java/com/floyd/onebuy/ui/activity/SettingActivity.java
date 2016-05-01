@@ -22,8 +22,11 @@ import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.EnvConstants;
+import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.FileUtils;
+import com.floyd.onebuy.biz.tools.PrefsTools;
 import com.floyd.onebuy.ui.DialogCreator;
+import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.view.UIAlertDialog;
 
@@ -42,6 +45,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private TextView fileSizeView; //文本大小
 
     private Dialog dataloadingDialog;
+    private TextView exitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,9 @@ public class SettingActivity extends Activity implements View.OnClickListener {
 
             }
         });
+
+        exitButton = (TextView) findViewById(R.id.noLogin);
+        exitButton.setOnClickListener(this);
     }
 
     @Override
@@ -182,6 +189,34 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                         });
                 AlertDialog dialog2 = clearBuilder.create();
                 dialog2.show();
+                break;
+            case R.id.noLogin:
+                UIAlertDialog.Builder builder = new UIAlertDialog.Builder(this);
+                SpannableString alertMessage = new SpannableString("亲, 您确认要退出登录？");
+                alertMessage.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                alertMessage.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                builder.setMessage(alertMessage)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.confirm,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.dismiss();
+                                        PrefsTools.setStringPrefs(SettingActivity.this, LoginManager.LOGIN_INFO, "");
+                                        Intent it = new Intent(SettingActivity.this, MainActivity.class);
+                                        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(it);
+                                    }
+                                })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
         }
 

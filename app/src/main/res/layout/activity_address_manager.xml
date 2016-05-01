@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="+id/title_layout"
+        layout="@layout/title_frame" />
+
+    <com.floyd.pullrefresh.widget.PullToRefreshListView
+        android:id="@+id/address_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/title_layout"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:divider="#c0c0c0"
+        android:dividerHeight="1px"
+        android:fadingEdge="none"
+        android:listSelector="#00000000" />
+
+    <LinearLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <include layout="@layout/diamod_data_loading" />
+
+</RelativeLayout>

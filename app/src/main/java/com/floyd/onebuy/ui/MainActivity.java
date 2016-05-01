@@ -11,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.fragment.AllProductFragemnt;
 import com.floyd.onebuy.ui.fragment.BackHandledFragment;
@@ -27,7 +29,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 
-public class MainActivity extends FragmentActivity implements BackHandledInterface {
+public class MainActivity extends FragmentActivity implements BackHandledInterface, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -56,11 +58,27 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         fragments.add(new MyFragment());
 
         rgs = (RadioGroup) findViewById(R.id.id_ly_bottombar);
+        myButton = (RadioButton) findViewById(R.id.tab_my);
+        myButton.setOnClickListener(this);
 
         tabAdapter = new FragmentTabAdapter(this, fragments, R.id.id_content, rgs);
         tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
             @Override
             public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
+            }
+        });
+
+        tabAdapter.setOnLoginCheck(new FragmentTabAdapter.OnLoginCheck() {
+            @Override
+            public boolean needLogin(RadioGroup radioGroup, int preCheckedId, int idx) {
+                if (idx == 4) {
+                    UserVO loginVO = LoginManager.getLoginInfo(MainActivity.this);
+                    if (loginVO == null) {
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
             }
         });
     }
@@ -111,4 +129,31 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tab_my:
+                boolean isLogin = LoginManager.isLogin(this);
+                if (!isLogin) {
+                    int currentTab = tabAdapter.getCurrentTab();
+                    if (currentTab == 0) {
+                        rgs.check(R.id.tab_index_page);
+                    } else if (currentTab == 1) {
+                        rgs.check(R.id.tab_all_product);
+                    } else if (currentTab == 2) {
+                        rgs.check(R.id.tab_new_owner);
+                    } else if (currentTab == 3) {
+                        rgs.check(R.id.tab_buy_car);
+                    } else {
+                        rgs.check(R.id.tab_my);
+                    }
+                }
+
+                break;
+            default:
+        }
+
+    }
+
 }

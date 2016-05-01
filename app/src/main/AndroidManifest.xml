@@ -228,6 +228,10 @@
             android:name=".activity.SearchResultActivity"
             android:label="@string/title_activity_search_result" >
         </activity>
+        <activity
+            android:name=".activity.AddressManagerActivity"
+            android:label="@string/title_activity_address_manager" >
+        </activity>
     </application>
 
 </manifest>

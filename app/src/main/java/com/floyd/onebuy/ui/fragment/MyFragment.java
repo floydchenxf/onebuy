@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,15 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
-import com.floyd.onebuy.ui.R;
+import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.tools.ImageUtils;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.FeeRecordActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
@@ -62,17 +68,20 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private TextView userNameView;
     private TextView feeView;
+    private TextView jiFengView;
     private TextView addFeeView;
     private GridView operateGridView;
     private ImageView saomiaoView;
+    private NetworkImageView headImageView;
+    private NetworkImageView bgHeadView;
 
     private UMSocialService mShare;
 
     private View shareLayout;
 
-    private String[] texts = new String[]{"充值记录", "夺宝记录", "中奖记录", "我的积分", "我的公益", "我的晒单", "快乐星期五", "邀请好友"};
-    private int[] images = new int[]{R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon,R.drawable.icon, R.drawable.icon};
-    private Class[] clazzs = new Class[]{FeeRecordActivity.class, WinningRecordActivity.class,FeeRecordActivity.class,FeeRecordActivity.class,FeeRecordActivity.class,FeeRecordActivity.class,FeeRecordActivity.class,FeeRecordActivity.class};
+    private String[] texts = new String[]{"充值记录", "夺宝记录", "中奖记录", "我的积分", "我的公益", "我的晒单", "快乐星期五", "邀请好友","收货地址管理"};
+    private int[] images = new int[]{R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon};
+    private Class[] clazzs = new Class[]{FeeRecordActivity.class, WinningRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +96,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
         for (int i = 0; i < texts.length; i++) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("ItemImage",images[i]);//添加图像资源的ID
+            map.put("ItemImage", images[i]);//添加图像资源的ID
             map.put("ItemText", texts[i]);//按序号做ItemText
             lstImageItem.add(map);
         }
@@ -168,7 +177,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         //设置分享内容跳转URL
         weixinContent.setTargetUrl("https://mp.weixin.qq.com/s?__biz=MzA3MzUxMjE0Nw==&mid=402986533&idx=1&sn=d503481e7048afe058d7b7b19613919d&scene=0&previewkey=Y0AJm9zrE7wRVUc950Fuc8NS9bJajjJKzz%2F0By7ITJA%3D&uin=NTgzMTExODgw&key=710a5d99946419d9b3463e089f1d876636ceb5d18633bbe0cb595068d607d845498fc2369c6cb0fb9af4c15c0132292e&devicetype=iMac14%2C2+OSX+OSX+10.11.1+build%2815B42%29&version=11000003&lang=zh_CN&pass_ticket=fsq9NnAUofrE%2FMjugdWnmN1G2g9xOx1w2bLs%2BwX9n2wOSxs8FzTcB4eb5CHVLpyy");
         //设置分享图片
-        weixinContent.setShareImage(new UMImage(MyFragment.this.getActivity(),R.drawable.icon));
+        weixinContent.setShareImage(new UMImage(MyFragment.this.getActivity(), R.drawable.icon));
         mShare.setShareMedia(weixinContent);
         // 添加微信平台
 
@@ -209,7 +218,13 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
         userNameView = (TextView) view.findViewById(R.id.user_name);
         feeView = (TextView) view.findViewById(R.id.fee);
+        jiFengView = (TextView) view.findViewById(R.id.jifeng);
         addFeeView = (TextView) view.findViewById(R.id.add_fee);
+        addFeeView.setOnClickListener(this);
+        headImageView = (NetworkImageView) view.findViewById(R.id.head);
+        headImageView.setDefaultImageResId(R.drawable.default_image);
+
+        bgHeadView = (NetworkImageView) view.findViewById(R.id.head_bg);
         operateGridView = (GridView) view.findViewById(R.id.wx_gridview);
 
         SimpleAdapter saImageItems = new SimpleAdapter(this.getActivity(),
@@ -224,7 +239,6 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 if (position == 7) {
                     mShare.openShare(MyFragment.this.getActivity(), false);
                 } else {
-
                     Intent it = new Intent(MyFragment.this.getActivity(), clazzs[position]);
                     MyFragment.this.getActivity().startActivity(it);
                 }
@@ -246,13 +260,28 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     }
 
     private void loadData(final boolean needDialog, final boolean isFirst) {
-//        if (needDialog) {
-//            if (isFirst) {
-//                dataLoadingView.startLoading();
-//            } else {
-//                dataLoadingDialog.show();
-//            }
-//        }
+        UserVO vo = LoginManager.getLoginInfo(this.getActivity());
+        if (vo == null) {
+            //未登录
+
+        } else {
+            headImageView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
+                @Override
+                public Bitmap processBitmpa(Bitmap bitmap) {
+                    return ImageUtils.getCircleBitmap(bitmap, getActivity().getResources().getDimension(R.dimen.cycle_head_image_size));
+                }
+            });
+
+//            bgHeadView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
+//                @Override
+//                public Bitmap processBitmpa(Bitmap bitmap) {
+//                    return ImageUtils.fastBlur(bitmap, 12);
+//                }
+//            });
+
+            userNameView.setText(vo.getUserName());
+            //已经登录
+        }
     }
 
     @Override
@@ -272,6 +301,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 Intent settingIntent = new Intent(this.getActivity(), SettingActivity.class);
                 settingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingIntent);
+                break;
+            case R.id.add_fee:
                 break;
         }
 
