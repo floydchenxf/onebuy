@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
@@ -26,6 +27,7 @@ import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by floyd on 16-4-13.
@@ -49,10 +51,18 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private TextView payView;
     private View payLayout;
 
+    private View deleteLayout;
+    private TextView deleteDescView;
+    private TextView deleteButtonView;
+
+    private View emptyLayout;
+    private View bottomLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageLoader = ImageLoaderFactory.createImageLoader();
+        pageNo = 1;
         needClear = true;
     }
 
@@ -62,6 +72,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         View view = inflater.inflate(R.layout.fragment_buy_car, null);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(view, this);
+        emptyLayout = view.findViewById(R.id.empty_layout);
+        bottomLayout = view.findViewById(R.id.bottom_layout);
+
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.buy_car_list);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
@@ -85,7 +98,11 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
             @Override
             public void onClick(View v, final long lssueId, final int buyNumber) {
-                long userId = LoginManager.getLoginInfo(BuyCarFragment.this.getActivity()).ID;
+                UserVO vo = LoginManager.getLoginInfo(BuyCarFragment.this.getActivity());
+                if (vo == null) {
+                    return;
+                }
+                long userId = vo.ID;
                 DBManager.updateBuyCarNumber(BuyCarFragment.this.getActivity(), userId, lssueId, buyNumber);
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
@@ -95,31 +112,35 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                 totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
             }
+        }, new BuyCarAdapter.CheckedListener() {
+            @Override
+            public void onChecked(View v, boolean isChecked) {
+                Set<Long> kk = mBuyCarAdapter.getDeleteList();
+                deleteDescView.setText(Html.fromHtml("共删除<font color=\"#ff0000\">" + kk.size() + "</font>件商品"));
+            }
         });
         mListView.setAdapter(mBuyCarAdapter);
+        titleNameView = (TextView) view.findViewById(R.id.title_name);
+        titleNameView.setText("购物车");
+        titleNameView.setVisibility(View.VISIBLE);
         payLayout = view.findViewById(R.id.pay_layout);
         payLayout.setVisibility(View.GONE);
         totalProductView = (TextView) view.findViewById(R.id.total_product_view);
         payView = (TextView) view.findViewById(R.id.pay_view);
         payView.setOnClickListener(this);
-        titleNameView = (TextView) view.findViewById(R.id.title_name);
-        titleNameView.setText("购物车");
-        titleNameView.setVisibility(View.VISIBLE);
 
         editView = (TextView) view.findViewById(R.id.right);
         editView.setVisibility(View.VISIBLE);
         editView.setOnClickListener(this);
 
-        if (isEdit) {
-            editView.setText("完成");
-        } else {
-            editView.setText("编辑");
-        }
+        deleteLayout = view.findViewById(R.id.delete_layout);
+        deleteLayout.setVisibility(View.GONE);
+        deleteDescView = (TextView)view.findViewById(R.id.delete_desc_view);
+        deleteButtonView = (TextView)view.findViewById(R.id.delete_button_view);
+        deleteButtonView.setOnClickListener(this);
 
         mBuyCarAdapter.showRadiio(isEdit);
-
         view.findViewById(R.id.title_back).setVisibility(View.GONE);
-
         return view;
     }
 
@@ -131,6 +152,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private void loadData(final boolean isFirst) {
         UserVO userVO = LoginManager.getLoginInfo(this.getActivity());
         if (userVO == null) {
+            showNoDataLayout();
             return;
         }
         if (isFirst) {
@@ -155,12 +177,25 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                 int productNum = winningInfos.size();
                 int totalPrice = 0;
-                for (WinningInfo info : winningInfos) {
+                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
                     totalPrice += info.buyCount;
                 }
+                if (totalPrice <=0) {
+                    showNoDataLayout();
+                    return;
+                }
 
-                payLayout.setVisibility(View.VISIBLE);
-                totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
+                hiddenNoDataLayout();
+                if (isEdit) {
+                    deleteLayout.setVisibility(View.VISIBLE);
+                    payLayout.setVisibility(View.GONE);
+                    editView.setText("完成");
+                } else {
+                    payLayout.setVisibility(View.VISIBLE);
+                    deleteLayout.setVisibility(View.GONE);
+                    editView.setText("编辑");
+                    totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
+                }
             }
 
             @Override
@@ -170,6 +205,21 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         });
 
     }
+
+    private void showNoDataLayout() {
+        editView.setVisibility(View.GONE);
+        mPullToRefreshListView.setVisibility(View.GONE);
+        emptyLayout.setVisibility(View.VISIBLE);
+        bottomLayout.setVisibility(View.GONE);
+    }
+
+    private void hiddenNoDataLayout() {
+        editView.setVisibility(View.VISIBLE);
+        mPullToRefreshListView.setVisibility(View.VISIBLE);
+        emptyLayout.setVisibility(View.GONE);
+        bottomLayout.setVisibility(View.VISIBLE);
+    }
+
 
 
     @Override
@@ -192,6 +242,50 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
             case R.id.right:
                 isEdit = !isEdit;
                 mBuyCarAdapter.showRadiio(isEdit);
+
+                UserVO userVO = LoginManager.getLoginInfo(this.getActivity());
+                if (userVO != null) {
+                    if (isEdit) {
+                        deleteLayout.setVisibility(View.VISIBLE);
+                        Set<Long> kk = mBuyCarAdapter.getDeleteList();
+                        deleteDescView.setText(Html.fromHtml("共删除<font color=\"#ff0000\">" + kk.size() + "</font>件商品"));
+                        payLayout.setVisibility(View.GONE);
+                        editView.setText("完成");
+                    } else {
+                        payLayout.setVisibility(View.VISIBLE);
+                        deleteLayout.setVisibility(View.GONE);
+                        editView.setText("编辑");
+                    }
+                }
+
+                break;
+            case R.id.delete_button_view:
+                final Set<Long> carIds = mBuyCarAdapter.getDeleteList();
+                if (carIds == null || carIds.isEmpty()) {
+                    Toast.makeText(getActivity(), "请选择删除记录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                CarManager.delCar(carIds).startUI(new ApiCallback<Boolean>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+                        Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean s) {
+                        isEdit = false;
+                        mBuyCarAdapter.remove(carIds);
+                        mBuyCarAdapter.showRadiio(isEdit);
+                        pageNo = 1;
+                        needClear = true;
+                        loadData(false);
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
                 break;
         }
 

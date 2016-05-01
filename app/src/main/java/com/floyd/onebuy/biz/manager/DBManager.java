@@ -10,6 +10,8 @@ import com.floyd.onebuy.dao.SearchDao;
 
 import java.util.List;
 
+import de.greenrobot.dao.query.DeleteQuery;
+
 /**
  * Created by floyd on 16-4-23.
  */
@@ -72,14 +74,16 @@ public class DBManager {
     public static void deleteBuyCarNumber(Context context, long userId, long productLssueId) {
         DaoSession daoSession = DBHelper.getDaoSession(context);
         BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.eq(productLssueId), BuyCarNumberDao.Properties.UserId.eq(userId)).buildDelete();
+        DeleteQuery deleteQuery = buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.eq(productLssueId), BuyCarNumberDao.Properties.UserId.eq(userId)).buildDelete();
+        deleteQuery.executeDeleteWithoutDetachingEntities();
     }
 
 
     public static void deleteBuyCarNumber(Context context, long userId, List<Long> productLssueIds) {
         DaoSession daoSession = DBHelper.getDaoSession(context);
         BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.in(productLssueIds), BuyCarNumberDao.Properties.UserId.eq(userId)).buildDelete();
+        DeleteQuery query = buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.in(productLssueIds), BuyCarNumberDao.Properties.UserId.eq(userId)).buildDelete();
+        query.executeDeleteWithoutDetachingEntities();
     }
 
     public static List<BuyCarNumber> queryAllBuyNumbers(Context context, long userId) {

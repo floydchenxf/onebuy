@@ -14,6 +14,7 @@ import com.floyd.onebuy.channel.request.HttpMethod;
 import com.floyd.onebuy.dao.BuyCarNumber;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,27 +31,28 @@ public class CarManager {
      * @param userId         当前用户
      * @return
      */
-    public static AsyncJob<String> addCar(long productLssueId, long userId) {
+    public static AsyncJob<Boolean> addCar(long productLssueId, long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "AddCar");
         params.put("userId", userId + "");
         params.put("productLssueID", productLssueId + "");
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, String.class);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
     /**
      * 删除购物车元素
      *
-     * @param carId
+     * @param carIds
      * @return
      */
-    public static AsyncJob<String> delCar(long carId) {
+    public static AsyncJob<Boolean> delCar(Collection<Long> carIds) {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "DelCar");
-        params.put("carId", carId + "");
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, String.class);
+        String cards = carIds.toString().substring(1,carIds.toString().length()-1);
+        params.put("carId", cards);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
     /**

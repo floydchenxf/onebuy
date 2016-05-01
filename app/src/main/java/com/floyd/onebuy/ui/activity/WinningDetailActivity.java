@@ -365,14 +365,14 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             case R.id.buy_now_view:
                 if (LoginManager.isLogin(this)) {
                     long userId = LoginManager.getLoginInfo(this).ID;
-                    CarManager.addCar(id, userId).startUI(new ApiCallback<String>() {
+                    CarManager.addCar(id, userId).startUI(new ApiCallback<Boolean>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onSuccess(String s) {
+                        public void onSuccess(Boolean s) {
                             EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car));
                         }
 

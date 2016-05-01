@@ -15,13 +15,19 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.biz.manager.DBManager;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.ui.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by floyd on 16-4-18.
@@ -33,25 +39,64 @@ public class BuyCarAdapter extends BaseAdapter {
     private List<WinningInfo> records = new ArrayList<WinningInfo>();
 
     private BuyClickListener buyClickListener;
+    private CheckedListener checkedListener;
     private boolean shwoRadio = false;
 
-    private Set<Long> deleteList = new HashSet<Long>();
+    private Set<Long> deleteList = new ConcurrentSkipListSet<>();
 
-    public BuyCarAdapter(Context context, List<WinningInfo> args, ImageLoader imageLoader, BuyClickListener buyClickListener) {
+    private static byte[] lock = new byte[0];
+
+    public BuyCarAdapter(Context context, List<WinningInfo> args, ImageLoader imageLoader, BuyClickListener buyClickListener, CheckedListener checkedListener) {
         this.mContext = context;
         if (args != null && !args.isEmpty()) {
             this.records.addAll(args);
         }
         this.mImageLoader = imageLoader;
         this.buyClickListener = buyClickListener;
+        this.checkedListener = checkedListener;
     }
 
     public void addAll(List<WinningInfo> records, boolean needClear) {
-        if (needClear) {
-            this.records.clear();
+        synchronized (lock) {
+            if (needClear) {
+                this.records.clear();
+            }
+            this.records.addAll(records);
+            this.notifyDataSetChanged();
         }
-        this.records.addAll(records);
-        this.notifyDataSetChanged();
+    }
+
+    public void remove(Collection<Long> carIds) {
+        synchronized (lock) {
+            final List<Long> deleteLssueIds = new ArrayList<Long>();
+            for (Long carId : carIds) {
+                Iterator<WinningInfo> s = records.iterator();
+                WinningInfo info = null;
+                while (s.hasNext()) {
+                    info = s.next();
+                    if (info.id == carId) {
+                        s.remove();
+                        deleteLssueIds.add(info.lssueId);
+                    }
+                }
+
+                deleteList.remove(carId);
+            }
+
+            if (!deleteLssueIds.isEmpty()) {
+                WxDefaultExecutor.getInstance().executeHttp(new Runnable() {
+                    @Override
+                    public void run() {
+                        UserVO v = LoginManager.getLoginInfo(mContext);
+                        if (v != null) {
+                            long userId = v.ID;
+                            DBManager.deleteBuyCarNumber(mContext, userId, deleteLssueIds);
+                        }
+                    }
+                });
+            }
+            this.notifyDataSetChanged();
+        }
     }
 
     public void showRadiio(boolean showRadio) {
@@ -98,22 +143,25 @@ public class BuyCarAdapter extends BaseAdapter {
         holder.totalLeftView.setText(Html.fromHtml("总需" + info.totalCount + "次, 剩余<font color=\"#ffaa66\">" + (info.totalCount - info.joinedCount) + "</font>次"));
         holder.numberView.setText(info.buyCount + "");
         if (shwoRadio) {
-            final long lssueId = info.lssueId;
+            final long carId = info.id;
             holder.radioButton.setVisibility(View.VISIBLE);
             holder.radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                     if (isChecked) {
-                        deleteList.add(lssueId);
+                        deleteList.add(carId);
                     } else {
-                        deleteList.remove(lssueId);
+                        deleteList.remove(carId);
                     }
                     buttonView.setChecked(isChecked);
+                    if (checkedListener != null) {
+                        checkedListener.onChecked(buttonView, isChecked);
+                    }
                 }
             });
 
-            if (deleteList.contains(lssueId)) {
+            if (deleteList.contains(carId)) {
                 holder.radioButton.setChecked(true);
             } else {
                 holder.radioButton.setChecked(false);
@@ -181,7 +229,7 @@ public class BuyCarAdapter extends BaseAdapter {
             public void onClick(View v) {
                 int left = info.totalCount - info.joinedCount;
                 info.buyCount = left;
-                holder.numberView.setText(info.buyCount+ "");
+                holder.numberView.setText(info.buyCount + "");
                 if (info.buyCount >= left) {
                     holder.buyLeftView.setChecked(false);
                 } else {
@@ -216,5 +264,9 @@ public class BuyCarAdapter extends BaseAdapter {
 
     public interface BuyClickListener {
         void onClick(View v, long lssueId, int buyCount);
+    }
+
+    public interface CheckedListener {
+        void onChecked(View v, boolean isChecked);
     }
 }
