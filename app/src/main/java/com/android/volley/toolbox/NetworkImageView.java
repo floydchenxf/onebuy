@@ -182,7 +182,7 @@ public class NetworkImageView extends ImageView {
                         if (response.getBitmap() != null) {
                             Bitmap bitmap = response.getBitmap();
                             if (processor != null) {
-                                bitmap = processor.processBitmpa(bitmap);
+                                bitmap = processor.processBitmap(bitmap);
                             }
                             setImageBitmap(bitmap);
                         } else if (mDefaultImageId != 0) {

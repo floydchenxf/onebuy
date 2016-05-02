@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="+id/title_layout"
+        android:id="@+id/title_layout"
         layout="@layout/title_frame" />
 
     <com.floyd.pullrefresh.widget.PullToRefreshListView

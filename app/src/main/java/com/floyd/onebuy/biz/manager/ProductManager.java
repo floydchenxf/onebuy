@@ -102,7 +102,7 @@ public class ProductManager {
      * @param sort
      * @return
      */
-    public static AsyncJob<List<WinningInfo>> fetchProductLssueVOs(int pageSize, int pageNum, int typeId, int sort) {
+    public static AsyncJob<List<WinningInfo>> fetchProductLssueVOs(int pageSize, int pageNum, long typeId, int sort) {
 
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();

@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -7,17 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.biz.constants.EnvConstants;
+import com.floyd.onebuy.biz.tools.FileTools;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.utils.CommonUtil;
+import com.floyd.onebuy.utils.WXUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -91,8 +98,20 @@ public class BannerFragment extends BaseFragment {
         mImageView.setErrorImageResId(R.drawable.pic_loading);
         mImageView.setDefaultImageResId(R.drawable.pic_loading);
         if (mDataList != null) {
-            String fullUrl = mDataList.imgUrl;
-            mImageView.setImageUrl(fullUrl, mImageLoader);
+            final String fullUrl = mDataList.imgUrl;
+            mImageView.setImageUrl(fullUrl, mImageLoader, new BitmapProcessor() {
+                @Override
+                public Bitmap processBitmap(final Bitmap bitmap) {
+                    WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
+                        @Override
+                        public void run() {
+                            final String md5Name = WXUtil.getMD5FileName(fullUrl);
+                            FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
+                        }
+                    });
+                    return bitmap;
+                }
+            });
         }
         return mImageView;
     }

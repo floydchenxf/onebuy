@@ -7,6 +7,6 @@ import android.graphics.Bitmap;
  */
 public interface BitmapProcessor {
 
-    Bitmap processBitmpa(Bitmap bitmap);
+    Bitmap processBitmap(Bitmap bitmap);
 
 }

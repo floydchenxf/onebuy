@@ -46,7 +46,7 @@ import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.H5Activity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
-import com.floyd.onebuy.ui.adapter.ProductAdapter;
+import com.floyd.onebuy.ui.adapter.ProductLssueAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
@@ -90,7 +90,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private BannerImageAdapter mBannerImageAdapter;
     private boolean isShowBanner;
     private DataLoadingView dataLoadingView;
-    private ProductAdapter indexProductAdapter;
+    private ProductLssueAdapter indexProductAdapter;
     private int sortType = 1;
     private int pageNo = 1;
     private int PAGE_SIZE = 10;
@@ -199,7 +199,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         loadData(true);
         init(view);
         mListView.addHeaderView(mHeaderView);
-        indexProductAdapter = new ProductAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
+        indexProductAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(indexProductAdapter);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
@@ -358,7 +358,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 final String newsImageUrl = indexVO.newsImageUrl;
                 newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
                     @Override
-                    public Bitmap processBitmpa(final Bitmap bitmap) {
+                    public Bitmap processBitmap(final Bitmap bitmap) {
 
                         WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
                             @Override
@@ -370,7 +370,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                         return bitmap;
                     }
                 });
-                ++pageNo;
+                pageNo = 2;
             }
 
             @Override

@@ -267,17 +267,10 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         } else {
             headImageView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
                 @Override
-                public Bitmap processBitmpa(Bitmap bitmap) {
+                public Bitmap processBitmap(Bitmap bitmap) {
                     return ImageUtils.getCircleBitmap(bitmap, getActivity().getResources().getDimension(R.dimen.cycle_head_image_size));
                 }
             });
-
-//            bgHeadView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
-//                @Override
-//                public Bitmap processBitmpa(Bitmap bitmap) {
-//                    return ImageUtils.fastBlur(bitmap, 12);
-//                }
-//            });
 
             userNameView.setText(vo.getUserName());
             //已经登录

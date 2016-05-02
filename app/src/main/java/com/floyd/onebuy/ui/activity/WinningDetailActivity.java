@@ -258,7 +258,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 mBannerImageAdapter.addItems(advVOs);
                 mHeaderViewIndicator.setTotal(mBannerImageAdapter.getCount());
                 mHeaderViewIndicator.setIndex(0);
-                mHeaderViewPager.setAdapter(mBannerImageAdapter);
+//                mHeaderViewPager.setAdapter(mBannerImageAdapter);
                 if (advVOs.size() == 1) {
                     mHeaderViewIndicator.setVisibility(View.GONE);
                 } else {

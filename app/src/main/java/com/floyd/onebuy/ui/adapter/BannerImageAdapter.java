@@ -19,6 +19,8 @@ public class BannerImageAdapter extends FragmentPagerAdapter {
 
     public static int BANNER_HEIGHT_IN_DP = 300;
 
+    private int height;
+
     List<AdvVO> dataLists = new ArrayList<AdvVO>();
     private BannerFragment.ImagerClickListener mImagerClickListener;
 
@@ -28,6 +30,7 @@ public class BannerImageAdapter extends FragmentPagerAdapter {
             this.dataLists.addAll(dataList);
         }
         this.mImagerClickListener = imagerClickListener;
+        height = BANNER_HEIGHT_IN_DP;
     }
 
     public void addItems(List<AdvVO> dataList) {
@@ -36,13 +39,17 @@ public class BannerImageAdapter extends FragmentPagerAdapter {
         this.notifyDataSetChanged();
     }
 
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     @Override
     public Fragment getItem(int position) {
         Log.d("test", "BannerImageAdapter getItem");
         Bundle args = new Bundle();
         args.putParcelable(BannerFragment.Banner, dataLists.get(position));
         args.putInt(BannerFragment.Position, position);
-        args.putInt(BannerFragment.Height, BANNER_HEIGHT_IN_DP);
+        args.putInt(BannerFragment.Height, height);
         return BannerFragment.newInstance(args, mImagerClickListener);
     }
 

@@ -14,6 +14,7 @@
     <color name="aliwx_refresh_head_color">#505253</color>
     <color name="setting_line_color">#cccccc</color>
     <color name="black">#000000</color>
+    <color name="bgcolor">#f2f2f2</color>
 
     <color name="aliwx_color_blue">#00b4ff</color>
     <color name="aliwx_color_blue_light">#535A60</color>

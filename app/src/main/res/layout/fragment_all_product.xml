@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:background="#d4377e">
+        <TextView
+            android:id="@+id/center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="全部商品"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/navigation_container"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/title"
+        android:layout_marginBottom="10dp"
+        android:background="#ffffff"
+        android:gravity="center_vertical">
+
+        <CheckedTextView
+            android:id="@+id/lastest_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:checked="true"
+            android:gravity="center"
+            android:text="最新" />
+
+        <CheckedTextView
+            android:id="@+id/hottest_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:text="最热" />
+
+        <CheckedTextView
+            android:id="@+id/fastest_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:text="最快" />
+
+        <CheckedTextView
+            android:id="@+id/price_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:text="价格" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/navigation_container">
+
+        <ListView
+            android:id="@+id/type_list_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1" />
+
+
+        <com.floyd.pullrefresh.widget.PullToRefreshListView
+            android:id="@+id/product_list"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/navigation_container"
+            android:layout_weight="3"
+            android:background="@color/white"
+            android:cacheColorHint="#00000000"
+            android:divider="#cecece"
+            android:dividerHeight="1px"
+            android:fadingEdge="none"
+            android:listSelector="#00000000" />
+    </LinearLayout>
+
+
+    <include layout="@layout/diamod_data_loading" />
+
+</RelativeLayout>

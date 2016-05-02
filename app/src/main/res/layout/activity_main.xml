@@ -47,7 +47,7 @@
                 android:drawableTop="@drawable/tg_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
-                android:text="商品"
+                android:text="全部商品"
                 android:textColor="@drawable/word_selector" />
 
             <RadioButton

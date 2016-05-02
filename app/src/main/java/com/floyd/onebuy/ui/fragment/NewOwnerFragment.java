@@ -10,7 +10,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.adapter.ProductAdapter;
+import com.floyd.onebuy.ui.adapter.ProductLssueAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
@@ -28,7 +28,7 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
     private DataLoadingView dataLoadingView;
-    private ProductAdapter productAdapter;
+    private ProductLssueAdapter productLssueAdapter;
     private ImageLoader mImageLoader;
 
     public static NewOwnerFragment newInstance(String param1, String param2) {
@@ -65,8 +65,8 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
-        productAdapter = new ProductAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
-        mListView.setAdapter(productAdapter);
+        productLssueAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
+        mListView.setAdapter(productLssueAdapter);
         loadData();
         return view;
     }
@@ -85,7 +85,7 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
             vo.lotteryTime = System.currentTimeMillis() + 100000;
             winningRecordVOs.add(vo);
         }
-        productAdapter.addAll(winningRecordVOs, true);
+        productLssueAdapter.addAll(winningRecordVOs, true);
     }
 
     @Override
