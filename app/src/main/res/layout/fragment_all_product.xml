@@ -67,7 +67,6 @@
             android:text="价格" />
 
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

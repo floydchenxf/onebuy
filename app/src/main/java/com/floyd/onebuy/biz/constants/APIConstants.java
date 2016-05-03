@@ -4,10 +4,10 @@ package com.floyd.onebuy.biz.constants;
  * Created by floyd on 15-11-28.
  */
 public class APIConstants {
-//    public static final String HOST = "http://120.27.132.126:9999/mote/";
-public static final String DIAMOND_HOST = "http://120.27.132.126:9999/mote/";//测试服务器
-    public static final String HOST ="http://yiyuan.zeego.cn/";
-    public static final String HOST_API_PATH = HOST+"AppInterface/";
+    //    public static final String HOST = "http://120.27.132.126:9999/mote/";
+    public static final String DIAMOND_HOST = "http://120.27.132.126:9999/mote/";//测试服务器
+    public static final String HOST = "http://yiyuan.zeego.cn/";
+    public static final String HOST_API_PATH = HOST + "AppInterface/";
 
     public static final String USER_MODULE = "UserService.ashx";
     public static final String PRODUCT_MODULE = "ProductService.ashx";
@@ -24,4 +24,7 @@ public static final String DIAMOND_HOST = "http://120.27.132.126:9999/mote/";//�
     public static final String PIC_PATH_360 = HOST + "/UploadImg/products/360/";
     public static final String PIC_PATH_640 = HOST + "/UploadImg/products/640/";
     public static final String PIC_PATH_SOURCE = HOST + "/UploadImg/products/source/";
+
+
+    public static final String PRO_ID = "PRO_ID";//产品id
 }

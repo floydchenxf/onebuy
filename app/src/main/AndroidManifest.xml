@@ -175,14 +175,12 @@
             android:name=".activity.WinningDetailActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay" >
-        </activity>
+            android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.PayActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay" >
-        </activity>
+            android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.SettingActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -226,12 +224,19 @@
             android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.SearchResultActivity"
-            android:label="@string/title_activity_search_result" >
-        </activity>
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.AddressManagerActivity"
-            android:label="@string/title_activity_address_manager" >
-        </activity>
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.HistoryPrizeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
     </application>
 
 </manifest>

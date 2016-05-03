@@ -10,6 +10,7 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.APIError;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.json.HistoryPrizeVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
@@ -209,6 +210,8 @@ public class ProductManager {
 
         }
         String proName = productLssue.getString("ProName");
+        long proId = productLssue.getLong("ProID");
+        detailInfo.proId = proId;
         detailInfo.productTitle = proName;
         detailInfo.id = productLssue.getLong("ProductLssueID");
         detailInfo.status = productLssue.getInt("Status");
@@ -250,4 +253,26 @@ public class ProductManager {
         AsyncJob<List<JoinVO>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
         return result;
     }
+
+    /**
+     * 往期中奖信息揭晓
+     *
+     * @param pageSize 　页面容量大小
+     * @param pageNum  页数
+     * @param proId    商品ID
+     */
+    public static AsyncJob<List<HistoryPrizeVO>> getHistoryPrizes(int pageSize, int pageNum, long proId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetHistoryPrize");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("proId", proId + "");
+        Type type = new TypeToken<List<HistoryPrizeVO>>() {
+        }.getType();
+        AsyncJob<List<HistoryPrizeVO>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        return result;
+    }
+
+
 }

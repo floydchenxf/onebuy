@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
@@ -48,6 +50,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     private Long id;
     private int pageNo = 1;
+    private WinningDetailInfo winningDetailInfo;
 
     private DataLoadingView dataLoadingView;
 
@@ -224,6 +227,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     dataLoadingView.loadSuccess();
                 }
 
+                WinningDetailActivity.this.winningDetailInfo = winningDetailInfo;
                 StringBuilder titleAndStatusSb = new StringBuilder();
                 int status = winningDetailInfo.status;
                 if (status == 0 || status == 1) {
@@ -258,7 +262,6 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 mBannerImageAdapter.addItems(advVOs);
                 mHeaderViewIndicator.setTotal(mBannerImageAdapter.getCount());
                 mHeaderViewIndicator.setIndex(0);
-//                mHeaderViewPager.setAdapter(mBannerImageAdapter);
                 if (advVOs.size() == 1) {
                     mHeaderViewIndicator.setVisibility(View.GONE);
                 } else {
@@ -292,9 +295,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     private void initListViewHeader() {
         mHeaderView = View.inflate(this, R.layout.detail_head, null);
-        mViewPagerContainer = mHeaderView.findViewById(R.id.pager_layout);
-        mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.loopViewPager);
-        mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.indicator);
+        mViewPagerContainer = mHeaderView.findViewById(R.id.detail_pager_layout);
+        mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.detail_loopViewPager);
+        mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.detail_indicator);
         mBannerImageAdapter = new BannerImageAdapter(this.getSupportFragmentManager(), null, null);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
@@ -337,6 +340,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             @Override
             public void onClick(View v) {
                 //往期
+                Intent prizeIntent = new Intent(WinningDetailActivity.this, HistoryPrizeActivity.class);
+                prizeIntent.putExtra(APIConstants.PRO_ID, winningDetailInfo.proId);
+                startActivity(prizeIntent);
             }
         });
 

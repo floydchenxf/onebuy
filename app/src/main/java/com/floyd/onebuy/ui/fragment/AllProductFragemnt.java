@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -17,8 +18,8 @@ import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.ProductAdapter;
+import com.floyd.onebuy.ui.adapter.ProductBannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.TypeAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -46,9 +47,8 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
     private LoopViewPager mHeaderViewPager;//广告
 
     private CircleLoopPageIndicator mHeaderViewIndicator;//广告条索引
-    private BannerImageAdapter mBannerImageAdapter;
+    private ProductBannerImageAdapter mBannerImageAdapter;
 
-    private boolean isShowBanner;
     private ListView typeListView;
 
     private TypeAdapter typeAdapter;
@@ -59,6 +59,8 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
     private int sortType = 1;
     private int pageNo = 1;
     private boolean needClear;
+
+    private LinearLayout banneLayout;
 
     private CheckedTextView lastestView; //按照最新排序
     private CheckedTextView hottestView; //按照最热排序
@@ -105,8 +107,9 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
 
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
         mRefreshListView = mPullToRefreshListView.getRefreshableView();
+
+//        banneLayout = (LinearLayout) view.findViewById(R.id.banne_layout);
         initListViewHeader();
-        mRefreshListView.addHeaderView(mHeaderView);
         productAdapter = new ProductAdapter(getActivity(), new ArrayList<WinningInfo>());
         mRefreshListView.setAdapter(productAdapter);
 
@@ -146,12 +149,13 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
     }
 
     private void initListViewHeader() {
-        mHeaderView = View.inflate(getActivity(), R.layout.all_product_head, null);
-        mViewPagerContainer = mHeaderView.findViewById(R.id.pager_layout);
-        mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.loopViewPager);
-        mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.indicator);
-        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null);
-//        mHeaderViewPager.setAdapter(mBannerImageAdapter);
+        mHeaderView = LayoutInflater.from(this.getActivity()).inflate(R.layout.all_product_head, mRefreshListView, false);
+        mViewPagerContainer = mHeaderView.findViewById(R.id.product_pager_layout);
+
+        mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.product_loopViewPager);
+        mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.product_indicator);
+        mBannerImageAdapter = new ProductBannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null);
+        mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int index) {
@@ -166,6 +170,7 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+        mRefreshListView.addHeaderView(mHeaderView);
     }
 
     private void checkSortType(int type) {
@@ -206,12 +211,7 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                     mViewPagerContainer.setVisibility(View.GONE);
                 } else {
                     mViewPagerContainer.setVisibility(View.VISIBLE);
-                    for (AdvVO a : advVOs) {
-                        a.id = 100000 + a.id;
-                    }
-
                     mBannerImageAdapter.addItems(advVOs);
-                    mHeaderViewPager.setAdapter(mBannerImageAdapter);
                     mHeaderViewIndicator.setTotal(mBannerImageAdapter.getCount());
                     mHeaderViewIndicator.setIndex(0);
                     if (advVOs.size() == 1) {

@@ -198,7 +198,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         initButton();
         loadData(true);
         init(view);
-        mListView.addHeaderView(mHeaderView);
         indexProductAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(indexProductAdapter);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -443,6 +442,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         typeDeses = new TextView[]{typeTextView1, typeTextView2, typeTextView3, typeTextView4, typeTextView5};
 
         newsImageView = (NetworkImageView) mHeaderView.findViewById(R.id.news_pic_view);
+        mListView.addHeaderView(mHeaderView);
     }
 
     public void stopBannerAutoLoop() {

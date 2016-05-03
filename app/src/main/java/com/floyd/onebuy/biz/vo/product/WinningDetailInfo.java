@@ -10,6 +10,7 @@ import java.util.List;
 public class WinningDetailInfo {
 
     public long id;//奖品id
+    public long proId;//商品id
     public List<AdvVO> advVOList; //产品广告
     public String productTitle; //产品名称
     public String productDetailUrl; //产品详情页面url

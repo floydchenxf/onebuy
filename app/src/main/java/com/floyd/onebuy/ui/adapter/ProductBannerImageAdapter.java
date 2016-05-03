@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.view.View;
 
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.ui.fragment.BannerFragment;
@@ -15,7 +16,9 @@ import java.util.List;
 /**
  * Created by floyd on 16-4-16.
  */
-public class BannerImageAdapter extends FragmentStatePagerAdapter {
+public class ProductBannerImageAdapter extends FragmentStatePagerAdapter {
+
+    private static final String TAG = "testProduct";
 
     public static int BANNER_HEIGHT_IN_DP = 300;
 
@@ -24,7 +27,7 @@ public class BannerImageAdapter extends FragmentStatePagerAdapter {
     List<AdvVO> dataLists = new ArrayList<AdvVO>();
     private BannerFragment.ImagerClickListener mImagerClickListener;
 
-    public BannerImageAdapter(FragmentManager fm, List<AdvVO> dataList, BannerFragment.ImagerClickListener imagerClickListener) {
+    public ProductBannerImageAdapter(FragmentManager fm, List<AdvVO> dataList, BannerFragment.ImagerClickListener imagerClickListener) {
         super(fm);
         if (dataList != null && !dataList.isEmpty()) {
             this.dataLists.addAll(dataList);
@@ -45,7 +48,7 @@ public class BannerImageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.d("test", "BannerImageAdapter getItem");
+        Log.i(TAG, "getItem---"+position);
         Bundle args = new Bundle();
         args.putParcelable(BannerFragment.Banner, dataLists.get(position));
         args.putInt(BannerFragment.Position, position);
@@ -74,6 +77,11 @@ public class BannerImageAdapter extends FragmentStatePagerAdapter {
             }
         }
         return (long) position;
+    }
+
+    public boolean isViewFromObject(View view, Object object) {
+        Log.i(TAG, "isViewFromObject---view:" + view.toString() + "---object:" + object);
+        return super.isViewFromObject(view, object);
     }
 }
 
