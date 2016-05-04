@@ -7,6 +7,6 @@ import java.util.List;
  */
 public class ProductLssueListVO {
 
-    public List<ProductLssueItemVO> ProductLssueList;
-    public int sort;
+    public List<ProductLssueVO> ProductLssueList;
+//    public int sort;
 }

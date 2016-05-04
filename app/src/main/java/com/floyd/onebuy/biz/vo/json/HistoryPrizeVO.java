@@ -15,7 +15,7 @@ public class HistoryPrizeVO {
     public long ClientID;//客户ID
     public String ClientIP;//客户的来源IP
     public String PrizeCode;//中奖号码
-    public long PrizeTime;//中奖时间
+    public String PrizeTime;//中奖时间
     public int status;//状态
 
     public String getClientPic() {

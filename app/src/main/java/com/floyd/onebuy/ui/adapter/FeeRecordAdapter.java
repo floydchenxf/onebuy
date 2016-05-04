@@ -25,6 +25,11 @@ public class FeeRecordAdapter extends BaseDataAdapter<FeeRecordVO> {
     }
 
     @Override
+    int[] cacheViews() {
+        return new int[]{R.id.fee_view, R.id.order_no_view, R.id.source_view, R.id.date_view};
+    }
+
+    @Override
     void processHolder(Map holder, FeeRecordVO vo) {
         TextView feeView = (TextView) holder.get(R.id.fee_view);
         TextView orderNoView = (TextView) holder.get(R.id.order_no_view);
@@ -38,11 +43,4 @@ public class FeeRecordAdapter extends BaseDataAdapter<FeeRecordVO> {
         dateView.setText(dateStr);
     }
 
-    @Override
-    void initHolder(View view, Map<Integer, View> holder) {
-        holder.put(R.id.fee_view, view.findViewById(R.id.fee_view));
-        holder.put(R.id.order_no_view, view.findViewById(R.id.order_no_view));
-        holder.put(R.id.source_view, view.findViewById(R.id.source_view));
-        holder.put(R.id.date_view, view.findViewById(R.id.date_view));
-    }
 }

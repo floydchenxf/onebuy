@@ -10,11 +10,13 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.APIError;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.vo.AdvVO;
-import com.floyd.onebuy.biz.vo.json.HistoryPrizeVO;
+import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
+import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueListVO;
+import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
@@ -124,12 +126,12 @@ public class ProductManager {
                     return result;
                 }
 
-                List<ProductLssueItemVO> productLssueVOs = productLssueVO.ProductLssueList;
+                List<ProductLssueVO> productLssueVOs = productLssueVO.ProductLssueList;
                 if (productLssueVOs == null || productLssueVOs.isEmpty()) {
                     return result;
                 }
 
-                for (ProductLssueItemVO vo : productLssueVOs) {
+                for (ProductLssueVO vo : productLssueVOs) {
                     WinningInfo info = new WinningInfo();
                     info.joinedCount = vo.JoinedCount;
                     info.totalCount = vo.TotalCount;
@@ -261,17 +263,71 @@ public class ProductManager {
      * @param pageNum  页数
      * @param proId    商品ID
      */
-    public static AsyncJob<List<HistoryPrizeVO>> getHistoryPrizes(int pageSize, int pageNum, long proId) {
+    public static AsyncJob<HistoryPrizeListVO> getHistoryPrizes(int pageSize, int pageNum, long proId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetHistoryPrize");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
         params.put("proId", proId + "");
-        Type type = new TypeToken<List<HistoryPrizeVO>>() {
-        }.getType();
-        AsyncJob<List<HistoryPrizeVO>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        AsyncJob<HistoryPrizeListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, HistoryPrizeListVO.class);
         return result;
+    }
+
+
+    /**
+     * 获取商品期数晒单
+     *
+     * @param productLssueID
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public static AsyncJob<PrizeShowListVO> getPrizeShow(long productLssueID, int pageSize, int pageNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "getPrizeShow");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("productLssueID", productLssueID + "");
+        AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
+        return result;
+    }
+
+    public static AsyncJob<List<WinningInfo>> searchProduct(String keywords, int pageSize, int pageNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "Search");
+        params.put("pageSzie", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("keyWords", keywords);
+        AsyncJob<ProductLssueListVO> s = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, ProductLssueListVO.class);
+        return s.map(new Func<ProductLssueListVO, List<WinningInfo>>() {
+            @Override
+            public List<WinningInfo> call(ProductLssueListVO productLssueVO) {
+                List<WinningInfo> result = new ArrayList<WinningInfo>();
+                if (productLssueVO == null) {
+                    return result;
+                }
+
+                List<ProductLssueVO> productLssueVOs = productLssueVO.ProductLssueList;
+                if (productLssueVOs == null || productLssueVOs.isEmpty()) {
+                    return result;
+                }
+
+                for (ProductLssueVO vo : productLssueVOs) {
+                    WinningInfo info = new WinningInfo();
+                    info.joinedCount = vo.JoinedCount;
+                    info.totalCount = vo.TotalCount;
+                    info.id = vo.ProID;
+                    info.status = 1;
+                    info.productUrl = APIConstants.HOST + vo.Pictures;
+                    info.title = vo.ProName;
+                    result.add(info);
+                }
+                return result;
+            }
+        });
     }
 
 

@@ -3,6 +3,7 @@ package com.floyd.onebuy.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,15 +37,8 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
     }
 
     @Override
-    void initHolder(View view, Map<Integer, View> holder) {
-        holder.put(R.id.lssue_code_view, view.findViewById(R.id.lssue_code_view));
-        holder.put(R.id.prize_time_view, view.findViewById(R.id.prize_time_view));
-        holder.put(R.id.head_image_view, view.findViewById(R.id.head_image_view));
-        holder.put(R.id.prizer_view, view.findViewById(R.id.prizer_view));
-        holder.put(R.id.ip_address_view, view.findViewById(R.id.ip_address_view));
-        holder.put(R.id.good_luck_view, view.findViewById(R.id.good_luck_view));
-        holder.put(R.id.joined_count_view, view.findViewById(R.id.joined_count_view));
-
+    int[] cacheViews() {
+        return new int[]{R.id.lssue_code_view, R.id.prize_time_view, R.id.head_image_view, R.id.prizer_view, R.id.ip_address_view, R.id.good_luck_view, R.id.joined_count_view};
     }
 
     @Override
@@ -58,9 +52,14 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
         TextView goodsLuckView = (TextView) holder.get(R.id.good_luck_view);
         TextView joinedView = (TextView) holder.get(R.id.joined_count_view);
 
-        lssueCodeView.setText(Html.fromHtml("获奖者：<font color=\"red\">"+vo.ProductLssueCode+"</font>"));
-        String dateStr = DateUtil.getDateTime(vo.PrizeTime);
-        prizeTimeView.setText("揭晓时间："+dateStr);
+        lssueCodeView.setText(Html.fromHtml("获奖者：<font color=\"red\">" + vo.ProductLssueCode + "</font>"));
+        String prizeTime = vo.PrizeTime;
+        if (!TextUtils.isEmpty(prizeTime)) {
+            String dateStr = DateUtil.getDateTime(Long.parseLong(vo.PrizeTime));
+            prizeTimeView.setText("揭晓时间：" + dateStr);
+        } else {
+            prizeTimeView.setText("揭晓时间：");
+        }
 
         headImageView.setImageUrl(vo.getClientPic(), mImageLoader, new BitmapProcessor() {
             @Override
@@ -70,6 +69,6 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
         });
 
         ipAddressView.setText("IP地址：" + vo.ClientIP);
-        joinedView.setText(Html.fromHtml("本次参与：<font color=\"red\">"+vo.JoinedCount+"</font>人次"));
+        joinedView.setText(Html.fromHtml("本次参与：<font color=\"red\">" + vo.JoinedCount + "</font>人次"));
     }
 }

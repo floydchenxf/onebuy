@@ -11,4 +11,7 @@ public class ProductLssueVO {
     public long ProID; //商品id
     public String ProName; //商品名称
     public String Pictures; //商品图片,不带前最
+    public int Code;
+    public int Status;
+
 }

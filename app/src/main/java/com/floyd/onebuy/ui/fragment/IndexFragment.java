@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.JiFengManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
@@ -41,6 +43,7 @@ import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
 import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
+import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.H5Activity;
@@ -50,7 +53,6 @@ import com.floyd.onebuy.ui.adapter.ProductLssueAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
-import com.floyd.onebuy.utils.CommonUtil;
 import com.floyd.onebuy.utils.WXUtil;
 import com.floyd.onebuy.view.LoopViewPager;
 import com.floyd.onebuy.view.UIAlertDialog;
@@ -59,7 +61,11 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,6 +105,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private CheckedTextView lastestView;
     private CheckedTextView hottestView;
     private CheckedTextView fastestView;
+    private CheckedTextView priceView;
+
+    private CheckedTextView[] checkedTextViews;
 
     private View categoryLayout;
     private NetworkImageView typeImageView1;
@@ -125,6 +134,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private ViewFlipper mFlipper;
 
+    private Long[] typeCodes = new Long[]{21l,22l,23l,24l};
+
+
     private Handler mChangeViewPagerHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
@@ -144,6 +156,14 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         }
     };
 
+    private View.OnClickListener allProductClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_all_product));
+        }
+    };
+
+    private View.OnClickListener[] listeners = new View.OnClickListener[] {allProductClick, allProductClick, null, null};
 
     public static IndexFragment newInstance(String param1, String param2) {
         IndexFragment fragment = new IndexFragment();
@@ -161,25 +181,17 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     }
 
     private void checkSortType(int type) {
-        if (type == 1) {
-            lastestView.setChecked(true);
-            hottestView.setChecked(false);
-            fastestView.setChecked(false);
-            this.sortType = type;
-            this.pageNo = 1;
-        } else if (type == 2) {
-            lastestView.setChecked(false);
-            hottestView.setChecked(true);
-            fastestView.setChecked(false);
-            this.sortType = type;
-            this.pageNo = 1;
-        } else if (type == 3) {
-            lastestView.setChecked(false);
-            hottestView.setChecked(false);
-            fastestView.setChecked(true);
-            this.sortType = type;
-            this.pageNo = 1;
+        for (int i = 0; i < checkedTextViews.length; i++) {
+            CheckedTextView checkedTextView = checkedTextViews[i];
+            if (i == type - 1) {
+                checkedTextView.setChecked(true);
+            } else {
+                checkedTextView.setChecked(false);
+            }
         }
+        this.sortType = type;
+        this.pageNo = 1;
+        this.needClear = true;
     }
 
     @Override
@@ -236,11 +248,18 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         lastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.lastest_view);
         hottestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.hottest_view);
         fastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.fastest_view);
+        priceView = (CheckedTextView) mNavigationContainer.findViewById(R.id.price_view);
 
+        checkedTextViews = new CheckedTextView[]{
+                lastestView, hottestView, fastestView, priceView
+        };
+
+        lastestView.setChecked(true);
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
         fastestView.setOnClickListener(this);
-        lastestView.setChecked(true);
+        priceView.setOnClickListener(this);
+
     }
 
     public void loadProductLssueVO() {
@@ -344,10 +363,23 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     categoryLayout.setVisibility(View.GONE);
                 } else {
                     categoryLayout.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < 5; i++) {
+                    Map<Long, ProductTypeVO> productTypeVOMap = new HashMap<Long, ProductTypeVO>();
+                    for (int i = 0; i < typeList.size(); i++) {
                         ProductTypeVO typeVO = typeList.get(i);
-                        imageViews[i].setImageUrl(typeVO.getTypePic(), mImageLoader);
-                        typeDeses[i].setText(typeVO.CodeName);
+                        productTypeVOMap.put(typeVO.CodeID, typeVO);
+                    }
+
+                    int idx = 0;
+                    for (Long l:typeCodes) {
+                        int k = idx++;
+                        ProductTypeVO vv = productTypeVOMap.get(l);
+                        String typePic = vv.TypePic;
+                        if (TextUtils.isEmpty(typePic)) {
+                            typePic = APIConstants.HOST + "UploadImg/20160415170740521.png";
+                        }
+                        imageViews[k].setImageUrl(typePic, mImageLoader);
+                        typeDeses[k].setText(vv.CodeName);
+                        imageViews[k].setOnClickListener(listeners[k]);
                     }
                 }
 
@@ -387,8 +419,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mFlipper.setFlipInterval(1500);
         mFlipper.setInAnimation(this.getActivity(), R.anim.public_slide_up);
         mFlipper.setOutAnimation(this.getActivity(), R.anim.public_slide_up2);
-        ViewGroup.LayoutParams mViewPagerContainerLayoutParams = mViewPagerContainer.getLayoutParams();
-        mViewPagerContainerLayoutParams.height = CommonUtil.dip2px(this.getActivity(), BannerImageAdapter.BANNER_HEIGHT_IN_DP) - 200;
         mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.loopViewPager);
         mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.indicator);
 
@@ -422,8 +452,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 }
             }
         });
-
-//        mHeaderView.findViewById(R.id.fri_area).setOnClickListener(this);
 
         categoryLayout = mHeaderView.findViewById(R.id.category);
         typeImageView1 = (NetworkImageView) mHeaderView.findViewById(R.id.type1_imageView);
@@ -462,17 +490,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         return false;
     }
 
-//    @Subscribe
-//    public void onEventMainThread(LoginEvent event) {
-//        if (!IndexFragment.this.getActivity().isFinishing()) {
-//            Log.i(TAG, "unReadMsg when login");
-//            loadUnReadMsgs(true);
-//        }
-//    }
 
     public void onDestroy() {
         super.onDestroy();
-//        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -505,32 +525,19 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lastest_view:
-                lastestView.setChecked(true);
-                hottestView.setChecked(false);
-                fastestView.setChecked(false);
-                sortType = 1;
-                pageNo = 1;
-                needClear = true;
+                checkSortType(1);
                 loadProductLssueVO();
                 break;
-
             case R.id.hottest_view:
-                lastestView.setChecked(false);
-                hottestView.setChecked(true);
-                fastestView.setChecked(false);
-                sortType = 2;
-                pageNo = 1;
-                needClear = true;
+                checkSortType(2);
                 loadProductLssueVO();
                 break;
-
             case R.id.fastest_view:
-                lastestView.setChecked(false);
-                hottestView.setChecked(false);
-                fastestView.setChecked(true);
-                sortType = 3;
-                pageNo = 1;
-                needClear = true;
+                checkSortType(3);
+                loadProductLssueVO();
+                break;
+            case R.id.price_view:
+                checkSortType(4);
                 loadProductLssueVO();
                 break;
             case R.id.act_ls_fail_layout:
@@ -577,10 +584,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 Intent it = new Intent(this.getActivity(), SearchActivity.class);
                 startActivity(it);
                 break;
-//            case R.id.fri_area:
-//                Intent fridayIntent = new Intent(this.getActivity(), FridayActivity.class);
-//                startActivity(fridayIntent);
-//                break;
         }
 
     }

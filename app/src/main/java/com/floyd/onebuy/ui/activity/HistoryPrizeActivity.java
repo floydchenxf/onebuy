@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.ProductManager;
+import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeVO;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.HistoryPrizeAdapter;
@@ -31,7 +32,7 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
     private ListView mListView;
     private HistoryPrizeAdapter adapter;
     private int pageNo = 1;
-    private boolean needClear = false;
+    private boolean needClear = true;
     private TextView titleView;
     private float oneDp;
     private long proId;
@@ -81,7 +82,7 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
             dataLoadingView.startLoading();
         }
 
-        ProductManager.getHistoryPrizes(PAGE_SIZE, pageNo, proId).startUI(new ApiCallback<List<HistoryPrizeVO>>() {
+        ProductManager.getHistoryPrizes(PAGE_SIZE, pageNo, proId).startUI(new ApiCallback<HistoryPrizeListVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -90,12 +91,13 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
             }
 
             @Override
-            public void onSuccess(List<HistoryPrizeVO> feeRecordVOs) {
+            public void onSuccess(HistoryPrizeListVO prizeListVO) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
 
-                adapter.addAll(feeRecordVOs, needClear);
+                List<HistoryPrizeVO> prizeVOs = prizeListVO.HistoryPrizeList;
+                adapter.addAll(prizeVOs, needClear);
                 pageNo++;
                 if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
                     TextView emptyView = new TextView(HistoryPrizeActivity.this);
