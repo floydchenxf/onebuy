@@ -32,9 +32,9 @@ public abstract class BaseDataAdapter<T> extends BaseAdapter {
 
     public void addAll(List<T> records, boolean needClear) {
         if (needClear) {
-            records.clear();
+            this.records.clear();
         }
-        records.addAll(records);
+        this.records.addAll(records);
         this.notifyDataSetChanged();
     }
 
@@ -62,8 +62,11 @@ public abstract class BaseDataAdapter<T> extends BaseAdapter {
         final Map<Integer, View> holder;
         if (convertView == null) {
             convertView = getLayoutView();
+            int[] cacheViews = cacheViews();
             holder = new HashMap<Integer, View>();
-            initHolder(convertView, holder);
+            for (int r : cacheViews) {
+                holder.put(r, convertView.findViewById(r));
+            }
             convertView.setTag(holder);
         } else {
             holder = (Map<Integer, View>) convertView.getTag();
@@ -82,12 +85,11 @@ public abstract class BaseDataAdapter<T> extends BaseAdapter {
     abstract View getLayoutView();
 
     /**
-     * 设置holder
+     * 保存的views 的ID
      *
-     * @param view
-     * @param holder
+     * @return
      */
-    abstract void initHolder(View view, Map<Integer, View> holder);
+    abstract int[] cacheViews();
 
     /**
      * 处理holder

@@ -375,6 +375,14 @@
             android:background="@drawable/blue_line_button_bg"
             android:gravity="center"
             android:text="最快" />
+        <CheckedTextView
+            android:id="@+id/price_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/blue_line_button_bg"
+            android:gravity="center"
+            android:text="价格" />
 
     </LinearLayout>
 

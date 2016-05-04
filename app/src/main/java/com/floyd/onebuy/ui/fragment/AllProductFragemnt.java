@@ -30,6 +30,7 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by floyd on 16-4-12.
@@ -68,6 +69,8 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
     private CheckedTextView priceView; //按照价格排序
 
     private CheckedTextView[] checkedTextViews;
+
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     public static AllProductFragemnt newInstance(String param1, String param2) {
         AllProductFragemnt fragment = new AllProductFragemnt();
@@ -108,7 +111,6 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
         mRefreshListView = mPullToRefreshListView.getRefreshableView();
 
-//        banneLayout = (LinearLayout) view.findViewById(R.id.banne_layout);
         initListViewHeader();
         productAdapter = new ProductAdapter(getActivity(), new ArrayList<WinningInfo>());
         mRefreshListView.setAdapter(productAdapter);
@@ -119,7 +121,7 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
             public void onPullDownToRefresh() {
                 needClear = true;
                 pageNo = 1;
-                loadData(false);
+                loadPageData();
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
@@ -171,6 +173,34 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
             }
         });
         mRefreshListView.addHeaderView(mHeaderView);
+    }
+
+    /**
+     * 外部切换
+     * @param typeId
+     */
+    public void switchType(final long typeId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int position = 0;
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                }
+                for (ProductTypeVO vo :typeAdapter.getTypeList()) {
+                    if (vo.CodeID == typeId) {
+                        break;
+                    }
+                    position++;
+                }
+                AllProductFragemnt.this.typeId = typeId;
+                needClear = true;
+                pageNo = 1;
+                typeAdapter.setCheckedIndex(position);
+                loadPageData();
+            }
+        }).start();
     }
 
     private void checkSortType(int type) {
@@ -231,6 +261,9 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 typeList.add(0, allProductTypeVO);
                 typeAdapter.addAll(typeList);
                 pageNo = 2;
+                if (countDownLatch.getCount() > 0) {
+                    countDownLatch.countDown();
+                }
             }
 
             @Override

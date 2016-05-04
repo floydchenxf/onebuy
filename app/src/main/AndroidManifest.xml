@@ -185,8 +185,7 @@
             android:name=".activity.SettingActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay" >
-        </activity>
+            android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.FeedbackActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -237,6 +236,16 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.JiFengActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.PayResultActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay"/>
     </application>
 
 </manifest>

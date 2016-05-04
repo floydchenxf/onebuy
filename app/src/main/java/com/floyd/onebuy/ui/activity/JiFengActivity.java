@@ -10,10 +10,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.biz.manager.ProductManager;
-import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.biz.manager.JiFengManager;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.vo.json.JiFengVO;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.adapter.ProductAdapter;
+import com.floyd.onebuy.ui.adapter.JiFengAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
@@ -22,42 +23,39 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultActivity extends Activity implements View.OnClickListener {
+public class JiFengActivity extends Activity implements View.OnClickListener {
 
-    private static final int PAGE_SIZE = 10;
     private DataLoadingView dataLoadingView;
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
-    private ProductAdapter productAdapter;
-    private TextView titleView;
+    private JiFengAdapter adapter;
     private int pageNo = 1;
-    private boolean needClear = true;
-    private String searchWord;
+    private int PAGE_SIZE = 10;
+    private boolean needClear = false;
+    private TextView titleView;
     private float oneDp;
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_common);
-        searchWord = getIntent().getStringExtra(SearchActivity.SEARCH_WORD);
+        setContentView(R.layout.activity_fee_record);
+
         oneDp = this.getResources().getDimension(R.dimen.one_dp);
+
         findViewById(R.id.title_back).setOnClickListener(this);
         titleView = (TextView) findViewById(R.id.title_name);
-        titleView.setText("搜索结果");
+        titleView.setText("积分记录");
         titleView.setVisibility(View.VISIBLE);
 
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
-        mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.common_list);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.fee_list);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-                pageNo = 1;
-                needClear = true;
-                loadData(false);
-                mPullToRefreshListView.onRefreshComplete(false, true);
+
             }
 
             @Override
@@ -70,18 +68,20 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        productAdapter = new ProductAdapter(this, new ArrayList<WinningInfo>());
-        mListView.setAdapter(productAdapter);
+        adapter = new JiFengAdapter(this, new ArrayList<JiFengVO>());
+        mListView.setAdapter(adapter);
         loadData(true);
+
     }
 
     private void loadData(final boolean isFirst) {
-
         if (isFirst) {
             dataLoadingView.startLoading();
         }
 
-        ProductManager.searchProduct(searchWord, PAGE_SIZE, pageNo).startUI(new ApiCallback<List<WinningInfo>>() {
+        long userId = LoginManager.getLoginInfo(this).ID;
+
+        JiFengManager.fetchJiFengList(userId, PAGE_SIZE, pageNo, 1).startUI(new ApiCallback<List<JiFengVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -90,24 +90,24 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
             }
 
             @Override
-            public void onSuccess(List<WinningInfo> winningInfos) {
+            public void onSuccess(List<JiFengVO> jiFengVOs) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
-
-                productAdapter.addAll(winningInfos, needClear);
+                adapter.addAll(jiFengVOs, needClear);
                 pageNo++;
-
-                if (productAdapter.getProductList() == null || productAdapter.getProductList().isEmpty()) {
-                    TextView emptyView = new TextView(SearchResultActivity.this);
+                if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
+                    TextView emptyView = new TextView(JiFengActivity.this);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (40 * oneDp));
                     emptyView.setGravity(Gravity.CENTER);
                     emptyView.setLayoutParams(params);
                     emptyView.setText("暂无数据");
                     emptyView.setTextColor(Color.BLACK);
                     mPullToRefreshListView.setEmptyView(emptyView);
+                } else {
+                    View head = View.inflate(JiFengActivity.this, R.layout.jifeng_head, null);
+                    mListView.addHeaderView(head);
                 }
-
             }
 
             @Override
@@ -115,6 +115,7 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
 
             }
         });
+
     }
 
     @Override

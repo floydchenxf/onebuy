@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.event.TabSwitchEvent;
@@ -24,6 +25,7 @@ import com.floyd.onebuy.ui.fragment.NewOwnerFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -115,6 +117,13 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     public void onEventMainThread(TabSwitchEvent event) {
         if (!this.isFinishing()) {
             rgs.check(event.tabId);
+
+            Map<String,Object> data = event.data;
+            Object o = data.get(APIConstants.INDEX_PRODUCT_TYPE_ID);
+            if (o != null) {
+                Long typeId =(Long)o;
+                ((AllProductFragemnt)fragments.get(1)).switchType(typeId);
+            }
         }
     }
 

@@ -31,12 +31,13 @@ public class CarManager {
      * @param userId         当前用户
      * @return
      */
-    public static AsyncJob<Boolean> addCar(long productLssueId, long userId) {
+    public static AsyncJob<Boolean> addCar(long productLssueId, long userId, int number) {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "AddCar");
         params.put("userId", userId + "");
         params.put("productLssueID", productLssueId + "");
+        params.put("number", number+"");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 

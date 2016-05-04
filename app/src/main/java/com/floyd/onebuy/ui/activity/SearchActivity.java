@@ -1,6 +1,7 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,6 +24,8 @@ import java.util.List;
 
 
 public class SearchActivity extends Activity implements View.OnClickListener {
+
+    public static final String SEARCH_WORD = "search_word";
 
     private ListView searchContentListView;
     private EditText searchContentView;
@@ -47,6 +50,9 @@ public class SearchActivity extends Activity implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position < searchList.size()) {
                     String k = searchList.get(position);
+                    Intent it = new Intent(SearchActivity.this, SearchResultActivity.class);
+                    it.putExtra(SEARCH_WORD, k);
+                    startActivity(it);
                 }
             }
         });
@@ -122,7 +128,9 @@ public class SearchActivity extends Activity implements View.OnClickListener {
 
                     @Override
                     public void onSuccess(Integer a) {
-                        Toast.makeText(SearchActivity.this, "查询插入成功", Toast.LENGTH_SHORT).show();
+                        Intent it = new Intent(SearchActivity.this, SearchResultActivity.class);
+                        it.putExtra(SEARCH_WORD, content);
+                        startActivity(it);
                         searchContentView.setText("");
                         if (a == 2) {
                             searchList.add(content);

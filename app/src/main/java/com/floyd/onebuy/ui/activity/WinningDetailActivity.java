@@ -39,6 +39,7 @@ import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -106,12 +107,6 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         joinLayout = findViewById(R.id.join_layout);
         addBuyCarView = (TextView)joinLayout.findViewById(R.id.join_buy_car_view);
         addBuyCarView.setOnClickListener(this);
-//        addBuyCarView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                buyCarPopup.showPopUpWindow();
-//            }
-//        });
         buyAtOnceButton = (TextView) findViewById(R.id.buy_now_view);
         buyAtOnceButton.setOnClickListener(this);
         gotoJoinLayout = findViewById(R.id.goto_join_layout);
@@ -366,12 +361,10 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 loadData(true);
                 break;
             case R.id.join_buy_car_view:
-                buyCarPopup.showPopUpWindow();
-                break;
-            case R.id.buy_now_view:
+//                buyCarPopup.showPopUpWindow();
                 if (LoginManager.isLogin(this)) {
                     long userId = LoginManager.getLoginInfo(this).ID;
-                    CarManager.addCar(id, userId).startUI(new ApiCallback<Boolean>() {
+                    CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -379,7 +372,27 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
                         @Override
                         public void onSuccess(Boolean s) {
-                            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car));
+                        }
+
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+                }
+                break;
+            case R.id.buy_now_view:
+                if (LoginManager.isLogin(this)) {
+                    long userId = LoginManager.getLoginInfo(this).ID;
+                    CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
+                        @Override
+                        public void onError(int code, String errorInfo) {
+                            Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(Boolean s) {
+                            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car, new HashMap<String, Object>()));
                         }
 
                         @Override

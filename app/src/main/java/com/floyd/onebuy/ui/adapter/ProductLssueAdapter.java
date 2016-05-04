@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -62,7 +63,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                         return;
                     }
 
-                    if (itemVO.status != 2) {
+                    if (itemVO.status != WinningInfo.STATUS_LOTTERY) {
                         return;
                     }
 
@@ -70,7 +71,6 @@ public class ProductLssueAdapter extends BaseAdapter {
                     if (left <= 0) {
                         timeView.setText("正在计算...");
                         return;
-//                        Toast.makeText(mContext, "goto web work...", Toast.LENGTH_SHORT).show();
                     } else {
                         String dateLeft = DateUtil.getDateBefore(itemVO.lotteryTime, ServerTimeManager.getServerTime());
                         timeView.setText(dateLeft);
@@ -79,7 +79,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     Message newMsg = new Message();
                     newMsg.what = TIME_EVENT;
                     newMsg.obj = o;
-                    mHandler.sendMessageDelayed(newMsg, 200);
+                    mHandler.sendMessageDelayed(newMsg, 300);
                     break;
             }
         }
@@ -133,6 +133,10 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.productImageView2 = (NetworkImageView) convertView.findViewById(R.id.product_pic_2);
             viewHolder.productTitleView1 = (TextView) convertView.findViewById(R.id.product_title_view_1);
             viewHolder.productTitleView2 = (TextView) convertView.findViewById(R.id.product_title_view_2);
+            viewHolder.productCodeLayout1 = convertView.findViewById(R.id.product_code_layout_1);
+            viewHolder.productCodeLayout2 = convertView.findViewById(R.id.product_code_layout_2);
+            viewHolder.productCodeView1 = (TextView) convertView.findViewById(R.id.product_code_view_1);
+            viewHolder.productCodeView2 = (TextView) convertView.findViewById(R.id.product_code_view_2);
             viewHolder.progressPrecentView1 = (ProgressBar) convertView.findViewById(R.id.progress_present_1);
             viewHolder.progressPrecentView2 = (ProgressBar) convertView.findViewById(R.id.progress_present_2);
 
@@ -150,7 +154,7 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.goodLuckNumView1 = (TextView) convertView.findViewById(R.id.good_luck_num_view_1);
             viewHolder.goodLuckNumView2 = (TextView) convertView.findViewById(R.id.good_luck_num_view_2);
             viewHolder.lottestTimeView1 = (TextView) convertView.findViewById(R.id.lottest_time_view_1);
-            viewHolder.lottestTimeView2 = (TextView) convertView.findViewById(R.id.good_luck_num_view_2);
+            viewHolder.lottestTimeView2 = (TextView) convertView.findViewById(R.id.lottest_time_view_2);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -169,6 +173,19 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.productImageView2.setImageUrl(winningInfo2.productUrl, mImageLoader);
             viewHolder.productTitleView1.setText(winningInfo.title);
             viewHolder.productTitleView2.setText(winningInfo2.title);
+            if (TextUtils.isEmpty(winningInfo.code)) {
+                viewHolder.productCodeLayout1.setVisibility(View.GONE);
+            } else {
+                viewHolder.productCodeLayout1.setVisibility(View.VISIBLE);
+                viewHolder.productCodeView1.setText("第" + winningInfo.code + "期");
+            }
+
+            if (TextUtils.isEmpty(winningInfo2.code)) {
+                viewHolder.productCodeLayout2.setVisibility(View.GONE);
+            } else {
+                viewHolder.productCodeLayout2.setVisibility(View.VISIBLE);
+                viewHolder.productCodeView2.setText("第" + winningInfo2.code + "期");
+            }
             viewHolder.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -189,7 +206,7 @@ public class ProductLssueAdapter extends BaseAdapter {
 
             viewHolder.leftTimeView1.setTag(R.id.LEFT_TIME_ID, winningInfo);
             viewHolder.leftTimeView2.setTag(R.id.LEFT_TIME_ID, winningInfo2);
-            if (winningInfo.status == 1) {
+            if (winningInfo.status == WinningInfo.STATUS_CHOOSE) {
                 viewHolder.chooseLayout1.setVisibility(View.VISIBLE);
                 viewHolder.lottestLayout1.setVisibility(View.GONE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
@@ -199,7 +216,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 }
                 viewHolder.progressPrecentView1.setProgress(precent);
                 viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
-            } else if (winningInfo.status == 2) {
+            } else if (winningInfo.status == WinningInfo.STATUS_LOTTERY) {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);
                 viewHolder.lottestLayout1.setVisibility(View.VISIBLE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
@@ -223,10 +240,17 @@ public class ProductLssueAdapter extends BaseAdapter {
                 }
 
             } else {
-                //TODO
+                viewHolder.chooseLayout1.setVisibility(View.GONE);
+                viewHolder.lottestLayout1.setVisibility(View.GONE);
+                viewHolder.ownerLayout1.setVisibility(View.VISIBLE);
+                viewHolder.winningOwnerView1.setText(winningInfo.ownerVO.userName);
+                viewHolder.joinWinningTimesView1.setText(winningInfo.ownerVO.joinNumber+"人次");
+                viewHolder.goodLuckNumView1.setText(winningInfo.ownerVO.winNumber);
+                String dateString = DateUtil.getDateTime(winningInfo.ownerVO.winTime);
+                viewHolder.lottestTimeView1.setText(dateString);
             }
 
-            if (winningInfo2.status == 1) {
+            if (winningInfo2.status == WinningInfo.STATUS_CHOOSE) {
                 viewHolder.chooseLayout2.setVisibility(View.VISIBLE);
                 viewHolder.lottestLayout2.setVisibility(View.GONE);
                 viewHolder.ownerLayout2.setVisibility(View.GONE);
@@ -236,7 +260,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 }
                 viewHolder.progressPrecentView2.setProgress(precent);
                 viewHolder.progressPrecentDescView2.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo2.processPrecent + "</font>"));
-            } else if (winningInfo2.status == 2) {
+            } else if (winningInfo2.status == WinningInfo.STATUS_LOTTERY) {
                 long left = winningInfo2.lotteryTime - ServerTimeManager.getServerTime();
                 viewHolder.chooseLayout2.setVisibility(View.GONE);
                 viewHolder.lottestLayout2.setVisibility(View.VISIBLE);
@@ -258,7 +282,14 @@ public class ProductLssueAdapter extends BaseAdapter {
                     mHandler.sendMessage(msg);
                 }
             } else {
-                //TODO
+                viewHolder.chooseLayout2.setVisibility(View.GONE);
+                viewHolder.lottestLayout2.setVisibility(View.GONE);
+                viewHolder.ownerLayout2.setVisibility(View.VISIBLE);
+                viewHolder.winningOwnerView2.setText(winningInfo2.ownerVO.userName);
+                viewHolder.joinWinningTimesView2.setText(winningInfo2.ownerVO.joinNumber+"人次");
+                viewHolder.goodLuckNumView2.setText(winningInfo2.ownerVO.winNumber);
+                String dateString = DateUtil.getDateTime(winningInfo2.ownerVO.winTime);
+                viewHolder.lottestTimeView2.setText(dateString);
             }
         } else {
             final WinningInfo winningInfo = records.get(start);
@@ -266,6 +297,13 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.layout2.setVisibility(View.INVISIBLE);
             viewHolder.productImageView1.setImageUrl(winningInfo.productUrl, mImageLoader);
             viewHolder.productTitleView1.setText(winningInfo.title);
+
+            if (TextUtils.isEmpty(winningInfo.code)) {
+                viewHolder.productCodeLayout1.setVisibility(View.GONE);
+            } else {
+                viewHolder.productCodeLayout1.setVisibility(View.VISIBLE);
+                viewHolder.productCodeView1.setText("第" + winningInfo.code + "期");
+            }
 
             viewHolder.leftTimeView1.setTag(R.id.LEFT_TIME_ID, winningInfo);
             viewHolder.leftTimeView2.setTag(R.id.LEFT_TIME_ID, null);
@@ -279,7 +317,7 @@ public class ProductLssueAdapter extends BaseAdapter {
             });
             viewHolder.layout2.setOnClickListener(null);
 
-            if (winningInfo.status == 1) {
+            if (winningInfo.status == WinningInfo.STATUS_CHOOSE) {
                 viewHolder.chooseLayout1.setVisibility(View.VISIBLE);
                 viewHolder.lottestLayout1.setVisibility(View.GONE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
@@ -289,7 +327,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 }
                 viewHolder.progressPrecentView1.setProgress(precent);
                 viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
-            } else if (winningInfo.status == 2) {
+            } else if (winningInfo.status == WinningInfo.STATUS_LOTTERY) {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);
                 viewHolder.lottestLayout1.setVisibility(View.VISIBLE);
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
@@ -312,10 +350,15 @@ public class ProductLssueAdapter extends BaseAdapter {
                     mHandler.sendMessage(msg);
                 }
             } else {
-                //TODO
+                viewHolder.chooseLayout1.setVisibility(View.GONE);
+                viewHolder.lottestLayout1.setVisibility(View.GONE);
+                viewHolder.ownerLayout1.setVisibility(View.VISIBLE);
+                viewHolder.winningOwnerView1.setText(winningInfo.ownerVO.userName);
+                viewHolder.joinWinningTimesView1.setText(winningInfo.ownerVO.joinNumber+"人次");
+                viewHolder.goodLuckNumView1.setText(winningInfo.ownerVO.winNumber);
+                String dateString = DateUtil.getDateTime(winningInfo.ownerVO.winTime);
+                viewHolder.lottestTimeView1.setText(dateString);
             }
-
-
         }
 
         return convertView;
@@ -329,6 +372,10 @@ public class ProductLssueAdapter extends BaseAdapter {
         public NetworkImageView productImageView2;
         public TextView productTitleView1; //产品标题１
         public TextView productTitleView2; //产品标题２
+        public View productCodeLayout1;
+        public View productCodeLayout2;
+        public TextView productCodeView1;//期号1
+        public TextView productCodeView2;//期号2
         public View chooseLayout1; //选择商品布局１
         public View chooseLayout2; //选择商品布局２
         public TextView progressPrecentDescView1; //进度条描述1
