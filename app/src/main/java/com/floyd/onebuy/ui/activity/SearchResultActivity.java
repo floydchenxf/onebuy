@@ -56,7 +56,7 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
             public void onPullDownToRefresh() {
                 pageNo = 1;
                 needClear = true;
-                loadData(true);
+                loadData(false);
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
 

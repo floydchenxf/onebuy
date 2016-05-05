@@ -108,7 +108,6 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
         mRefreshListView = mPullToRefreshListView.getRefreshableView();
 
-//        banneLayout = (LinearLayout) view.findViewById(R.id.banne_layout);
         initListViewHeader();
         productAdapter = new ProductAdapter(getActivity(), new ArrayList<WinningInfo>());
         mRefreshListView.setAdapter(productAdapter);

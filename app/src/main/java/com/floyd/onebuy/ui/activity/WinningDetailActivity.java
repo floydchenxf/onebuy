@@ -371,7 +371,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             case R.id.buy_now_view:
                 if (LoginManager.isLogin(this)) {
                     long userId = LoginManager.getLoginInfo(this).ID;
-                    CarManager.addCar(id, userId).startUI(new ApiCallback<Boolean>() {
+                    CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();

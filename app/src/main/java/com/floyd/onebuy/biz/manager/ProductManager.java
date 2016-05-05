@@ -294,6 +294,13 @@ public class ProductManager {
         return result;
     }
 
+    /**
+     * 搜索产品信息
+     * @param keywords
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
     public static AsyncJob<List<WinningInfo>> searchProduct(String keywords, int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
@@ -329,6 +336,5 @@ public class ProductManager {
             }
         });
     }
-
 
 }
