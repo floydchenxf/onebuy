@@ -8,6 +8,7 @@ public class OwnerVO {
     public long userId;
     public String userName;
     public int joinNumber;
-    public String winNumber;
+    public String winNumber;//中奖号码
+    public String avatar;//头像
     public long winTime;
 }

@@ -1,5 +1,7 @@
 package com.floyd.onebuy.biz.vo.model;
 
+import com.floyd.onebuy.biz.vo.product.OwnerVO;
+
 /**
  * Created by floyd on 16-4-13.
  * 奖品信息
@@ -8,6 +10,7 @@ public class WinningInfo {
 
     public long id;//奖品id
     public long lssueId;//期数
+    public long productId;//商品Id
     public String productUrl;//产品图片url
     public String title; //标题
     public String processPrecent;//完成百分比
@@ -17,6 +20,7 @@ public class WinningInfo {
 
     public long lotteryTime;//开奖时间
     public int status;//类型 1 选择商品，　２：开奖　３．已开奖
+    public OwnerVO ownerVO; //中奖者
 
     public long getId() {
         return id;

@@ -156,14 +156,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         }
     };
 
-    private View.OnClickListener allProductClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_all_product));
-        }
-    };
-
-    private View.OnClickListener[] listeners = new View.OnClickListener[] {allProductClick, allProductClick, null, null};
+    private View.OnClickListener[] listeners = null;
 
     public static IndexFragment newInstance(String param1, String param2) {
         IndexFragment fragment = new IndexFragment();
@@ -370,6 +363,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     }
 
                     int idx = 0;
+                    TypeClickListener tenTypeClickListener = new TypeClickListener(typeCodes[0]);
+                    TypeClickListener hundeTypeClickListener = new TypeClickListener(typeCodes[1]);
+                    listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, null,null,null};
                     for (Long l:typeCodes) {
                         int k = idx++;
                         ProductTypeVO vv = productTypeVOMap.get(l);
@@ -588,12 +584,18 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     }
 
-    /**
-     * 跳转到ListView的最上方
-     */
-    public void gotoTop() {
-        if (mListView != null) {
-            mListView.setSelection(0);
+
+    private static class TypeClickListener implements View.OnClickListener {
+        private long typeId;
+        public TypeClickListener(long typeId) {
+            this.typeId = typeId;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put(APIConstants.INDEX_PRODUCT_TYPE_ID, typeId);
+            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_all_product, data));
         }
     }
 

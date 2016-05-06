@@ -273,15 +273,13 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     return;
                 }
 
-                long productLssueId = 0l;
+                StringBuilder productLssueDetail = new StringBuilder();
                 final Set<Long> delCarIds = new HashSet<Long>();
                 for (WinningInfo info : mBuyCarAdapter.getRecords()) {
                     delCarIds.add(info.id);
-                    if (productLssueId == 0l) {
-                        productLssueId = info.lssueId;
-                    }
+                    productLssueDetail.append(info.lssueId).append("|").append(info.buyCount).append(",");
                 }
-                OrderManager.createOrder(vo.ID, productLssueId, vo.Name, vo.Mobile, "浙江杭州", "").startUI(new ApiCallback<OrderVO>() {
+                OrderManager.createOrder(vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, "浙江杭州", "").startUI(new ApiCallback<OrderVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
@@ -310,8 +308,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                             }
                         });
-
-
                     }
 
                     @Override

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
@@ -25,6 +27,10 @@ import java.util.List;
  */
 public class NewOwnerFragment extends BackHandledFragment implements View.OnClickListener {
 
+    private static final int PAGE_SIZE = 10;
+
+    private int pageNo = 1;
+    private boolean needClear = true;
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
     private DataLoadingView dataLoadingView;
@@ -54,38 +60,56 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
         dataLoadingView.initView(view, this);
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
         mListView = mPullToRefreshListView.getRefreshableView();
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
+                pageNo = 1;
+                needClear = true;
+                loadData(false);
+                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
             public void onPullUpToRefresh() {
+                pageNo++;
+                needClear = false;
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
         productLssueAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(productLssueAdapter);
-        loadData();
+        loadData(true);
         return view;
     }
 
-    private void loadData() {
-        List<WinningInfo> winningRecordVOs = new ArrayList<WinningInfo>();
-        for(int i = 0; i < 1; i++) {
-            WinningInfo vo  = new WinningInfo();
-            vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
-            vo.joinedCount=i+ 1;
-            vo.totalCount = 100;
-            vo.id = i+1;
-            vo.processPrecent=(50+i)+"";
-            vo.title = "小米手机５｜｜精彩开奖就送苹果";
-            vo.status = 2;
-            vo.lotteryTime = System.currentTimeMillis() + 100000;
-            winningRecordVOs.add(vo);
+    private void loadData(final boolean isFirst) {
+        if (isFirst) {
+            dataLoadingView.startLoading();
         }
-        productLssueAdapter.addAll(winningRecordVOs, true);
+
+        ProductManager.getNewestProductLssues(PAGE_SIZE, pageNo).startUI(new ApiCallback<List<WinningInfo>>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                if (isFirst) {
+                    dataLoadingView.loadFail();
+                }
+            }
+
+            @Override
+            public void onSuccess(List<WinningInfo> winningInfos) {
+                if (isFirst) {
+                    dataLoadingView.loadSuccess();
+                }
+                productLssueAdapter.addAll(winningInfos, needClear);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+
     }
 
     @Override
@@ -95,6 +119,13 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.act_ls_fail_layout:
+                pageNo = 1;
+                needClear = true;
+                loadData(true);
+                break;
+        }
 
     }
 }

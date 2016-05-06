@@ -39,6 +39,7 @@ import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -379,7 +380,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
                         @Override
                         public void onSuccess(Boolean s) {
-                            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car));
+                            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car, new HashMap<String, Object>()));
                         }
 
                         @Override

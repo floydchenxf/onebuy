@@ -28,4 +28,5 @@ public class APIConstants {
 
 
     public static final String PRO_ID = "PRO_ID";//产品id
+    public static final String INDEX_PRODUCT_TYPE_ID = "INDEX_PRODUCT_TYPE_ID";
 }

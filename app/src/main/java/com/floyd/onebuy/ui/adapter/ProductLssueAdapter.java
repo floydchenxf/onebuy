@@ -79,7 +79,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     Message newMsg = new Message();
                     newMsg.what = TIME_EVENT;
                     newMsg.obj = o;
-                    mHandler.sendMessageDelayed(newMsg, 200);
+                    mHandler.sendMessageDelayed(newMsg, 300);
                     break;
             }
         }
