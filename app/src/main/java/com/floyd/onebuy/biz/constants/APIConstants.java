@@ -14,6 +14,8 @@ public class APIConstants {
     public static final String JIFENG_MODULE = "JiFengRecordService.ashx";
     public static final String CAR_MODULE = "CarService.ashx";
     public static final String ORDER_MODULE = "OrderService.ashx";
+    public static final String IMGAEINFO_MODULE = "ImgaeInfoService.ashx";
+    public static final String ADDRESS_MODULE = "AddressService.ashx";
 
     public static final String API_GET_ADVERT_LIST = "api/index/getAdvertList";//获取广告
     public static final String API_GET_MOTE_LIST = "api/index/getMoteList"; //获取首页模特信息
@@ -29,4 +31,5 @@ public class APIConstants {
 
     public static final String PRO_ID = "PRO_ID";//产品id
     public static final String INDEX_PRODUCT_TYPE_ID = "INDEX_PRODUCT_TYPE_ID";
+    public static final String PAY_ORDER_NO = "PAY_ORDER_NO";
 }

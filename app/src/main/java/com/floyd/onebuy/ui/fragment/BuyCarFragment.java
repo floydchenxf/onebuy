@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
@@ -21,6 +23,7 @@ import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.PayResultActivity;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -300,7 +303,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                                 mBuyCarAdapter.showRadiio(isEdit);
                                 pageNo = 1;
                                 needClear = true;
-                                loadData(false);
+//                                loadData(false);
                             }
 
                             @Override
@@ -308,6 +311,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                             }
                         });
+                        Intent intent = new Intent(getActivity(), PayResultActivity.class);
+                        intent.putExtra(APIConstants.PAY_ORDER_NO, orderVO.orderNum);
+                        startActivity(intent);
                     }
 
                     @Override

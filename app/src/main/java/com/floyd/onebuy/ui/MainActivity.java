@@ -122,7 +122,7 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
             Object o = data.get(APIConstants.INDEX_PRODUCT_TYPE_ID);
             if (o != null) {
                 Long typeId =(Long)o;
-                ((AllProductFragemnt)mBackHandedFragment).switchType(typeId);
+                ((AllProductFragemnt)fragments.get(1)).switchType(typeId);
             }
         }
     }

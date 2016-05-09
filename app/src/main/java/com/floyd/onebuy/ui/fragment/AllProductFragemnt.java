@@ -121,7 +121,7 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
             public void onPullDownToRefresh() {
                 needClear = true;
                 pageNo = 1;
-                loadData(false);
+                loadPageData();
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
 

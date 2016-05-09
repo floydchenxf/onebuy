@@ -114,5 +114,6 @@
     <string name="title_activity_address_manager">AddressManagerActivity</string>
     <string name="title_activity_history_prize">HistoryPrizeActivity</string>
     <string name="title_activity_ji_feng">JiFengActivity</string>
+    <string name="title_activity_pay_result">PayResultActivity</string>
 
     </resources>

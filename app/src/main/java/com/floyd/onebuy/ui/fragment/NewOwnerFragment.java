@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
@@ -58,6 +59,10 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
         final View view = inflater.inflate(R.layout.fragment_new_owner, container, false);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(view, this);
+        view.findViewById(R.id.title_back).setVisibility(View.GONE);
+        TextView titleNameView = (TextView)view.findViewById(R.id.title_name);
+        titleNameView.setText("最新揭晓");
+        titleNameView.setVisibility(View.VISIBLE);
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
         mListView = mPullToRefreshListView.getRefreshableView();
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
