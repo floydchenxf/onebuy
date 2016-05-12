@@ -32,4 +32,5 @@ public class APIConstants {
     public static final String PRO_ID = "PRO_ID";//产品id
     public static final String INDEX_PRODUCT_TYPE_ID = "INDEX_PRODUCT_TYPE_ID";
     public static final String PAY_ORDER_NO = "PAY_ORDER_NO";
+    public static final String ADDRESS_MANAGEMENT_VO = "ADDRESS_MANAGEMENT_VO";
 }
