@@ -49,31 +49,39 @@ public class PayResultAdapter extends BaseDataAdapter<WinningInfo> {
 
             List<String> tmpList = new ArrayList<String>();
             if (joinedNums.size() >= 6) {
-                System.arraycopy(joinedNums, 0, tmpList, 0, 5);
+                for(int i=0; i<5; i++) {
+                    tmpList.add(joinedNums.get(i));
+                }
                 tmpList.add("更多");
             } else {
-                System.arraycopy(joinedNums, 0, tmpList, 0, joinedNums.size());
+                tmpList.addAll(joinedNums);
             }
 
             int lines = tmpList.size() % 3 == 0 ? tmpList.size() / 3 : tmpList.size() / 3 + 1;
             for (int i = 0; i < lines; i++) {
                 LinearLayout layout = (LinearLayout) View.inflate(mContext, R.layout.joined_num_item, null);
+                joinedNumLayout.addView(layout);
                 TextView text1 = (TextView) layout.findViewById(R.id.join_number_1);
                 TextView text2 = (TextView) layout.findViewById(R.id.join_number_2);
                 TextView text3 = (TextView) layout.findViewById(R.id.join_number_3);
                 int k = i * 3;
-                if (k < joinedNums.size()) {
-                    text1.setText(joinedNums.get(k));
+                if (k < tmpList.size()) {
+                    text1.setText(tmpList.get(k));
+                    text1.setVisibility(View.VISIBLE);
+                } else {
+                    text1.setVisibility(View.GONE);
                 }
 
-                if (k + 1 < joinedNums.size()) {
-                    text2.setText(joinedNums.get(k + 1));
+                if (k + 1 < tmpList.size()) {
+                    text2.setText(tmpList.get(k + 1));
+                    text2.setVisibility(View.VISIBLE);
                 } else {
                     text2.setVisibility(View.GONE);
                 }
 
-                if (k + 2 < joinedNums.size()) {
-                    text3.setText(joinedNums.get(k + 2));
+                if (k + 2 < tmpList.size()) {
+                    text3.setText(tmpList.get(k + 2));
+                    text3.setVisibility(View.VISIBLE);
                 } else {
                     text3.setVisibility(View.GONE);
                 }

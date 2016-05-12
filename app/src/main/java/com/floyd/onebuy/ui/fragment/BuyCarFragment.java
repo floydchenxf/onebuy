@@ -14,11 +14,13 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.manager.AddressManager;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
-import com.floyd.onebuy.biz.vo.json.OrderVO;
+import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
+import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
@@ -282,14 +284,21 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     delCarIds.add(info.id);
                     productLssueDetail.append(info.lssueId).append("|").append(info.buyCount).append(",");
                 }
-                OrderManager.createOrder(vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, "浙江杭州", "").startUI(new ApiCallback<OrderVO>() {
+
+                GoodsAddressVO goodsAddressVO = AddressManager.getDefaultAddressInfo(getActivity());
+                String address = "";
+                if (goodsAddressVO != null) {
+                    address = goodsAddressVO.getFullAddress();
+                }
+
+                OrderManager.createAndPayOrder(vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSuccess(OrderVO orderVO) {
+                    public void onSuccess(OrderPayVO orderVO) {
                         CarManager.delCar(delCarIds).startUI(new ApiCallback<Boolean>() {
                             @Override
                             public void onError(int code, String errorInfo) {

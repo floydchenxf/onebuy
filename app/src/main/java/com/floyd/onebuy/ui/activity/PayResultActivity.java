@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
@@ -32,6 +33,10 @@ public class PayResultActivity extends Activity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_result);
+        findViewById(R.id.title_back).setOnClickListener(this);
+        TextView titleName = (TextView) findViewById(R.id.title_name);
+        titleName.setText("付款成功");
+        titleName.setVisibility(View.VISIBLE);
         orderNo = getIntent().getStringExtra(APIConstants.PAY_ORDER_NO);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);

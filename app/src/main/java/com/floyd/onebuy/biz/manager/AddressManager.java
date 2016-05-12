@@ -40,7 +40,7 @@ public class AddressManager {
      * @param context
      * @return
      */
-    public GoodsAddressVO getDefaultAddressInfo(Context context) {
+    public static GoodsAddressVO getDefaultAddressInfo(Context context) {
         String data = PrefsTools.getStringPrefs(context, DEFAULT_ADDRESS_INFO, "");
         if (TextUtils.isEmpty(data)) {
             return null;

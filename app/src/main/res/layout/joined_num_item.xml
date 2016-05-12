@@ -7,30 +7,36 @@
     <TextView
         android:id="@+id/join_number_1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="1"
         android:ellipsize="middle"
+        android:gravity="center_vertical"
         android:singleLine="true"
+        android:text="test1"
         android:textColor="#666666"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/join_number_2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="1"
         android:ellipsize="middle"
+        android:gravity="center_vertical"
         android:singleLine="true"
+        android:text="test2"
         android:textColor="#666666"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/join_number_3"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="1"
         android:ellipsize="middle"
+        android:gravity="center_vertical"
         android:singleLine="true"
+        android:text="test3"
         android:textColor="#666666"
         android:textSize="12sp" />
 

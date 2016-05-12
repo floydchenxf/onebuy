@@ -477,17 +477,22 @@ public class ProductManager {
             info.code = wjson.getString("ProductLssueCode");
             info.productId = wjson.getLong("ProID");
             info.totalCount = wjson.getInt("TotalCount");
-            info.joinedCount = wjson.getInt("JoinedCount");
+            info.joinedCount = wjson.getInt("JonidedCount");
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            info.lotteryTime = wjson.getLong("PriceTime");
+            String priceTime = wjson.getString("PriceTime");
+            info.lotteryTime = TextUtils.isEmpty(priceTime)?0:Long.parseLong(priceTime);
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
-                JSONArray jj = wjson.getJSONArray("ClientCodeList");
-                for(int j=0;j<jj.length(); j++) {
-                    String clientCode = jj.getString(j);
-                    codeList.add(clientCode);
+                String aa = wjson.getString("ClientCodeList");
+                if (!TextUtils.isEmpty(aa)) {
+
+                    String[] jj = aa.split(",");
+                    for(int j=0;j<jj.length; j++) {
+                        String clientCode = jj[j];
+                        codeList.add(clientCode);
+                    }
                 }
 
                 info.myPrizeCodes = codeList;
