@@ -1,6 +1,7 @@
 package com.floyd.onebuy.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,6 +12,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +105,9 @@ public class ProductAdapter extends BaseAdapter {
             holder.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.putExtra("productId", info1.productId);
+                    mContext.startActivity(it);
                 }
             });
             final WinningInfo info2 = mList.get(start + 1);
@@ -113,7 +117,9 @@ public class ProductAdapter extends BaseAdapter {
             holder.layout2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.putExtra("productId", info2.productId);
+                    mContext.startActivity(it);
                 }
             });
             final WinningInfo info3 = mList.get(start + 2);
@@ -123,7 +129,9 @@ public class ProductAdapter extends BaseAdapter {
             holder.layout3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.putExtra("productId", info3.productId);
+                    mContext.startActivity(it);
                 }
             });
         } else {
@@ -134,7 +142,9 @@ public class ProductAdapter extends BaseAdapter {
             holder.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.putExtra("productId", info1.productId);
+                    mContext.startActivity(it);
                 }
             });
 
@@ -151,7 +161,9 @@ public class ProductAdapter extends BaseAdapter {
                 holder.layout2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        Intent it = new Intent(mContext, WinningDetailActivity.class);
+                        it.putExtra("productId", info2.productId);
+                        mContext.startActivity(it);
                     }
                 });
                 holder.layout3.setVisibility(View.INVISIBLE);

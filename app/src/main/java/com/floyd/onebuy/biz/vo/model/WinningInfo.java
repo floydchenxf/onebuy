@@ -40,4 +40,5 @@ public class WinningInfo {
     public String getTitle() {
         return title;
     }
+
 }

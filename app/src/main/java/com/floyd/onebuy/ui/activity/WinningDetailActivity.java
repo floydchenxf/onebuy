@@ -50,6 +50,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private static final int PAGE_SIZE = 10;
 
     private Long id;
+    private Long productId;
     private int pageNo = 1;
     private WinningDetailInfo winningDetailInfo;
 
@@ -100,6 +101,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.title_name)).setText("商品详情");
         id = getIntent().getLongExtra("id", 0l);
+        productId = getIntent().getLongExtra("productId",0l);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
@@ -208,12 +210,19 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             userId = userVO.ID;
         }
 
-        ProductManager.fetchProductLssuePageData(id, userId).startUI(new ApiCallback<WinningDetailInfo>() {
+        Long lssueId = null;
+        if (id != null && id != 0l) {
+            lssueId = id;
+        }
+
+        ProductManager.fetchProductLssueDetail(lssueId, productId, userId).startUI(new ApiCallback<WinningDetailInfo>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
                     dataLoadingView.loadFail();
                 }
+                Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                WinningDetailActivity.this.finish();
             }
 
             @Override
@@ -223,6 +232,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 }
 
                 WinningDetailActivity.this.winningDetailInfo = winningDetailInfo;
+                id = winningDetailInfo.id;
                 StringBuilder titleAndStatusSb = new StringBuilder();
                 int status = winningDetailInfo.status;
                 if (status == 0 || status == 1) {
@@ -230,7 +240,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     gotoJoinLayout.setVisibility(View.GONE);
                     progressLayout.setVisibility(View.VISIBLE);
                     ProgressVO progressVO = winningDetailInfo.progressVO;
-                    totalView.setText(Html.fromHtml("总需<font color=\"red\">"+progressVO.TotalCount+"</font>"));
+                    totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>"));
                     leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>"));
                     progressBar.setProgress(progressVO.getPrecent());
                     joinLayout.setVisibility(View.VISIBLE);
@@ -238,7 +248,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     titleAndStatusSb.append("进行中");
                 } else if (status == 2) {
                     titleAndStatusSb.append("开奖中");
-                }else if (status == 3) {
+                } else if (status == 3) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
@@ -262,19 +272,34 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 } else {
                     mHeaderViewIndicator.setVisibility(View.VISIBLE);
                 }
-                List<JoinVO> myJoinedRecords = winningDetailInfo.myJoinedRecords;
-                if (myJoinedRecords == null||myJoinedRecords.isEmpty()) {
+
+                UserVO userVO = LoginManager.getLoginInfo(WinningDetailActivity.this);
+                if (userVO == null) {
                     noJoinView.setVisibility(View.VISIBLE);
-                    noJoinView.setText(R.string.no_join_desc);
+                    noJoinView.setText(R.string.no_login);
                     userNickView.setVisibility(View.GONE);
                     joinNumberView.setVisibility(View.GONE);
+                    noJoinView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent it = new Intent(WinningDetailActivity.this, LoginActivity.class);
+                            startActivity(it);
+                        }
+                    });
                 } else {
-                    noJoinView.setVisibility(View.GONE);
-                    userNickView.setVisibility(View.VISIBLE);
-                    joinNumberView.setVisibility(View.VISIBLE);
-                    joinNumberView.setText(myJoinedRecords.get(0).Number);
+                    noJoinView.setOnClickListener(null);
+                    if (winningDetailInfo.isGet) {
+                        noJoinView.setVisibility(View.GONE);
+                        userNickView.setVisibility(View.VISIBLE);
+                        joinNumberView.setVisibility(View.VISIBLE);
+                        joinNumberView.setText("Test");
+                    } else {
+                        noJoinView.setVisibility(View.VISIBLE);
+                        noJoinView.setText(R.string.no_join_desc);
+                        userNickView.setVisibility(View.GONE);
+                        joinNumberView.setVisibility(View.GONE);
+                    }
                 }
-
 
                 adapter.addAll(winningDetailInfo.allJoinedRecords, true);
             }
@@ -361,7 +386,6 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 loadData(true);
                 break;
             case R.id.join_buy_car_view:
-//                buyCarPopup.showPopUpWindow();
                 if (LoginManager.isLogin(this)) {
                     long userId = LoginManager.getLoginInfo(this).ID;
                     CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
@@ -372,6 +396,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
                         @Override
                         public void onSuccess(Boolean s) {
+                            Toast.makeText(WinningDetailActivity.this, "添加购物车成功", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

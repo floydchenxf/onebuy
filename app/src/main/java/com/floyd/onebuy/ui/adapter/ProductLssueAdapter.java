@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,17 +15,22 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
+import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by floyd on 16-4-24.
@@ -35,8 +41,10 @@ public class ProductLssueAdapter extends BaseAdapter {
     private List<WinningInfo> records = new ArrayList<WinningInfo>();
     private ImageLoader mImageLoader;
 
-    private Map<Long, Boolean> requets = new HashMap<Long, Boolean>();
     private static final int TIME_EVENT = 1;
+
+    private Set<Long> requestSet = new ConcurrentSkipListSet<>();
+    private Map<Long, Integer> callTimes = new ConcurrentHashMap<Long, Integer>();
 
     private Handler mHandler = new Handler() {
 
@@ -70,6 +78,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     long left = itemVO.lotteryTime - ServerTimeManager.getServerTime();
                     if (left <= 0) {
                         timeView.setText("正在计算...");
+                        getWinnerInfo(itemVO);
                         return;
                     } else {
                         String dateLeft = DateUtil.getDateBefore(itemVO.lotteryTime, ServerTimeManager.getServerTime());
@@ -84,6 +93,51 @@ public class ProductLssueAdapter extends BaseAdapter {
             }
         }
     };
+
+    private synchronized void getWinnerInfo(final WinningInfo itemVO) {
+        long lssueId = itemVO.lssueId;
+        if (!requestSet.contains(lssueId)) {
+            Integer callNum = callTimes.get(lssueId);
+            if (callNum == null) {
+                callNum = 0;
+                callTimes.put(lssueId, callNum);
+            }
+
+            if (callNum > 1) {
+                return;
+            }
+            Log.i("ProductLssueAdapter", "-----------request winner for" + itemVO.lssueId);
+            requestSet.add(lssueId);
+            ProductManager.getWinnerInfo(lssueId).startUI(new ApiCallback<OwnerExtVO>() {
+                @Override
+                public void onError(int code, String errorInfo) {
+                    long tmpId = itemVO.lssueId;
+                    requestSet.remove(tmpId);
+                    Integer num = callTimes.get(tmpId);
+                    num++;
+                    callTimes.put(tmpId, num);
+                }
+
+                @Override
+                public void onSuccess(OwnerExtVO ownerExtVO) {
+                    for (WinningInfo info : records) {
+                        if (info.lssueId == ownerExtVO.lssueId) {
+                            info.ownerVO = ownerExtVO;
+                            info.status = ownerExtVO.status;
+                            break;
+                        }
+                    }
+
+                    ProductLssueAdapter.this.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onProgress(int progress) {
+
+                }
+            });
+        }
+    }
 
     public ProductLssueAdapter(Context context, List<WinningInfo> records, ImageLoader imageLoader) {
         this.mContext = context;
@@ -191,6 +245,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
                     it.putExtra("id", winningInfo.lssueId);
+                    it.putExtra("productId", winningInfo.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -200,6 +255,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
                     it.putExtra("id", winningInfo2.lssueId);
+                    it.putExtra("productId", winningInfo2.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -212,7 +268,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 viewHolder.ownerLayout1.setVisibility(View.GONE);
                 int precent = 0;
                 if (winningInfo.totalCount > 0) {
-                    precent = winningInfo.joinedCount* 100 / winningInfo.totalCount;
+                    precent = winningInfo.joinedCount * 100 / winningInfo.totalCount;
                 }
                 viewHolder.progressPrecentView1.setProgress(precent);
                 viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
@@ -224,8 +280,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 long left = winningInfo.lotteryTime - ServerTimeManager.getServerTime();
                 if (left <= 0) {
                     viewHolder.leftTimeView1.setText("正在计算...");
-//                    Toast.makeText(mContext, "goto web work...", Toast.LENGTH_SHORT).show();
-                    //TODO 获取数据
+                    getWinnerInfo(winningInfo);
                 } else {
                     String dateleft = DateUtil.getDateBefore(winningInfo.lotteryTime, ServerTimeManager.getServerTime());
                     viewHolder.leftTimeView1.setText(dateleft);
@@ -244,7 +299,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 viewHolder.lottestLayout1.setVisibility(View.GONE);
                 viewHolder.ownerLayout1.setVisibility(View.VISIBLE);
                 viewHolder.winningOwnerView1.setText(winningInfo.ownerVO.userName);
-                viewHolder.joinWinningTimesView1.setText(winningInfo.ownerVO.joinNumber+"人次");
+                viewHolder.joinWinningTimesView1.setText(winningInfo.ownerVO.joinNumber + "人次");
                 viewHolder.goodLuckNumView1.setText(winningInfo.ownerVO.winNumber);
                 String dateString = DateUtil.getDateTime(winningInfo.ownerVO.winTime);
                 viewHolder.lottestTimeView1.setText(dateString);
@@ -267,8 +322,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 viewHolder.ownerLayout2.setVisibility(View.GONE);
                 if (left <= 0) {
                     viewHolder.leftTimeView2.setText("正在计算...");
-//                    Toast.makeText(mContext, "goto web work...", Toast.LENGTH_SHORT).show();
-                    //TODO 获取数据
+                    getWinnerInfo(winningInfo2);
                 } else {
                     String dateleft2 = DateUtil.getDateBefore(winningInfo2.lotteryTime, ServerTimeManager.getServerTime());
                     viewHolder.leftTimeView2.setText(dateleft2);
@@ -286,7 +340,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 viewHolder.lottestLayout2.setVisibility(View.GONE);
                 viewHolder.ownerLayout2.setVisibility(View.VISIBLE);
                 viewHolder.winningOwnerView2.setText(winningInfo2.ownerVO.userName);
-                viewHolder.joinWinningTimesView2.setText(winningInfo2.ownerVO.joinNumber+"人次");
+                viewHolder.joinWinningTimesView2.setText(winningInfo2.ownerVO.joinNumber + "人次");
                 viewHolder.goodLuckNumView2.setText(winningInfo2.ownerVO.winNumber);
                 String dateString = DateUtil.getDateTime(winningInfo2.ownerVO.winTime);
                 viewHolder.lottestTimeView2.setText(dateString);
@@ -312,6 +366,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
                     it.putExtra("id", winningInfo.lssueId);
+                    it.putExtra("productId", winningInfo.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -335,7 +390,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 long left = winningInfo.lotteryTime - ServerTimeManager.getServerTime();
                 if (left <= 0) {
                     viewHolder.leftTimeView1.setText("正在计算...");
-//                    Toast.makeText(mContext, "goto web work...", Toast.LENGTH_SHORT).show();
+                    getWinnerInfo(winningInfo);
                     //TODO 获取数据
                 } else {
                     String dateleft = DateUtil.getDateBefore(winningInfo.lotteryTime, ServerTimeManager.getServerTime());
@@ -354,7 +409,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 viewHolder.lottestLayout1.setVisibility(View.GONE);
                 viewHolder.ownerLayout1.setVisibility(View.VISIBLE);
                 viewHolder.winningOwnerView1.setText(winningInfo.ownerVO.userName);
-                viewHolder.joinWinningTimesView1.setText(winningInfo.ownerVO.joinNumber+"人次");
+                viewHolder.joinWinningTimesView1.setText(winningInfo.ownerVO.joinNumber + "人次");
                 viewHolder.goodLuckNumView1.setText(winningInfo.ownerVO.winNumber);
                 String dateString = DateUtil.getDateTime(winningInfo.ownerVO.winTime);
                 viewHolder.lottestTimeView1.setText(dateString);

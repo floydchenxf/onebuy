@@ -67,7 +67,7 @@ public class AddressManagerActivity extends Activity implements View.OnClickList
     private void loadData() {
         dataLoadingView.startLoading();
         long userId = LoginManager.getLoginInfo(this).ID;
-        AddressManager.getMyAddressList(userId, PAGE_SIZE, 1).startUI(new ApiCallback<List<GoodsAddressVO>>() {
+        AddressManager.getMyAddressList(this, userId, PAGE_SIZE, 1).startUI(new ApiCallback<List<GoodsAddressVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 dataLoadingView.loadFail();

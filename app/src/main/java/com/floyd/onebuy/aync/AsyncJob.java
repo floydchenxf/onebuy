@@ -16,6 +16,26 @@ public abstract class AsyncJob<T> {
 
     public abstract void start(ApiCallback<T> callback);
 
+    public void start() {
+        final AsyncJob<T> source = this;
+        source.start(new ApiCallback<T>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+
+            }
+
+            @Override
+            public void onSuccess(T t) {
+
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+    }
+
     public void startUI(final ApiCallback<T> callback) {
         final AsyncJob<T> source = this;
         source.start(new ApiCallback<T>() {

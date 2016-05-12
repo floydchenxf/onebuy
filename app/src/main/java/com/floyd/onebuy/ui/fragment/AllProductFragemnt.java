@@ -38,7 +38,7 @@ import java.util.concurrent.CountDownLatch;
 public class AllProductFragemnt extends BackHandledFragment implements View.OnClickListener {
 
     public static final int CHANGE_PRODUCT_BANNER_HANDLER_MSG_WHAT = 52;
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 12;
     private PullToRefreshListView mPullToRefreshListView;
 
     private ListView mRefreshListView;

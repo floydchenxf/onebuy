@@ -13,6 +13,7 @@ import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
+import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueListVO;
@@ -85,6 +86,7 @@ public class ProductManager {
                         info.productUrl = APIConstants.HOST + v.Pictures;
                         info.title = v.ProName;
                         info.id = v.ProID;
+                        info.productId = v.ProID;
                         info.lssueId = v.ProductLssueID;
                         info.status = 0;
                         winningInfos.add(info);
@@ -137,13 +139,68 @@ public class ProductManager {
                     WinningInfo info = new WinningInfo();
                     info.joinedCount = vo.JoinedCount;
                     info.totalCount = vo.TotalCount;
+                    info.lssueId = vo.ProductLssueID;
                     info.id = vo.ProID;
+                    info.productId = vo.ProID;
                     info.status = 1;
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
                     result.add(info);
                 }
                 return result;
+            }
+        });
+    }
+
+    /**
+     * 获取期数商品详情
+     *
+     * @param lssueId 可以不传 0
+     * @param cid     必须有，商品id
+     * @param userId  可以不传
+     * @return
+     */
+    public static AsyncJob<WinningDetailInfo> fetchProductLssueDetail(Long lssueId, long cid, Long userId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetProductLssueDetail");
+        params.put("cId", cid + "");
+        String lssueIdStr = "";
+        if (lssueId != null) {
+            lssueIdStr = lssueId + "";
+        }
+        params.put("productLssueID", lssueIdStr);
+
+        String userIdStr = "";
+        if (userId != null && userId != 0l) {
+            userIdStr = userId + "";
+        }
+        params.put("userId", userIdStr);
+
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<WinningDetailInfo>>() {
+            @Override
+            public AsyncJob<WinningDetailInfo> call(final String s) {
+                return new AsyncJob<WinningDetailInfo>() {
+                    @Override
+                    public void start(ApiCallback<WinningDetailInfo> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONObject data = j.getJSONObject("data");
+                                WinningDetailInfo detailInfo = convert2Obj(data);
+                                callback.onSuccess(detailInfo);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+
+                    }
+                };
             }
         });
     }
@@ -204,8 +261,8 @@ public class ProductManager {
                 int idx = 0;
                 for (String i : ii) {
                     AdvVO vo = new AdvVO();
-                    vo.imgUrl = APIConstants.PIC_PATH_110 + i;
-                    vo.title = APIConstants.PIC_PATH_110 + i;
+                    vo.imgUrl = APIConstants.PIC_PATH_360 + i;
+                    vo.title = APIConstants.PIC_PATH_360 + i;
                     vo.id = ++idx;
                     advVOs.add(vo);
                 }
@@ -232,6 +289,10 @@ public class ProductManager {
             }.getType();
             List<JoinVO> joinVOs = GsonHelper.getGson().fromJson(joinStr, type);
             detailInfo.allJoinedRecords = joinVOs;
+        }
+
+        if (data.has("isGet")) {
+            detailInfo.isGet = data.getBoolean("isGet");
         }
 
         return detailInfo;
@@ -330,6 +391,7 @@ public class ProductManager {
                     info.joinedCount = vo.JoinedCount;
                     info.totalCount = vo.TotalCount;
                     info.id = vo.ProID;
+                    info.productId = vo.ProID;
                     info.status = 1;
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
@@ -403,14 +465,11 @@ public class ProductManager {
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            info.lotteryTime = wjson.getLong("PriceTime");
+            if (wjson.has("PriceTime")) {
+                info.lotteryTime = wjson.getLong("PriceTime") * 1000;
+            }
             if (wjson.has("winnerInfo")) {
-                OwnerVO ownerVO = new OwnerVO();
-                JSONObject ownerInfoJson = wjson.getJSONObject("winnerInfo");
-                ownerVO.userId = ownerInfoJson.getLong("PrizeClientID");
-                ownerVO.avatar = ownerInfoJson.getString("PrizeClientPic");
-                ownerVO.userName = ownerInfoJson.getString("PrizeClientName");
-                ownerVO.winNumber = ownerInfoJson.getString("PrizeCode");
+                OwnerVO ownerVO = convert2OwnerVO(wjson);
                 info.ownerVO = ownerVO;
             }
             infoList.add(info);
@@ -418,8 +477,25 @@ public class ProductManager {
         return infoList;
     }
 
+    private static OwnerVO convert2OwnerVO(JSONObject wjson) throws JSONException {
+        OwnerVO ownerVO = new OwnerVO();
+        JSONObject ownerInfoJson = wjson.getJSONObject("winnerInfo");
+        ownerVO.userId = ownerInfoJson.getLong("PrizeClientID");
+        ownerVO.avatar = ownerInfoJson.getString("PrizeClientPic");
+        ownerVO.userName = ownerInfoJson.getString("PrizeClientName");
+        if (ownerInfoJson.has("PrizeCode")) {
+            ownerVO.winNumber = ownerInfoJson.getString("PrizeCode");
+        }
+
+        if (ownerInfoJson.has("PriceTime")) {
+            ownerVO.winTime = ownerInfoJson.getLong("PriceTime") * 1000;
+        }
+        return ownerVO;
+    }
+
     /**
      * 根据订单号获取夺宝记录
+     *
      * @param userId
      * @param orderNo
      * @return
@@ -464,7 +540,7 @@ public class ProductManager {
     }
 
     private static List<WinningInfo> convert2MyOrderCodes(JSONArray data) throws JSONException {
-        if (data == null||data.length() <=0) {
+        if (data == null || data.length() <= 0) {
             return null;
         }
 
@@ -477,22 +553,180 @@ public class ProductManager {
             info.code = wjson.getString("ProductLssueCode");
             info.productId = wjson.getLong("ProID");
             info.totalCount = wjson.getInt("TotalCount");
-            info.joinedCount = wjson.getInt("JoinedCount");
+            info.joinedCount = wjson.getInt("JoinCount");
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            info.lotteryTime = wjson.getLong("PriceTime");
+            String priceTime = wjson.getString("PriceTime");
+            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
-                JSONArray jj = wjson.getJSONArray("ClientCodeList");
-                for(int j=0;j<jj.length(); j++) {
-                    String clientCode = jj.getString(j);
-                    codeList.add(clientCode);
+                String aa = wjson.getString("ClientCodeList");
+                if (!TextUtils.isEmpty(aa)) {
+
+                    String[] jj = aa.split(",");
+                    for (int j = 0; j < jj.length; j++) {
+                        String clientCode = jj[j];
+                        codeList.add(clientCode);
+                    }
                 }
 
                 info.myPrizeCodes = codeList;
             }
             infoList.add(info);
+        }
+        return infoList;
+    }
+
+    /**
+     * 根据期数获取获奖者信息
+     *
+     * @param lssueId
+     * @return
+     */
+    public static AsyncJob<OwnerExtVO> getWinnerInfo(final long lssueId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetWinnerInfo");
+        params.put("productLssueID", lssueId + "");
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<OwnerExtVO>>() {
+            @Override
+            public AsyncJob<OwnerExtVO> call(final String s) {
+
+                return new AsyncJob<OwnerExtVO>() {
+                    @Override
+                    public void start(ApiCallback<OwnerExtVO> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONObject data = j.getJSONObject("data");
+                                int winnerStatus = data.getInt("Status");
+                                OwnerVO ownerVO = convert2OwnerVO(data);
+                                if (ownerVO == null) {
+                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
+                                    return;
+                                }
+
+                                OwnerExtVO ownerExtVO = new OwnerExtVO();
+                                ownerExtVO.status = status;
+                                ownerExtVO.userName = ownerVO.userName;
+                                ownerExtVO.winNumber = ownerVO.winNumber;
+                                ownerExtVO.avatar = ownerVO.avatar;
+                                ownerExtVO.userId = ownerVO.userId;
+                                ownerExtVO.winTime = ownerVO.winTime;
+                                ownerExtVO.joinNumber = ownerVO.joinNumber;
+                                ownerExtVO.lssueId = lssueId;
+
+                                callback.onSuccess(ownerExtVO);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    /**
+     * 获取用户的夺宝记录
+     * @param userId
+     * @param pageSize
+     * @param pageNum
+     * @param orderType
+     * @return
+     */
+    public static AsyncJob<List<WinningInfo>> getPrizeHistory(long userId, int pageSize, int pageNum, int orderType) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "getPrizeHistory");
+        params.put("userId", userId + "");
+        params.put("pageSize", pageSize+"");
+        params.put("pageNum", pageNum+"");
+        params.put("orderType", orderType+"");
+
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<List<WinningInfo>>>() {
+            @Override
+            public AsyncJob<List<WinningInfo>> call(final String s) {
+                return new AsyncJob<List<WinningInfo>>() {
+                    @Override
+                    public void start(ApiCallback<List<WinningInfo>> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONArray data = j.getJSONArray("data");
+                                List<WinningInfo> winningInfos = convert2MyRecords(data);
+                                if (winningInfos == null || winningInfos.isEmpty()) {
+                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
+                                    return;
+                                }
+                                callback.onSuccess(winningInfos);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    private static List<WinningInfo> convert2MyRecords(JSONArray data) throws JSONException {
+        if (data == null || data.length() <= 0) {
+            return null;
+        }
+
+        List<WinningInfo> infoList = new ArrayList<WinningInfo>();
+        for (int i = 0; i < data.length(); i++) {
+            WinningInfo info = new WinningInfo();
+            JSONObject wjson = data.getJSONObject(i);
+            info.lssueId = wjson.getLong("ProductLssueID");
+            info.id = info.lssueId;
+            info.code = wjson.getString("ProductLssueCode");
+            info.productId = wjson.getLong("ProID");
+            info.totalCount = wjson.getInt("TotalCount");
+            info.joinedCount = wjson.getInt("JonidedCount");
+            info.title = wjson.getString("ProName");
+            info.status = wjson.getInt("Status");
+            info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
+            String priceTime = wjson.getString("PriceTime");
+            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
+            if (wjson.has("ClientCodeList")) {
+                List<String> codeList = new ArrayList<String>();
+                String aa = wjson.getString("ClientCodeList");
+                if (!TextUtils.isEmpty(aa)) {
+
+                    String[] jj = aa.split(",");
+                    for (int j = 0; j < jj.length; j++) {
+                        String clientCode = jj[j];
+                        codeList.add(clientCode);
+                    }
+                }
+
+                info.myPrizeCodes = codeList;
+            }
+
+            if (wjson.has("PriceTime")) {
+                info.lotteryTime = wjson.getLong("PriceTime") * 1000;
+            }
+
+            if (wjson.has("winnerInfo")) {
+                OwnerVO ownerVO = convert2OwnerVO(wjson);
+                info.ownerVO = ownerVO;
+            }
+
+            infoList.add(info);
+
         }
         return infoList;
     }

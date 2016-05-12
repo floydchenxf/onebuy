@@ -103,7 +103,7 @@ public class DateUtil {
         sec = secs % 60;
         yushu = secs % 10;
 
-        String result = String.format("%1$02d:%2$02d:%3$d", min, sec, yushu);
+        String result = String.format("%1$02d:%2$02d:%3$02d", min, sec, yushu);
         return result;
     }
 }

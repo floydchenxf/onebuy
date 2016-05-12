@@ -99,7 +99,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private ProductLssueAdapter indexProductAdapter;
     private int sortType = 1;
     private int pageNo = 1;
-    private int PAGE_SIZE = 10;
+    private int PAGE_SIZE = 12;
     private boolean needClear;
 
     private CheckedTextView lastestView;
