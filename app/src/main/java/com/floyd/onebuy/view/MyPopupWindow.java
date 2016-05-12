@@ -100,6 +100,10 @@ public class MyPopupWindow implements View.OnClickListener {
         return false;
     }
 
+    public boolean isShow() {
+        return this.isShow;
+    }
+
     @Override
     public void onClick(View v) {
         if (v == contentView) {

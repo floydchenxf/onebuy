@@ -1,15 +1,11 @@
 package com.floyd.onebuy.biz.vo.json;
 
 /**
- * Created by floyd on 16-5-8.
+ * Created by floyd on 16-5-10.
  */
 public class AddressVO {
-    public long id;
-    public String name;//收货人
-    public String mobile;//收货人手机号码
-    public String province;
-    public String city;
-    public String area;
-    public String detailAdr;
-    public boolean isDefault;
+    public Long CodeID;
+    public String CodeName;
+    public Long pid;//父id
+
 }
