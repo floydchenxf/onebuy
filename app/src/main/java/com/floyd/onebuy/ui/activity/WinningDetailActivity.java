@@ -50,6 +50,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private static final int PAGE_SIZE = 10;
 
     private Long id;
+    private Long productId;
     private int pageNo = 1;
     private WinningDetailInfo winningDetailInfo;
 
@@ -100,6 +101,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.title_name)).setText("商品详情");
         id = getIntent().getLongExtra("id", 0l);
+        productId = getIntent().getLongExtra("productId",0l);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
@@ -208,7 +210,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             userId = userVO.ID;
         }
 
-        ProductManager.fetchProductLssuePageData(id, userId).startUI(new ApiCallback<WinningDetailInfo>() {
+        ProductManager.fetchProductLssueDetail(null, productId,userId).startUI(new ApiCallback<WinningDetailInfo>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

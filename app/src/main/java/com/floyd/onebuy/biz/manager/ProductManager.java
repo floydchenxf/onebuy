@@ -85,6 +85,7 @@ public class ProductManager {
                         info.productUrl = APIConstants.HOST + v.Pictures;
                         info.title = v.ProName;
                         info.id = v.ProID;
+                        info.productId = v.ProID;
                         info.lssueId = v.ProductLssueID;
                         info.status = 0;
                         winningInfos.add(info);
@@ -138,12 +139,65 @@ public class ProductManager {
                     info.joinedCount = vo.JoinedCount;
                     info.totalCount = vo.TotalCount;
                     info.id = vo.ProID;
+                    info.productId = vo.ProID;
                     info.status = 1;
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
                     result.add(info);
                 }
                 return result;
+            }
+        });
+    }
+
+    /**
+     * 获取期数商品详情
+     * @param lssueId 可以不传 0
+     * @param cid 必须有，商品id
+     * @param userId 可以不传
+     * @return
+     */
+    public static AsyncJob<WinningDetailInfo> fetchProductLssueDetail(Long lssueId, long cid, Long userId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetProductLssueDetail");
+        params.put("cId", cid+"");
+        String lssueIdStr = "";
+        if (lssueId != null) {
+            lssueIdStr = lssueId+"";
+        }
+        params.put("productLssueID", lssueIdStr);
+
+        String userIdStr = "";
+        if (userId != null && userId != 0l) {
+            userIdStr = userId+"";
+        }
+        params.put("userId", userIdStr);
+
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<WinningDetailInfo>>() {
+            @Override
+            public AsyncJob<WinningDetailInfo> call(final String s) {
+                return new AsyncJob<WinningDetailInfo>() {
+                    @Override
+                    public void start(ApiCallback<WinningDetailInfo> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONObject data = j.getJSONObject("data");
+                                WinningDetailInfo detailInfo = convert2Obj(data);
+                                callback.onSuccess(detailInfo);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+
+                    }
+                };
             }
         });
     }
@@ -330,6 +384,7 @@ public class ProductManager {
                     info.joinedCount = vo.JoinedCount;
                     info.totalCount = vo.TotalCount;
                     info.id = vo.ProID;
+                    info.productId = vo.ProID;
                     info.status = 1;
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
