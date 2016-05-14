@@ -19,6 +19,7 @@
     <string name="next_step">下一步</string>
     <string name="up_step">上一步</string>
     <string name="no_join_desc">您还未参与，１元试一下，万一中了呢！</string>
+    <string name="no_login">您还未登录，点击登录</string>
     <string name="crop_save_text">选取</string>
     <string name="crop_discard_text">取消</string>
 

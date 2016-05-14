@@ -291,6 +291,10 @@ public class ProductManager {
             detailInfo.allJoinedRecords = joinVOs;
         }
 
+        if (data.has("isGet")) {
+            detailInfo.isGet = data.getBoolean("isGet");
+        }
+
         return detailInfo;
     }
 

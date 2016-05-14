@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
@@ -28,6 +30,7 @@ import com.floyd.onebuy.ui.activity.AddressManagerActivity;
 import com.floyd.onebuy.ui.activity.FeeRecordActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
+import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -263,20 +266,14 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private void loadData(final boolean needDialog, final boolean isFirst) {
         UserVO vo = LoginManager.getLoginInfo(this.getActivity());
-        if (vo == null) {
-            //未登录
+        headImageView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
+            @Override
+            public Bitmap processBitmap(Bitmap bitmap) {
+                return ImageUtils.getCircleBitmap(bitmap, getActivity().getResources().getDimension(R.dimen.cycle_head_image_size));
+            }
+        });
 
-        } else {
-            headImageView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
-                @Override
-                public Bitmap processBitmap(Bitmap bitmap) {
-                    return ImageUtils.getCircleBitmap(bitmap, getActivity().getResources().getDimension(R.dimen.cycle_head_image_size));
-                }
-            });
-
-            userNameView.setText(vo.getUserName());
-            //已经登录
-        }
+        userNameView.setText(vo.getUserName());
     }
 
     @Override
@@ -310,9 +307,14 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle bundle = data.getExtras();
                     //显示扫描到的内容
-//                    layoutExpressNoEditView.setText(bundle.getString("result"));
-                    //显示图片，FIXME　图片会溢出
-//                    mImageView.setImageBitmap((Bitmap) data.getParcelableExtra("bitmap"));
+                    String lssueIdStr = bundle.getString("result");
+                    if (!TextUtils.isDigitsOnly(lssueIdStr)) {
+                        Toast.makeText(getActivity(), "不是有效的商品类型", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Intent detailIntent = new Intent(getActivity(), WinningDetailActivity.class);
+                    startActivity(detailIntent);
                 }
                 break;
         }

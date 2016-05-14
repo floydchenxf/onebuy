@@ -19,6 +19,6 @@ public class WinningDetailInfo {
     public int status; //状态 1 进行中, 2：开奖中，　３:已经揭晓;
     public ProgressVO progressVO; //进度信息
     public OwnerVO ownerVO; //中奖者
-    public List<JoinVO> myJoinedRecords; //我的参与号码
+    public boolean isGet;//是否已参与
     public List<JoinVO> allJoinedRecords; //所有的参与号码
 }

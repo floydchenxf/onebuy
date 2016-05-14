@@ -216,6 +216,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 if (isFirst) {
                     dataLoadingView.loadFail();
                 }
+                Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                WinningDetailActivity.this.finish();
             }
 
             @Override
@@ -265,19 +267,34 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 } else {
                     mHeaderViewIndicator.setVisibility(View.VISIBLE);
                 }
-                List<JoinVO> myJoinedRecords = winningDetailInfo.myJoinedRecords;
-                if (myJoinedRecords == null || myJoinedRecords.isEmpty()) {
+
+                UserVO userVO = LoginManager.getLoginInfo(WinningDetailActivity.this);
+                if (userVO == null) {
                     noJoinView.setVisibility(View.VISIBLE);
-                    noJoinView.setText(R.string.no_join_desc);
+                    noJoinView.setText(R.string.no_login);
                     userNickView.setVisibility(View.GONE);
                     joinNumberView.setVisibility(View.GONE);
+                    noJoinView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent it = new Intent(WinningDetailActivity.this, LoginActivity.class);
+                            startActivity(it);
+                        }
+                    });
                 } else {
-                    noJoinView.setVisibility(View.GONE);
-                    userNickView.setVisibility(View.VISIBLE);
-                    joinNumberView.setVisibility(View.VISIBLE);
-                    joinNumberView.setText(myJoinedRecords.get(0).Number);
+                    noJoinView.setOnClickListener(null);
+                    if (winningDetailInfo.isGet) {
+                        noJoinView.setVisibility(View.GONE);
+                        userNickView.setVisibility(View.VISIBLE);
+                        joinNumberView.setVisibility(View.VISIBLE);
+                        joinNumberView.setText("Test");
+                    } else {
+                        noJoinView.setVisibility(View.VISIBLE);
+                        noJoinView.setText(R.string.no_join_desc);
+                        userNickView.setVisibility(View.GONE);
+                        joinNumberView.setVisibility(View.GONE);
+                    }
                 }
-
 
                 adapter.addAll(winningDetailInfo.allJoinedRecords, true);
             }
