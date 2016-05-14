@@ -21,13 +21,15 @@
             android:layout_height="80dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:scaleType="centerCrop"
+            android:scaleType="center"
             android:src="@drawable/tuqian" />
 
         <TextView
             android:id="@+id/productNameView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             android:ellipsize="middle"
             android:singleLine="true"
@@ -52,13 +54,15 @@
             android:layout_height="80dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:scaleType="centerCrop"
+            android:scaleType="center"
             android:src="@drawable/tuqian" />
 
         <TextView
             android:id="@+id/productNameView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             android:ellipsize="middle"
             android:singleLine="true"
@@ -83,13 +87,15 @@
             android:layout_height="80dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:scaleType="centerCrop"
+            android:scaleType="center"
             android:src="@drawable/tuqian" />
 
         <TextView
             android:id="@+id/productNameView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             android:ellipsize="middle"
             android:singleLine="true"
