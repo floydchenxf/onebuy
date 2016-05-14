@@ -20,6 +20,16 @@ public class PayResultAdapter extends BaseDataAdapter<WinningInfo> {
         super(context, records);
     }
 
+    private MoreClickListener moreClickListener;
+
+    public MoreClickListener getMoreClickListener() {
+        return moreClickListener;
+    }
+
+    public void setMoreClickListener(MoreClickListener moreClickListener) {
+        this.moreClickListener = moreClickListener;
+    }
+
     @Override
     View getLayoutView() {
         return View.inflate(mContext, R.layout.pay_result_item, null);
@@ -31,7 +41,7 @@ public class PayResultAdapter extends BaseDataAdapter<WinningInfo> {
     }
 
     @Override
-    void processHolder(Map<Integer, View> holder, WinningInfo winningInfo) {
+    void processHolder(Map<Integer, View> holder, final WinningInfo winningInfo) {
         TextView productCodeView = (TextView) holder.get(R.id.product_code_view);
         TextView productTitleView = (TextView) holder.get(R.id.product_title_view);
         TextView joinedCountView = (TextView) holder.get(R.id.joined_count_view);
@@ -48,13 +58,16 @@ public class PayResultAdapter extends BaseDataAdapter<WinningInfo> {
             joinedNumLayout.setVisibility(View.VISIBLE);
 
             List<String> tmpList = new ArrayList<String>();
+            boolean hasMore = false;
             if (joinedNums.size() >= 6) {
                 for(int i=0; i<5; i++) {
                     tmpList.add(joinedNums.get(i));
                 }
-                tmpList.add("更多");
+                tmpList.add("查看更多");
+                hasMore = true;
             } else {
                 tmpList.addAll(joinedNums);
+                hasMore = false;
             }
 
             int lines = tmpList.size() % 3 == 0 ? tmpList.size() / 3 : tmpList.size() / 3 + 1;
@@ -64,6 +77,7 @@ public class PayResultAdapter extends BaseDataAdapter<WinningInfo> {
                 TextView text1 = (TextView) layout.findViewById(R.id.join_number_1);
                 TextView text2 = (TextView) layout.findViewById(R.id.join_number_2);
                 TextView text3 = (TextView) layout.findViewById(R.id.join_number_3);
+                text3.setOnClickListener(null);
                 int k = i * 3;
                 if (k < tmpList.size()) {
                     text1.setText(tmpList.get(k));
@@ -85,9 +99,25 @@ public class PayResultAdapter extends BaseDataAdapter<WinningInfo> {
                 } else {
                     text3.setVisibility(View.GONE);
                 }
+                if (i==1 && hasMore) {
+                    text3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (moreClickListener != null) {
+                                moreClickListener.onClick(winningInfo);
+                            }
+                        }
+                    });
+                } else {
+                    text3.setOnClickListener(null);
+                }
             }
         }
 
 
+    }
+
+    public static interface MoreClickListener {
+        void onClick(WinningInfo winningInfo);
     }
 }

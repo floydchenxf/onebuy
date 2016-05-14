@@ -1,6 +1,7 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
@@ -12,22 +13,36 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
 import com.floyd.onebuy.ui.adapter.PayResultAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.onebuy.view.MyPopupWindow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class PayResultActivity extends Activity implements View.OnClickListener {
 
     private DataLoadingView dataLoadingView;
-    PayResultAdapter payResultAdapter;
+    private PayResultAdapter payResultAdapter;
     private ListView mListView;
     private String orderNo;
     private CheckedTextView viewBuyRecordView;
     private CheckedTextView gotoBuyView;
+    private MyPopupWindow joinedPopupWindow;
+
+    private TextView popProductCodeView;
+    private TextView popProductTitleView;
+    private TextView popJoinedCountView;
+    private ListView popJoinNumListView;
+    private JoinedNumAdapter joinedNumAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +57,32 @@ public class PayResultActivity extends Activity implements View.OnClickListener 
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
         mListView = (ListView) findViewById(R.id.buy_list);
         payResultAdapter = new PayResultAdapter(this, new ArrayList<WinningInfo>());
+        payResultAdapter.setMoreClickListener(new PayResultAdapter.MoreClickListener() {
+            @Override
+            public void onClick(WinningInfo winningInfo) {
+                popProductCodeView.setText("第" + winningInfo.code + "期");
+                popProductTitleView.setText(winningInfo.getTitle());
+                popJoinedCountView.setText(winningInfo.joinedCount + "人次");
+                List<String> list = winningInfo.myPrizeCodes;
+                joinedNumAdapter.addAll(list, true);
+                joinedPopupWindow.showPopUpWindow();
+            }
+        });
         mListView.setAdapter(payResultAdapter);
         viewBuyRecordView = (CheckedTextView) findViewById(R.id.view_buy_view);
         gotoBuyView = (CheckedTextView) findViewById(R.id.goto_buy_view);
+        joinedPopupWindow = new MyPopupWindow(this);
+        joinedPopupWindow.initView(R.layout.pop_join_num, new MyPopupWindow.ViewInit() {
+            @Override
+            public void initView(View v) {
+                popProductCodeView = (TextView) v.findViewById(R.id.pop_product_code_view);
+                popProductTitleView = (TextView) v.findViewById(R.id.pop_product_title_view);
+                popJoinedCountView = (TextView) v.findViewById(R.id.pop_joined_count_view);
+                popJoinNumListView = (ListView) v.findViewById(R.id.pop_joined_num_listview);
+                joinedNumAdapter = new JoinedNumAdapter(PayResultActivity.this, new ArrayList<String>());
+                popJoinNumListView.setAdapter(joinedNumAdapter);
+            }
+        });
         viewBuyRecordView.setOnClickListener(this);
         gotoBuyView.setOnClickListener(this);
         loadData();
@@ -83,8 +121,12 @@ public class PayResultActivity extends Activity implements View.OnClickListener 
                 loadData();
                 break;
             case R.id.goto_buy_view:
+                this.finish();
+                EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 break;
             case R.id.view_buy_view:
+                Intent winnerRecordIntent = new Intent(this, WinningRecordActivity.class);
+                startActivity(winnerRecordIntent);
                 break;
         }
     }

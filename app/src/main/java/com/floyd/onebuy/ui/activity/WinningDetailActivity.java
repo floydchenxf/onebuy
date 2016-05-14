@@ -210,7 +210,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             userId = userVO.ID;
         }
 
-        ProductManager.fetchProductLssueDetail(null, productId,userId).startUI(new ApiCallback<WinningDetailInfo>() {
+        ProductManager.fetchProductLssueDetail(null, productId, userId).startUI(new ApiCallback<WinningDetailInfo>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -225,6 +225,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 }
 
                 WinningDetailActivity.this.winningDetailInfo = winningDetailInfo;
+                id = winningDetailInfo.id;
                 StringBuilder titleAndStatusSb = new StringBuilder();
                 int status = winningDetailInfo.status;
                 if (status == 0 || status == 1) {
@@ -232,7 +233,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     gotoJoinLayout.setVisibility(View.GONE);
                     progressLayout.setVisibility(View.VISIBLE);
                     ProgressVO progressVO = winningDetailInfo.progressVO;
-                    totalView.setText(Html.fromHtml("总需<font color=\"red\">"+progressVO.TotalCount+"</font>"));
+                    totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>"));
                     leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>"));
                     progressBar.setProgress(progressVO.getPrecent());
                     joinLayout.setVisibility(View.VISIBLE);
@@ -240,7 +241,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     titleAndStatusSb.append("进行中");
                 } else if (status == 2) {
                     titleAndStatusSb.append("开奖中");
-                }else if (status == 3) {
+                } else if (status == 3) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
@@ -265,7 +266,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     mHeaderViewIndicator.setVisibility(View.VISIBLE);
                 }
                 List<JoinVO> myJoinedRecords = winningDetailInfo.myJoinedRecords;
-                if (myJoinedRecords == null||myJoinedRecords.isEmpty()) {
+                if (myJoinedRecords == null || myJoinedRecords.isEmpty()) {
                     noJoinView.setVisibility(View.VISIBLE);
                     noJoinView.setText(R.string.no_join_desc);
                     userNickView.setVisibility(View.GONE);
@@ -363,7 +364,6 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 loadData(true);
                 break;
             case R.id.join_buy_car_view:
-//                buyCarPopup.showPopUpWindow();
                 if (LoginManager.isLogin(this)) {
                     long userId = LoginManager.getLoginInfo(this).ID;
                     CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
@@ -374,6 +374,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
                         @Override
                         public void onSuccess(Boolean s) {
+                            Toast.makeText(WinningDetailActivity.this, "添加购物车成功", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

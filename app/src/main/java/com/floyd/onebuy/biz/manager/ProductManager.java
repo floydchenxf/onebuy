@@ -13,6 +13,7 @@ import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
+import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueListVO;
@@ -138,6 +139,7 @@ public class ProductManager {
                     WinningInfo info = new WinningInfo();
                     info.joinedCount = vo.JoinedCount;
                     info.totalCount = vo.TotalCount;
+                    info.lssueId = vo.ProductLssueID;
                     info.id = vo.ProID;
                     info.productId = vo.ProID;
                     info.status = 1;
@@ -152,25 +154,26 @@ public class ProductManager {
 
     /**
      * 获取期数商品详情
+     *
      * @param lssueId 可以不传 0
-     * @param cid 必须有，商品id
-     * @param userId 可以不传
+     * @param cid     必须有，商品id
+     * @param userId  可以不传
      * @return
      */
     public static AsyncJob<WinningDetailInfo> fetchProductLssueDetail(Long lssueId, long cid, Long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetProductLssueDetail");
-        params.put("cId", cid+"");
+        params.put("cId", cid + "");
         String lssueIdStr = "";
         if (lssueId != null) {
-            lssueIdStr = lssueId+"";
+            lssueIdStr = lssueId + "";
         }
         params.put("productLssueID", lssueIdStr);
 
         String userIdStr = "";
         if (userId != null && userId != 0l) {
-            userIdStr = userId+"";
+            userIdStr = userId + "";
         }
         params.put("userId", userIdStr);
 
@@ -458,14 +461,11 @@ public class ProductManager {
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            info.lotteryTime = wjson.getLong("PriceTime");
+            if (wjson.has("PriceTime")) {
+                info.lotteryTime = wjson.getLong("PriceTime") * 1000;
+            }
             if (wjson.has("winnerInfo")) {
-                OwnerVO ownerVO = new OwnerVO();
-                JSONObject ownerInfoJson = wjson.getJSONObject("winnerInfo");
-                ownerVO.userId = ownerInfoJson.getLong("PrizeClientID");
-                ownerVO.avatar = ownerInfoJson.getString("PrizeClientPic");
-                ownerVO.userName = ownerInfoJson.getString("PrizeClientName");
-                ownerVO.winNumber = ownerInfoJson.getString("PrizeCode");
+                OwnerVO ownerVO = convert2OwnerVO(wjson);
                 info.ownerVO = ownerVO;
             }
             infoList.add(info);
@@ -473,8 +473,25 @@ public class ProductManager {
         return infoList;
     }
 
+    private static OwnerVO convert2OwnerVO(JSONObject wjson) throws JSONException {
+        OwnerVO ownerVO = new OwnerVO();
+        JSONObject ownerInfoJson = wjson.getJSONObject("winnerInfo");
+        ownerVO.userId = ownerInfoJson.getLong("PrizeClientID");
+        ownerVO.avatar = ownerInfoJson.getString("PrizeClientPic");
+        ownerVO.userName = ownerInfoJson.getString("PrizeClientName");
+        if (ownerInfoJson.has("PrizeCode")) {
+            ownerVO.winNumber = ownerInfoJson.getString("PrizeCode");
+        }
+
+        if (ownerInfoJson.has("PriceTime")) {
+            ownerVO.winTime = ownerInfoJson.getLong("PriceTime") * 1000;
+        }
+        return ownerVO;
+    }
+
     /**
      * 根据订单号获取夺宝记录
+     *
      * @param userId
      * @param orderNo
      * @return
@@ -519,7 +536,7 @@ public class ProductManager {
     }
 
     private static List<WinningInfo> convert2MyOrderCodes(JSONArray data) throws JSONException {
-        if (data == null||data.length() <=0) {
+        if (data == null || data.length() <= 0) {
             return null;
         }
 
@@ -532,19 +549,19 @@ public class ProductManager {
             info.code = wjson.getString("ProductLssueCode");
             info.productId = wjson.getLong("ProID");
             info.totalCount = wjson.getInt("TotalCount");
-            info.joinedCount = wjson.getInt("JonidedCount");
+            info.joinedCount = wjson.getInt("JoinCount");
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
             String priceTime = wjson.getString("PriceTime");
-            info.lotteryTime = TextUtils.isEmpty(priceTime)?0:Long.parseLong(priceTime);
+            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
                 String aa = wjson.getString("ClientCodeList");
                 if (!TextUtils.isEmpty(aa)) {
 
                     String[] jj = aa.split(",");
-                    for(int j=0;j<jj.length; j++) {
+                    for (int j = 0; j < jj.length; j++) {
                         String clientCode = jj[j];
                         codeList.add(clientCode);
                     }
@@ -555,6 +572,61 @@ public class ProductManager {
             infoList.add(info);
         }
         return infoList;
+    }
+
+    /**
+     * 根据期数获取获奖者信息
+     *
+     * @param lssueId
+     * @return
+     */
+    public static AsyncJob<OwnerExtVO> getWinnerInfo(final long lssueId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetWinnerInfo");
+        params.put("productLssueID", lssueId + "");
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<OwnerExtVO>>() {
+            @Override
+            public AsyncJob<OwnerExtVO> call(final String s) {
+
+                return new AsyncJob<OwnerExtVO>() {
+                    @Override
+                    public void start(ApiCallback<OwnerExtVO> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONObject data = j.getJSONObject("data");
+                                int winnerStatus = data.getInt("Status");
+                                OwnerVO ownerVO = convert2OwnerVO(data);
+                                if (ownerVO == null) {
+                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
+                                    return;
+                                }
+
+                                OwnerExtVO ownerExtVO = new OwnerExtVO();
+                                ownerExtVO.status = status;
+                                ownerExtVO.userName = ownerVO.userName;
+                                ownerExtVO.winNumber = ownerVO.winNumber;
+                                ownerExtVO.avatar = ownerVO.avatar;
+                                ownerExtVO.userId = ownerVO.userId;
+                                ownerExtVO.winTime = ownerVO.winTime;
+                                ownerExtVO.joinNumber = ownerVO.joinNumber;
+                                ownerExtVO.lssueId = lssueId;
+
+                                callback.onSuccess(ownerExtVO);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+                    }
+                };
+            }
+        });
     }
 
 
