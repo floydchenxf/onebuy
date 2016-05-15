@@ -26,6 +26,7 @@ import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
 import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
+import com.floyd.onebuy.event.LoginEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -92,11 +94,13 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private EditText buyCarNumberView;
     private TextView buyCarAddButton;
     private TextView buyAtOnceButton;
+    private TextView gotoDetailView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winning_detail);
+        EventBus.getDefault().register(this);
         findViewById(R.id.title_back).setOnClickListener(this);
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.title_name)).setText("商品详情");
@@ -112,6 +116,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         buyAtOnceButton = (TextView) findViewById(R.id.buy_now_view);
         buyAtOnceButton.setOnClickListener(this);
         gotoJoinLayout = findViewById(R.id.goto_join_layout);
+        gotoDetailView = (TextView) findViewById(R.id.goto_detail_view);
+        gotoDetailView.setOnClickListener(this);
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.join_list);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
@@ -235,25 +241,23 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 id = winningDetailInfo.id;
                 StringBuilder titleAndStatusSb = new StringBuilder();
                 int status = winningDetailInfo.status;
-                if (status == 0 || status == 1) {
+                if (status == 0) {
                     joinLayout.setVisibility(View.VISIBLE);
                     gotoJoinLayout.setVisibility(View.GONE);
+                    joinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.VISIBLE);
                     ProgressVO progressVO = winningDetailInfo.progressVO;
-                    totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>"));
-                    leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>"));
+                    totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>人次"));
+                    leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>人次"));
                     progressBar.setProgress(progressVO.getPrecent());
-                    joinLayout.setVisibility(View.VISIBLE);
-                    gotoJoinLayout.setVisibility(View.GONE);
                     titleAndStatusSb.append("进行中");
-                } else if (status == 2) {
+                } else if (status == 1) {
                     titleAndStatusSb.append("开奖中");
-                } else if (status == 3) {
+                } else if (status == 2) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
                     joinLayout.setVisibility(View.GONE);
-                    gotoJoinLayout.setVisibility(View.VISIBLE);
                     titleAndStatusSb.append("已揭晓");
                 }
 
@@ -428,6 +432,23 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 }
                 this.finish();
                 break;
+            case R.id.goto_detail_view:
+                Intent it = new Intent(this, WinningDetailActivity.class);
+                it.putExtra("productId", productId);
+                startActivity(it);
+                this.finish();
+                break;
         }
+    }
+
+    @Subscribe
+    public void onEventMainThread(LoginEvent event) {
+        loadData(false);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+
     }
 }
