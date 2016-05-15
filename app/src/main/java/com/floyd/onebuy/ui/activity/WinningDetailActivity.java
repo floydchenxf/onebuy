@@ -210,7 +210,12 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             userId = userVO.ID;
         }
 
-        ProductManager.fetchProductLssueDetail(null, productId, userId).startUI(new ApiCallback<WinningDetailInfo>() {
+        Long lssueId = null;
+        if (id != null && id != 0l) {
+            lssueId = id;
+        }
+
+        ProductManager.fetchProductLssueDetail(lssueId, productId, userId).startUI(new ApiCallback<WinningDetailInfo>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

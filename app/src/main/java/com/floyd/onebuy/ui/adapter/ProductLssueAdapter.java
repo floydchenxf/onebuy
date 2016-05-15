@@ -26,7 +26,6 @@ import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +41,6 @@ public class ProductLssueAdapter extends BaseAdapter {
     private List<WinningInfo> records = new ArrayList<WinningInfo>();
     private ImageLoader mImageLoader;
 
-    private Map<Long, Boolean> requets = new HashMap<Long, Boolean>();
     private static final int TIME_EVENT = 1;
 
     private Set<Long> requestSet = new ConcurrentSkipListSet<>();

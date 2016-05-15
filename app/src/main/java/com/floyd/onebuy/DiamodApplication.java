@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGNotifaction;
 import com.tencent.android.tpush.XGPushManager;
@@ -62,6 +63,8 @@ public class DiamodApplication extends Application {
 
                 }
             });
+
+            ServerTimeManager.getServerTime();
 
             XGPushManager.setNotifactionCallback(new XGPushNotifactionCallback() {
 

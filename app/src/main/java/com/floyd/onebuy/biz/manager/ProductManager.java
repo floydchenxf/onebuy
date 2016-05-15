@@ -261,8 +261,8 @@ public class ProductManager {
                 int idx = 0;
                 for (String i : ii) {
                     AdvVO vo = new AdvVO();
-                    vo.imgUrl = APIConstants.PIC_PATH_110 + i;
-                    vo.title = APIConstants.PIC_PATH_110 + i;
+                    vo.imgUrl = APIConstants.PIC_PATH_360 + i;
+                    vo.title = APIConstants.PIC_PATH_360 + i;
                     vo.id = ++idx;
                     advVOs.add(vo);
                 }
@@ -631,6 +631,104 @@ public class ProductManager {
                 };
             }
         });
+    }
+
+    /**
+     * 获取用户的夺宝记录
+     * @param userId
+     * @param pageSize
+     * @param pageNum
+     * @param orderType
+     * @return
+     */
+    public static AsyncJob<List<WinningInfo>> getPrizeHistory(long userId, int pageSize, int pageNum, int orderType) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "getPrizeHistory");
+        params.put("userId", userId + "");
+        params.put("pageSize", pageSize+"");
+        params.put("pageNum", pageNum+"");
+        params.put("orderType", orderType+"");
+
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<List<WinningInfo>>>() {
+            @Override
+            public AsyncJob<List<WinningInfo>> call(final String s) {
+                return new AsyncJob<List<WinningInfo>>() {
+                    @Override
+                    public void start(ApiCallback<List<WinningInfo>> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONArray data = j.getJSONArray("data");
+                                List<WinningInfo> winningInfos = convert2MyRecords(data);
+                                if (winningInfos == null || winningInfos.isEmpty()) {
+                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
+                                    return;
+                                }
+                                callback.onSuccess(winningInfos);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    private static List<WinningInfo> convert2MyRecords(JSONArray data) throws JSONException {
+        if (data == null || data.length() <= 0) {
+            return null;
+        }
+
+        List<WinningInfo> infoList = new ArrayList<WinningInfo>();
+        for (int i = 0; i < data.length(); i++) {
+            WinningInfo info = new WinningInfo();
+            JSONObject wjson = data.getJSONObject(i);
+            info.lssueId = wjson.getLong("ProductLssueID");
+            info.id = info.lssueId;
+            info.code = wjson.getString("ProductLssueCode");
+            info.productId = wjson.getLong("ProID");
+            info.totalCount = wjson.getInt("TotalCount");
+            info.joinedCount = wjson.getInt("JonidedCount");
+            info.title = wjson.getString("ProName");
+            info.status = wjson.getInt("Status");
+            info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
+            String priceTime = wjson.getString("PriceTime");
+            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
+            if (wjson.has("ClientCodeList")) {
+                List<String> codeList = new ArrayList<String>();
+                String aa = wjson.getString("ClientCodeList");
+                if (!TextUtils.isEmpty(aa)) {
+
+                    String[] jj = aa.split(",");
+                    for (int j = 0; j < jj.length; j++) {
+                        String clientCode = jj[j];
+                        codeList.add(clientCode);
+                    }
+                }
+
+                info.myPrizeCodes = codeList;
+            }
+
+            if (wjson.has("PriceTime")) {
+                info.lotteryTime = wjson.getLong("PriceTime") * 1000;
+            }
+
+            if (wjson.has("winnerInfo")) {
+                OwnerVO ownerVO = convert2OwnerVO(wjson);
+                info.ownerVO = ownerVO;
+            }
+
+            infoList.add(info);
+
+        }
+        return infoList;
     }
 
 
