@@ -10,10 +10,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +20,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.ImageUtils;
+import com.floyd.onebuy.biz.vo.NavigationVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
@@ -32,6 +31,7 @@ import com.floyd.onebuy.ui.activity.JiFengActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
+import com.floyd.onebuy.ui.adapter.NavigationAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.zxing.MipcaActivityCapture;
@@ -48,9 +48,7 @@ import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MyFragment extends BackHandledFragment implements View.OnClickListener {
 
@@ -61,7 +59,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private static final int SCANNIN_GREQUEST_CODE = 100;
 
-    private List<Map<String, Object>> lstImageItem = new ArrayList<Map<String, Object>>();
+    private List<NavigationVO> lstImageItem = new ArrayList<NavigationVO>();
 
 
     private ProgressDialog avatorDialog;
@@ -75,7 +73,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private TextView feeView;
     private TextView jiFengView;
     private TextView addFeeView;
-    private GridView operateGridView;
+    private ListView operateListView;
     private ImageView saomiaoView;
     private NetworkImageView headImageView;
     private NetworkImageView bgHeadView;
@@ -84,7 +82,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private View shareLayout;
 
-    private String[] texts = new String[]{"充值记录", "夺宝记录", "中奖记录", "我的积分", "我的公益", "我的晒单", "快乐星期五", "邀请好友","收货地址管理"};
+    private NavigationAdapter adapter;
+
+    private String[] texts = new String[]{"充值记录", "夺宝记录", "中奖记录", "我的积分", "我的公益", "我的晒单", "快乐星期五", "邀请好友", "收货地址管理"};
     private int[] images = new int[]{R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon, R.drawable.icon};
     private Class[] clazzs = new Class[]{FeeRecordActivity.class, WinningRecordActivity.class, FeeRecordActivity.class, JiFengActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, AddressManagerActivity.class};
 
@@ -100,10 +100,24 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         configPlatform();
 
         for (int i = 0; i < texts.length; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("ItemImage", images[i]);//添加图像资源的ID
-            map.put("ItemText", texts[i]);//按序号做ItemText
-            lstImageItem.add(map);
+            NavigationVO vo = new NavigationVO();
+            vo.drawIcon = images[i];
+            vo.navigationName = texts[i];
+            final int k = i;
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (k == 7) {
+                        mShare.openShare(MyFragment.this.getActivity(), false);
+                    } else {
+                        Intent it = new Intent(MyFragment.this.getActivity(), clazzs[k]);
+                        MyFragment.this.getActivity().startActivity(it);
+                    }
+                }
+            };
+
+            vo.onClickListener = onClickListener;
+            lstImageItem.add(vo);
         }
 
     }
@@ -221,34 +235,21 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         dataLoadingView.initView(view, this);
         dataLoadingDialog = DialogCreator.createDataLoadingDialog(this.getActivity());
 
-        userNameView = (TextView) view.findViewById(R.id.user_name);
-        feeView = (TextView) view.findViewById(R.id.fee);
-        jiFengView = (TextView) view.findViewById(R.id.jifeng);
-        addFeeView = (TextView) view.findViewById(R.id.add_fee);
+        View headView = View.inflate(getActivity(), R.layout.my_head, null);
+
+        userNameView = (TextView) headView.findViewById(R.id.user_name);
+        feeView = (TextView) headView.findViewById(R.id.fee);
+        jiFengView = (TextView) headView.findViewById(R.id.jifeng);
+        addFeeView = (TextView) headView.findViewById(R.id.add_fee);
+        bgHeadView = (NetworkImageView) headView.findViewById(R.id.head_bg);
         addFeeView.setOnClickListener(this);
-        headImageView = (NetworkImageView) view.findViewById(R.id.head);
+        headImageView = (NetworkImageView) headView.findViewById(R.id.head);
         headImageView.setDefaultImageResId(R.drawable.default_image);
 
-        bgHeadView = (NetworkImageView) view.findViewById(R.id.head_bg);
-        operateGridView = (GridView) view.findViewById(R.id.wx_gridview);
-
-        SimpleAdapter saImageItems = new SimpleAdapter(this.getActivity(),
-                lstImageItem,
-                R.layout.night_item,
-                new String[]{"ItemImage", "ItemText"},
-                new int[]{R.id.ItemImage, R.id.ItemText});
-        operateGridView.setAdapter(saImageItems);
-        operateGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 7) {
-                    mShare.openShare(MyFragment.this.getActivity(), false);
-                } else {
-                    Intent it = new Intent(MyFragment.this.getActivity(), clazzs[position]);
-                    MyFragment.this.getActivity().startActivity(it);
-                }
-            }
-        });
+        operateListView = (ListView) view.findViewById(R.id.operate_listview);
+        operateListView.addHeaderView(headView);
+        adapter = new NavigationAdapter(getActivity(), lstImageItem);
+        operateListView.setAdapter(adapter);
 
         saomiaoView = (ImageView) view.findViewById(R.id.saomiao_view);
         saomiaoView.setOnClickListener(this);
