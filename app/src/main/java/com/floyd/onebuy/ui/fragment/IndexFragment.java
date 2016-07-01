@@ -369,6 +369,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     for (Long l:typeCodes) {
                         int k = idx++;
                         ProductTypeVO vv = productTypeVOMap.get(l);
+                        if (vv == null) {
+                            continue;
+                        }
                         String typePic = vv.TypePic;
                         if (TextUtils.isEmpty(typePic)) {
                             typePic = APIConstants.HOST + "UploadImg/20160415170740521.png";
