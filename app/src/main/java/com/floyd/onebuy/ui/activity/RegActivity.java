@@ -36,12 +36,15 @@ public class RegActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
         backView = findViewById(R.id.title_back);
+        backView.setOnClickListener(this);
+        TextView titleNameView = (TextView)findViewById(R.id.title_name);
+        titleNameView.setText("注册");
+        titleNameView.setVisibility(View.VISIBLE);
         checkCodeView = (EditText) findViewById(R.id.check_code);
         checkCodeButtonView = (TextView) findViewById(R.id.check_code_button);
         userNickView = (EditText) findViewById(R.id.user_nick);
         passwordView = (EditText) findViewById(R.id.password);
         regButton = (TextView) findViewById(R.id.next_step);
-        backView.setOnClickListener(this);
         regButton.setOnClickListener(this);
         checkCodeButtonView.setOnClickListener(this);
         regButton.setOnClickListener(this);
@@ -70,45 +73,50 @@ public class RegActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.title_back:
                 this.finish();
                 break;
             case R.id.check_code_button:
                 checkCodeButtonView.setEnabled(false);
                 String usernick2 = userNickView.getText().toString();
-                LoginManager.fetchVerifyCodeJob(usernick2).startUI(new ApiCallback<Boolean>() {
-                    @Override
-                    public void onError(int code, String errorInfo) {
-                        Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                        checkCodeButtonView.setEnabled(true);
-                    }
-
-                    @Override
-                    public void onSuccess(Boolean s) {
-                        if (s) {
-                            checkCodeButtonView.setEnabled(false);
-                            checkCodeButtonView.setBackgroundResource(R.drawable.common_round_bg);
-                            checkCodeButtonView.setText("60秒后重新获取");
-                            doUpdateTime(60);
-                        }
-                    }
-
-                    @Override
-                    public void onProgress(int progress) {
-
-                    }
-                });
+//                LoginManager.fetchVerifyCodeJob(usernick2).startUI(new ApiCallback<Boolean>() {
+//                    @Override
+//                    public void onError(int code, String errorInfo) {
+//                        Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+//                        checkCodeButtonView.setEnabled(true);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(Boolean s) {
+//                        if (s) {
+//                            checkCodeButtonView.setEnabled(false);
+//                            checkCodeButtonView.setBackgroundResource(R.drawable.common_round_bg);
+//                            checkCodeButtonView.setText("60秒后重新获取");
+//                            doUpdateTime(60);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onProgress(int progress) {
+//
+//                    }
+//                });
                 break;
             case R.id.next_step:
                 String usernick = userNickView.getText().toString();
                 if (TextUtils.isEmpty(usernick)) {
-                    Toast.makeText(this, "请输入别名", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 String password = passwordView.getText().toString();
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (password.length() < 6) {
+                    Toast.makeText(this, "密码长度不能短于6个字符", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -131,6 +139,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
                         passwordView.setText("");
                         checkCodeView.setText("");
                         Toast.makeText(RegActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                        RegActivity.this.finish();
                     }
 
                     @Override

@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:paddingTop="6dp"
                 android:singleLine="true"
-                android:text="夺宝"
+                android:text="首页"
                 android:textColor="@drawable/word_selector" />
 
             <RadioButton
@@ -44,10 +44,10 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/tg_selector"
+                android:drawableTop="@drawable/product_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
-                android:text="全部商品"
+                android:text="全部"
                 android:textColor="@drawable/word_selector" />
 
             <RadioButton
@@ -56,7 +56,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/tg_selector"
+                android:drawableTop="@drawable/prize_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
                 android:text="最新揭晓"
@@ -68,7 +68,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/tg_selector"
+                android:drawableTop="@drawable/buycar_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
                 android:text="购物车"
