@@ -134,7 +134,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="center"
-                    android:text="button1"
+                    android:text="button2"
                     android:textColor="#4193c0" />
 
                 <View
@@ -149,8 +149,8 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="center"
-                    android:text="button2"
-                    android:textColor="#d4377e" />
+                    android:text="button1"
+                    android:textColor="@color/red" />
 
                 <View
                     android:layout_width="0.5dp"
@@ -166,7 +166,7 @@
                     android:background="@null"
                     android:gravity="center"
                     android:text="button3"
-                    android:textColor="#d4377e" />
+                    android:textColor="@color/red" />
 
                 <LinearLayout
                     android:id="@+id/rightSpacer"

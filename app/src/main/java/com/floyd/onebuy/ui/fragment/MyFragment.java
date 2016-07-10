@@ -86,7 +86,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private String[] texts = new String[]{"夺宝记录", "我的公益", "中奖记录", "快乐星期五", "充值记录", "我的晒单", "软件设置", "邀请好友", "我的积分"};
     private int[] images = new int[]{R.drawable.prize_record, R.drawable.gongyi, R.drawable.winning, R.drawable.fri, R.drawable.add_fee, R.drawable.shandan, R.drawable.setting, R.drawable.invite, R.drawable.jifeng};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, JiFengActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, AddressManagerActivity.class};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, FeeRecordActivity.class, JiFengActivity.class, FeeRecordActivity.class, SettingActivity.class, FeeRecordActivity.class, AddressManagerActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
