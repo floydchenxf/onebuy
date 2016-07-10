@@ -23,6 +23,7 @@ import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.PayResultActivity;
@@ -32,9 +33,13 @@ import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by floyd on 16-4-13.
@@ -61,6 +66,8 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private View deleteLayout;
     private TextView deleteDescView;
     private TextView deleteButtonView;
+
+    private TextView gotoIndexView;
 
     private View emptyLayout;
     private View bottomLayout;
@@ -153,6 +160,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         editView = (TextView) view.findViewById(R.id.right);
         editView.setVisibility(View.VISIBLE);
         editView.setOnClickListener(this);
+
+        gotoIndexView = (TextView) emptyLayout.findViewById(R.id.goto_index);
+
+        gotoIndexView.setOnClickListener(this);
 
         deleteLayout = view.findViewById(R.id.delete_layout);
         deleteLayout.setVisibility(View.GONE);
@@ -387,6 +398,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 break;
             case R.id.alipay_layout:
                 checkType(3);
+                break;
+            case R.id.goto_index:
+                EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 break;
         }
     }
