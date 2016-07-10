@@ -134,7 +134,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private ViewFlipper mFlipper;
 
-    private Long[] typeCodes = new Long[]{21l,22l,23l,24l};
+    private Long[] typeCodes = new Long[]{11l,12l,13l,14l, 15l};
+    private int[] defaultImages = new int[]{R.drawable.ten_index, R.drawable.hun_index, R.drawable.gongyi_index,R.drawable.shandan_index, R.drawable.fri_index};
 
 
     private Handler mChangeViewPagerHandler = new Handler() {
@@ -376,6 +377,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                         if (TextUtils.isEmpty(typePic)) {
                             typePic = APIConstants.HOST + "UploadImg/20160415170740521.png";
                         }
+                        imageViews[k].setDefaultImageResId(defaultImages[k]);
                         imageViews[k].setImageUrl(typePic, mImageLoader);
                         typeDeses[k].setText(vv.CodeName);
                         imageViews[k].setOnClickListener(listeners[k]);
@@ -386,6 +388,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
 
                 final String newsImageUrl = indexVO.newsImageUrl;
+                newsImageView.setDefaultImageResId(R.drawable.news_pic);
                 newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
                     @Override
                     public Bitmap processBitmap(final Bitmap bitmap) {
