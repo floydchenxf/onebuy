@@ -63,6 +63,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         faqView = (TextView) findViewById(R.id.faq_view);
         aboutUsView = (TextView) findViewById(R.id.about_us_view);
         contactUsLayout = findViewById(R.id.contact_us_layout);
+        contactUsLayout.setOnClickListener(this);
         phoneNumView = (TextView) findViewById(R.id.phoneNum);
         suggestView = (TextView) findViewById(R.id.suggestion_view);
         msgSwitch = (Switch) findViewById(R.id.msg_switch_view);
@@ -137,8 +138,6 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.about_us_view:
                 break;
-            case R.id.contact_us_layout:
-                break;
             case R.id.suggestion_view:
                 Intent suggestIntent = new Intent(this, FeedbackActivity.class);
                 startActivity(suggestIntent);
@@ -147,7 +146,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 UIAlertDialog.Builder clearBuilder = new UIAlertDialog.Builder(this);
                 SpannableString message = new SpannableString("亲！您确认清除缓存？");
                 message.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                message.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                message.setSpan(new ForegroundColorSpan(this.getResources().getColor(R.color.red)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 clearBuilder.setMessage(message)
                         .setCancelable(true)
                         .setPositiveButton("清除",
@@ -194,7 +193,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 UIAlertDialog.Builder builder = new UIAlertDialog.Builder(this);
                 SpannableString alertMessage = new SpannableString("亲, 您确认要退出登录？");
                 alertMessage.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                alertMessage.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                alertMessage.setSpan(new ForegroundColorSpan(this.getResources().getColor(R.color.red)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 builder.setMessage(alertMessage)
                         .setCancelable(true)
@@ -217,6 +216,18 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                         });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                break;
+            case R.id.contact_us_layout:
+                UIAlertDialog.Builder contactus = new UIAlertDialog.Builder(this);
+                SpannableString tipMessage = new SpannableString("客服热线：400-000-000");
+                contactus.setMessage(tipMessage).setCancelable(true).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog b = contactus.create();
+                b.show();
                 break;
         }
 

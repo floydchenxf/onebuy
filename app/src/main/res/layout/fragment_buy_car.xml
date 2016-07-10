@@ -134,7 +134,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="10dp"
-            android:text="马上夺宝"
+            android:text="马上去夺宝"
             android:textColor="@color/white"
             android:textSize="12sp" />
     </LinearLayout>
