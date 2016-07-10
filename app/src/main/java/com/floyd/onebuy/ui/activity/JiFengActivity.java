@@ -44,7 +44,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
 
         findViewById(R.id.title_back).setOnClickListener(this);
         titleView = (TextView) findViewById(R.id.title_name);
-        titleView.setText("积分记录");
+        titleView.setText("我的积分");
         titleView.setVisibility(View.VISIBLE);
 
         dataLoadingView = new DefaultDataLoadingView();
@@ -104,9 +104,6 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
                     emptyView.setText("暂无数据");
                     emptyView.setTextColor(Color.BLACK);
                     mPullToRefreshListView.setEmptyView(emptyView);
-                } else {
-                    View head = View.inflate(JiFengActivity.this, R.layout.jifeng_head, null);
-                    mListView.addHeaderView(head);
                 }
             }
 
