@@ -18,7 +18,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/tuqian" />
 
         <TextView
@@ -239,7 +239,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/tuqian" />
 
         <TextView

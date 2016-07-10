@@ -10,6 +10,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:background="@drawable/type_background"
+        android:textColor="@drawable/word_selector"
         android:gravity="center" />
 
 </LinearLayout>

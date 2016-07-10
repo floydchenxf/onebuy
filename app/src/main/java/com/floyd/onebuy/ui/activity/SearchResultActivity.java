@@ -1,10 +1,12 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
     private ListView mListView;
     private ProductAdapter productAdapter;
     private TextView titleView;
+    private View searchContentView;
     private int pageNo = 1;
     private boolean needClear = true;
     private String searchWord;
@@ -38,13 +41,13 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_common);
+        setContentView(R.layout.activity_search_result);
         searchWord = getIntent().getStringExtra(SearchActivity.SEARCH_WORD);
         oneDp = this.getResources().getDimension(R.dimen.one_dp);
         findViewById(R.id.title_back).setOnClickListener(this);
-        titleView = (TextView) findViewById(R.id.title_name);
-        titleView.setText("搜索结果");
-        titleView.setVisibility(View.VISIBLE);
+
+        searchContentView = findViewById(R.id.search_content_view);
+        searchContentView.setOnClickListener(this);
 
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
@@ -128,6 +131,12 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
                 needClear = true;
                 loadData(true);
                 break;
+            case R.id.search_content_view:
+                Intent it = new Intent(this, SearchActivity.class);
+                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(it);
+                break;
         }
     }
 }
+
