@@ -35,7 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/pager_layout"
         android:background="#ffffff"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="6dp">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -51,10 +52,11 @@
                     android:id="@+id/type1_imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/weixinhaoyou" />
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ten_index" />
 
                 <RelativeLayout
                     android:id="@+id/redHot1_layout"
@@ -87,9 +89,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="30dp"
-                android:text="十元区"
-                android:textColor="#ffffff"
+                android:paddingTop="36dp"
+                android:text="十元专区"
+                android:textColor="#999999"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -107,10 +109,11 @@
                     android:id="@+id/type2_imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/penyouquan" />
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/hun_index" />
 
                 <RelativeLayout
                     android:id="@+id/redHot2_layout"
@@ -143,9 +146,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="30dp"
-                android:text="男装"
-                android:textColor="#ffffff"
+                android:paddingTop="36dp"
+                android:text="百元特享"
+                android:textColor="#999999"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -163,11 +166,11 @@
                     android:id="@+id/type3_imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/qqkonjing" />
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/gongyi_index" />
 
                 <RelativeLayout
                     android:id="@+id/redHot3_layout"
@@ -200,9 +203,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="30dp"
-                android:text="童装"
-                android:textColor="#ffffff"
+                android:paddingTop="36dp"
+                android:text="公益"
+                android:textColor="#999999"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -221,11 +224,11 @@
                     android:id="@+id/type4_imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/tengxunweib" />
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/shandan_index" />
 
                 <RelativeLayout
                     android:id="@+id/redHot4_layout"
@@ -259,9 +262,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="30dp"
-                android:text="综合"
-                android:textColor="#ffffff"
+                android:paddingTop="36dp"
+                android:text="晒单"
+                android:textColor="#999999"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -280,11 +283,11 @@
                     android:id="@+id/type5_imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/tengxunweib" />
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/fri_index" />
 
                 <RelativeLayout
                     android:id="@+id/redHot5_layout"
@@ -318,9 +321,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="30dp"
-                android:text="综合"
-                android:textColor="#ffffff"
+                android:paddingTop="36dp"
+                android:text="快乐星期五"
+                android:textColor="#999999"
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
@@ -329,17 +332,16 @@
     <ViewFlipper
         android:id="@+id/viewflipper"
         android:layout_width="match_parent"
-        android:background="@color/white"
         android:layout_height="wrap_content"
         android:layout_below="@+id/category"
-        />
+        android:background="@color/white" />
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/news_pic_view"
-        android:layout_below="@+id/viewflipper"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:scaleType="centerCrop" />
+        android:layout_below="@+id/viewflipper"
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:id="@+id/navigation_container"
@@ -354,7 +356,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/blue_line_button_bg"
+            android:background="@drawable/red_line_button_bg"
             android:gravity="center"
             android:text="最新" />
 
@@ -363,7 +365,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/blue_line_button_bg"
+            android:background="@drawable/red_line_button_bg"
             android:gravity="center"
             android:text="最热" />
 
@@ -372,15 +374,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/blue_line_button_bg"
+            android:background="@drawable/red_line_button_bg"
             android:gravity="center"
             android:text="最快" />
+
         <CheckedTextView
             android:id="@+id/price_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/blue_line_button_bg"
+            android:background="@drawable/red_line_button_bg"
             android:gravity="center"
             android:text="价格" />
 
