@@ -14,10 +14,10 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/product_pic_1"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="140dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_centerHorizontal="true"
             android:scaleType="center"
             android:src="@drawable/tuqian" />
 
@@ -26,30 +26,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_pic_1"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:singleLine="false"
             android:text="test1"
-            android:textColor="#333333"
-            android:textSize="14sp" />
+            android:textColor="@color/gray_sub_title"
+            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/product_code_layout_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_title_view_1"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="期号:"
-                android:textColor="#999999"
+                android:textColor="@color/gray_content"
                 android:textSize="12sp" />
 
             <TextView
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="11111"
-                android:textColor="#999999"
+                android:textColor="@color/gray_content"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -66,21 +67,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_code_layout_1"
-            android:visibility="gone">
+            android:layout_marginLeft="10dp">
 
             <LinearLayout
+                android:id="@+id/progress_layout1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_centerVertical="true"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/progress_precent_desc_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="夺宝进度"
-                    android:textColor="#999999"
-                    android:textSize="10sp" />
+                    android:layout_marginBottom="4dp"
+                    android:text="开奖进度"
+                    android:textColor="@color/red"
+                    android:textSize="12sp" />
 
                 <ProgressBar
                     android:id="@+id/progress_present_1"
@@ -93,20 +96,17 @@
 
             </LinearLayout>
 
-            <TextView
+            <ImageView
                 android:id="@+id/add_buy_list_view_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="4dp"
-                android:background="@drawable/common_red_round_bord_bg"
-                android:paddingBottom="4dp"
-                android:paddingLeft="6dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/progress_layout1"
+                android:paddingLeft="10dp"
                 android:paddingRight="6dp"
-                android:paddingTop="4dp"
-                android:text="加入清单"
-                android:textColor="#ff4400"
-                android:textSize="12sp" />
+                android:src="@drawable/addbuycar" />
+
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_code_layout_1"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -235,10 +235,10 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/product_pic_2"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="140dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_centerHorizontal="true"
             android:scaleType="center"
             android:src="@drawable/tuqian" />
 
@@ -247,28 +247,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_pic_2"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:singleLine="false"
             android:text="test2"
-            android:textColor="#333333"
-            android:textSize="14sp" />
+            android:textColor="@color/gray_sub_title"
+            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/product_code_layout_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_title_view_2"
-            android:layout_marginLeft="4dp">
+            android:layout_marginLeft="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="期号:"
-                android:textColor="#999999"
+                android:textColor="@color/gray_content"
                 android:textSize="12sp" />
 
             <TextView
@@ -276,7 +277,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="11111"
-                android:textColor="#999999"
+                android:textColor="@color/gray_content"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -284,21 +285,24 @@
             android:id="@+id/choose_layout_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/product_code_layout_2">
+            android:layout_below="@+id/product_code_layout_2"
+            android:layout_marginLeft="10dp">
 
             <LinearLayout
+                android:id="@+id/progress_layout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_centerVertical="true"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/progress_precent_desc_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="夺宝进度"
-                    android:textColor="#999999"
-                    android:textSize="10sp" />
+                    android:layout_marginBottom="4dp"
+                    android:text="开奖进度"
+                    android:textColor="@color/red"
+                    android:textSize="12sp" />
 
                 <ProgressBar
                     android:id="@+id/progress_present_2"
@@ -311,20 +315,16 @@
 
             </LinearLayout>
 
-            <TextView
+            <ImageView
                 android:id="@+id/add_buy_list_view_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="4dp"
-                android:background="@drawable/common_red_round_bord_bg"
-                android:paddingBottom="4dp"
-                android:paddingLeft="6dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/progress_layout2"
+                android:paddingLeft="10dp"
                 android:paddingRight="6dp"
-                android:paddingTop="4dp"
-                android:text="加入清单"
-                android:textColor="#ff4400"
-                android:textSize="12sp" />
+                android:src="@drawable/addbuycar" />
+
         </RelativeLayout>
 
         <RelativeLayout

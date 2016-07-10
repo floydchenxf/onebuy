@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -179,8 +180,8 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.layout2 = convertView.findViewById(R.id.product_item_2);
             viewHolder.chooseLayout1 = convertView.findViewById(R.id.choose_layout_1);
             viewHolder.chooseLayout2 = convertView.findViewById(R.id.choose_layout_2);
-            viewHolder.addBuyCarView1 = (TextView) convertView.findViewById(R.id.add_buy_list_view_1);
-            viewHolder.addBuyCarView2 = (TextView) convertView.findViewById(R.id.add_buy_list_view_2);
+            viewHolder.addBuyCarView1 = (ImageView) convertView.findViewById(R.id.add_buy_list_view_1);
+            viewHolder.addBuyCarView2 = (ImageView) convertView.findViewById(R.id.add_buy_list_view_2);
             viewHolder.progressPrecentDescView1 = (TextView) convertView.findViewById(R.id.progress_precent_desc_1);
             viewHolder.progressPrecentDescView2 = (TextView) convertView.findViewById(R.id.progress_precent_desc_2);
             viewHolder.productImageView1 = (NetworkImageView) convertView.findViewById(R.id.product_pic_1);
@@ -271,7 +272,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     precent = winningInfo.joinedCount * 100 / winningInfo.totalCount;
                 }
                 viewHolder.progressPrecentView1.setProgress(precent);
-                viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
+                viewHolder.progressPrecentDescView1.setText(Html.fromHtml("开奖进度:" + winningInfo.processPrecent));
             } else if (winningInfo.status == WinningInfo.STATUS_LOTTERY) {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);
                 viewHolder.lottestLayout1.setVisibility(View.VISIBLE);
@@ -314,7 +315,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     precent = winningInfo2.joinedCount * 100 / winningInfo2.totalCount;
                 }
                 viewHolder.progressPrecentView2.setProgress(precent);
-                viewHolder.progressPrecentDescView2.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo2.processPrecent + "</font>"));
+                viewHolder.progressPrecentDescView2.setText(Html.fromHtml("开奖进度:" + winningInfo2.processPrecent));
             } else if (winningInfo2.status == WinningInfo.STATUS_LOTTERY) {
                 long left = winningInfo2.lotteryTime - ServerTimeManager.getServerTime();
                 viewHolder.chooseLayout2.setVisibility(View.GONE);
@@ -381,7 +382,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     precent = winningInfo.joinedCount * 100 / winningInfo.totalCount;
                 }
                 viewHolder.progressPrecentView1.setProgress(precent);
-                viewHolder.progressPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
+                viewHolder.progressPrecentDescView1.setText(Html.fromHtml("开奖进度:" + winningInfo.processPrecent));
             } else if (winningInfo.status == WinningInfo.STATUS_LOTTERY) {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);
                 viewHolder.lottestLayout1.setVisibility(View.VISIBLE);
@@ -437,8 +438,8 @@ public class ProductLssueAdapter extends BaseAdapter {
         public TextView progressPrecentDescView2; //进度条描述2
         public ProgressBar progressPrecentView1; //进度条１
         public ProgressBar progressPrecentView2; //进度条２
-        public TextView addBuyCarView1;
-        public TextView addBuyCarView2;
+        public ImageView addBuyCarView1;
+        public ImageView addBuyCarView2;
 
         public View lottestLayout1; //开奖布局１
         public View lottestLayout2; //开奖布局２
