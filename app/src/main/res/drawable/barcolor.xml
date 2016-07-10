@@ -4,8 +4,8 @@
         <shape>
             <corners android:radius="4dip" />
             <gradient
-                android:endColor="#aaaaaa"
-                android:startColor="#aaaaaa" />
+                android:endColor="@color/default_gray"
+                android:startColor="@color/default_gray" />
         </shape>
     </item>
 
@@ -14,8 +14,8 @@
             <shape>
                 <corners android:radius="4dip" />
                 <gradient
-                    android:endColor="@color/yellow"
-                    android:startColor="@color/yellow" />
+                    android:endColor="@color/red"
+                    android:startColor="@color/red" />
             </shape>
         </clip>
     </item>
