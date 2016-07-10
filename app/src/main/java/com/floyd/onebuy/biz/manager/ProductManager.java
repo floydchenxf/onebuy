@@ -369,7 +369,7 @@ public class ProductManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "Search");
-        params.put("pageSzie", pageSize + "");
+        params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
         params.put("keyWords", keywords);
         AsyncJob<ProductLssueListVO> s = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, ProductLssueListVO.class);

@@ -358,7 +358,8 @@
             android:layout_weight="1"
             android:background="@drawable/red_line_button_bg"
             android:gravity="center"
-            android:text="最新" />
+            android:text="最新"
+            android:textColor="@drawable/word_selector" />
 
         <CheckedTextView
             android:id="@+id/hottest_view"
@@ -367,7 +368,8 @@
             android:layout_weight="1"
             android:background="@drawable/red_line_button_bg"
             android:gravity="center"
-            android:text="最热" />
+            android:text="最热"
+            android:textColor="@drawable/word_selector" />
 
         <CheckedTextView
             android:id="@+id/fastest_view"
@@ -376,7 +378,8 @@
             android:layout_weight="1"
             android:background="@drawable/red_line_button_bg"
             android:gravity="center"
-            android:text="最快" />
+            android:text="最快"
+            android:textColor="@drawable/word_selector" />
 
         <CheckedTextView
             android:id="@+id/price_view"
@@ -385,7 +388,8 @@
             android:layout_weight="1"
             android:background="@drawable/red_line_button_bg"
             android:gravity="center"
-            android:text="价格" />
+            android:text="价格"
+            android:textColor="@drawable/word_selector" />
 
     </LinearLayout>
 

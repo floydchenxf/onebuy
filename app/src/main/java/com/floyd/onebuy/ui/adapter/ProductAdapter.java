@@ -84,6 +84,9 @@ public class ProductAdapter extends BaseAdapter {
             holder.productNameView2 = (TextView) convertView.findViewById(R.id.productNameView2);
             holder.productNameView3 = (TextView) convertView.findViewById(R.id.productNameView3);
 
+            holder.line1 = convertView.findViewById(R.id.line1);
+            holder.line2 = convertView.findViewById(R.id.line2);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -110,6 +113,7 @@ public class ProductAdapter extends BaseAdapter {
                     mContext.startActivity(it);
                 }
             });
+            holder.line1.setVisibility(View.VISIBLE);
             final WinningInfo info2 = mList.get(start + 1);
             holder.productImage2.setImageUrl(info2.productUrl, imageLoader);
             holder.productNameView2.setText(info2.title);
@@ -122,6 +126,7 @@ public class ProductAdapter extends BaseAdapter {
                     mContext.startActivity(it);
                 }
             });
+            holder.line2.setVisibility(View.VISIBLE);
             final WinningInfo info3 = mList.get(start + 2);
             holder.productImage3.setImageUrl(info3.productUrl, imageLoader);
             holder.productNameView3.setText(info3.title);
@@ -148,9 +153,12 @@ public class ProductAdapter extends BaseAdapter {
                 }
             });
 
+            holder.line1.setVisibility(View.VISIBLE);
+
             if (mList.size() - 1 < start + 1) {
                 holder.layout2.setVisibility(View.INVISIBLE);
                 holder.layout3.setVisibility(View.INVISIBLE);
+                holder.line2.setVisibility(View.GONE);
                 holder.layout2.setOnClickListener(null);
                 holder.layout3.setOnClickListener(null);
             } else {
@@ -166,6 +174,7 @@ public class ProductAdapter extends BaseAdapter {
                         mContext.startActivity(it);
                     }
                 });
+                holder.line2.setVisibility(View.VISIBLE);
                 holder.layout3.setVisibility(View.INVISIBLE);
                 holder.layout3.setOnClickListener(null);
             }
@@ -186,6 +195,9 @@ public class ProductAdapter extends BaseAdapter {
         private View layout1;
         private View layout2;
         private View layout3;
+
+        private View line1;
+        private View line2;
 
 
     }
