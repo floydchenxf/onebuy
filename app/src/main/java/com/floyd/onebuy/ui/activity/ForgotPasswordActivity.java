@@ -11,7 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.ui.R;
+
+import java.util.Map;
 
 public class ForgotPasswordActivity extends Activity implements View.OnClickListener {
 
@@ -30,7 +34,6 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                 int k = time;
                 if (k <= 0) {
                     checkCodeButton.setEnabled(true);
-                    checkCodeButton.setBackgroundResource(R.drawable.common_round_blue_bg);
                     checkCodeButton.setText("获取验证码");
                     return;
                 }
@@ -54,6 +57,8 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
         checkCodeView = (EditText) findViewById(R.id.check_code);
         checkCodeButton = (TextView) findViewById(R.id.check_code_button);
         nextStepButton = (TextView) findViewById(R.id.next_step);
+        checkCodeButton.setOnClickListener(this);
+        nextStepButton.setOnClickListener(this);
     }
 
     @Override
@@ -83,7 +88,31 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                 this.finish();
                 break;
             case R.id.check_code_button:
-                //TODO getCheckCode
+                String mobile1 = mobileView.getText().toString();
+                if (TextUtils.isEmpty(mobile1)) {
+                    Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Map<String, String>>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+                        Toast.makeText(ForgotPasswordActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        checkCodeButton.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onSuccess(Map<String, String> s) {
+                        checkCodeButton.setEnabled(false);
+                        checkCodeButton.setText("60秒后重新获取");
+                        doUpdateTime(60);
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
+
                 break;
         }
 
