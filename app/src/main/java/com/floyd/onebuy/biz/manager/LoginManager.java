@@ -12,12 +12,14 @@ import com.floyd.onebuy.biz.func.AbstractJsonApiCallback;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.tools.PrefsTools;
 import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.channel.request.FileItem;
 import com.floyd.onebuy.channel.request.HttpMethod;
 import com.floyd.onebuy.ui.activity.LoginActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +29,6 @@ import java.util.Map;
 public class LoginManager {
 
     public static final String LOGIN_INFO = "LOGIN_INFO";
-
-    public static AsyncJob<Boolean> fetchVerifyCodeJob(String phoneNumber) {
-        return null;
-    }
 
     public static UserVO getLoginInfo(Context context) {
         String data = PrefsTools.getStringPrefs(context, LOGIN_INFO, "");
@@ -64,7 +62,7 @@ public class LoginManager {
     public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType","register");
+        params.put("pageType", "register");
         params.put("mobile", phoneNum);
         params.put("password", password);
         params.put("code", code);
@@ -132,5 +130,60 @@ public class LoginManager {
         params.put("newPassword", newPassword);
         params.put("code", smsCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, String.class);
+    }
+
+    /**
+     * 发送短信
+     *
+     * @param mobile
+     * @return map key:code
+     */
+    public static AsyncJob<Map<String, String>> sendSms(String mobile) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "sendVerifyCode");
+        params.put("mobile", mobile);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
+    }
+
+
+    /**
+     * 修改头像
+     *
+     * @param userId
+     * @param file
+     * @return
+     */
+    public static AsyncJob<Map<String, String>> modifyHead(long userId, File file) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "upLoadUserLogo");
+        params.put("userId", userId + "");
+        Map<String, FileItem> files = new HashMap<String, FileItem>();
+        files.put("File", new FileItem(file));
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, files, HttpMethod.POST, Map.class);
+    }
+
+    /**
+     * 修改个人信息
+     *
+     * @param userId
+     * @param nickName
+     * @return
+     */
+    public static AsyncJob<Boolean> modifyUserInfo(long userId, String nickName) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "modifyUserInfo");
+        params.put("nickName", nickName);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+    }
+
+    public static AsyncJob<Boolean> checkUserMobile(String mobile, String smsCode) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "checkUserMobile");
+        params.put("mobile", mobile);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 }

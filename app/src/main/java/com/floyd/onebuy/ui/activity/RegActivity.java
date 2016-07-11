@@ -16,6 +16,8 @@ import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.ui.R;
 
+import java.util.Map;
+
 public class RegActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = "RegActivity";
@@ -59,7 +61,6 @@ public class RegActivity extends Activity implements View.OnClickListener {
                 int k = time;
                 if (k <= 0) {
                     checkCodeButtonView.setEnabled(true);
-                    checkCodeButtonView.setBackgroundResource(R.drawable.common_round_blue_bg);
                     checkCodeButtonView.setText("获取验证码");
                     return;
                 }
@@ -79,28 +80,25 @@ public class RegActivity extends Activity implements View.OnClickListener {
             case R.id.check_code_button:
                 checkCodeButtonView.setEnabled(false);
                 String usernick2 = userNickView.getText().toString();
-//                LoginManager.fetchVerifyCodeJob(usernick2).startUI(new ApiCallback<Boolean>() {
-//                    @Override
-//                    public void onError(int code, String errorInfo) {
-//                        Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-//                        checkCodeButtonView.setEnabled(true);
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Boolean s) {
-//                        if (s) {
-//                            checkCodeButtonView.setEnabled(false);
-//                            checkCodeButtonView.setBackgroundResource(R.drawable.common_round_bg);
-//                            checkCodeButtonView.setText("60秒后重新获取");
-//                            doUpdateTime(60);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onProgress(int progress) {
-//
-//                    }
-//                });
+                LoginManager.sendSms(usernick2).startUI(new ApiCallback<Map<String, String>>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+                        Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        checkCodeButtonView.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onSuccess(Map<String, String> s) {
+                        checkCodeButtonView.setEnabled(false);
+                        checkCodeButtonView.setText("60秒后重新获取");
+                        doUpdateTime(60);
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
                 break;
             case R.id.next_step:
                 String usernick = userNickView.getText().toString();
