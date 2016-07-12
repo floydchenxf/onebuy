@@ -28,6 +28,7 @@ import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.AddressManagerActivity;
 import com.floyd.onebuy.ui.activity.FeeRecordActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
+import com.floyd.onebuy.ui.activity.MyInfoActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
@@ -245,6 +246,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         addFeeView.setOnClickListener(this);
         headImageView = (NetworkImageView) headView.findViewById(R.id.head);
         headImageView.setDefaultImageResId(R.drawable.default_image);
+        headImageView.setOnClickListener(this);
 
         operateListView = (ListView) view.findViewById(R.id.operate_listview);
         operateListView.addHeaderView(headView);
@@ -296,6 +298,10 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 startActivity(settingIntent);
                 break;
             case R.id.add_fee:
+                break;
+            case R.id.head:
+                Intent myInfoIntent = new Intent(getActivity(), MyInfoActivity.class);
+                startActivity(myInfoIntent);
                 break;
         }
 

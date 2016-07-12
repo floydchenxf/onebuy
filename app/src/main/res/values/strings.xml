@@ -75,7 +75,7 @@
     <string name="net_null">哎呀，怎么没网络了，请联网后试试！</string>
     <string name="aliwx_send_original">原图</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
     <string name="title_activity_profile_address">ProfileAddressActivity</string>
@@ -103,19 +103,6 @@
 
     <string name="demo_min_label">Min</string>
     <string name="demo_max_label">Max</string>
-    <string name="title_activity_winning_record">WinningRecordActivity</string>
-    <string name="title_activity_winning_detail">WinningDetailActivity</string>
-    <string name="title_activity_pay">PayActivity</string>
-    <string name="title_activity_setting">SettingActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_friday">FridayActivity</string>
-    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
-    <string name="title_activity_forgot_password2">ForgotPassword2Activity</string>
-    <string name="title_activity_search_result">SearchResultActivity</string>
-    <string name="title_activity_address_manager">AddressManagerActivity</string>
-    <string name="title_activity_history_prize">HistoryPrizeActivity</string>
-    <string name="title_activity_ji_feng">JiFengActivity</string>
-    <string name="title_activity_pay_result">PayResultActivity</string>
-    <string name="title_activity_address_modify">AddressModifyActivity</string>
-
-    </resources>
+    <string name="take_phone">拍照</string>
+    <string name="phone">相册</string>
+</resources>

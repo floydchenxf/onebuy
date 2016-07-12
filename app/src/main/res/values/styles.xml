@@ -52,16 +52,16 @@
     </style>
 
     <!--<style name="Transpart" parent="android:style/Theme.Dialog">-->
-        <!--<item name="android:windowNoTitle">true</item>-->
-        <!--//对话框无标题-->
-        <!--<item name="android:windowIsTranslucent">false</item>-->
-        <!--//对话框是否透明-->
-        <!--<item name="android:windowBackground">@drawable/bg_dialog</item>-->
-        <!--//此对话框的背景-->
-        <!--<item name="android:windowIsFloating">true</item>-->
-        <!--//对话框是否浮动-->
-        <!--<item name="android:backgroundDimEnabled">true</item>-->
-        <!--//（全透明or半透明）-->
+    <!--<item name="android:windowNoTitle">true</item>-->
+    <!--//对话框无标题-->
+    <!--<item name="android:windowIsTranslucent">false</item>-->
+    <!--//对话框是否透明-->
+    <!--<item name="android:windowBackground">@drawable/bg_dialog</item>-->
+    <!--//此对话框的背景-->
+    <!--<item name="android:windowIsFloating">true</item>-->
+    <!--//对话框是否浮动-->
+    <!--<item name="android:backgroundDimEnabled">true</item>-->
+    <!--//（全透明or半透明）-->
     <!--</style>-->
 
     <style name="ContentOverlay" parent="@android:style/Theme">
@@ -170,5 +170,9 @@
         <item name="android:scrollHorizontally">true</item>
         <item name="android:textAppearance">@android:style/TextAppearance.DialogWindowTitle</item>
     </style>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
