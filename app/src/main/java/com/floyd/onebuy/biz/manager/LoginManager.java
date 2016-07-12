@@ -176,6 +176,7 @@ public class LoginManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "modifyUserInfo");
         params.put("nickName", nickName);
+        params.put("userId", userId+"");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 

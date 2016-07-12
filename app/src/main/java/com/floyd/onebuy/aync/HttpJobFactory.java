@@ -77,6 +77,25 @@ public class HttpJobFactory {
         return new AsyncJob<byte[]>() {
             @Override
             public void start(final ApiCallback<byte[]> callback) {
+
+                boolean isNetworkAvailable = NetworkUtil.isNetworkAvailable(IMChannel.getApplication());
+                if (!isNetworkAvailable) {
+                    if (callback != null) {
+                        callback.onError(APIError.API_NETWORK_ERROR, "无网络，请检查网络设置．");
+                    }
+                    return;
+                }
+
+                if (params != null && !params.isEmpty()) {
+                    String noncestr = SignTool.getRandomString(16);
+                    params.put("noncestr", noncestr);
+                }
+
+                String sign = SignTool.generateSign(params);
+                if (sign != null) {
+                    params.put("sign", sign);
+                }
+
                 new BaseRequest(url, params, files, httpMethod, new RequestCallback() {
                     @Override
                     public void onProgress(int progress) {
