@@ -46,8 +46,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="#666666"
-            android:textSize="12sp" />
+            android:textColor="@color/gray_sub_title"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:id="@+id/progress_layout"
@@ -59,8 +59,9 @@
                 android:id="@+id/progress_present_view"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="4dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:max="100"
                 android:progress="50"
                 android:progressDrawable="@drawable/barcolor" />
@@ -75,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:text="111"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/left_view"
@@ -84,7 +85,7 @@
                     android:layout_alignParentRight="true"
                     android:text="222"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -173,6 +174,7 @@
                 android:layout_centerVertical="true"
                 android:drawablePadding="6dp"
                 android:drawableRight="@drawable/jiantou_next"
+                android:textColor="@color/gray_content"
                 android:text="建议在wifi下查看"
                 android:textSize="12sp" />
         </RelativeLayout>

@@ -250,21 +250,21 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>人次"));
                     leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>人次"));
                     progressBar.setProgress(progressVO.getPrecent());
-                    titleAndStatusSb.append("进行中");
+                    titleAndStatusSb.append("进行中    ");
                 } else if (status == 1) {
-                    titleAndStatusSb.append("开奖中");
+                    titleAndStatusSb.append("开奖中    ");
                 } else if (status == 2) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
                     joinLayout.setVisibility(View.GONE);
-                    titleAndStatusSb.append("已揭晓");
+                    titleAndStatusSb.append("已揭晓    ");
                 }
 
                 titleAndStatusSb.append(winningDetailInfo.productTitle);
 
                 SpannableString message = new SpannableString(titleAndStatusSb.toString());
-                message.setSpan(new BackgroundColorSpan(Color.parseColor("#ff00dd")), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                message.setSpan(new BackgroundColorSpan(Color.parseColor("#ff424c")), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 titleAndStatusView.setText(message);
 
                 List<AdvVO> advVOs = winningDetailInfo.advVOList;

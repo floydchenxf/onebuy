@@ -8,7 +8,9 @@
         android:id="@+id/head"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="14dp"
+        android:layout_marginTop="4dp"
         android:src="@drawable/tupian" />
 
     <LinearLayout
@@ -21,21 +23,21 @@
         <TextView
             android:id="@+id/user_name_view"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
 
             android:gravity="center_vertical|left"
             android:text="sss"
-            android:textColor="#0000ff"
+            android:textColor="@color/gray_title"
             android:textSize="10sp" />
 
         <TextView
             android:id="@+id/join_number_view"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:layout_below="@+id/user_name_view"
             android:gravity="center_vertical|left"
             android:text="sss"
-            android:textColor="#666666"
+            android:textColor="@color/gray_sub_title"
             android:textSize="10sp" />
     </LinearLayout>
 

@@ -1,14 +1,19 @@
 package com.floyd.onebuy.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.biz.tools.DateUtil;
+import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
@@ -23,11 +28,13 @@ public class JoinRecordAdapter extends BaseAdapter {
     private List<JoinVO> joinRecordVOList = new ArrayList<JoinVO>();
     private Context mContext;
     private ImageLoader imageLoader;
+    private float onDp;
 
     public JoinRecordAdapter(Context context, List<JoinVO> args) {
         joinRecordVOList.addAll(args);
         this.imageLoader = ImageLoaderFactory.createImageLoader();
         mContext = context;
+        onDp = context.getResources().getDimension(R.dimen.one_dp);
     }
 
     public void add(JoinVO k) {
@@ -78,9 +85,19 @@ public class JoinRecordAdapter extends BaseAdapter {
 
         JoinVO vo = getItem(position);
         holder.headImage.setDefaultImageResId(R.drawable.default_image);
-        holder.headImage.setImageUrl(vo.ClientPic, imageLoader);
-        holder.userNameView.setText(vo.ClientName);
-        holder.joinNumberView.setText(Html.fromHtml("参与了<font color=\"red\">" + vo.Number + "</font>"));
+        holder.headImage.setImageUrl(vo.ClientPic, imageLoader, new BitmapProcessor() {
+            @Override
+            public Bitmap processBitmap(Bitmap bitmap) {
+                return ImageUtils.getCircleBitmap(bitmap, 40*onDp);
+            }
+        });
+        holder.userNameView.setText(vo.ClientName+"("+vo.ClientIP+")");
+        String dateTimeStr = "";
+        if (!TextUtils.isEmpty(vo.InTime) && TextUtils.isDigitsOnly(vo.InTime)) {
+            Long t = Long.parseLong(vo.InTime);
+            dateTimeStr = DateUtil.getDateTime(t*1000);
+        }
+        holder.joinNumberView.setText(Html.fromHtml("参与了<font color=\"red\">" + vo.Number + "</font>次 " + dateTimeStr));
         return convertView;
     }
 

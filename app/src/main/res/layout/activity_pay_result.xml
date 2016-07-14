@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
     <include
@@ -15,6 +16,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
+
         android:orientation="vertical">
 
         <TextView
@@ -23,7 +25,7 @@
             android:gravity="center"
             android:text="恭喜您，参与成功"
             android:textColor="#666666"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +33,7 @@
             android:layout_marginTop="12dp"
             android:text="请等待系统为您揭晓"
             android:textColor="#666666"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +43,7 @@
             <CheckedTextView
                 android:id="@+id/goto_buy_view"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
@@ -54,11 +56,11 @@
             <CheckedTextView
                 android:id="@+id/view_buy_view"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="14dp"
                 android:layout_weight="1"
-                android:background="@drawable/common_round_blue_bg"
+                android:background="@drawable/common_round_gray_bg"
                 android:gravity="center"
                 android:text="查看夺宝记录"
                 android:textColor="@color/white"
@@ -66,11 +68,18 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/result_layout"
+        android:layout_height="1px"
+        android:background="@color/gray_sub_title"/>
+
     <ListView
         android:id="@+id/buy_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/result_layout"
+        android:layout_below="@+id/line1"
         android:background="@color/white"
         android:cacheColorHint="#00000000"
         android:divider="@null"
