@@ -11,9 +11,10 @@
         android:id="@+id/operate_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingTop="4dp">
 
         <View
             android:layout_width="match_parent"
@@ -24,7 +25,6 @@
             android:id="@+id/join_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -35,7 +35,7 @@
                 android:layout_weight="4"
                 android:background="#ff9900"
                 android:gravity="center"
-                android:text="加入清单"
+                android:text="加入购物车"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
@@ -46,7 +46,7 @@
                 android:layout_weight="4"
                 android:background="#ff1100"
                 android:gravity="center"
-                android:text="立即参与"
+                android:text="立即夺宝"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:src="@drawable/tab_c_off" />
+                android:src="@drawable/buycar_normal" />
 
         </LinearLayout>
 
@@ -96,15 +96,14 @@
         android:id="@+id/join_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/operate_layout"
         android:layout_below="@+id/title_layout"
         android:background="@color/white"
         android:cacheColorHint="#00000000"
         android:divider="#cecece"
         android:dividerHeight="1px"
-        android:layout_above="@+id/operate_layout"
         android:fadingEdge="none"
         android:listSelector="#00000000" />
-
 
 
     <include layout="@layout/diamod_data_loading" />

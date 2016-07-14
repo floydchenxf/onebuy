@@ -1,6 +1,7 @@
 package com.floyd.onebuy.biz.manager;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
@@ -37,8 +38,18 @@ public class CarManager {
         params.put("pageType", "AddCar");
         params.put("userId", userId + "");
         params.put("productLssueID", productLssueId + "");
-        params.put("number", number+"");
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+        params.put("number", number + "");
+        AsyncJob<Map<String, String>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
+        return result.map(new Func<Map<String, String>, Boolean>() {
+            @Override
+            public Boolean call(Map<String, String> map) {
+                String i = map.get("number");
+                if (TextUtils.isDigitsOnly(i)) {
+                    return Boolean.TRUE;
+                }
+                return Boolean.FALSE;
+            }
+        });
     }
 
     /**
