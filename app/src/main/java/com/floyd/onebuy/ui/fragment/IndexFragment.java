@@ -134,8 +134,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private ViewFlipper mFlipper;
 
-    private Long[] typeCodes = new Long[]{11l,12l,13l,14l, 15l};
+    private Long[] typeCodes = new Long[]{21l,22l};
     private int[] defaultImages = new int[]{R.drawable.ten_index, R.drawable.hun_index, R.drawable.gongyi_index,R.drawable.shandan_index, R.drawable.fri_index};
+    private String[] defaultTexts = new String[]{"十元区", "百元区", "公益", "晒单", "快乐星期五"};
 
 
     private Handler mChangeViewPagerHandler = new Handler() {
@@ -352,37 +353,37 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
                 mNavigationContainer.setVisibility(View.VISIBLE);
 
-                List<ProductTypeVO> typeList = indexVO.typeList;
-                if (typeList == null || typeList.isEmpty()) {
-                    categoryLayout.setVisibility(View.GONE);
-                } else {
-                    categoryLayout.setVisibility(View.VISIBLE);
-                    Map<Long, ProductTypeVO> productTypeVOMap = new HashMap<Long, ProductTypeVO>();
-                    for (int i = 0; i < typeList.size(); i++) {
-                        ProductTypeVO typeVO = typeList.get(i);
-                        productTypeVOMap.put(typeVO.CodeID, typeVO);
-                    }
-
-                    int idx = 0;
-                    TypeClickListener tenTypeClickListener = new TypeClickListener(typeCodes[0]);
-                    TypeClickListener hundeTypeClickListener = new TypeClickListener(typeCodes[1]);
-                    listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, null,null,null};
-                    for (Long l:typeCodes) {
-                        int k = idx++;
-                        ProductTypeVO vv = productTypeVOMap.get(l);
-                        if (vv == null) {
-                            continue;
-                        }
-                        String typePic = vv.TypePic;
-                        if (TextUtils.isEmpty(typePic)) {
-                            typePic = APIConstants.HOST + "UploadImg/20160415170740521.png";
-                        }
-                        imageViews[k].setDefaultImageResId(defaultImages[k]);
-                        imageViews[k].setImageUrl(typePic, mImageLoader);
-                        typeDeses[k].setText(vv.CodeName);
-                        imageViews[k].setOnClickListener(listeners[k]);
-                    }
+                categoryLayout.setVisibility(View.VISIBLE);
+                TypeClickListener tenTypeClickListener = new TypeClickListener(typeCodes[0]);
+                TypeClickListener hundeTypeClickListener = new TypeClickListener(typeCodes[1]);
+                listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, null,null,null};
+                for (int i=0; i < 5; i++) {
+                    imageViews[i].setDefaultImageResId(defaultImages[i]);
+                    imageViews[i].setImageUrl(null, mImageLoader);
+                    typeDeses[i].setText(defaultTexts[i]);
+                    imageViews[i].setOnClickListener(listeners[i]);
                 }
+
+//                List<ProductTypeVO> typeList = indexVO.typeList;
+//                if (typeList != null && !typeList.isEmpty()) {
+//                    Map<Long, ProductTypeVO> productTypeVOMap = new HashMap<Long, ProductTypeVO>();
+//                    for (int i = 0; i < typeList.size(); i++) {
+//                        ProductTypeVO typeVO = typeList.get(i);
+//                        productTypeVOMap.put(typeVO.CodeID, typeVO);
+//                    }
+//
+//                    int typeSize = typeCodes.length > 5 ? 5 : typeCodes.length;
+//                    for (int k=0; k < typeSize; k++) {
+//                        ProductTypeVO vv = productTypeVOMap.get(typeCodes[k]);
+//                        if (vv == null) {
+//                            continue;
+//                        }
+//                        String typePic = vv.TypePic;
+//                        imageViews[k].setImageUrl(typePic, mImageLoader);
+//                        typeDeses[k].setText(vv.CodeName);
+//                        imageViews[k].setOnClickListener(listeners[k]);
+//                    }
+//                }
 
                 List<WinningInfo> winningRecordVOs = indexVO.theNewList;
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
@@ -426,7 +427,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         mNavigationContainer = (LinearLayout) mHeaderView.findViewById(R.id.navigation_container);
 
-        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null);
+        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null, BannerFragment.SCALE_CENTER_CROP);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override
@@ -562,7 +563,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                             UIAlertDialog.Builder clearBuilder = new UIAlertDialog.Builder(IndexFragment.this.getActivity());
                             SpannableString message = new SpannableString("亲！您签到成功，奖励" + signInVO.AddJF + "积分");
                             message.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#ff424c")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             clearBuilder.setMessage(message)
                                     .setCancelable(true)
                                     .setNegativeButton("确认", new DialogInterface.OnClickListener() {

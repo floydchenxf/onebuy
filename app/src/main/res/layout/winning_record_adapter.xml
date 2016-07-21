@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="查看我的号码"
-                    android:textColor="#0066ff"
+                    android:textColor="@color/red"
                     android:textSize="12sp" />
 
             </RelativeLayout>

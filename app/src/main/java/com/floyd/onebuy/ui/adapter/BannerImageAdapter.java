@@ -20,17 +20,19 @@ public class BannerImageAdapter extends FragmentStatePagerAdapter {
     public static int BANNER_HEIGHT_IN_DP = 300;
 
     private int height;
+    private int scaleType;
 
     List<AdvVO> dataLists = new ArrayList<AdvVO>();
     private BannerFragment.ImagerClickListener mImagerClickListener;
 
-    public BannerImageAdapter(FragmentManager fm, List<AdvVO> dataList, BannerFragment.ImagerClickListener imagerClickListener) {
+    public BannerImageAdapter(FragmentManager fm, List<AdvVO> dataList, BannerFragment.ImagerClickListener imagerClickListener, int scaleType) {
         super(fm);
         if (dataList != null && !dataList.isEmpty()) {
             this.dataLists.addAll(dataList);
         }
         this.mImagerClickListener = imagerClickListener;
-        height = BANNER_HEIGHT_IN_DP;
+        this.height = BANNER_HEIGHT_IN_DP;
+        this.scaleType = scaleType;
     }
 
     public void addItems(List<AdvVO> dataList) {
@@ -50,6 +52,7 @@ public class BannerImageAdapter extends FragmentStatePagerAdapter {
         args.putParcelable(BannerFragment.Banner, dataLists.get(position));
         args.putInt(BannerFragment.Position, position);
         args.putInt(BannerFragment.Height, height);
+        args.putInt(BannerFragment.SCALE_TYPE, scaleType);
         return BannerFragment.newInstance(args, mImagerClickListener);
     }
 

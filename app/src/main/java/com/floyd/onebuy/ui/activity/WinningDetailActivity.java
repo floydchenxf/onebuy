@@ -28,9 +28,11 @@ import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
 import com.floyd.onebuy.event.LoginEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
+import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
+import com.floyd.onebuy.ui.fragment.BannerFragment;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
@@ -78,6 +80,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private View detailLinkView;//详情连接
     private View lastWinnerView;//往期揭晓
     private View showShareView;//晒单分享
+
+    private View allRecordLayout;
 
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
@@ -195,6 +199,10 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             @Override
             public void onSuccess(List<JoinVO> joinVOs) {
                 adapter.addAll(joinVOs, false);
+                if (adapter.getFeeRecords() == null||adapter.getFeeRecords().isEmpty()) {
+                    allRecordLayout.setVisibility(View.GONE);
+                }
+
             }
 
             @Override
@@ -291,21 +299,31 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                         }
                     });
                 } else {
-                    noJoinView.setOnClickListener(null);
                     if (winningDetailInfo.isGet) {
                         noJoinView.setVisibility(View.GONE);
                         userNickView.setVisibility(View.VISIBLE);
                         joinNumberView.setVisibility(View.VISIBLE);
                         joinNumberView.setText("Test");
+                        noJoinView.setOnClickListener(null);
                     } else {
                         noJoinView.setVisibility(View.VISIBLE);
                         noJoinView.setText(R.string.no_join_desc);
                         userNickView.setVisibility(View.GONE);
                         joinNumberView.setVisibility(View.GONE);
+                        noJoinView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                buyNow();
+                            }
+                        });
                     }
                 }
 
                 adapter.addAll(winningDetailInfo.allJoinedRecords, true);
+
+                if (adapter.getFeeRecords() == null||adapter.getFeeRecords().isEmpty()) {
+                    allRecordLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -319,10 +337,11 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     private void initListViewHeader() {
         mHeaderView = View.inflate(this, R.layout.detail_head, null);
+        allRecordLayout = mHeaderView.findViewById(R.id.all_record_layout);
         mViewPagerContainer = mHeaderView.findViewById(R.id.detail_pager_layout);
         mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.detail_loopViewPager);
         mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.detail_indicator);
-        mBannerImageAdapter = new BannerImageAdapter(this.getSupportFragmentManager(), null, null);
+        mBannerImageAdapter = new BannerImageAdapter(this.getSupportFragmentManager(), null, null, BannerFragment.SCALE_FIT_CENTER);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override
@@ -340,7 +359,6 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         });
 
         titleAndStatusView = (TextView)mHeaderView.findViewById(R.id.title_and_status_view);
-
         progressLayout = mHeaderView.findViewById(R.id.progress_layout);
         progressBar = (ProgressBar) progressLayout.findViewById(R.id.progress_present_view);
         totalView = (TextView) progressLayout.findViewById(R.id.total_view);
@@ -411,26 +429,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 }
                 break;
             case R.id.buy_now_view:
-                if (LoginManager.isLogin(this)) {
-                    long userId = LoginManager.getLoginInfo(this).ID;
-                    CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
-                        @Override
-                        public void onError(int code, String errorInfo) {
-                            Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onSuccess(Boolean s) {
-                            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_buy_car, new HashMap<String, Object>()));
-                        }
-
-                        @Override
-                        public void onProgress(int progress) {
-
-                        }
-                    });
-                }
-                this.finish();
+                buyNow();
                 break;
             case R.id.goto_detail_view:
                 Intent it = new Intent(this, WinningDetailActivity.class);
@@ -439,6 +438,32 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 this.finish();
                 break;
         }
+    }
+
+    private void buyNow() {
+        if (LoginManager.isLogin(this)) {
+            long userId = LoginManager.getLoginInfo(this).ID;
+            CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
+                @Override
+                public void onError(int code, String errorInfo) {
+                    Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess(Boolean s) {
+                    Intent it = new Intent(WinningDetailActivity.this, MainActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    it.putExtra(MainActivity.TAB_INDEX, R.id.tab_buy_car);
+                    startActivity(it);
+                }
+
+                @Override
+                public void onProgress(int progress) {
+
+                }
+            });
+        }
+        this.finish();
     }
 
     @Subscribe

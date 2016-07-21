@@ -60,8 +60,8 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:max="100"
                 android:progress="50"
                 android:progressDrawable="@drawable/barcolor" />
@@ -113,8 +113,8 @@
                 android:id="@+id/no_join_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:textColor="#666666"
                 android:textSize="12sp" />
 
@@ -174,8 +174,8 @@
                 android:layout_centerVertical="true"
                 android:drawablePadding="6dp"
                 android:drawableRight="@drawable/jiantou_next"
-                android:textColor="@color/gray_content"
                 android:text="建议在wifi下查看"
+                android:textColor="@color/gray_content"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -216,22 +216,28 @@
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/middle_layout_2"
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
+    <LinearLayout
+        android:id="@+id/all_record_layout"
         android:layout_below="@+id/click_layout"
-        android:background="#efefef" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/middle_layout_2"
-        android:layout_marginLeft="12dp"
-        android:gravity="center_vertical|left"
-        android:text="所有的参与记录"
-        android:textColor="#333333"
-        android:textSize="12sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:background="#efefef" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/middle_layout_2"
+            android:layout_marginLeft="12dp"
+            android:gravity="center_vertical|left"
+            android:text="所有的参与记录"
+            android:textColor="#333333"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 
 </RelativeLayout>

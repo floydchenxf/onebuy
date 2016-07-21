@@ -14,11 +14,13 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/product_pic_1"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="120dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:scaleType="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/tuqian" />
 
         <TextView
@@ -29,7 +31,6 @@
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:singleLine="false"
@@ -236,11 +237,13 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/product_pic_2"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="120dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:scaleType="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/tuqian" />
 
         <TextView
@@ -251,7 +254,6 @@
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:singleLine="false"

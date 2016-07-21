@@ -35,6 +35,11 @@ public class BannerFragment extends BaseFragment {
     public static final String Banner = "Banner";
     public static final String Position = "position";
     public static final String Height = "height";
+    public static final String SCALE_TYPE = "scale_type";
+
+    public static final int SCALE_CENTER_CROP = 0;
+    public static final int SCALE_FIT_CENTER = 1;
+    public static final int SCALE_FIT_XY = 2;
 
 
     private ImageLoader mImageLoader;
@@ -76,11 +81,13 @@ public class BannerFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         Bundle args = getArguments();
         int height = (int) getActivity().getResources().getDimension(R.dimen.BANNER_HEIGHT_IN_DP);
+        int saleType = 0;
 
         if (args != null) {
             mDataList = args.getParcelable(Banner);
             mPosition = args.getInt(Position);
             height = args.getInt(Height);
+            saleType = args.getInt(SCALE_TYPE, 0);
         }
 
         mImageView = new NetworkImageView(getActivity());
@@ -94,7 +101,16 @@ public class BannerFragment extends BaseFragment {
                 }
             }
         });
-        mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+
+        if (saleType == SCALE_FIT_CENTER) {
+            mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        } else if (saleType == SCALE_FIT_XY) {
+            mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+
         mImageView.setErrorImageResId(R.drawable.pic_loading);
         mImageView.setDefaultImageResId(R.drawable.pic_loading);
         if (mDataList != null) {

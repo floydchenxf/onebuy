@@ -39,6 +39,8 @@ import de.greenrobot.event.EventBus;
 
 public class AddressModifyActivity extends Activity implements View.OnClickListener {
 
+    public static final String IS_EDIT = "IS_EDIT";
+
     private EditText linkNameEditView;
     private EditText mobileEditView;
     private TextView provinceCityView;
@@ -73,8 +75,13 @@ public class AddressModifyActivity extends Activity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_modify);
+        boolean isEdit = getIntent().getBooleanExtra(IS_EDIT, false);
         TextView titleName = (TextView) findViewById(R.id.title_name);
-        titleName.setText("添加收货地址");
+        if (isEdit) {
+            titleName.setText("修改收货地址");
+        } else {
+            titleName.setText("添加收货地址");
+        }
         titleName.setVisibility(View.VISIBLE);
         findViewById(R.id.title_back).setOnClickListener(this);
         linkNameEditView = (EditText) findViewById(R.id.linkname_view);

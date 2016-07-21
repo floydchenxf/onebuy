@@ -58,6 +58,7 @@ public class AddressManagerActivity extends Activity implements View.OnClickList
                 GoodsAddressVO goodsAddressVO = addressAdapter.getItem(position);
                 Intent addAddressIntent = new Intent(AddressManagerActivity.this, AddressModifyActivity.class);
                 addAddressIntent.putExtra(APIConstants.ADDRESS_MANAGEMENT_VO, goodsAddressVO);
+                addAddressIntent.putExtra(AddressModifyActivity.IS_EDIT, true);
                 startActivity(addAddressIntent);
             }
         });

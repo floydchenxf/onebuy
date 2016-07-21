@@ -1,9 +1,15 @@
 package com.floyd.onebuy.ui;
 
+import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,6 +40,8 @@ import de.greenrobot.event.Subscribe;
 public class MainActivity extends FragmentActivity implements BackHandledInterface, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+
+    public static final String TAB_INDEX = "TAB_INDEX";
 
     private FragmentTransaction fragmentTransaction;
 
@@ -86,6 +94,15 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int tabId = intent.getIntExtra(TAB_INDEX, -1);
+        if (tabId != -1) {
+            rgs.check(tabId);
+        }
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mBackHandedFragment == null || !mBackHandedFragment.onBackPressed()) {
@@ -110,6 +127,24 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         } else {
             finish();
             System.exit(0);
+        }
+    }
+
+    @TargetApi(11)
+    protected void moveToFront() {
+        if (Build.VERSION.SDK_INT >= 11) { // honeycomb
+            final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+            for (int i = 0; i < recentTasks.size(); i++) {
+                Log.d("Executed app", "Application executed : "
+                        + recentTasks.get(i).baseActivity.toShortString()
+                        + "\t\t ID: " + recentTasks.get(i).id + "");
+                // bring to front
+                if (recentTasks.get(i).baseActivity.toShortString().indexOf(MainActivity.class.getName()) > -1) {
+                    activityManager.moveTaskToFront(recentTasks.get(i).id, ActivityManager.MOVE_TASK_WITH_HOME);
+                }
+            }
         }
     }
 
