@@ -59,7 +59,7 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
     private TextView popJoinedCountView;
     private ListView popJoinNumListView;
     private JoinedNumAdapter joinedNumAdapter;
-    private TextView emptyView;
+    private View emptyView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +97,7 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
             }
         });
 
-        emptyView = new TextView(WinningRecordActivity.this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)(60*oneDp), (int) (10 * oneDp));
-        emptyView.setGravity(Gravity.CENTER);
-        emptyView.setLayoutParams(params);
-        emptyView.setText("暂无数据");
-        emptyView.setTextColor(Color.parseColor("#999999"));
-        mPullToRefreshListView.setEmptyView(emptyView);
+        emptyView = findViewById(R.id.empty_view);
         emptyView.setVisibility(View.GONE);
 
         mListView = mPullToRefreshListView.getRefreshableView();
@@ -112,7 +106,7 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                WinningInfo info = adapter.getItem(position);
+                WinningInfo info = adapter.getItem(position-1);
                 Intent it = new Intent(WinningRecordActivity.this, WinningDetailActivity.class);
                 it.putExtra("productId", info.productId);
                 it.putExtra("id", info.id);

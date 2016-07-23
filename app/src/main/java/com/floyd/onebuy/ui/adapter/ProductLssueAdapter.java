@@ -13,10 +13,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.CarManager;
+import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
@@ -261,6 +264,20 @@ public class ProductLssueAdapter extends BaseAdapter {
                 }
             });
 
+            viewHolder.addBuyCarView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addBuyCar(winningInfo.lssueId, 1);
+                }
+            });
+
+            viewHolder.addBuyCarView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addBuyCar(winningInfo2.lssueId, 1);
+                }
+            });
+
             viewHolder.leftTimeView1.setTag(R.id.LEFT_TIME_ID, winningInfo);
             viewHolder.leftTimeView2.setTag(R.id.LEFT_TIME_ID, winningInfo2);
             if (winningInfo.status == WinningInfo.STATUS_CHOOSE) {
@@ -350,6 +367,13 @@ public class ProductLssueAdapter extends BaseAdapter {
             final WinningInfo winningInfo = records.get(start);
             viewHolder.layout1.setVisibility(View.VISIBLE);
             viewHolder.layout2.setVisibility(View.INVISIBLE);
+            viewHolder.addBuyCarView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addBuyCar(winningInfo.lssueId, 1);
+                }
+            });
+            viewHolder.addBuyCarView2.setOnClickListener(null);
             viewHolder.productImageView1.setImageUrl(winningInfo.productUrl, mImageLoader);
             viewHolder.productTitleView1.setText(winningInfo.title);
 
@@ -461,6 +485,28 @@ public class ProductLssueAdapter extends BaseAdapter {
     public static class MsgObj {
         public SoftReference<TextView> timeView;
         public long id;
+    }
+
+    public void addBuyCar(long lssueId, int num) {
+        if (LoginManager.isLogin(mContext)) {
+            long userId = LoginManager.getLoginInfo(mContext).ID;
+            CarManager.addCar(lssueId, userId, num).startUI(new ApiCallback<Boolean>() {
+                @Override
+                public void onError(int code, String errorInfo) {
+                    Toast.makeText(mContext, errorInfo, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess(Boolean s) {
+                    Toast.makeText(mContext, "添加购物车成功", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onProgress(int progress) {
+
+                }
+            });
+        }
     }
 
 }
