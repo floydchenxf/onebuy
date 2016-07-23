@@ -28,7 +28,7 @@ public class GoodsAddressAdapter extends BaseDataAdapter<GoodsAddressVO> {
 
     @Override
     int[] cacheViews() {
-        return new int[]{R.id.name_view, R.id.mobile_view, R.id.address_detail_view, R.id.edit_view};
+        return new int[]{R.id.name_view, R.id.mobile_view, R.id.address_detail_view};
     }
 
     @Override
@@ -36,7 +36,6 @@ public class GoodsAddressAdapter extends BaseDataAdapter<GoodsAddressVO> {
         TextView nameView = (TextView) holder.get(R.id.name_view);
         TextView mobileView = (TextView) holder.get(R.id.mobile_view);
         TextView addressDetailView = (TextView) holder.get(R.id.address_detail_view);
-        ImageView editView = (ImageView) holder.get(R.id.edit_view);
 
         nameView.setText(addressVO.linkName);
         mobileView.setText(addressVO.mobile);

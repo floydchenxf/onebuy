@@ -32,6 +32,7 @@ import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
+import com.floyd.onebuy.ui.fragment.BannerFragment;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
@@ -340,7 +341,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         mViewPagerContainer = mHeaderView.findViewById(R.id.detail_pager_layout);
         mHeaderViewPager = (LoopViewPager) mHeaderView.findViewById(R.id.detail_loopViewPager);
         mHeaderViewIndicator = (CircleLoopPageIndicator) mHeaderView.findViewById(R.id.detail_indicator);
-        mBannerImageAdapter = new BannerImageAdapter(this.getSupportFragmentManager(), null, null);
+        mBannerImageAdapter = new BannerImageAdapter(this.getSupportFragmentManager(), null, null, BannerFragment.SCALE_FIT_CENTER);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override

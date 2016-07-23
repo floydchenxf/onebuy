@@ -59,6 +59,7 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
     private TextView popJoinedCountView;
     private ListView popJoinNumListView;
     private JoinedNumAdapter joinedNumAdapter;
+    private TextView emptyView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,16 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
 
             }
         });
+
+        emptyView = new TextView(WinningRecordActivity.this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)(60*oneDp), (int) (10 * oneDp));
+        emptyView.setGravity(Gravity.CENTER);
+        emptyView.setLayoutParams(params);
+        emptyView.setText("暂无数据");
+        emptyView.setTextColor(Color.parseColor("#999999"));
+        mPullToRefreshListView.setEmptyView(emptyView);
+        emptyView.setVisibility(View.GONE);
+
         mListView = mPullToRefreshListView.getRefreshableView();
         adapter = new WinningRecordAdapter(this, mImageLoader, new ArrayList<WinningInfo>());
         mListView.setAdapter(adapter);
@@ -174,13 +185,9 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
                 adapter.addAll(winningInfos, needClear);
                 pageNo++;
                 if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
-                    TextView emptyView = new TextView(WinningRecordActivity.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (10 * oneDp));
-                    emptyView.setGravity(Gravity.CENTER);
-                    emptyView.setLayoutParams(params);
-                    emptyView.setText("暂无数据");
-                    emptyView.setTextColor(Color.BLACK);
-                    mPullToRefreshListView.setEmptyView(emptyView);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    emptyView.setVisibility(View.GONE);
                 }
 
             }

@@ -18,6 +18,7 @@ import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
+import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
@@ -663,10 +664,6 @@ public class ProductManager {
                             if (status == 1) {
                                 JSONArray data = j.getJSONArray("data");
                                 List<WinningInfo> winningInfos = convert2MyRecords(data);
-                                if (winningInfos == null || winningInfos.isEmpty()) {
-                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
-                                    return;
-                                }
                                 callback.onSuccess(winningInfos);
                             } else {
                                 String msg = j.getString("info");
@@ -683,7 +680,7 @@ public class ProductManager {
 
     private static List<WinningInfo> convert2MyRecords(JSONArray data) throws JSONException {
         if (data == null || data.length() <= 0) {
-            return null;
+            return new ArrayList<WinningInfo>();
         }
 
         List<WinningInfo> infoList = new ArrayList<WinningInfo>();
@@ -730,6 +727,22 @@ public class ProductManager {
         }
         return infoList;
     }
+
+
+    public static AsyncJob<List<ProductLssueWithWinnerVO>> fetchMyLuckRecords(long uid, int pageNum, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetLuckRecord");
+        params.put("userId", uid + "");
+        params.put("pageSize", pageSize+"");
+        params.put("pageNum", pageNum+"");
+
+        Type type = new TypeToken<List<ProductLssueWithWinnerVO>>(){}.getType();
+        AsyncJob<List<ProductLssueWithWinnerVO>> a = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+        return  a;
+    }
+
+
 
 
 }

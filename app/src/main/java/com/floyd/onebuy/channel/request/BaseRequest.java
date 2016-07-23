@@ -41,12 +41,6 @@ public class BaseRequest extends AbstractRequest {
 
 	public BaseRequest(String url, Map<String, String> headers,
 			Map<String, String> parameters, Map<String, String> fileMap,
-			HttpMethod httpMethod) {
-		this(url, headers, parameters, fileMap, httpMethod, null);
-	}
-
-	public BaseRequest(String url, Map<String, String> headers,
-			Map<String, String> parameters, Map<String, String> fileMap,
 			HttpMethod httpMethod, RequestCallback callback) {
 		Map<String, FileItem> attachments = new HashMap<String, FileItem>();
 		if (fileMap != null && !fileMap.isEmpty()) {

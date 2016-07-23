@@ -427,7 +427,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         mNavigationContainer = (LinearLayout) mHeaderView.findViewById(R.id.navigation_container);
 
-        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null);
+        mBannerImageAdapter = new BannerImageAdapter(this.getActivity().getSupportFragmentManager(), null, null, BannerFragment.SCALE_CENTER_CROP);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override
@@ -563,7 +563,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                             UIAlertDialog.Builder clearBuilder = new UIAlertDialog.Builder(IndexFragment.this.getActivity());
                             SpannableString message = new SpannableString("亲！您签到成功，奖励" + signInVO.AddJF + "积分");
                             message.setSpan(new RelativeSizeSpan(2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#d4377e")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            message.setSpan(new ForegroundColorSpan(Color.parseColor("#ff424c")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             clearBuilder.setMessage(message)
                                     .setCancelable(true)
                                     .setNegativeButton("确认", new DialogInterface.OnClickListener() {
