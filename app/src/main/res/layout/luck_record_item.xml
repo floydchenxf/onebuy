@@ -19,6 +19,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:src="@drawable/tuqian" />
 
@@ -42,11 +43,36 @@
                 android:id="@+id/total_count_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
                 android:layout_marginTop="6dp"
                 android:gravity="center_vertical"
-                android:text="总需100人次"
+                android:text="总需：100人次"
                 android:textColor="@color/gray_content"
                 android:textSize="10sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/product_code_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:text="参与期号:"
+                    android:textColor="@color/gray_content"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/product_code_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/product_code_desc"
+                    android:text="xxxxxx"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -73,6 +99,31 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/luck_number_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:text="幸运号码:"
+                    android:textColor="@color/gray_content"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/luck_number_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/luck_number_desc"
+                    android:text="xxxxxxx"
+                    android:textColor="#0983e6"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/lottest_time_layout"
                 android:layout_width="match_parent"
@@ -84,8 +135,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
-                    android:text="开奖倒计时:"
-                    android:textColor="#666666"
+                    android:text="揭晓时间:"
+                    android:textColor="@color/gray_content"
                     android:textSize="12sp" />
 
                 <TextView
