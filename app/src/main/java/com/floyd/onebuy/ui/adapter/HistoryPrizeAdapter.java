@@ -27,10 +27,12 @@ import java.util.Map;
 public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
 
     private ImageLoader mImageLoader;
+    private long productId;
 
-    public HistoryPrizeAdapter(Context context, List<HistoryPrizeVO> records) {
+    public HistoryPrizeAdapter(Context context, List<HistoryPrizeVO> records, long productId) {
         super(context, records);
         mImageLoader = ImageLoaderFactory.createImageLoader();
+        this.productId = productId;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
         titleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoDetail(vo.ProductLssueID);
+                gotoDetail(vo.ProductLssueID, productId);
             }
         });
 
@@ -84,9 +86,10 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
         goodsLuckView.setText("幸运号码："+vo.PrizeCode);
     }
 
-    private void gotoDetail(Long lssueId) {
+    private void gotoDetail(Long lssueId, long productId) {
         Intent it = new Intent(mContext, WinningDetailActivity.class);
         it.putExtra("id", lssueId);
+        it.putExtra("productId", productId);
         mContext.startActivity(it);
     }
 }

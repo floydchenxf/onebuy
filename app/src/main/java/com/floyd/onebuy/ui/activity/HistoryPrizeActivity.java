@@ -72,7 +72,7 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        adapter = new HistoryPrizeAdapter(this, new ArrayList<HistoryPrizeVO>());
+        adapter = new HistoryPrizeAdapter(this, new ArrayList<HistoryPrizeVO>(), proId);
         mListView.setAdapter(adapter);
         loadData(true);
     }
