@@ -41,6 +41,8 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
     private View emptyView;
     private TextView gotoIndexView;
 
+    private TextView buyView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +83,8 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         emptyView = findViewById(R.id.empty_view);
         gotoIndexView = (TextView) emptyView.findViewById(R.id.goto_index);
         gotoIndexView.setOnClickListener(this);
+        buyView = (TextView) findViewById(R.id.buy_view);
+        buyView.setOnClickListener(this);
         loadData();
     }
 
@@ -98,9 +102,11 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
                 if (luckRecordAdapter.getRecords().isEmpty()) {
                     mListView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
+                    buyView.setVisibility(View.GONE);
                 } else {
                     mListView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    buyView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -122,7 +128,9 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
                 loadData();
                 break;
             case R.id.goto_index:
+            case R.id.buy_view:
                 EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
+                this.finish();
                 break;
         }
 
