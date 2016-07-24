@@ -19,6 +19,7 @@ import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.DataBaseUtils;
@@ -230,7 +231,11 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
                 @Override
                 public void onSuccess(Map<String, String> stringStringMap) {
                     dataLoadingDialog.dismiss();
-                    String url = stringStringMap.get("");
+                    String path = stringStringMap.get("url");
+                    if (path != null && path.startsWith(File.separator)) {
+                        path = path.substring(1);
+                    }
+                    String url = APIConstants.HOST+ path;
                     headImageView.setImageUrl(url, mImageLoader, new BitmapProcessor() {
                         @Override
                         public Bitmap processBitmap(Bitmap bitmap) {
@@ -238,7 +243,7 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
                         }
                     });
                     UserVO userVO = LoginManager.getLoginInfo(MyInfoActivity.this);
-                    userVO.Pic = url;
+                    userVO.Pic = path;
                     LoginManager.saveLoginInfo(MyInfoActivity.this, userVO);
                     hiddenPopup();
                     newFile.delete();

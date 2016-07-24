@@ -25,7 +25,7 @@ import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.activity.AddressManagerActivity;
+import com.floyd.onebuy.ui.activity.CommonwealActivity;
 import com.floyd.onebuy.ui.activity.FeeRecordActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
 import com.floyd.onebuy.ui.activity.MyInfoActivity;
@@ -88,7 +88,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private String[] texts = new String[]{"夺宝记录", "我的公益", "中奖记录", "快乐星期五", "充值记录", "我的晒单", "软件设置", "邀请好友", "我的积分"};
     private int[] images = new int[]{R.drawable.prize_record, R.drawable.gongyi, R.drawable.winning, R.drawable.fri, R.drawable.add_fee, R.drawable.shandan, R.drawable.setting, R.drawable.invite, R.drawable.jifeng};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, FeeRecordActivity.class, MyLuckActivity.class, FeeRecordActivity.class, JiFengActivity.class, FeeRecordActivity.class, SettingActivity.class, FeeRecordActivity.class, JiFengActivity.class};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, CommonwealActivity.class, MyLuckActivity.class, FeeRecordActivity.class, JiFengActivity.class, FeeRecordActivity.class, SettingActivity.class, FeeRecordActivity.class, JiFengActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

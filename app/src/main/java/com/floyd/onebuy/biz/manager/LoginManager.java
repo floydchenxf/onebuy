@@ -160,7 +160,8 @@ public class LoginManager {
         params.put("pageType", "upLoadUserLogo");
         params.put("userId", userId + "");
         Map<String, FileItem> files = new HashMap<String, FileItem>();
-        files.put("File", new FileItem(file));
+        FileItem fileItem = new FileItem(file, "image/jpeg");
+        files.put("File", fileItem);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, files, HttpMethod.POST, Map.class);
     }
 

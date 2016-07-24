@@ -23,19 +23,31 @@
     <LinearLayout
         android:id="@+id/empty_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/title_layout"
         android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:background="#eeeff3"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/no_record" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="暂无数据"
-            android:textColor="#666666"
-            android:textSize="14sp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:text="您还没有数据哦~"
+            android:textColor="@color/gray_content"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

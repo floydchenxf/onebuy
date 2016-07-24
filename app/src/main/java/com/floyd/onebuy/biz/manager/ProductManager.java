@@ -67,9 +67,14 @@ public class ProductManager {
                 if (adv != null && !adv.isEmpty()) {
                     List<AdvVO> advList = new ArrayList<AdvVO>();
                     for (IndexAdvVO a : adv) {
+                        if (a == null) {
+                            continue;
+                        }
                         AdvVO b = new AdvVO();
                         b.title = a.Url;
-                        b.id = a.NewsID;
+                        if (a.NewsID != null) {
+                            b.id = a.NewsID;
+                        }
                         b.imgUrl = APIConstants.HOST + a.SmallPic;
                         advList.add(b);
                     }

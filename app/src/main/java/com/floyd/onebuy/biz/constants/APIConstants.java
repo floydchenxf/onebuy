@@ -16,6 +16,7 @@ public class APIConstants {
     public static final String ORDER_MODULE = "OrderService.ashx";
     public static final String IMGAEINFO_MODULE = "ImgaeInfoService.ashx";
     public static final String ADDRESS_MODULE = "AddressService.ashx";
+    public static final String COMMONWEAL_MODULE = "CommonwealService.ashx";
 
     public static final String API_GET_ADVERT_LIST = "api/index/getAdvertList";//获取广告
     public static final String API_GET_MOTE_LIST = "api/index/getMoteList"; //获取首页模特信息

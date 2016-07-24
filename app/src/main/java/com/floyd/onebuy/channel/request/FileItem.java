@@ -29,6 +29,11 @@ public class FileItem {
         this(new File(filePath));
     }
 
+    public FileItem(File file, String mimeType) {
+        this.file = file;
+        this.mimeType = mimeType;
+    }
+
     /**
      * 基于文件名和字节流的构造器。
      *
