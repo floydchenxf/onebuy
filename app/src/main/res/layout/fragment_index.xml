@@ -31,14 +31,13 @@
                 android:textColor="@color/white" />
         </LinearLayout>
 
-        <TextView
+        <ImageView
             android:id="@+id/center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:text="苏城云购"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:src="@drawable/title"
+            />
 
         <LinearLayout
             android:id="@+id/right_layout"

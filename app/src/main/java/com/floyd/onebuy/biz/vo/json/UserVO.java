@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.floyd.onebuy.biz.constants.APIConstants;
 
+import java.io.File;
+
 /**
  * Created by floyd on 16-4-21.
  */
@@ -17,7 +19,11 @@ public class UserVO {
 
 
     public String getFullPic() {
-        return APIConstants.HOST + Pic;
+        if (Pic != null && Pic.startsWith(File.separator)) {
+            return APIConstants.HOST + Pic.substring(1);
+        } else {
+            return APIConstants.HOST + Pic;
+        }
     }
 
     public String getUserName() {
