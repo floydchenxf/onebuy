@@ -88,7 +88,11 @@ public class ProductManager {
                         WinningInfo info = new WinningInfo();
                         info.totalCount = v.TotalCount;
                         info.joinedCount = v.JoinedCount;
-                        info.processPrecent = v.Percent;
+                        if (v.TotalCount == 0) {
+                            info.processPrecent = "0%";
+                        } else {
+                            info.processPrecent = (v.JoinedCount * 100/v.TotalCount)+"%";
+                        }
                         info.productUrl = APIConstants.HOST + v.Pictures;
                         info.title = v.ProName;
                         info.id = v.ProID;
@@ -148,7 +152,12 @@ public class ProductManager {
                     info.lssueId = vo.ProductLssueID;
                     info.id = vo.ProID;
                     info.productId = vo.ProID;
-                    info.status = 1;
+                    info.status = vo.Status;
+                    if (vo.TotalCount ==0) {
+                        info.processPrecent = "0%";
+                    } else {
+                        info.processPrecent = (vo.JoinedCount * 100 / vo.TotalCount) + "%";
+                    }
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
                     result.add(info);
