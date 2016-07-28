@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
@@ -33,21 +34,25 @@ import java.util.List;
 public class CommonwealActivity extends FragmentActivity implements AbsListView.OnScrollListener, View.OnClickListener {
 
     public static final int CHANGE_BANNER_HANDLER_MSG_WHAT = 51;
+    private static int PAGE_SIZE = 10;
 
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
     private CommonwealAdapter mAdapter;
-    private DataLoadingView dataLoadingView;
 
+    private DataLoadingView dataLoadingView;
     private View mViewPagerContainer;//整个广告
     private LoopViewPager mHeaderViewPager;//广告
     private CircleLoopPageIndicator mHeaderViewIndicator;//广告条索引
     private List<AdvVO> mTopBannerList;//最上部分左右循环广告条
-    private BannerImageAdapter mBannerImageAdapter;
 
+    private BannerImageAdapter mBannerImageAdapter;
     private boolean needClear;
+    private int pageNo;
 
     private boolean isShowBanner;
+
+    private TextView commonwealFeeView;
 
     private Handler mChangeViewPagerHandler = new Handler() {
         @Override
@@ -74,6 +79,7 @@ public class CommonwealActivity extends FragmentActivity implements AbsListView.
         setContentView(R.layout.activity_commonweal);
         ImageLoader mImageLoader = ImageLoaderFactory.createImageLoader();
         mTopBannerList = new ArrayList<AdvVO>();
+        pageNo = 1;
 
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
@@ -88,6 +94,7 @@ public class CommonwealActivity extends FragmentActivity implements AbsListView.
             @Override
             public void onPullDownToRefresh() {
                 needClear = true;
+                pageNo = 1;
                 loadData(false);
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
@@ -95,7 +102,8 @@ public class CommonwealActivity extends FragmentActivity implements AbsListView.
             @Override
             public void onPullUpToRefresh() {
                 needClear = false;
-                loadData(false);
+                pageNo++;
+                loadPageData();
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
@@ -111,6 +119,7 @@ public class CommonwealActivity extends FragmentActivity implements AbsListView.
         mViewPagerContainer = header.findViewById(R.id.pager_layout);
         mHeaderViewPager = (LoopViewPager) header.findViewById(R.id.loopViewPager);
         mHeaderViewIndicator = (CircleLoopPageIndicator) header.findViewById(R.id.indicator);
+        commonwealFeeView = (TextView)header.findViewById(R.id.commonweal_fee_textview);
         mListView.addHeaderView(header);
 
         mBannerImageAdapter = new BannerImageAdapter(this.getSupportFragmentManager(), null, null, BannerFragment.SCALE_CENTER_CROP);
@@ -187,8 +196,29 @@ public class CommonwealActivity extends FragmentActivity implements AbsListView.
                     mViewPagerContainer.setVisibility(View.GONE);
                 }
 
+                commonwealFeeView.setText(commonwealHomeVO.TotalMoney + "");
+
                 List<CommonwealVO> commonwealVO = commonwealHomeVO.FoundationList;
                 mAdapter.addAll(commonwealVO, needClear);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+    }
+
+    private void loadPageData() {
+        CommonwealManager.fetchCommonwealList(pageNo, PAGE_SIZE).startUI(new ApiCallback<List<CommonwealVO>>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                Toast.makeText(CommonwealActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(List<CommonwealVO> commonwealVOs) {
+                mAdapter.addAll(commonwealVOs, needClear);
             }
 
             @Override

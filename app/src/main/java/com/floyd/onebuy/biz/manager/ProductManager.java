@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,11 @@ public class ProductManager {
                         WinningInfo info = new WinningInfo();
                         info.totalCount = v.TotalCount;
                         info.joinedCount = v.JoinedCount;
-                        info.processPrecent = v.Percent;
+                        if (v.TotalCount == 0) {
+                            info.processPrecent = "0%";
+                        } else {
+                            info.processPrecent = (v.JoinedCount * 100/v.TotalCount)+"%";
+                        }
                         info.productUrl = APIConstants.HOST + v.Pictures;
                         info.title = v.ProName;
                         info.id = v.ProID;
@@ -148,7 +153,12 @@ public class ProductManager {
                     info.lssueId = vo.ProductLssueID;
                     info.id = vo.ProID;
                     info.productId = vo.ProID;
-                    info.status = 1;
+                    info.status = vo.Status;
+                    if (vo.TotalCount ==0) {
+                        info.processPrecent = "0%";
+                    } else {
+                        info.processPrecent = (vo.JoinedCount * 100 / vo.TotalCount) + "%";
+                    }
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
                     result.add(info);
@@ -435,10 +445,10 @@ public class ProductManager {
                             if (status == 1) {
                                 JSONObject data = j.getJSONObject("data");
                                 List<WinningInfo> winningInfos = convert2WinningInfs(data);
-                                if (winningInfos == null || winningInfos.isEmpty()) {
-                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
-                                    return;
-                                }
+//                                if (winningInfos == null || winningInfos.isEmpty()) {
+//                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
+//                                    return;
+//                                }
                                 callback.onSuccess(winningInfos);
                             } else {
                                 String msg = j.getString("info");
@@ -456,7 +466,7 @@ public class ProductManager {
     private static List<WinningInfo> convert2WinningInfs(JSONObject data) throws JSONException {
         JSONArray winningInfoJsonArray = data.getJSONArray("ProductLssueList");
         if (winningInfoJsonArray == null || winningInfoJsonArray.length() <= 0) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         List<WinningInfo> infoList = new ArrayList<WinningInfo>();
         for (int i = 0; i < winningInfoJsonArray.length(); i++) {
@@ -701,8 +711,6 @@ public class ProductManager {
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            String priceTime = wjson.getString("PriceTime");
-            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
                 String aa = wjson.getString("ClientCodeList");

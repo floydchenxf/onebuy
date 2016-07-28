@@ -84,6 +84,8 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
         mImageLoader = ImageLoaderFactory.createImageLoader();
         dataLoadingDialog = DialogCreator.createDataLoadingDialog(this);
         headImageView = (NetworkImageView) findViewById(R.id.head_image);
+        View headLayout = findViewById(R.id.head_layout);
+        headLayout.setOnClickListener(this);
         phoneView = (TextView) findViewById(R.id.phone_num);
         nickNameView = (TextView) findViewById(R.id.nick);
         addressManagerView = findViewById(R.id.address_layout);
@@ -176,6 +178,7 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
                 hiddenPopup();
                 break;
             case R.id.head_image:
+            case R.id.head_layout:
                 if (!this.isFinishing()) {
                     popupWindow.showPopUpWindow();
                 }

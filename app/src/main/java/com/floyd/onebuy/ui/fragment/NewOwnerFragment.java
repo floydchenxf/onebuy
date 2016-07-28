@@ -66,6 +66,8 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
         mListView = mPullToRefreshListView.getRefreshableView();
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        View emptyView = inflater.inflate(R.layout.empty_item, container, false);
+        mPullToRefreshListView.setEmptyView(emptyView);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
