@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
+import android.widget.TextView;
 
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FragmentAdapter;
@@ -33,6 +34,12 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commonweal_bak);
+
+        TextView titleNameView = (TextView) findViewById(R.id.title_name);
+        titleNameView.setText("公益");
+        titleNameView.setVisibility(View.VISIBLE);
+        findViewById(R.id.title_back).setOnClickListener(this);
+
 
         currentIndex = getIntent().getIntExtra(CURRENT_PAGE_INDEX, 0);
         commonwealPager = (ViewPager) findViewById(R.id.id_page_commonweal);
@@ -96,6 +103,9 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.tab_commonweal_view:
                 commonwealPager.setCurrentItem(0);
+                break;
+            case R.id.title_back:
+                this.finish();
                 break;
         }
     }

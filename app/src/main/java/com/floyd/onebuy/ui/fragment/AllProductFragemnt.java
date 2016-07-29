@@ -132,6 +132,8 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
+        View emptyView = inflater.inflate(R.layout.empty_item, container,false);
+        mPullToRefreshListView.setEmptyView(emptyView);
 
         typeListView = (ListView) view.findViewById(R.id.type_list_view);
         typeAdapter = new TypeAdapter(getActivity());

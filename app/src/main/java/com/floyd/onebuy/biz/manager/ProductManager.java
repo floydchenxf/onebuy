@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -444,10 +445,10 @@ public class ProductManager {
                             if (status == 1) {
                                 JSONObject data = j.getJSONObject("data");
                                 List<WinningInfo> winningInfos = convert2WinningInfs(data);
-                                if (winningInfos == null || winningInfos.isEmpty()) {
-                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
-                                    return;
-                                }
+//                                if (winningInfos == null || winningInfos.isEmpty()) {
+//                                    callback.onError(APIError.API_CONTENT_EMPTY, "内容为空");
+//                                    return;
+//                                }
                                 callback.onSuccess(winningInfos);
                             } else {
                                 String msg = j.getString("info");
@@ -465,7 +466,7 @@ public class ProductManager {
     private static List<WinningInfo> convert2WinningInfs(JSONObject data) throws JSONException {
         JSONArray winningInfoJsonArray = data.getJSONArray("ProductLssueList");
         if (winningInfoJsonArray == null || winningInfoJsonArray.length() <= 0) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         List<WinningInfo> infoList = new ArrayList<WinningInfo>();
         for (int i = 0; i < winningInfoJsonArray.length(); i++) {
@@ -710,8 +711,6 @@ public class ProductManager {
             info.title = wjson.getString("ProName");
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            String priceTime = wjson.getString("PriceTime");
-            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
                 String aa = wjson.getString("ClientCodeList");

@@ -46,6 +46,7 @@ import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.CommonwealBakActivity;
 import com.floyd.onebuy.ui.activity.H5Activity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
@@ -208,6 +209,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         indexProductAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(indexProductAdapter);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        View emptyView = inflater.inflate(R.layout.empty_item, container, false);
+        mPullToRefreshListView.setEmptyView(emptyView);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
@@ -356,7 +359,13 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 categoryLayout.setVisibility(View.VISIBLE);
                 TypeClickListener tenTypeClickListener = new TypeClickListener(typeCodes[0]);
                 TypeClickListener hundeTypeClickListener = new TypeClickListener(typeCodes[1]);
-                listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, null,null,null};
+                listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(getActivity(), CommonwealBakActivity.class);
+                        getActivity().startActivity(it);
+                    }
+                },null,null};
                 for (int i=0; i < 5; i++) {
                     imageViews[i].setDefaultImageResId(defaultImages[i]);
                     imageViews[i].setImageUrl(null, mImageLoader);

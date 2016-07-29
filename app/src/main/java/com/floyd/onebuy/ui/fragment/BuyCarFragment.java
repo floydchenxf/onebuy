@@ -6,8 +6,10 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +38,6 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import de.greenrobot.event.EventBus;
@@ -44,7 +45,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by floyd on 16-4-13.
  */
-public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener {
+public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final int PAGE_SIZE = 10;
     private DataLoadingView dataLoadingView;
@@ -184,6 +185,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         alipayButton = (RadioButton) footer.findViewById(R.id.alipay_radio);
         jifengButton = (RadioButton) footer.findViewById(R.id.jifeng_radio);
         weixinButton = (RadioButton) footer.findViewById(R.id.wx_radio);
+        alipayButton.setOnCheckedChangeListener(this);
+        weixinButton.setOnCheckedChangeListener(this);
+        jifengButton.setOnCheckedChangeListener(this);
+
         alipayLayout.setOnClickListener(this);
         weixinLayout.setOnClickListener(this);
         jiefengLayout.setOnClickListener(this);
@@ -416,5 +421,24 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 rb.setChecked(false);
             }
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (!isChecked) {
+            return;
+        }
+        switch (buttonView.getId()) {
+            case R.id.wx_radio:
+                checkType(1);
+                break;
+            case R.id.alipay_radio:
+                checkType(3);
+                break;
+            case R.id.jifeng_radio:
+                checkType(2);
+                break;
+        }
+
     }
 }

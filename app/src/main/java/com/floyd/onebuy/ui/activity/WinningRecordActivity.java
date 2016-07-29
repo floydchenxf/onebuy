@@ -59,7 +59,6 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
     private TextView popJoinedCountView;
     private ListView popJoinNumListView;
     private JoinedNumAdapter joinedNumAdapter;
-    private View emptyView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +96,9 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
             }
         });
 
-        emptyView = findViewById(R.id.empty_view);
-        emptyView.setVisibility(View.GONE);
+        View emptyView = View.inflate(this, R.layout.empty_item, null);
+        mPullToRefreshListView.setEmptyView(emptyView);
+
 
         mListView = mPullToRefreshListView.getRefreshableView();
         adapter = new WinningRecordAdapter(this, mImageLoader, new ArrayList<WinningInfo>());
@@ -178,12 +178,6 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
 
                 adapter.addAll(winningInfos, needClear);
                 pageNo++;
-                if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
-                    emptyView.setVisibility(View.VISIBLE);
-                } else {
-                    emptyView.setVisibility(View.GONE);
-                }
-
             }
 
             @Override

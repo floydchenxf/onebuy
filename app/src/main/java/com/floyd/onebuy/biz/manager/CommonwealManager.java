@@ -78,7 +78,13 @@ public class CommonwealManager {
         });
     }
 
-    public static AsyncJob<List<HelpPersionVO>> fetchHelpPersonList() {
+    public static AsyncJob<List<HelpPersionVO>> fetchHelpPersonList(long pid, int pageNo, int  pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetHelpPersonList");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNo + "");
+        params.put("pid", pid + "");
         return null;
     }
 
