@@ -1,13 +1,17 @@
 package com.floyd.onebuy.biz.manager;
 
+import android.text.TextUtils;
+
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailJsonVO;
+import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailVO;
+import com.floyd.onebuy.biz.vo.commonweal.CommonwealHelperList;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHomeVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealJsonVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealVO;
-import com.floyd.onebuy.biz.vo.commonweal.HelpPersionVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.channel.request.HttpMethod;
 import com.google.gson.reflect.TypeToken;
@@ -23,6 +27,12 @@ import java.util.Map;
  */
 public class CommonwealManager {
 
+    /**
+     * 公益首页接口
+     *
+     * @param pageSize
+     * @return
+     */
     public static AsyncJob<CommonwealHomeVO> fetchCommonwealHomeData(int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
         Map<String, String> params = new HashMap<String, String>();
@@ -60,6 +70,13 @@ public class CommonwealManager {
         });
     }
 
+    /**
+     * 分页获取公益信息
+     *
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
     public static AsyncJob<List<CommonwealVO>> fetchCommonwealList(int pageNo, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
         Map<String, String> params = new HashMap<String, String>();
@@ -78,14 +95,80 @@ public class CommonwealManager {
         });
     }
 
-    public static AsyncJob<List<HelpPersionVO>> fetchHelpPersonList(long pid, int pageNo, int  pageSize) {
+    /**
+     * 获取捐款人
+     *
+     * @param pid      0或者空，代表获取全部
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public static AsyncJob<CommonwealHelperList> fetchHelpPersonList(long pid, int pageNo, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetHelpPersonList");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNo + "");
         params.put("pid", pid + "");
-        return null;
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealHelperList.class);
     }
+
+    /**
+     * 获取公益详情
+     *
+     * @param pid
+     * @return
+     */
+    public static AsyncJob<CommonwealDetailVO> fetchCommonwealDetail(long pid) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetCommonwealDetail");
+        params.put("pid", pid + "");
+        AsyncJob<CommonwealDetailJsonVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealDetailJsonVO.class);
+        return result.map(new Func<CommonwealDetailJsonVO, CommonwealDetailVO>() {
+            @Override
+            public CommonwealDetailVO call(CommonwealDetailJsonVO jsonVO) {
+                CommonwealDetailVO vo = new CommonwealDetailVO();
+                vo.TotalMoney = jsonVO.TotalMoney;
+                vo.Content = jsonVO.Content;
+                vo.Percent = jsonVO.Percent;
+                vo.PersonList = jsonVO.PersonList;
+                vo.ProductLssueID = jsonVO.ProductLssueID;
+                vo.ProName = jsonVO.ProName;
+                vo.RaiseCount = jsonVO.RaiseCount;
+                vo.RaiseMoney = jsonVO.RaiseMoney;
+                vo.Status = jsonVO.Status;
+
+                if (TextUtils.isEmpty(jsonVO.TotalMoney) || TextUtils.isEmpty(jsonVO.RaiseMoney)) {
+                    vo.percentNum = 0;
+                } else {
+                    Double total = Double.parseDouble(jsonVO.TotalMoney);
+                    Double raise = Double.parseDouble(jsonVO.RaiseMoney);
+                    vo.percentNum = (int)(raise * 100 / total);
+                }
+
+                if (!TextUtils.isEmpty(jsonVO.Pictures)) {
+                    List<AdvVO> advVOs = new ArrayList<AdvVO>();
+                    String[] pics = jsonVO.Pictures.split("\\|");
+                    for (int i=0; i < pics.length; i++) {
+                        AdvVO advVO = new AdvVO();
+                        String pic = pics[i];
+                        if (pic.startsWith("http")) {
+                            advVO.imgUrl = pic;
+                        } else {
+                            advVO.imgUrl = APIConstants.HOST + pic;
+                        }
+
+                        advVOs.add(advVO);
+                    }
+
+                    vo.advVOList = advVOs;
+                }
+
+                return vo;
+            }
+        });
+    }
+
 
 }

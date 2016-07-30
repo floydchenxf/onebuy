@@ -19,4 +19,5 @@
     <dimen name="one_dp">1dp</dimen>
     <dimen name="aliwx_popup_height">300dip</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="normal_font">14sp</dimen>
 </resources>

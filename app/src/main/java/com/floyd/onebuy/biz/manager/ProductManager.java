@@ -486,6 +486,7 @@ public class ProductManager {
             }
             if (wjson.has("winnerInfo")) {
                 OwnerVO ownerVO = convert2OwnerVO(wjson);
+                ownerVO.joinNumber = info.myPrizeCodes == null ? 0 : info.myPrizeCodes.size();
                 info.ownerVO = ownerVO;
             }
             infoList.add(info);
@@ -499,8 +500,8 @@ public class ProductManager {
         ownerVO.userId = ownerInfoJson.getLong("PrizeClientID");
         ownerVO.avatar = ownerInfoJson.getString("PrizeClientPic");
         ownerVO.userName = ownerInfoJson.getString("PrizeClientName");
-        if (ownerInfoJson.has("PrizeCode")) {
-            ownerVO.winNumber = ownerInfoJson.getString("PrizeCode");
+        if (ownerInfoJson.has("PriceCode")) {
+            ownerVO.winNumber = ownerInfoJson.getString("PriceCode");
         }
 
         if (ownerInfoJson.has("PriceTime")) {
@@ -732,6 +733,7 @@ public class ProductManager {
 
             if (wjson.has("winnerInfo")) {
                 OwnerVO ownerVO = convert2OwnerVO(wjson);
+                ownerVO.joinNumber = info.myPrizeCodes == null ? 0 : info.myPrizeCodes.size();
                 info.ownerVO = ownerVO;
             }
 
