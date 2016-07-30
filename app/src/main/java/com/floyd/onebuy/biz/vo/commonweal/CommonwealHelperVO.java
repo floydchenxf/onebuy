@@ -1,20 +1,19 @@
-package com.floyd.onebuy.biz.vo.product;
+package com.floyd.onebuy.biz.vo.commonweal;
 
 import android.text.TextUtils;
 
 import com.floyd.onebuy.biz.constants.APIConstants;
 
 /**
- * Created by floyd on 16-4-17.
+ * Created by floyd on 16-7-30.
  */
-public class JoinVO {
-    public long ProductLssueID; //期数
-    public String ClientIP; //客户端ip
+public class CommonwealHelperVO {
     public String ClientID; //用户id
     public String ClientName; //用户名称
     public String ClientPic; //用户头像
-    public int Number; //参与次数
-    public String InTime;//加入时间
+    public long PayTime;
+    public String Remark;
+    public String PayMoney;
 
     public String getClientPic() {
         if (TextUtils.isEmpty(ClientPic)) {

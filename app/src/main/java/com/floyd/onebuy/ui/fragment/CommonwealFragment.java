@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.floyd.onebuy.biz.vo.commonweal.CommonwealHomeVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.CommonwealDetailActivity;
 import com.floyd.onebuy.ui.activity.CommonwealHelperActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.CommonwealAdapter;
@@ -136,6 +138,16 @@ public class CommonwealFragment extends Fragment implements View.OnClickListener
         initHeader();
         mAdapter = new CommonwealAdapter(getActivity(), new ArrayList<CommonwealVO>(), mImageLoader);
         mListView.setAdapter(mAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CommonwealVO vo = mAdapter.getItem(position - 2);
+                Intent it = new Intent(getActivity(), CommonwealDetailActivity.class);
+                it.putExtra(CommonwealDetailActivity.PRODUCT_ID, vo.ProductLssueID);
+                startActivity(it);
+            }
+        });
         loadData(true);
         return view;
     }
