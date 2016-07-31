@@ -17,7 +17,7 @@
             android:layout_gravity="center_vertical|center_horizontal"
             android:text="全部商品"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
     </FrameLayout>
 

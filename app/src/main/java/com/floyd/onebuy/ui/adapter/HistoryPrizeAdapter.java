@@ -73,7 +73,7 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
         });
 
         headImageView.setDefaultImageResId(R.drawable.tupian);
-        headImageView.setImageUrl(vo.ClientPic, mImageLoader, new BitmapProcessor() {
+        headImageView.setImageUrl(vo.getClientPic(), mImageLoader, new BitmapProcessor() {
             @Override
             public Bitmap processBitmap(Bitmap bitmap) {
                 return ImageUtils.getCircleBitmap(bitmap, mContext.getResources().getDimension(R.dimen.cycle_head_image_size));

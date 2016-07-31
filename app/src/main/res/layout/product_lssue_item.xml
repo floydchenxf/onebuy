@@ -125,7 +125,7 @@
                 android:layout_centerInParent="true"
                 android:text="20:00:11"
                 android:textColor="#ff0000"
-                android:textSize="12sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
 
@@ -345,7 +345,7 @@
                 android:layout_centerInParent="true"
                 android:text="20:00:11"
                 android:textColor="#ff0000"
-                android:textSize="12sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
 

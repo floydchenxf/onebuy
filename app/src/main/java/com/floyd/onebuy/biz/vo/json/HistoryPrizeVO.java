@@ -1,5 +1,7 @@
 package com.floyd.onebuy.biz.vo.json;
 
+import android.text.TextUtils;
+
 import com.floyd.onebuy.biz.constants.APIConstants;
 
 /**
@@ -19,6 +21,13 @@ public class HistoryPrizeVO {
     public int status;//状态
 
     public String getClientPic() {
+        if (TextUtils.isEmpty(this.ClientPic)) {
+            return null;
+        }
+
+        if (this.ClientPic.startsWith("http")) {
+            return this.ClientPic;
+        }
         return APIConstants.HOST + this.ClientPic;
     }
 }
