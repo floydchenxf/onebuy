@@ -97,13 +97,16 @@ public class DateUtil {
             return null;
         }
 
-        long secs = (end - start) / 1000;
-        long min = 0, sec = 0, yushu;
+        long left = end-start;
+        long secs = left / 1000;
+        long min = 0, sec = 0, yushu1,yushu2;
         min = secs / 60;
         sec = secs % 60;
-        yushu = secs % 10;
+        yushu1 = (left / 100) % 10;
+        yushu2 = (left / 10) % 10;
 
-        String result = String.format("%1$02d:%2$02d:%3$02d", min, sec, yushu);
+//        Log.i(TAG, "min:" + min + "---sec:" + sec + "--yushu1:" + yushu1 + "---yushu2:" + yushu2);
+        String result = String.format("%1$02d:%2$02d:%3$1d%4$1d", min, sec, yushu1, yushu2);
         return result;
     }
 }

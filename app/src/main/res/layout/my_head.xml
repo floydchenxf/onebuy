@@ -30,7 +30,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:text="苏城云商"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:id="@+id/share"

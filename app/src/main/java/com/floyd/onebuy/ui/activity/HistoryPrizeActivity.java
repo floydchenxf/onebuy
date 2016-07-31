@@ -71,6 +71,8 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
 
             }
         });
+        View emptyView = View.inflate(this, R.layout.empty_item, null);
+        mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
         adapter = new HistoryPrizeAdapter(this, new ArrayList<HistoryPrizeVO>(), proId);
         mListView.setAdapter(adapter);
@@ -99,15 +101,15 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
                 List<HistoryPrizeVO> prizeVOs = prizeListVO.HistoryPrizeList;
                 adapter.addAll(prizeVOs, needClear);
                 pageNo++;
-                if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
-                    TextView emptyView = new TextView(HistoryPrizeActivity.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (40 * oneDp));
-                    emptyView.setGravity(Gravity.CENTER);
-                    emptyView.setLayoutParams(params);
-                    emptyView.setText("暂无数据");
-                    emptyView.setTextColor(Color.BLACK);
-                    mPullToRefreshListView.setEmptyView(emptyView);
-                }
+//                if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
+//                    TextView emptyView = new TextView(HistoryPrizeActivity.this);
+//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (40 * oneDp));
+//                    emptyView.setGravity(Gravity.CENTER);
+//                    emptyView.setLayoutParams(params);
+//                    emptyView.setText("暂无数据");
+//                    emptyView.setTextColor(Color.BLACK);
+//                    mPullToRefreshListView.setEmptyView(emptyView);
+//                }
             }
 
             @Override
