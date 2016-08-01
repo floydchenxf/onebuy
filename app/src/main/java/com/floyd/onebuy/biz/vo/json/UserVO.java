@@ -16,6 +16,10 @@ public class UserVO {
     public long RegTime;//注册时间
     public String Pic;//头像
     public long LastTime;//上次访问时间
+    public int JiFen; //积分
+    public double Amount;//金额
+    public String Token; //Token
+    public String InviterCode;//邀请code
 
 
     public String getFullPic() {

@@ -93,7 +93,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                     Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Map<String, String>>() {
+                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Boolean>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(ForgotPasswordActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -101,10 +101,12 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                     }
 
                     @Override
-                    public void onSuccess(Map<String, String> s) {
-                        checkCodeButton.setEnabled(false);
-                        checkCodeButton.setText("60秒后重新获取");
-                        doUpdateTime(60);
+                    public void onSuccess(Boolean s) {
+                        if (s) {
+                            checkCodeButton.setEnabled(false);
+                            checkCodeButton.setText("60秒后重新获取");
+                            doUpdateTime(60);
+                        }
                     }
 
                     @Override

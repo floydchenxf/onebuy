@@ -17,12 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
 import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
@@ -51,10 +53,14 @@ import de.greenrobot.event.Subscribe;
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
 
     private static final String TAG = "WinningDetailActivity";
+    public static final String LASTEST = "lastest";
+    public static final String PRODUCT_ID = "PRODUCT_ID";
+    public static final String LSSUE_ID = "id";
     private static final int PAGE_SIZE = 10;
 
     private Long id;
     private Long productId;
+    private boolean isLatest;
     private int pageNo = 1;
     private WinningDetailInfo winningDetailInfo;
 
@@ -108,8 +114,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         findViewById(R.id.title_back).setOnClickListener(this);
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.title_name)).setText("商品详情");
-        id = getIntent().getLongExtra("id", 0l);
-        productId = getIntent().getLongExtra("productId",0l);
+        id = getIntent().getLongExtra(LSSUE_ID, 0l);
+        isLatest = getIntent().getBooleanExtra(LASTEST, true);
+        productId = getIntent().getLongExtra(PRODUCT_ID,0l);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
@@ -229,7 +236,15 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             lssueId = id;
         }
 
-        ProductManager.fetchProductLssueDetail(lssueId, productId, userId).startUI(new ApiCallback<WinningDetailInfo>() {
+        AsyncJob<WinningDetailInfo> job = null;
+
+        if (!isLatest) {
+            job = ProductManager.fetchProductLssuePageData(lssueId, userId);
+        } else {
+            job = ProductManager.fetchProductLssueDetail(lssueId, productId, userId);
+        }
+
+        job.startUI(new ApiCallback<WinningDetailInfo>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -249,7 +264,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 id = winningDetailInfo.id;
                 StringBuilder titleAndStatusSb = new StringBuilder();
                 int status = winningDetailInfo.status;
-                if (status == 0) {
+                if (status == WinningInfo.STATUS_CHOOSE) {
                     joinLayout.setVisibility(View.VISIBLE);
                     gotoJoinLayout.setVisibility(View.GONE);
                     joinLayout.setVisibility(View.VISIBLE);
@@ -259,9 +274,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>人次"));
                     progressBar.setProgress(progressVO.getPrecent());
                     titleAndStatusSb.append("进行中    ");
-                } else if (status == 1) {
+                } else if (status == WinningInfo.STATUS_LOTTERY) {
                     titleAndStatusSb.append("开奖中    ");
-                } else if (status == 2) {
+                } else if (status == WinningInfo.STATUS_LOTTERYED) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
@@ -433,7 +448,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.goto_detail_view:
                 Intent it = new Intent(this, WinningDetailActivity.class);
-                it.putExtra("productId", productId);
+                it.putExtra(PRODUCT_ID, productId);
+                it.putExtra(LASTEST, true);
                 startActivity(it);
                 this.finish();
                 break;

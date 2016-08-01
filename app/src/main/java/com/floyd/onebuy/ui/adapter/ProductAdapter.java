@@ -109,7 +109,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("productId", info1.productId);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, info1.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -122,7 +122,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("productId", info2.productId);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, info2.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -135,7 +135,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("productId", info3.productId);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, info3.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -148,7 +148,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("productId", info1.productId);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, info1.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -170,7 +170,7 @@ public class ProductAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent it = new Intent(mContext, WinningDetailActivity.class);
-                        it.putExtra("productId", info2.productId);
+                        it.putExtra(WinningDetailActivity.PRODUCT_ID, info2.productId);
                         mContext.startActivity(it);
                     }
                 });

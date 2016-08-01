@@ -108,8 +108,13 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 WinningInfo info = adapter.getItem(position-1);
                 Intent it = new Intent(WinningRecordActivity.this, WinningDetailActivity.class);
-                it.putExtra("productId", info.productId);
-                it.putExtra("id", info.id);
+                if (info.status == WinningInfo.STATUS_CHOOSE ) {
+                    it.putExtra(WinningDetailActivity.LASTEST, true);
+                } else {
+                    it.putExtra(WinningDetailActivity.LASTEST, false);
+                }
+                it.putExtra(WinningDetailActivity.PRODUCT_ID, info.productId);
+                it.putExtra(WinningDetailActivity.LSSUE_ID, info.id);
                 startActivity(it);
             }
         });

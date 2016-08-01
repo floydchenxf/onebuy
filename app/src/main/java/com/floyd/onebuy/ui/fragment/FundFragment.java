@@ -7,8 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.loading.DataLoadingView;
+import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,35 +23,21 @@ import com.floyd.onebuy.ui.R;
  * Use the {@link FundFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FundFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class FundFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private PullToRefreshListView mPullToRefreshListView;
+    private ListView mListView;
 
+    private DataLoadingView dataLoadingView;
+    private ImageLoader mImageLoader;
+    private int pageNo = 1;
 
     public FundFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FundFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FundFragment newInstance(String param1, String param2) {
         FundFragment fragment = new FundFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,16 +45,21 @@ public class FundFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        mImageLoader = ImageLoaderFactory.createImageLoader();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_fund, container, false);
+        View view = inflater.inflate(R.layout.fragment_fund, container, false);
+        dataLoadingView = new DefaultDataLoadingView();
+        dataLoadingView.initView(view, this);
+        return view;
+
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }

@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.HttpJobFactory;
+import com.floyd.onebuy.aync.Processor;
+import com.floyd.onebuy.bean.MD5Util;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.func.AbstractJsonApiCallback;
 import com.floyd.onebuy.biz.func.StringFunc;
@@ -59,14 +61,49 @@ public class LoginManager {
         PrefsTools.setStringPrefs(context, LOGIN_INFO, data);
     }
 
-    public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code) {
+    /**
+     * 注册用户
+     *
+     * @param phoneNum
+     * @param password
+     * @param code
+     * @param inviterCode 邀请码。可以为空
+     * @return
+     */
+    public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code, String inviterCode) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "register");
         params.put("mobile", phoneNum);
-        params.put("password", password);
+        String md5Pass = MD5Util.encodeBy32BitMD5(password);
+        params.put("password", md5Pass == null ? "" : md5Pass.toLowerCase());
         params.put("code", code);
+        if (!TextUtils.isEmpty(inviterCode)) {
+            params.put("inviterCode", inviterCode);
+        }
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, UserVO.class);
+    }
+
+    /**
+     * 获取用户基本信息
+     *
+     * @param token
+     * @return
+     */
+    public static AsyncJob<UserVO> fetchUserInfo(final Context context, String token) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "getUserInfo");
+        params.put("token", token);
+        AsyncJob<UserVO> result= JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, UserVO.class);
+        return result.process(new Processor<UserVO>() {
+            @Override
+            public void doProcess(UserVO userVO) {
+                UserVO oldVO = LoginManager.getLoginInfo(context);
+                userVO.Token = oldVO.Token;
+                saveLoginInfo(context, userVO);
+            }
+        });
     }
 
     /**
@@ -81,7 +118,8 @@ public class LoginManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "login");
         params.put("mobile", mobile);
-        params.put("password", password);
+        String md5Pass = MD5Util.encodeBy32BitMD5(password);
+        params.put("password", md5Pass == null ? "" : md5Pass.toLowerCase());
 
         final AsyncJob<String> httpJob = HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc());
 
@@ -117,8 +155,8 @@ public class LoginManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "modifyUserPassword");
         params.put("mobile", mobile);
-        params.put("oldPassword", oldPass);
-        params.put("newPassword", newPass);
+        params.put("oldPassword", MD5Util.encodeBy32BitMD5(oldPass).toLowerCase());
+        params.put("newPassword", MD5Util.encodeBy32BitMD5(newPass).toLowerCase());
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
@@ -127,7 +165,7 @@ public class LoginManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "forgetPassword");
         params.put("mobile", mobile);
-        params.put("newPassword", newPassword);
+        params.put("newPassword", MD5Util.encodeBy32BitMD5(newPassword).toLowerCase());
         params.put("code", smsCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, String.class);
     }
@@ -138,12 +176,12 @@ public class LoginManager {
      * @param mobile
      * @return map key:code
      */
-    public static AsyncJob<Map<String, String>> sendSms(String mobile) {
+    public static AsyncJob<Boolean> sendSms(String mobile) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "sendVerifyCode");
         params.put("mobile", mobile);
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
 
@@ -177,7 +215,7 @@ public class LoginManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "modifyUserInfo");
         params.put("nickName", nickName);
-        params.put("userId", userId+"");
+        params.put("userId", userId + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
