@@ -54,6 +54,12 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+//        loadData(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_new_owner, container, false);
@@ -89,6 +95,8 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
         loadData(true);
         return view;
     }
+
+
 
     private void loadData(final boolean isFirst) {
         if (isFirst) {
