@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.NavigationVO;
@@ -270,7 +271,39 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     }
 
     private void loadData(final boolean needDialog, final boolean isFirst) {
-        UserVO vo = LoginManager.getLoginInfo(this.getActivity());
+
+        if (isFirst) {
+            dataLoadingView.startLoading();
+        }
+
+        final UserVO vo = LoginManager.getLoginInfo(this.getActivity());
+        LoginManager.fetchUserInfo(getActivity(), vo.Token).startUI(new ApiCallback<UserVO>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                if (isFirst) {
+                    dataLoadingView.loadSuccess();
+                }
+                fillView(vo);
+            }
+
+            @Override
+            public void onSuccess(UserVO userVO) {
+                if (isFirst) {
+                    dataLoadingView.loadSuccess();
+                }
+
+                fillView(userVO);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+
+    }
+
+    private void fillView(UserVO vo) {
         headImageView.setImageUrl(vo.getFullPic(), mImageLoader, new BitmapProcessor() {
             @Override
             public Bitmap processBitmap(Bitmap bitmap) {
@@ -279,6 +312,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         });
 
         userNameView.setText(vo.getUserName());
+        feeView.setText("金额：" + vo.Amount);
+        jiFengView.setText("积分："+vo.JiFen);
     }
 
     @Override
@@ -323,6 +358,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                     }
 
                     Intent detailIntent = new Intent(getActivity(), WinningDetailActivity.class);
+                    detailIntent.putExtra(WinningDetailActivity.LSSUE_ID, lssueIdStr);
                     startActivity(detailIntent);
                 }
                 break;

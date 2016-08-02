@@ -258,8 +258,8 @@ public class ProductLssueAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo2.lssueId);
-                    it.putExtra("productId", winningInfo2.productId);
+                    it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo2.lssueId);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo2.productId);
                     mContext.startActivity(it);
                 }
             });
@@ -390,8 +390,8 @@ public class ProductLssueAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo.lssueId);
-                    it.putExtra("productId", winningInfo.productId);
+                    it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo.lssueId);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo.productId);
                     mContext.startActivity(it);
                 }
             });
