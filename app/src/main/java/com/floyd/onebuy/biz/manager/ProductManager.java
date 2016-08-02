@@ -10,6 +10,7 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.APIError;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
@@ -756,6 +757,16 @@ public class ProductManager {
         AsyncJob<List<ProductLssueWithWinnerVO>> a = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
         return  a;
     }
+
+    public static AsyncJob<FundJsonVO> fetchFundData(int pageSize, int pageNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetFoundsPageData");
+        params.put("pageSize", pageSize+"");
+        params.put("pageNum", pageNum+"");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, FundJsonVO.class);
+    }
+
 
 
 
