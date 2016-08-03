@@ -1,5 +1,7 @@
 package com.floyd.onebuy.biz.vo.commonweal;
 
+import android.text.TextUtils;
+
 import com.floyd.onebuy.biz.constants.APIConstants;
 
 /**
@@ -19,6 +21,13 @@ public class CommonwealVO {
     public Integer Status;//状态
 
     public String getPicUrl() {
+        if (TextUtils.isEmpty(Pictures)) {
+            return null;
+        }
+
+        if (Pictures.startsWith("http")) {
+            return Pictures;
+        }
         return APIConstants.HOST + Pictures;
     }
 }

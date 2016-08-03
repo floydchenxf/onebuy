@@ -36,6 +36,7 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +45,7 @@ import java.util.List;
  * Use the {@link CommonwealFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CommonwealFragment extends Fragment implements View.OnClickListener, AbsListView.OnScrollListener {
+public class CommonwealFragment extends CommonwealBaseFragment implements View.OnClickListener, AbsListView.OnScrollListener {
 
     public static final int CHANGE_BANNER_HANDLER_MSG_WHAT = 51;
     private static int PAGE_SIZE = 10;
@@ -296,5 +297,10 @@ public class CommonwealFragment extends Fragment implements View.OnClickListener
                 break;
         }
 
+    }
+
+    @Override
+    Map<String, Object> getSwitchData() {
+        return null;
     }
 }

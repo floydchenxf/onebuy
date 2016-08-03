@@ -6,21 +6,24 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FragmentAdapter;
+import com.floyd.onebuy.ui.fragment.CommonwealBaseFragment;
 import com.floyd.onebuy.ui.fragment.CommonwealFragment;
 import com.floyd.onebuy.ui.fragment.FundFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CommonwealBakActivity extends FragmentActivity implements View.OnClickListener {
 
     public static final String CURRENT_PAGE_INDEX = "current_page_index";
 
-    private List<Fragment> mFragmentList = new ArrayList<Fragment>();
+    private List<CommonwealBaseFragment> mFragmentList = new ArrayList<CommonwealBaseFragment>();
     private FragmentAdapter mFragmentAdapter;
     private ViewPager commonwealPager;
 
@@ -29,6 +32,7 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
     private CheckedTextView tabCommonwealView;
     private CheckedTextView tabFundView;
     private int currentPager;
+    private ImageView moreView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
         titleNameView.setText("公益");
         titleNameView.setVisibility(View.VISIBLE);
         findViewById(R.id.title_back).setOnClickListener(this);
+        moreView = (ImageView) findViewById(R.id.right);
 
 
         currentIndex = getIntent().getIntExtra(CURRENT_PAGE_INDEX, 0);
@@ -52,7 +57,19 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
 
     private void initFragments() {
         CommonwealFragment commonwealFragment = new CommonwealFragment();
+        commonwealFragment.initSwitchTabListener(new CommonwealBaseFragment.SwitchTabListener() {
+            @Override
+            public void onCallback(Map<String, Object> data) {
+                moreView.setVisibility(View.GONE);
+            }
+        });
         FundFragment fundFragment = new FundFragment();
+        fundFragment.initSwitchTabListener(new CommonwealBaseFragment.SwitchTabListener() {
+            @Override
+            public void onCallback(Map<String, Object> data) {
+                moreView.setVisibility(View.VISIBLE);
+            }
+        });
         mFragmentList.add(commonwealFragment);
         mFragmentList.add(fundFragment);
         mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
@@ -80,10 +97,14 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
                     case 0:
                         tabCommonwealView.setChecked(true);
                         tabFundView.setChecked(false);
+                        CommonwealBaseFragment baseFragment1 = mFragmentList.get(position);
+                        baseFragment1.doSwitchCall();
                         break;
                     case 1:
                         tabCommonwealView.setChecked(false);
                         tabFundView.setChecked(true);
+                        CommonwealBaseFragment baseFragment2 = mFragmentList.get(position);
+                        baseFragment2.doSwitchCall();
                         break;
                 }
             }

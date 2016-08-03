@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.floyd.onebuy.ui.fragment.CommonwealBaseFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +14,15 @@ import java.util.List;
  */
 public class FragmentAdapter extends FragmentPagerAdapter {
 
-    private List<Fragment> fragmentList = new ArrayList<Fragment>();
+    private List<CommonwealBaseFragment> fragmentList = new ArrayList<CommonwealBaseFragment>();
 
-    public FragmentAdapter(FragmentManager fm, List<Fragment> pagers) {
+    public FragmentAdapter(FragmentManager fm, List<CommonwealBaseFragment> pagers) {
         super(fm);
         this.fragmentList = pagers;
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public CommonwealBaseFragment getItem(int position) {
         return fragmentList.get(position);
     }
 
