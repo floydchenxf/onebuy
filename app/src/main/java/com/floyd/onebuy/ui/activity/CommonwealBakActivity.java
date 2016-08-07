@@ -1,21 +1,31 @@
 package com.floyd.onebuy.ui.activity;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.floyd.onebuy.biz.vo.commonweal.TypeVO;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FragmentAdapter;
 import com.floyd.onebuy.ui.fragment.CommonwealBaseFragment;
 import com.floyd.onebuy.ui.fragment.CommonwealFragment;
 import com.floyd.onebuy.ui.fragment.FundFragment;
+import com.floyd.onebuy.view.BasePopupWindow;
+import com.floyd.onebuy.view.LeftDownPopupWindow;
+import com.floyd.onebuy.view.RightTopPopupWindow;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,16 +44,28 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
     private int currentPager;
     private ImageView moreView;
 
+    private ListView fundTypeListView;
+    private SimpleAdapter simpleAdapter;
+
+    private RightTopPopupWindow myPopupWindow;
+
+    private List<TypeVO> typeVOs;
+
+    private float onedp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commonweal_bak);
+
+        onedp = this.getResources().getDimension(R.dimen.one_dp);
 
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("公益");
         titleNameView.setVisibility(View.VISIBLE);
         findViewById(R.id.title_back).setOnClickListener(this);
         moreView = (ImageView) findViewById(R.id.right);
+        moreView.setOnClickListener(this);
 
 
         currentIndex = getIntent().getIntExtra(CURRENT_PAGE_INDEX, 0);
@@ -53,6 +75,14 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
         initFragments();
         tabCommonwealView.setOnClickListener(this);
         tabFundView.setOnClickListener(this);
+
+        myPopupWindow = new RightTopPopupWindow(this);
+        myPopupWindow.initView(R.layout.fund_type_pop, new BasePopupWindow.ViewInit() {
+            @Override
+            public void initView(View v) {
+                fundTypeListView = (ListView) v.findViewById(R.id.fund_type_listview);
+            }
+        });
     }
 
     private void initFragments() {
@@ -68,6 +98,22 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
             @Override
             public void onCallback(Map<String, Object> data) {
                 moreView.setVisibility(View.VISIBLE);
+                myPopupWindow.setLocationView(moreView);
+
+                typeVOs = (List<TypeVO>) data.get("result");
+                List<Map<String, String>> aa = new ArrayList<Map<String, String>>();
+                if (typeVOs != null && !typeVOs.isEmpty()) {
+                    for (TypeVO v :typeVOs) {
+                        Map<String, String> t = new HashMap<String, String>();
+                        t.put("fundNameView", v.CodeName);
+                        aa.add(t);
+                    }
+                }
+
+                String[] from = {"fundNameView"};
+                int[] to = {R.id.fund_type_view};
+                simpleAdapter = new SimpleAdapter(CommonwealBakActivity.this, aa, R.layout.fund_type_item, from, to);
+                fundTypeListView.setAdapter(simpleAdapter);
             }
         });
         mFragmentList.add(commonwealFragment);
@@ -127,6 +173,9 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.title_back:
                 this.finish();
+                break;
+            case R.id.right:
+                myPopupWindow.showPopUpWindow();
                 break;
         }
     }

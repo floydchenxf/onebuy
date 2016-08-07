@@ -40,4 +40,17 @@
         android:textColor="#666666"
         android:textSize="12sp" />
 
+    <TextView
+        android:id="@+id/join_number_4"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:ellipsize="middle"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="test3"
+        android:visibility="gone"
+        android:textColor="#666666"
+        android:textSize="12sp" />
+
 </LinearLayout>

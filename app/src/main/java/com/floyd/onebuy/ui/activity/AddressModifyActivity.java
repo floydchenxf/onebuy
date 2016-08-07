@@ -28,7 +28,7 @@ import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
 import com.floyd.onebuy.event.AddressModifiedEvent;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.AddressAdapter;
-import com.floyd.onebuy.view.MyPopupWindow;
+import com.floyd.onebuy.view.LeftDownPopupWindow;
 import com.floyd.onebuy.view.UIAlertDialog;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class AddressModifyActivity extends Activity implements View.OnClickListe
     private TextView saveButton;
     private TextView deleteButton;
     private View deleteLine;
-    private MyPopupWindow popupWindow;
+    private LeftDownPopupWindow popupWindow;
 
     private CheckedTextView popProvinceView;
     private CheckedTextView popCityView;
@@ -147,8 +147,8 @@ public class AddressModifyActivity extends Activity implements View.OnClickListe
             deleteButton.setOnClickListener(null);
         }
 
-        popupWindow = new MyPopupWindow(this);
-        popupWindow.initView(R.layout.address_pop, new MyPopupWindow.ViewInit() {
+        popupWindow = new LeftDownPopupWindow(this);
+        popupWindow.initView(R.layout.address_pop, new LeftDownPopupWindow.ViewInit() {
             @Override
             public void initView(View v) {
                 popProvinceView = (CheckedTextView) v.findViewById(R.id.pop_province_view);

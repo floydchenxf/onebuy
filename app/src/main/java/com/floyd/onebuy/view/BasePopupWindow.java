@@ -2,30 +2,36 @@ package com.floyd.onebuy.view;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.PopupWindow;
 
 /**
  * Created by floyd on 16-4-17.
  */
-public class MyPopupWindow implements View.OnClickListener {
+public abstract class BasePopupWindow implements View.OnClickListener {
 
     private PopupWindow menu;
-    private Activity context;
+    protected Activity context;
     private View contentView;
     private View containerView;
-    private boolean isShow;
+    protected boolean isShow;
 
-    public MyPopupWindow(Activity context) {
+    private Animation hiddenAnimation;
+    private Animation showAnimation;
+
+    protected View locationView;
+
+    public void setLocationView(View locationView) {
+        this.locationView = locationView;
+    }
+
+    public BasePopupWindow(Activity context) {
         this.context = context;
+        this.locationView = context.getWindow().getDecorView();
     }
 
     public void initView(int layout, ViewInit viewInit) {
@@ -47,52 +53,73 @@ public class MyPopupWindow implements View.OnClickListener {
         }
     }
 
+    /**
+     * 设置定位
+     *
+     * @param popupWindow
+     */
+    abstract void setLocation(PopupWindow popupWindow);
+
+    /**
+     * 设置显示动作
+     *
+     * @return
+     */
+    abstract Animation getShowAnimation();
+
+    /**
+     * 设置隐藏动作
+     *
+     * @return
+     */
+    abstract Animation getHiddenAnimation();
+
 
     public void showPopUpWindow() {
         if (menu == null) {
             throw new RuntimeException("please init view first!");
         }
 
-        TranslateAnimation trans = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF,
-                0, Animation.RELATIVE_TO_SELF, 1,
-                Animation.RELATIVE_TO_SELF, 0);
+        if (showAnimation == null) {
+            showAnimation = getShowAnimation();
+        }
 
-        trans.setDuration(200);
-        trans.setInterpolator(new AccelerateDecelerateInterpolator());
-        containerView.startAnimation(trans);
-        menu.showAtLocation(context.getWindow().getDecorView(), Gravity.LEFT | Gravity.BOTTOM, 0, 0);
+        if (showAnimation != null) {
+            containerView.startAnimation(showAnimation);
+        }
+        setLocation(menu);
         isShow = true;
     }
 
     public boolean hidePopUpWindow() {
         if (!context.isFinishing()) {
             if (menu != null) {
-                TranslateAnimation trans = new TranslateAnimation(
-                        Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0,
-                        Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
 
-                trans.setDuration(200);
-                trans.setInterpolator(new AccelerateInterpolator());
-                trans.setAnimationListener(new Animation.AnimationListener() {
+                if (hiddenAnimation == null) {
+                    hiddenAnimation = getHiddenAnimation();
+                }
 
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+                if (hiddenAnimation != null) {
+                    hiddenAnimation.setAnimationListener(new Animation.AnimationListener() {
 
-                    }
+                        @Override
+                        public void onAnimationStart(Animation animation) {
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
+                        }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
 
-                        menu.dismiss();
-                    }
-                });
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
 
-                containerView.startAnimation(trans);
+                            menu.dismiss();
+                        }
+                    });
+
+                    containerView.startAnimation(hiddenAnimation);
+                }
             }
             isShow = false;
             return true;

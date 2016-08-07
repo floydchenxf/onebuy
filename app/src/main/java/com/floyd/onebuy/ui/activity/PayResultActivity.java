@@ -19,7 +19,7 @@ import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
 import com.floyd.onebuy.ui.adapter.PayResultAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.floyd.onebuy.view.MyPopupWindow;
+import com.floyd.onebuy.view.LeftDownPopupWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class PayResultActivity extends Activity implements View.OnClickListener 
     private String orderNo;
     private CheckedTextView viewBuyRecordView;
     private CheckedTextView gotoBuyView;
-    private MyPopupWindow joinedPopupWindow;
+    private LeftDownPopupWindow joinedPopupWindow;
 
     private TextView popProductCodeView;
     private TextView popProductTitleView;
@@ -71,8 +71,8 @@ public class PayResultActivity extends Activity implements View.OnClickListener 
         mListView.setAdapter(payResultAdapter);
         viewBuyRecordView = (CheckedTextView) findViewById(R.id.view_buy_view);
         gotoBuyView = (CheckedTextView) findViewById(R.id.goto_buy_view);
-        joinedPopupWindow = new MyPopupWindow(this);
-        joinedPopupWindow.initView(R.layout.pop_join_num, new MyPopupWindow.ViewInit() {
+        joinedPopupWindow = new LeftDownPopupWindow(this);
+        joinedPopupWindow.initView(R.layout.pop_join_num, new LeftDownPopupWindow.ViewInit() {
             @Override
             public void initView(View v) {
                 popProductCodeView = (TextView) v.findViewById(R.id.pop_product_code_view);

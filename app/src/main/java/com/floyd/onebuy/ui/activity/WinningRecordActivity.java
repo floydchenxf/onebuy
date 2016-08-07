@@ -2,14 +2,11 @@ package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +21,7 @@ import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
 import com.floyd.onebuy.ui.adapter.WinningRecordAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.floyd.onebuy.view.MyPopupWindow;
+import com.floyd.onebuy.view.LeftDownPopupWindow;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
@@ -52,7 +49,7 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
 
     private int taskStatus = 3;
 
-    private MyPopupWindow joinedPopupWindow;
+    private LeftDownPopupWindow joinedPopupWindow;
 
     private TextView popProductCodeView;
     private TextView popProductTitleView;
@@ -143,8 +140,8 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
         lotestStatusView.setOnClickListener(this);
         doneStatusView.setOnClickListener(this);
 
-        joinedPopupWindow = new MyPopupWindow(this);
-        joinedPopupWindow.initView(R.layout.pop_join_num, new MyPopupWindow.ViewInit() {
+        joinedPopupWindow = new LeftDownPopupWindow(this);
+        joinedPopupWindow.initView(R.layout.pop_join_num, new LeftDownPopupWindow.ViewInit() {
             @Override
             public void initView(View v) {
                 popProductCodeView = (TextView) v.findViewById(R.id.pop_product_code_view);

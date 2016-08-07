@@ -31,7 +31,7 @@ import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.graphic.CropImageActivity;
-import com.floyd.onebuy.view.MyPopupWindow;
+import com.floyd.onebuy.view.LeftDownPopupWindow;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +61,7 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
 
     private ImageLoader mImageLoader;
 
-    private MyPopupWindow popupWindow;
+    private LeftDownPopupWindow popupWindow;
 
     private TextView choosePhoneView;
     private TextView takePhoneView;
@@ -93,8 +93,8 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
 
         headImageView.setDefaultImageResId(R.drawable.default_image);
         addressManagerView.setOnClickListener(this);
-        popupWindow = new MyPopupWindow(this);
-        popupWindow.initView(R.layout.edit_head_pop, new MyPopupWindow.ViewInit() {
+        popupWindow = new LeftDownPopupWindow(this);
+        popupWindow.initView(R.layout.edit_head_pop, new LeftDownPopupWindow.ViewInit() {
             @Override
             public void initView(View v) {
                 choosePhoneView = (TextView) v.findViewById(R.id.choose_phone);
