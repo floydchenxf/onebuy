@@ -3,12 +3,15 @@ package com.floyd.onebuy.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -23,7 +26,10 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
+import com.floyd.onebuy.biz.manager.ServerTimeManager;
+import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
@@ -44,6 +50,7 @@ import com.floyd.onebuy.view.LeftDownPopupWindow;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +58,8 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
+
+    public static final int TIME_EVENT = 1;
 
     private static final String TAG = "WinningDetailActivity";
     public static final String LASTEST = "lastest";
@@ -75,12 +84,15 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private TextView titleAndStatusView;//状态和标题
 
     private View progressLayout;//进度view,已揭晓隐藏
+    private View priceTimeLayout; //开奖倒计时layout
+    private View ownerLayout; //中奖者layout
+
+    private View joinNumberLayout;
     private ProgressBar progressBar;//进度
     private TextView totalView;//总需人数
-    private TextView leftView;//剩余人数
 
+    private TextView leftView;//剩余人数
     private TextView noJoinView; //无参与提示
-    private View joinNumberLayout;//是否是listview
 
     private View detailLinkView;//详情连接
     private View lastWinnerView;//往期揭晓
@@ -112,6 +124,56 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private TextView popJoinedCountView;
     private ListView popJoinNumListView;
     private JoinedNumAdapter joinedNumAdapter;
+
+    private int callTime = 0;
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+            switch (what) {
+                case TIME_EVENT:
+
+                    MsgObj o = (MsgObj) msg.obj;
+                    long id = o.id;
+
+                    SoftReference<TextView> view = o.timeView;
+                    if (view == null && view.get() == null) {
+                        return;
+                    }
+
+                    TextView timeView = view.get();
+                    if (timeView == null) {
+                        return;
+                    }
+
+
+                    long priceTime = (Long) timeView.getTag(R.id.LEFT_TIME_ID);
+                    if (winningDetailInfo.status != WinningInfo.STATUS_LOTTERY) {
+                        return;
+                    }
+
+                    long left = priceTime - ServerTimeManager.getServerTime();
+
+                    if (left <= 0) {
+                        timeView.setText("正在计算...");
+                        getWinnerInfo();
+                        return;
+                    } else {
+                        String dateLeft = DateUtil.getDateBefore(priceTime, ServerTimeManager.getServerTime());
+                        timeView.setText(dateLeft);
+                    }
+
+                    Message newMsg = new Message();
+                    newMsg.what = TIME_EVENT;
+                    newMsg.obj = o;
+                    mHandler.sendMessageDelayed(newMsg, 252);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +351,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     gotoJoinLayout.setVisibility(View.GONE);
                     joinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.VISIBLE);
+                    priceTimeLayout.setVisibility(View.GONE);
+                    ownerLayout.setVisibility(View.GONE);
                     ProgressVO progressVO = winningDetailInfo.progressVO;
                     totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>人次"));
                     leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>人次"));
@@ -296,10 +360,28 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     titleAndStatusSb.append("进行中    ");
                 } else if (status == WinningInfo.STATUS_LOTTERY) {
                     titleAndStatusSb.append("开奖中    ");
+                    progressLayout.setVisibility(View.GONE);
+                    priceTimeLayout.setVisibility(View.VISIBLE);
+
+                    TextView priceTimeView = (TextView) priceTimeLayout.findViewById(R.id.price_time_view);
+                    long priceTime = winningDetailInfo.priceTime;
+                    priceTimeView.setTag(R.id.LEFT_TIME_ID, priceTime);
+
+                    Message msg = new Message();
+                    msg.what = TIME_EVENT;
+                    MsgObj msgObj = new MsgObj();
+                    msgObj.id = id;
+                    msgObj.timeView = new SoftReference<TextView>(priceTimeView);
+                    msg.obj = msgObj;
+                    mHandler.sendMessage(msg);
+                    ownerLayout.setVisibility(View.GONE);
+
                 } else if (status == WinningInfo.STATUS_LOTTERYED) {
                     joinLayout.setVisibility(View.GONE);
                     gotoJoinLayout.setVisibility(View.VISIBLE);
                     progressLayout.setVisibility(View.GONE);
+                    priceTimeLayout.setVisibility(View.GONE);
+                    ownerLayout.setVisibility(View.VISIBLE);
                     joinLayout.setVisibility(View.GONE);
                     titleAndStatusSb.append("已揭晓    ");
                 }
@@ -341,7 +423,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                         noJoinView.setVisibility(View.GONE);
                         joinNumberLayout.setVisibility(View.VISIBLE);
                         TextView buyNoDescView = (TextView) joinNumberLayout.findViewById(R.id.buy_no_desc);
-                        buyNoDescView.setText(Html.fromHtml("您参与了：<font color=\"blue\">"+joinedNums.size()+"</font>人次"));
+                        buyNoDescView.setText(Html.fromHtml("您参与了：<font color=\"blue\">" + joinedNums.size() + "</font>人次"));
                         LinearLayout joinedNumLayout = (LinearLayout) joinNumberLayout.findViewById(R.id.joined_num_layout);
                         joinedNumLayout.removeAllViews();
                         joinedNumLayout.setVisibility(View.VISIBLE);
@@ -471,6 +553,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
         titleAndStatusView = (TextView) mHeaderView.findViewById(R.id.title_and_status_view);
         progressLayout = mHeaderView.findViewById(R.id.progress_layout);
+        priceTimeLayout = mHeaderView.findViewById(R.id.price_time_layout);
+        ownerLayout = mHeaderView.findViewById(R.id.owner_info_layout);
         progressBar = (ProgressBar) progressLayout.findViewById(R.id.progress_present_view);
         totalView = (TextView) progressLayout.findViewById(R.id.total_view);
         leftView = (TextView) progressLayout.findViewById(R.id.left_view);
@@ -596,5 +680,36 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         super.onDestroy();
         EventBus.getDefault().unregister(this);
 
+    }
+
+    private synchronized void getWinnerInfo() {
+        if (callTime > 3) {
+            return;
+        }
+
+        ProductManager.getWinnerInfo(id).startUI(new ApiCallback<OwnerExtVO>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                callTime++;
+            }
+
+            @Override
+            public void onSuccess(OwnerExtVO ownerExtVO) {
+                callTime++;
+                winningDetailInfo.ownerVO = ownerExtVO;
+                winningDetailInfo.status = ownerExtVO.status;
+                //TODO update
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+    }
+
+    public static class MsgObj {
+        public SoftReference<TextView> timeView;
+        public long id;
     }
 }
