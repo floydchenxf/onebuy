@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -293,6 +294,17 @@ public class ProductManager {
         detailInfo.productTitle = proName;
         detailInfo.id = productLssue.getLong("ProductLssueID");
         detailInfo.status = productLssue.getInt("Status");
+        detailInfo.code = productLssue.getString("ProductLssueCode");
+
+        if (productLssue.has("winnerInfo")) {
+            JSONObject o = productLssue.getJSONObject("winnerInfo");
+            OwnerVO ownerVO = new OwnerVO();
+            ownerVO.userId = o.getLong("PrizeClientID");
+            ownerVO.userName = o.getString("PrizeClientName");
+            //FIXME 服务端放在了外面对象中
+            ownerVO.winNumber = productLssue.getString("PriceCode");
+            detailInfo.ownerVO = ownerVO;
+        }
 
         if (productLssue.has("processVO")) {
             String processVO = productLssue.getString("processVO");
@@ -306,6 +318,15 @@ public class ProductManager {
             }.getType();
             List<JoinVO> joinVOs = GsonHelper.getGson().fromJson(joinStr, type);
             detailInfo.allJoinedRecords = joinVOs;
+        }
+
+        //FIXME new add
+        if (data.has("ClientCodeList")) {
+            String codes = data.getString("ClientCodeList");
+            if (!TextUtils.isEmpty(codes)) {
+                String[] codeArray = codes.split(",");
+                detailInfo.myRecords = Arrays.asList(codeArray);
+            }
         }
 
         if (data.has("isGet")) {
@@ -349,7 +370,7 @@ public class ProductManager {
         params.put("pageType", "GetHistoryPrize");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
-        params.put("proId", proId + "");
+        params.put("cId", proId + "");
         AsyncJob<HistoryPrizeListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, HistoryPrizeListVO.class);
         return result;
     }

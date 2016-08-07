@@ -21,4 +21,5 @@ public class WinningDetailInfo {
     public OwnerVO ownerVO; //中奖者
     public boolean isGet;//是否已参与
     public List<JoinVO> allJoinedRecords; //所有的参与号码
+    public List<String> myRecords;
 }

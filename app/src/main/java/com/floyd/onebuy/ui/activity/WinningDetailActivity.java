@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,22 +30,21 @@ import com.floyd.onebuy.biz.vo.product.JoinVO;
 import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
 import com.floyd.onebuy.event.LoginEvent;
-import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
+import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
 import com.floyd.onebuy.ui.fragment.BannerFragment;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
 import com.floyd.onebuy.view.LoopViewPager;
-import com.floyd.onebuy.view.MyPopupWindow;
+import com.floyd.onebuy.view.LeftDownPopupWindow;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -80,8 +80,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private TextView leftView;//剩余人数
 
     private TextView noJoinView; //无参与提示
-    private TextView userNickView;//用户名称
-    private TextView joinNumberView;//是否是listview
+    private View joinNumberLayout;//是否是listview
 
     private View detailLinkView;//详情连接
     private View lastWinnerView;//往期揭晓
@@ -97,7 +96,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private View gotoJoinLayout;
 
     private TextView addBuyCarView;
-    private MyPopupWindow buyCarPopup;
+    private LeftDownPopupWindow buyCarPopup;
+
+    private LeftDownPopupWindow joinedPopupWindow;
 
     private TextView buyCarSubView;
     private TextView buyCarAddView;
@@ -106,6 +107,12 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private TextView buyAtOnceButton;
     private TextView gotoDetailView;
 
+    private TextView popProductCodeView;
+    private TextView popProductTitleView;
+    private TextView popJoinedCountView;
+    private ListView popJoinNumListView;
+    private JoinedNumAdapter joinedNumAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,16 +120,16 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         EventBus.getDefault().register(this);
         findViewById(R.id.title_back).setOnClickListener(this);
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
-        ((TextView)findViewById(R.id.title_name)).setText("商品详情");
+        ((TextView) findViewById(R.id.title_name)).setText("商品详情");
         id = getIntent().getLongExtra(LSSUE_ID, 0l);
         isLatest = getIntent().getBooleanExtra(LASTEST, true);
-        productId = getIntent().getLongExtra(PRODUCT_ID,0l);
+        productId = getIntent().getLongExtra(PRODUCT_ID, 0l);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
         initListViewHeader();
         joinLayout = findViewById(R.id.join_layout);
-        addBuyCarView = (TextView)joinLayout.findViewById(R.id.join_buy_car_view);
+        addBuyCarView = (TextView) joinLayout.findViewById(R.id.join_buy_car_view);
         addBuyCarView.setOnClickListener(this);
         buyAtOnceButton = (TextView) findViewById(R.id.buy_now_view);
         buyAtOnceButton.setOnClickListener(this);
@@ -150,8 +157,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         mListView.addHeaderView(mHeaderView);
         adapter = new JoinRecordAdapter(this, new ArrayList<JoinVO>());
         mListView.setAdapter(adapter);
-        buyCarPopup = new MyPopupWindow(this);
-        buyCarPopup.initView(R.layout.choose_number,new MyPopupWindow.ViewInit() {
+        buyCarPopup = new LeftDownPopupWindow(this);
+        buyCarPopup.initView(R.layout.choose_number, new LeftDownPopupWindow.ViewInit() {
             @Override
             public void initView(View v) {
                 buyCarAddButton = (TextView) v.findViewById(R.id.operate_button);
@@ -178,20 +185,33 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                         if (num > 1) {
                             buyCarNumberView.setText(--num + "");
                         }
-                        buyCarNumberView.setSelection((num+"").length());
+                        buyCarNumberView.setSelection((num + "").length());
                     }
                 });
 
                 buyCarAddButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO 加入购物车
                         buyCarPopup.hidePopUpWindow();
                     }
                 });
             }
 
         });
+
+        joinedPopupWindow = new LeftDownPopupWindow(this);
+        joinedPopupWindow.initView(R.layout.pop_join_num, new LeftDownPopupWindow.ViewInit() {
+            @Override
+            public void initView(View v) {
+                popProductCodeView = (TextView) v.findViewById(R.id.pop_product_code_view);
+                popProductTitleView = (TextView) v.findViewById(R.id.pop_product_title_view);
+                popJoinedCountView = (TextView) v.findViewById(R.id.pop_joined_count_view);
+                popJoinNumListView = (ListView) v.findViewById(R.id.pop_joined_num_listview);
+                joinedNumAdapter = new JoinedNumAdapter(WinningDetailActivity.this, new ArrayList<String>());
+                popJoinNumListView.setAdapter(joinedNumAdapter);
+            }
+        });
+
         loadData(true);
     }
 
@@ -206,7 +226,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             @Override
             public void onSuccess(List<JoinVO> joinVOs) {
                 adapter.addAll(joinVOs, false);
-                if (adapter.getFeeRecords() == null||adapter.getFeeRecords().isEmpty()) {
+                if (adapter.getFeeRecords() == null || adapter.getFeeRecords().isEmpty()) {
                     allRecordLayout.setVisibility(View.GONE);
                 }
 
@@ -255,7 +275,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             }
 
             @Override
-            public void onSuccess(WinningDetailInfo winningDetailInfo) {
+            public void onSuccess(final WinningDetailInfo winningDetailInfo) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
@@ -284,6 +304,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     titleAndStatusSb.append("已揭晓    ");
                 }
 
+                titleAndStatusSb.append("(第").append(winningDetailInfo.code).append("期)");
+
                 titleAndStatusSb.append(winningDetailInfo.productTitle);
 
                 SpannableString message = new SpannableString(titleAndStatusSb.toString());
@@ -304,8 +326,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 if (userVO == null) {
                     noJoinView.setVisibility(View.VISIBLE);
                     noJoinView.setText(R.string.no_login);
-                    userNickView.setVisibility(View.GONE);
-                    joinNumberView.setVisibility(View.GONE);
+                    joinNumberLayout.setVisibility(View.GONE);
                     noJoinView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -314,17 +335,92 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                         }
                     });
                 } else {
-                    if (winningDetailInfo.isGet) {
+                    if (winningDetailInfo.myRecords != null && !winningDetailInfo.myRecords.isEmpty()) {
+
+                        List<String> joinedNums = winningDetailInfo.myRecords;
                         noJoinView.setVisibility(View.GONE);
-                        userNickView.setVisibility(View.VISIBLE);
-                        joinNumberView.setVisibility(View.VISIBLE);
-                        joinNumberView.setText("Test");
+                        joinNumberLayout.setVisibility(View.VISIBLE);
+                        TextView buyNoDescView = (TextView) joinNumberLayout.findViewById(R.id.buy_no_desc);
+                        buyNoDescView.setText(Html.fromHtml("您参与了：<font color=\"blue\">"+joinedNums.size()+"</font>人次"));
+                        LinearLayout joinedNumLayout = (LinearLayout) joinNumberLayout.findViewById(R.id.joined_num_layout);
+                        joinedNumLayout.removeAllViews();
+                        joinedNumLayout.setVisibility(View.VISIBLE);
+
+                        List<String> tmpList = new ArrayList<String>();
+                        boolean hasMore = false;
+                        if (joinedNums.size() >= 8) {
+                            for (int i = 0; i < 7; i++) {
+                                tmpList.add(joinedNums.get(i));
+                            }
+                            tmpList.add("查看更多");
+                            hasMore = true;
+                        } else {
+                            tmpList.addAll(joinedNums);
+                            hasMore = false;
+                        }
+
+                        int lines = tmpList.size() % 4 == 0 ? tmpList.size() / 4 : tmpList.size() / 4 + 1;
+                        for (int i = 0; i < lines; i++) {
+                            LinearLayout layout = (LinearLayout) View.inflate(WinningDetailActivity.this, R.layout.joined_num_item, null);
+                            joinedNumLayout.addView(layout);
+                            TextView text1 = (TextView) layout.findViewById(R.id.join_number_1);
+                            TextView text2 = (TextView) layout.findViewById(R.id.join_number_2);
+                            TextView text3 = (TextView) layout.findViewById(R.id.join_number_3);
+                            TextView text4 = (TextView) layout.findViewById(R.id.join_number_4);
+                            text4.setVisibility(View.VISIBLE);
+                            text4.setOnClickListener(null);
+                            int k = i * 4;
+                            if (k < tmpList.size()) {
+                                text1.setText(tmpList.get(k));
+                                text1.setVisibility(View.VISIBLE);
+                            } else {
+                                text1.setVisibility(View.GONE);
+                            }
+
+                            if (k + 1 < tmpList.size()) {
+                                text2.setText(tmpList.get(k + 1));
+                                text2.setVisibility(View.VISIBLE);
+                            } else {
+                                text2.setVisibility(View.GONE);
+                            }
+
+                            if (k + 2 < tmpList.size()) {
+                                text3.setText(tmpList.get(k + 2));
+                                text3.setVisibility(View.VISIBLE);
+                            } else {
+                                text3.setVisibility(View.GONE);
+                            }
+
+                            if (k + 3 < tmpList.size()) {
+                                text4.setText(tmpList.get(k + 3));
+                                text4.setVisibility(View.VISIBLE);
+                            } else {
+                                text4.setVisibility(View.GONE);
+                            }
+
+                            if (i == 1 && hasMore) {
+                                text4.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        popProductCodeView.setText("第" + winningDetailInfo.code + "期");
+                                        popProductTitleView.setText(winningDetailInfo.productTitle);
+                                        popJoinedCountView.setText(winningDetailInfo.myRecords.size() + "人次");
+                                        List<String> list = winningDetailInfo.myRecords;
+                                        joinedNumAdapter.addAll(list, true);
+                                        joinedPopupWindow.showPopUpWindow();
+                                    }
+                                });
+                            } else {
+                                text4.setOnClickListener(null);
+                            }
+                        }
+
+
                         noJoinView.setOnClickListener(null);
                     } else {
                         noJoinView.setVisibility(View.VISIBLE);
                         noJoinView.setText(R.string.no_join_desc);
-                        userNickView.setVisibility(View.GONE);
-                        joinNumberView.setVisibility(View.GONE);
+                        joinNumberLayout.setVisibility(View.GONE);
                         noJoinView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -336,7 +432,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
                 adapter.addAll(winningDetailInfo.allJoinedRecords, true);
 
-                if (adapter.getFeeRecords() == null||adapter.getFeeRecords().isEmpty()) {
+                if (adapter.getFeeRecords() == null || adapter.getFeeRecords().isEmpty()) {
                     allRecordLayout.setVisibility(View.GONE);
                 }
             }
@@ -373,22 +469,31 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             }
         });
 
-        titleAndStatusView = (TextView)mHeaderView.findViewById(R.id.title_and_status_view);
+        titleAndStatusView = (TextView) mHeaderView.findViewById(R.id.title_and_status_view);
         progressLayout = mHeaderView.findViewById(R.id.progress_layout);
         progressBar = (ProgressBar) progressLayout.findViewById(R.id.progress_present_view);
         totalView = (TextView) progressLayout.findViewById(R.id.total_view);
         leftView = (TextView) progressLayout.findViewById(R.id.left_view);
 
 
-        noJoinView = (TextView)mHeaderView.findViewById(R.id.no_join_view);
-        userNickView = (TextView)mHeaderView.findViewById(R.id.user_nick_view);
-        joinNumberView = (TextView) mHeaderView.findViewById(R.id.join_number_view);
+        noJoinView = (TextView) mHeaderView.findViewById(R.id.no_join_view);
+        joinNumberLayout = mHeaderView.findViewById(R.id.join_number_layout);
 
         detailLinkView = mHeaderView.findViewById(R.id.detail_view);
         detailLinkView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //详情
+                Intent detailIntent = new Intent(WinningDetailActivity.this, H5Activity.class);
+                H5Activity.H5Data h5Data = new H5Activity.H5Data();
+                h5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                String detailUrl = String.format(APIConstants.PRODUCT_DETAIL_URL_FORMAT, productId);
+                h5Data.data = detailUrl;
+                h5Data.showProcess = true;
+                h5Data.showNav = true;
+                h5Data.title = "商品详情";
+                detailIntent.putExtra(H5Activity.H5Data.H5_DATA, h5Data);
+                startActivity(detailIntent);
             }
         });
 
@@ -468,7 +573,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 @Override
                 public void onSuccess(Boolean s) {
                     Intent it = new Intent(WinningDetailActivity.this, MainActivity.class);
-                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     it.putExtra(MainActivity.TAB_INDEX, R.id.tab_buy_car);
                     startActivity(it);
                 }

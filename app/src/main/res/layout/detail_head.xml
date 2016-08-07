@@ -105,8 +105,6 @@
             android:background="#66cecece"
             android:orientation="vertical"
             android:paddingBottom="6dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
             android:paddingTop="6dp">
 
             <TextView
@@ -115,26 +113,36 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:visibility="gone"
                 android:textColor="#666666"
                 android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/user_nick_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="您参与了"
-                android:textColor="#666666"
-                android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/join_number_view"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/join_number_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:text="1111"
+                android:layout_marginLeft="6dp"
+                android:orientation="vertical">
 
-                android:textColor="#999999"
-                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/buy_no_desc"
+                    android:layout_height="30dp"
+                    android:layout_width="match_parent"
+                    android:ellipsize="middle"
+                    android:gravity="left|center_vertical"
+                    android:singleLine="true"
+                    android:text="您参与了:"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/joined_num_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -218,9 +226,9 @@
 
     <LinearLayout
         android:id="@+id/all_record_layout"
-        android:layout_below="@+id/click_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/click_layout"
         android:orientation="vertical">
 
         <View
