@@ -303,6 +303,8 @@ public class ProductManager {
             ownerVO.userName = o.getString("PrizeClientName");
             //FIXME 服务端放在了外面对象中
             ownerVO.winNumber = productLssue.getString("PriceCode");
+            ownerVO.avatar = o.getString("PrizeClientPic");
+            ownerVO.winTime = o.getLong("PriceTime") * 1000;
             detailInfo.ownerVO = ownerVO;
         }
 
@@ -310,6 +312,10 @@ public class ProductManager {
             String processVO = productLssue.getString("processVO");
             ProgressVO progressVO = GsonHelper.getGson().fromJson(processVO, ProgressVO.class);
             detailInfo.progressVO = progressVO;
+        }
+
+        if (productLssue.has("PriceTime")) {
+            detailInfo.priceTime = (productLssue.getLong("PriceTime") + 10) * 1000;
         }
 
         if (data.has("joinList")) {
@@ -327,10 +333,6 @@ public class ProductManager {
                 String[] codeArray = codes.split(",");
                 detailInfo.myRecords = Arrays.asList(codeArray);
             }
-        }
-
-        if (data.has("isGet")) {
-            detailInfo.isGet = data.getBoolean("isGet");
         }
 
         return detailInfo;
@@ -504,7 +506,7 @@ public class ProductManager {
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
             if (wjson.has("PriceTime")) {
-                info.lotteryTime = wjson.getLong("PriceTime") * 1000;
+                info.lotteryTime = (wjson.getLong("PriceTime") + 10) * 1000;
             }
             if (wjson.has("winnerInfo")) {
                 OwnerVO ownerVO = convert2OwnerVO(wjson);
@@ -597,7 +599,7 @@ public class ProductManager {
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
             String priceTime = wjson.getString("PriceTime");
-            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : Long.parseLong(priceTime);
+            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : (Long.parseLong(priceTime)+10)*1000;
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
                 String aa = wjson.getString("ClientCodeList");
@@ -750,7 +752,8 @@ public class ProductManager {
             }
 
             if (wjson.has("PriceTime")) {
-                info.lotteryTime = wjson.getLong("PriceTime") * 1000;
+                //加10秒，等待服务器计算
+                info.lotteryTime = (wjson.getLong("PriceTime") + 10) * 1000;
             }
 
             if (wjson.has("winnerInfo")) {
