@@ -25,6 +25,7 @@ import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 
@@ -120,14 +121,17 @@ public class ProductLssueAdapter extends BaseAdapter {
                     Integer num = callTimes.get(tmpId);
                     num++;
                     callTimes.put(tmpId, num);
+                    Log.i("ProductLssueAdapter", "-----------error:"+errorInfo+"request winner for" + itemVO.lssueId);
                 }
 
                 @Override
                 public void onSuccess(OwnerExtVO ownerExtVO) {
+                    Log.i("ProductLssueAdapter", "-----------success request winner for" + itemVO.lssueId);
                     for (WinningInfo info : records) {
                         if (info.lssueId == ownerExtVO.lssueId) {
                             info.ownerVO = ownerExtVO;
-                            info.status = ownerExtVO.status;
+                            info.status = WinningInfo.STATUS_LOTTERYED;
+//                            info.status = ownerExtVO.status;
                             break;
                         }
                     }
