@@ -31,6 +31,7 @@ import java.util.Map;
 public class LoginManager {
 
     public static final String LOGIN_INFO = "LOGIN_INFO";
+    public static final String DEVICE_TOKEN_INFO = "DEVICE_TOKEN_INFO";
 
     public static UserVO getLoginInfo(Context context) {
         String data = PrefsTools.getStringPrefs(context, LOGIN_INFO, "");
@@ -59,6 +60,14 @@ public class LoginManager {
         Gson gson = new Gson();
         String data = gson.toJson(vo);
         PrefsTools.setStringPrefs(context, LOGIN_INFO, data);
+    }
+
+    public static void saveDeviceId(Context context, String deviceId) {
+        PrefsTools.setStringPrefs(context, DEVICE_TOKEN_INFO, deviceId);
+    }
+
+    public static String getDeviceId(Context context) {
+        return PrefsTools.getStringPrefs(context, DEVICE_TOKEN_INFO, "0000");
     }
 
     /**
@@ -119,6 +128,7 @@ public class LoginManager {
         params.put("pageType", "login");
         params.put("mobile", mobile);
         String md5Pass = MD5Util.encodeBy32BitMD5(password);
+        params.put("deviceToken", getDeviceId(context));
         params.put("password", md5Pass == null ? "" : md5Pass.toLowerCase());
 
         final AsyncJob<String> httpJob = HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc());

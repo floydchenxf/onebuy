@@ -72,6 +72,9 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
 
             }
         });
+
+        View emptyView = View.inflate(this, R.layout.empty_item, null);
+        mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
         productAdapter = new ProductAdapter(this, new ArrayList<WinningInfo>());
         mListView.setAdapter(productAdapter);
@@ -100,17 +103,6 @@ public class SearchResultActivity extends Activity implements View.OnClickListen
 
                 productAdapter.addAll(winningInfos, needClear);
                 pageNo++;
-
-                if (productAdapter.getProductList() == null || productAdapter.getProductList().isEmpty()) {
-                    TextView emptyView = new TextView(SearchResultActivity.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (40 * oneDp));
-                    emptyView.setGravity(Gravity.CENTER);
-                    emptyView.setLayoutParams(params);
-                    emptyView.setText("暂无数据");
-                    emptyView.setTextColor(Color.BLACK);
-                    mPullToRefreshListView.setEmptyView(emptyView);
-                }
-
             }
 
             @Override

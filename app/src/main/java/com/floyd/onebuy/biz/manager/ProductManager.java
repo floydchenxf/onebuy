@@ -94,7 +94,7 @@ public class ProductManager {
                         if (v.TotalCount == 0) {
                             info.processPrecent = "0%";
                         } else {
-                            info.processPrecent = (v.JoinedCount * 100/v.TotalCount)+"%";
+                            info.processPrecent = (v.JoinedCount * 100 / v.TotalCount) + "%";
                         }
                         info.productUrl = APIConstants.HOST + v.Pictures;
                         info.title = v.ProName;
@@ -156,7 +156,7 @@ public class ProductManager {
                     info.id = vo.ProID;
                     info.productId = vo.ProID;
                     info.status = vo.Status;
-                    if (vo.TotalCount ==0) {
+                    if (vo.TotalCount == 0) {
                         info.processPrecent = "0%";
                     } else {
                         info.processPrecent = (vo.JoinedCount * 100 / vo.TotalCount) + "%";
@@ -302,7 +302,7 @@ public class ProductManager {
             ownerVO.userId = o.getLong("PrizeClientID");
             ownerVO.userName = o.getString("PrizeClientName");
             //FIXME 服务端放在了外面对象中
-            ownerVO.winNumber = productLssue.getString("PriceCode");
+            ownerVO.winNumber = productLssue.getString("PrizeCode");
             ownerVO.avatar = o.getString("PrizeClientPic");
             ownerVO.winTime = o.getLong("PriceTime") * 1000;
             detailInfo.ownerVO = ownerVO;
@@ -524,8 +524,8 @@ public class ProductManager {
         ownerVO.userId = ownerInfoJson.getLong("PrizeClientID");
         ownerVO.avatar = ownerInfoJson.getString("PrizeClientPic");
         ownerVO.userName = ownerInfoJson.getString("PrizeClientName");
-        if (ownerInfoJson.has("PriceCode")) {
-            ownerVO.winNumber = ownerInfoJson.getString("PriceCode");
+        if (ownerInfoJson.has("PrizeCode")) {
+            ownerVO.winNumber = ownerInfoJson.getString("PrizeCode");
         }
 
         if (ownerInfoJson.has("PriceTime")) {
@@ -599,7 +599,7 @@ public class ProductManager {
             info.status = wjson.getInt("Status");
             info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
             String priceTime = wjson.getString("PriceTime");
-            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : (Long.parseLong(priceTime)+10)*1000;
+            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : (Long.parseLong(priceTime) + 10) * 1000;
             if (wjson.has("ClientCodeList")) {
                 List<String> codeList = new ArrayList<String>();
                 String aa = wjson.getString("ClientCodeList");
@@ -651,7 +651,7 @@ public class ProductManager {
                                 }
 
                                 OwnerExtVO ownerExtVO = new OwnerExtVO();
-                                ownerExtVO.status = status;
+                                ownerExtVO.status = winnerStatus;
                                 ownerExtVO.userName = ownerVO.userName;
                                 ownerExtVO.winNumber = ownerVO.winNumber;
                                 ownerExtVO.avatar = ownerVO.avatar;
@@ -676,6 +676,7 @@ public class ProductManager {
 
     /**
      * 获取用户的夺宝记录
+     *
      * @param userId
      * @param pageSize
      * @param pageNum
@@ -687,9 +688,9 @@ public class ProductManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "getPrizeHistory");
         params.put("userId", userId + "");
-        params.put("pageSize", pageSize+"");
-        params.put("pageNum", pageNum+"");
-        params.put("orderType", orderType+"");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("orderType", orderType + "");
 
         return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<List<WinningInfo>>>() {
             @Override
@@ -774,25 +775,43 @@ public class ProductManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetLuckRecord");
         params.put("userId", uid + "");
-        params.put("pageSize", pageSize+"");
-        params.put("pageNum", pageNum+"");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
 
-        Type type = new TypeToken<List<ProductLssueWithWinnerVO>>(){}.getType();
+        Type type = new TypeToken<List<ProductLssueWithWinnerVO>>() {
+        }.getType();
         AsyncJob<List<ProductLssueWithWinnerVO>> a = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
-        return  a;
+        return a;
     }
 
     public static AsyncJob<FundJsonVO> fetchFundData(int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetFoundsPageData");
-        params.put("pageSize", pageSize+"");
-        params.put("pageNum", pageNum+"");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, FundJsonVO.class);
     }
 
+    public static AsyncJob<List<ProductLssueVO>> fetcchFundList(int typeID, int pageSize, int pageNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetFoundsList");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("typeID", typeID + "");
+        Type type = new TypeToken<Map<String, List<ProductLssueVO>>>() {
+        }.getType();
 
+        AsyncJob<Map<String, List<ProductLssueVO>>> asyncJob = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
 
+        return asyncJob.map(new Func<Map<String, List<ProductLssueVO>>, List<ProductLssueVO>>() {
+            @Override
+            public List<ProductLssueVO> call(Map<String, List<ProductLssueVO>> stringListMap) {
+                return stringListMap.get("ProductLssueList");
+            }
+        });
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,8 +16,10 @@ import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.commonweal.TypeVO;
 import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.adapter.FundAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -105,6 +108,18 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductLssueVO lssueVo = fundAdapter.getItem(position - 2);
+                Intent it = new Intent(getActivity(), WinningDetailActivity.class);
+                it.putExtra(WinningDetailActivity.LASTEST, true);
+                it.putExtra(WinningDetailActivity.PRODUCT_ID, lssueVo.ProID);
+                it.putExtra(WinningDetailActivity.LSSUE_ID, lssueVo.ProductLssueID);
+                startActivity(it);
             }
         });
 

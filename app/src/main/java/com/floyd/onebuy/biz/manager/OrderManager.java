@@ -2,9 +2,12 @@ package com.floyd.onebuy.biz.manager;
 
 import android.text.TextUtils;
 
+import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.vo.json.ChargeOrderVO;
+import com.floyd.onebuy.biz.vo.json.ChargeVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.channel.request.HttpMethod;
@@ -20,6 +23,8 @@ import java.util.Map;
  * Created by floyd on 16-5-5.
  */
 public class OrderManager {
+
+    public static final String TAOBAOTEST = "TAOBAOTEST";
 
     /**
      * 创建订单
@@ -70,12 +75,24 @@ public class OrderManager {
         });
     }
 
+
+    /**
+     * 创建订单
+     *
+     * @param userId
+     * @param productLssueDetail
+     * @param linkName
+     * @param linkMobile
+     * @param receivingAdrString
+     * @param remark
+     * @return
+     */
     public static AsyncJob<OrderPayVO> createAndPayOrder(long userId, String productLssueDetail, String linkName,
                                                          String linkMobile, String receivingAdrString, String remark) {
         AsyncJob<OrderPayVO> result = createOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString, remark).flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
             @Override
             public AsyncJob<OrderPayVO> call(final OrderVO orderVO) {
-                AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum, "TAOBAOTEST").map(new Func<List<String>, OrderPayVO>() {
+                AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum,  TAOBAOTEST).map(new Func<List<String>, OrderPayVO>() {
                     @Override
                     public OrderPayVO call(List<String> strings) {
                         OrderPayVO orderPayVO = new OrderPayVO();
@@ -88,7 +105,101 @@ public class OrderManager {
             }
         });
 
+
         return result;
 
     }
+
+    /**
+     * 捐款模拟支付
+     *
+     * @param orderNum
+     * @return
+     */
+    public static AsyncJob<Boolean> payWeal(String orderNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "PayWeal");
+        params.put("orderNum", orderNum);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+    }
+
+    public static AsyncJob<Integer> payCharge(String orderNum, String taobaoNum) {
+
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "PayCharge");
+        params.put("orderNum", orderNum);
+        params.put("taobaoNum", taobaoNum);
+        AsyncJob<Map<String, String>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
+        return result.map(new Func<Map<String, String>, Integer>() {
+            @Override
+            public Integer call(Map<String, String> m) {
+                String moneyString = m.get("clientMoney");
+                int result = 0;
+                if (!TextUtils.isEmpty(moneyString)) {
+                    result = Integer.parseInt(moneyString);
+                }
+                return result;
+            }
+        });
+    }
+
+
+    /**
+     * 创建充值订单
+     *
+     * @param userId
+     * @param money
+     * @return
+     */
+    public static AsyncJob<ChargeOrderVO> createChargeOrder(Long userId, String money) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "Recharge");
+        params.put("userId", userId + "");
+        params.put("money", money);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, ChargeOrderVO.class);
+    }
+
+    /**
+     * 创建订单并支付
+     *
+     * @param userId
+     * @param money
+     * @return
+     */
+    public static AsyncJob<Integer> createOrderAndPayCharge(Long userId, String money) {
+        final AsyncJob<Integer> chargeOrderJob = createChargeOrder(userId, money).flatMap(new Func<ChargeOrderVO, AsyncJob<Integer>>() {
+            @Override
+            public AsyncJob<Integer> call(final ChargeOrderVO chargeOrderVO) {
+                String orderNum = chargeOrderVO.orderNum;
+                return payCharge(orderNum, TAOBAOTEST);
+            }
+        });
+
+        return chargeOrderJob;
+    }
+
+    /**
+     * 获取充值记录
+     * 
+     * @param userId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public static AsyncJob<List<ChargeVO>> getRecharge(Long userId, int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "ChargeList");
+        params.put("userId", userId + "");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNo + "");
+        Type type = new TypeToken<List<ChargeVO>>() {
+        }.getType();
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+    }
+
+
 }

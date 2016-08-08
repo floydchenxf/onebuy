@@ -64,7 +64,11 @@ import de.greenrobot.event.Subscribe;
 
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
 
+    public static final int DETAIL_TYPE_PRODUCT = 0;
+    public static final int DETAIL_TYPE_COMMONWEAL = 1;
+    public static final int DETAIL_TYPE_FRI = 2;
     public static final int TIME_EVENT = 1;
+    public static final String DETAIL_TYPE="DETAIL_TYPE";
 
     private static final String TAG = "WinningDetailActivity";
     public static final String LASTEST = "lastest";
@@ -72,10 +76,13 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     public static final String LSSUE_ID = "id";
     private static final int PAGE_SIZE = 10;
 
+
     private Long id;
     private Long productId;
     private boolean isLatest;
     private int pageNo = 1;
+    private int detailType; //类型
+
     private WinningDetailInfo winningDetailInfo;
 
     private DataLoadingView dataLoadingView;
@@ -414,6 +421,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         ((TextView) findViewById(R.id.title_name)).setText("商品详情");
         id = getIntent().getLongExtra(LSSUE_ID, 0l);
         isLatest = getIntent().getBooleanExtra(LASTEST, true);
+        detailType = getIntent().getIntExtra(DETAIL_TYPE, DETAIL_TYPE_PRODUCT);
         productId = getIntent().getLongExtra(PRODUCT_ID, 0l);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
