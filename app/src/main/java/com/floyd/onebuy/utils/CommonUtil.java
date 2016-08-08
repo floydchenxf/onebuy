@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.floyd.onebuy.biz.constants.APIConstants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,6 +152,18 @@ public class CommonUtil {
      */
     public static String getImage_400(String url) {
         return getImageType(url, "!v400");
+    }
+
+    public static String getImageUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+
+        if (url.startsWith("http")) {
+            return url;
+        }
+
+        return APIConstants.HOST + url;
     }
 
 }

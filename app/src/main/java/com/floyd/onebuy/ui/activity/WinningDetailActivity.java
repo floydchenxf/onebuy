@@ -20,8 +20,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
+import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
@@ -33,9 +36,11 @@ import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
+import com.floyd.onebuy.biz.vo.product.OwnerVO;
 import com.floyd.onebuy.biz.vo.product.ProgressVO;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
 import com.floyd.onebuy.event.LoginEvent;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
@@ -125,7 +130,10 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private ListView popJoinNumListView;
     private JoinedNumAdapter joinedNumAdapter;
 
+    private ImageLoader mImageLoader;
+
     private int callTime = 0;
+    private boolean isFirst;
 
     private Handler mHandler = new Handler() {
 
@@ -175,10 +183,231 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         }
     };
 
+    private ApiCallback<WinningDetailInfo> apiCallback = new ApiCallback<WinningDetailInfo>() {
+        @Override
+        public void onError(int code, String errorInfo) {
+            if (isFirst) {
+                dataLoadingView.loadFail();
+            }
+            Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+            WinningDetailActivity.this.finish();
+        }
+
+        @Override
+        public void onSuccess(final WinningDetailInfo winningDetailInfo) {
+            if (isFirst) {
+                dataLoadingView.loadSuccess();
+            }
+
+            WinningDetailActivity.this.winningDetailInfo = winningDetailInfo;
+            id = winningDetailInfo.id;
+            StringBuilder titleAndStatusSb = new StringBuilder();
+            int status = winningDetailInfo.status;
+            if (status == WinningInfo.STATUS_CHOOSE) {
+                joinLayout.setVisibility(View.VISIBLE);
+                gotoJoinLayout.setVisibility(View.GONE);
+                joinLayout.setVisibility(View.VISIBLE);
+                progressLayout.setVisibility(View.VISIBLE);
+                priceTimeLayout.setVisibility(View.GONE);
+                ownerLayout.setVisibility(View.GONE);
+                ProgressVO progressVO = winningDetailInfo.progressVO;
+                totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>人次"));
+                leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>人次"));
+                progressBar.setProgress(progressVO.getPrecent());
+                titleAndStatusSb.append("进行中    ");
+            } else if (status == WinningInfo.STATUS_LOTTERY) {
+                titleAndStatusSb.append("开奖中    ");
+                progressLayout.setVisibility(View.GONE);
+                priceTimeLayout.setVisibility(View.VISIBLE);
+
+                TextView priceTimeView = (TextView) priceTimeLayout.findViewById(R.id.price_time_view);
+                long priceTime = winningDetailInfo.priceTime;
+                priceTimeView.setTag(R.id.LEFT_TIME_ID, priceTime);
+
+                Message msg = new Message();
+                msg.what = TIME_EVENT;
+                MsgObj msgObj = new MsgObj();
+                msgObj.id = id;
+                msgObj.timeView = new SoftReference<TextView>(priceTimeView);
+                msg.obj = msgObj;
+                mHandler.sendMessage(msg);
+                ownerLayout.setVisibility(View.GONE);
+
+            } else if (status == WinningInfo.STATUS_LOTTERYED) {
+                joinLayout.setVisibility(View.GONE);
+                gotoJoinLayout.setVisibility(View.VISIBLE);
+                progressLayout.setVisibility(View.GONE);
+                priceTimeLayout.setVisibility(View.GONE);
+                ownerLayout.setVisibility(View.VISIBLE);
+
+                OwnerVO vo  = winningDetailInfo.ownerVO;
+                if (vo == null) {
+                    ownerLayout.setVisibility(View.GONE);
+                } else {
+                    NetworkImageView ownerHeadView = (NetworkImageView) ownerLayout.findViewById(R.id.owner_head_view);
+                    TextView ownerNameView = (TextView) ownerLayout.findViewById(R.id.owner_name_view);
+                    TextView ownerClientIdView = (TextView) ownerLayout.findViewById(R.id.owner_client_id_view);
+                    TextView ownerJoinNumView = (TextView) ownerLayout.findViewById(R.id.owner_join_num_view);
+                    TextView ownerPriceTimeView = (TextView) ownerLayout.findViewById(R.id.owner_price_time_view);
+                    TextView winnerNumberView = (TextView) ownerLayout.findViewById(R.id.luck_number_view);
+                    ownerHeadView.setDefaultImageResId(R.drawable.tupian);
+                    ownerHeadView.setImageUrl(vo.getHeadImage(), mImageLoader);
+                    ownerNameView.setText(vo.userName);
+                    ownerJoinNumView.setText((winningDetailInfo.myRecords==null?0:winningDetailInfo.myRecords.size())+"人次");
+                    String k = DateUtil.getDateTime(vo.winTime);
+                    ownerPriceTimeView.setText(k);
+                    ownerClientIdView.setText(vo.userId+"");
+                    winnerNumberView.setText(vo.winNumber);
+                }
+
+                joinLayout.setVisibility(View.GONE);
+                titleAndStatusSb.append("已揭晓    ");
+            }
+
+            titleAndStatusSb.append("(第").append(winningDetailInfo.code).append("期)");
+
+            titleAndStatusSb.append(winningDetailInfo.productTitle);
+
+            SpannableString message = new SpannableString(titleAndStatusSb.toString());
+            message.setSpan(new BackgroundColorSpan(Color.parseColor("#ff424c")), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            titleAndStatusView.setText(message);
+
+            List<AdvVO> advVOs = winningDetailInfo.advVOList;
+            mBannerImageAdapter.addItems(advVOs);
+            mHeaderViewIndicator.setTotal(mBannerImageAdapter.getCount());
+            mHeaderViewIndicator.setIndex(0);
+            if (advVOs.size() == 1) {
+                mHeaderViewIndicator.setVisibility(View.GONE);
+            } else {
+                mHeaderViewIndicator.setVisibility(View.VISIBLE);
+            }
+
+            UserVO userVO = LoginManager.getLoginInfo(WinningDetailActivity.this);
+            if (userVO == null) {
+                noJoinView.setVisibility(View.VISIBLE);
+                noJoinView.setText(R.string.no_login);
+                joinNumberLayout.setVisibility(View.GONE);
+                noJoinView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(WinningDetailActivity.this, LoginActivity.class);
+                        startActivity(it);
+                    }
+                });
+            } else {
+                if (winningDetailInfo.myRecords != null && !winningDetailInfo.myRecords.isEmpty()) {
+
+                    List<String> joinedNums = winningDetailInfo.myRecords;
+                    noJoinView.setVisibility(View.GONE);
+                    joinNumberLayout.setVisibility(View.VISIBLE);
+                    TextView buyNoDescView = (TextView) joinNumberLayout.findViewById(R.id.buy_no_desc);
+                    buyNoDescView.setText(Html.fromHtml("您参与了：<font color=\"blue\">" + joinedNums.size() + "</font>人次"));
+                    LinearLayout joinedNumLayout = (LinearLayout) joinNumberLayout.findViewById(R.id.joined_num_layout);
+                    joinedNumLayout.removeAllViews();
+                    joinedNumLayout.setVisibility(View.VISIBLE);
+
+                    List<String> tmpList = new ArrayList<String>();
+                    boolean hasMore = false;
+                    if (joinedNums.size() >= 8) {
+                        for (int i = 0; i < 7; i++) {
+                            tmpList.add(joinedNums.get(i));
+                        }
+                        tmpList.add("查看更多");
+                        hasMore = true;
+                    } else {
+                        tmpList.addAll(joinedNums);
+                        hasMore = false;
+                    }
+
+                    int lines = tmpList.size() % 4 == 0 ? tmpList.size() / 4 : tmpList.size() / 4 + 1;
+                    for (int i = 0; i < lines; i++) {
+                        LinearLayout layout = (LinearLayout) View.inflate(WinningDetailActivity.this, R.layout.joined_num_item, null);
+                        joinedNumLayout.addView(layout);
+                        TextView text1 = (TextView) layout.findViewById(R.id.join_number_1);
+                        TextView text2 = (TextView) layout.findViewById(R.id.join_number_2);
+                        TextView text3 = (TextView) layout.findViewById(R.id.join_number_3);
+                        TextView text4 = (TextView) layout.findViewById(R.id.join_number_4);
+                        text4.setVisibility(View.VISIBLE);
+                        text4.setOnClickListener(null);
+                        int k = i * 4;
+                        if (k < tmpList.size()) {
+                            text1.setText(tmpList.get(k));
+                            text1.setVisibility(View.VISIBLE);
+                        } else {
+                            text1.setVisibility(View.GONE);
+                        }
+
+                        if (k + 1 < tmpList.size()) {
+                            text2.setText(tmpList.get(k + 1));
+                            text2.setVisibility(View.VISIBLE);
+                        } else {
+                            text2.setVisibility(View.GONE);
+                        }
+
+                        if (k + 2 < tmpList.size()) {
+                            text3.setText(tmpList.get(k + 2));
+                            text3.setVisibility(View.VISIBLE);
+                        } else {
+                            text3.setVisibility(View.GONE);
+                        }
+
+                        if (k + 3 < tmpList.size()) {
+                            text4.setText(tmpList.get(k + 3));
+                            text4.setVisibility(View.VISIBLE);
+                        } else {
+                            text4.setVisibility(View.GONE);
+                        }
+
+                        if (i == 1 && hasMore) {
+                            text4.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    popProductCodeView.setText("第" + winningDetailInfo.code + "期");
+                                    popProductTitleView.setText(winningDetailInfo.productTitle);
+                                    popJoinedCountView.setText(winningDetailInfo.myRecords.size() + "人次");
+                                    List<String> list = winningDetailInfo.myRecords;
+                                    joinedNumAdapter.addAll(list, true);
+                                    joinedPopupWindow.showPopUpWindow();
+                                }
+                            });
+                        } else {
+                            text4.setOnClickListener(null);
+                        }
+                    }
+
+
+                    noJoinView.setOnClickListener(null);
+                } else {
+                    noJoinView.setVisibility(View.VISIBLE);
+                    noJoinView.setText(R.string.no_join_desc);
+                    joinNumberLayout.setVisibility(View.GONE);
+                    noJoinView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            buyNow();
+                        }
+                    });
+                }
+            }
+
+            adapter.addAll(winningDetailInfo.allJoinedRecords, true);
+
+            if (adapter.getFeeRecords() == null || adapter.getFeeRecords().isEmpty()) {
+                allRecordLayout.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winning_detail);
+        mImageLoader = ImageLoaderFactory.createImageLoader();
         EventBus.getDefault().register(this);
         findViewById(R.id.title_back).setOnClickListener(this);
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
@@ -274,7 +503,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             }
         });
 
-        loadData(true);
+        isFirst = true;
+        loadData();
     }
 
 
@@ -302,7 +532,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     }
 
 
-    private void loadData(final boolean isFirst) {
+    private void loadData() {
         if (isFirst) {
             dataLoadingView.startLoading();
         }
@@ -326,204 +556,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             job = ProductManager.fetchProductLssueDetail(lssueId, productId, userId);
         }
 
-        job.startUI(new ApiCallback<WinningDetailInfo>() {
-            @Override
-            public void onError(int code, String errorInfo) {
-                if (isFirst) {
-                    dataLoadingView.loadFail();
-                }
-                Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                WinningDetailActivity.this.finish();
-            }
-
-            @Override
-            public void onSuccess(final WinningDetailInfo winningDetailInfo) {
-                if (isFirst) {
-                    dataLoadingView.loadSuccess();
-                }
-
-                WinningDetailActivity.this.winningDetailInfo = winningDetailInfo;
-                id = winningDetailInfo.id;
-                StringBuilder titleAndStatusSb = new StringBuilder();
-                int status = winningDetailInfo.status;
-                if (status == WinningInfo.STATUS_CHOOSE) {
-                    joinLayout.setVisibility(View.VISIBLE);
-                    gotoJoinLayout.setVisibility(View.GONE);
-                    joinLayout.setVisibility(View.VISIBLE);
-                    progressLayout.setVisibility(View.VISIBLE);
-                    priceTimeLayout.setVisibility(View.GONE);
-                    ownerLayout.setVisibility(View.GONE);
-                    ProgressVO progressVO = winningDetailInfo.progressVO;
-                    totalView.setText(Html.fromHtml("总需<font color=\"red\">" + progressVO.TotalCount + "</font>人次"));
-                    leftView.setText(Html.fromHtml("剩余<font color=\"red\">" + (progressVO.TotalCount - progressVO.JonidedCount) + "</font>人次"));
-                    progressBar.setProgress(progressVO.getPrecent());
-                    titleAndStatusSb.append("进行中    ");
-                } else if (status == WinningInfo.STATUS_LOTTERY) {
-                    titleAndStatusSb.append("开奖中    ");
-                    progressLayout.setVisibility(View.GONE);
-                    priceTimeLayout.setVisibility(View.VISIBLE);
-
-                    TextView priceTimeView = (TextView) priceTimeLayout.findViewById(R.id.price_time_view);
-                    long priceTime = winningDetailInfo.priceTime;
-                    priceTimeView.setTag(R.id.LEFT_TIME_ID, priceTime);
-
-                    Message msg = new Message();
-                    msg.what = TIME_EVENT;
-                    MsgObj msgObj = new MsgObj();
-                    msgObj.id = id;
-                    msgObj.timeView = new SoftReference<TextView>(priceTimeView);
-                    msg.obj = msgObj;
-                    mHandler.sendMessage(msg);
-                    ownerLayout.setVisibility(View.GONE);
-
-                } else if (status == WinningInfo.STATUS_LOTTERYED) {
-                    joinLayout.setVisibility(View.GONE);
-                    gotoJoinLayout.setVisibility(View.VISIBLE);
-                    progressLayout.setVisibility(View.GONE);
-                    priceTimeLayout.setVisibility(View.GONE);
-                    ownerLayout.setVisibility(View.VISIBLE);
-                    joinLayout.setVisibility(View.GONE);
-                    titleAndStatusSb.append("已揭晓    ");
-                }
-
-                titleAndStatusSb.append("(第").append(winningDetailInfo.code).append("期)");
-
-                titleAndStatusSb.append(winningDetailInfo.productTitle);
-
-                SpannableString message = new SpannableString(titleAndStatusSb.toString());
-                message.setSpan(new BackgroundColorSpan(Color.parseColor("#ff424c")), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                titleAndStatusView.setText(message);
-
-                List<AdvVO> advVOs = winningDetailInfo.advVOList;
-                mBannerImageAdapter.addItems(advVOs);
-                mHeaderViewIndicator.setTotal(mBannerImageAdapter.getCount());
-                mHeaderViewIndicator.setIndex(0);
-                if (advVOs.size() == 1) {
-                    mHeaderViewIndicator.setVisibility(View.GONE);
-                } else {
-                    mHeaderViewIndicator.setVisibility(View.VISIBLE);
-                }
-
-                UserVO userVO = LoginManager.getLoginInfo(WinningDetailActivity.this);
-                if (userVO == null) {
-                    noJoinView.setVisibility(View.VISIBLE);
-                    noJoinView.setText(R.string.no_login);
-                    joinNumberLayout.setVisibility(View.GONE);
-                    noJoinView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent it = new Intent(WinningDetailActivity.this, LoginActivity.class);
-                            startActivity(it);
-                        }
-                    });
-                } else {
-                    if (winningDetailInfo.myRecords != null && !winningDetailInfo.myRecords.isEmpty()) {
-
-                        List<String> joinedNums = winningDetailInfo.myRecords;
-                        noJoinView.setVisibility(View.GONE);
-                        joinNumberLayout.setVisibility(View.VISIBLE);
-                        TextView buyNoDescView = (TextView) joinNumberLayout.findViewById(R.id.buy_no_desc);
-                        buyNoDescView.setText(Html.fromHtml("您参与了：<font color=\"blue\">" + joinedNums.size() + "</font>人次"));
-                        LinearLayout joinedNumLayout = (LinearLayout) joinNumberLayout.findViewById(R.id.joined_num_layout);
-                        joinedNumLayout.removeAllViews();
-                        joinedNumLayout.setVisibility(View.VISIBLE);
-
-                        List<String> tmpList = new ArrayList<String>();
-                        boolean hasMore = false;
-                        if (joinedNums.size() >= 8) {
-                            for (int i = 0; i < 7; i++) {
-                                tmpList.add(joinedNums.get(i));
-                            }
-                            tmpList.add("查看更多");
-                            hasMore = true;
-                        } else {
-                            tmpList.addAll(joinedNums);
-                            hasMore = false;
-                        }
-
-                        int lines = tmpList.size() % 4 == 0 ? tmpList.size() / 4 : tmpList.size() / 4 + 1;
-                        for (int i = 0; i < lines; i++) {
-                            LinearLayout layout = (LinearLayout) View.inflate(WinningDetailActivity.this, R.layout.joined_num_item, null);
-                            joinedNumLayout.addView(layout);
-                            TextView text1 = (TextView) layout.findViewById(R.id.join_number_1);
-                            TextView text2 = (TextView) layout.findViewById(R.id.join_number_2);
-                            TextView text3 = (TextView) layout.findViewById(R.id.join_number_3);
-                            TextView text4 = (TextView) layout.findViewById(R.id.join_number_4);
-                            text4.setVisibility(View.VISIBLE);
-                            text4.setOnClickListener(null);
-                            int k = i * 4;
-                            if (k < tmpList.size()) {
-                                text1.setText(tmpList.get(k));
-                                text1.setVisibility(View.VISIBLE);
-                            } else {
-                                text1.setVisibility(View.GONE);
-                            }
-
-                            if (k + 1 < tmpList.size()) {
-                                text2.setText(tmpList.get(k + 1));
-                                text2.setVisibility(View.VISIBLE);
-                            } else {
-                                text2.setVisibility(View.GONE);
-                            }
-
-                            if (k + 2 < tmpList.size()) {
-                                text3.setText(tmpList.get(k + 2));
-                                text3.setVisibility(View.VISIBLE);
-                            } else {
-                                text3.setVisibility(View.GONE);
-                            }
-
-                            if (k + 3 < tmpList.size()) {
-                                text4.setText(tmpList.get(k + 3));
-                                text4.setVisibility(View.VISIBLE);
-                            } else {
-                                text4.setVisibility(View.GONE);
-                            }
-
-                            if (i == 1 && hasMore) {
-                                text4.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        popProductCodeView.setText("第" + winningDetailInfo.code + "期");
-                                        popProductTitleView.setText(winningDetailInfo.productTitle);
-                                        popJoinedCountView.setText(winningDetailInfo.myRecords.size() + "人次");
-                                        List<String> list = winningDetailInfo.myRecords;
-                                        joinedNumAdapter.addAll(list, true);
-                                        joinedPopupWindow.showPopUpWindow();
-                                    }
-                                });
-                            } else {
-                                text4.setOnClickListener(null);
-                            }
-                        }
-
-
-                        noJoinView.setOnClickListener(null);
-                    } else {
-                        noJoinView.setVisibility(View.VISIBLE);
-                        noJoinView.setText(R.string.no_join_desc);
-                        joinNumberLayout.setVisibility(View.GONE);
-                        noJoinView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                buyNow();
-                            }
-                        });
-                    }
-                }
-
-                adapter.addAll(winningDetailInfo.allJoinedRecords, true);
-
-                if (adapter.getFeeRecords() == null || adapter.getFeeRecords().isEmpty()) {
-                    allRecordLayout.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onProgress(int progress) {
-
-            }
-        });
+        job.startUI(apiCallback);
 
 
     }
@@ -609,7 +642,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.act_ls_fail_layout:
                 pageNo = 1;
-                loadData(true);
+                isFirst = true;
+                loadData();
                 break;
             case R.id.join_buy_car_view:
                 if (LoginManager.isLogin(this)) {
@@ -673,7 +707,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     @Subscribe
     public void onEventMainThread(LoginEvent event) {
-        loadData(false);
+        isFirst = false;
+        loadData();
     }
 
     protected void onDestroy() {
@@ -698,7 +733,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 callTime++;
                 winningDetailInfo.ownerVO = ownerExtVO;
                 winningDetailInfo.status = ownerExtVO.status;
-                //TODO update
+                isFirst = false;
+                JobFactory.createJob(winningDetailInfo).startUI(apiCallback);
             }
 
             @Override
