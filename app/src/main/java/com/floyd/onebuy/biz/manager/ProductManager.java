@@ -302,7 +302,7 @@ public class ProductManager {
             ownerVO.userId = o.getLong("PrizeClientID");
             ownerVO.userName = o.getString("PrizeClientName");
             //FIXME 服务端放在了外面对象中
-            ownerVO.winNumber = productLssue.getString("PriceCode");
+            ownerVO.winNumber = productLssue.getString("PrizeCode");
             ownerVO.avatar = o.getString("PrizeClientPic");
             ownerVO.winTime = o.getLong("PriceTime") * 1000;
             detailInfo.ownerVO = ownerVO;
