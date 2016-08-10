@@ -32,6 +32,7 @@ import com.floyd.onebuy.ui.activity.FeeRecordActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
 import com.floyd.onebuy.ui.activity.MyInfoActivity;
 import com.floyd.onebuy.ui.activity.MyLuckActivity;
+import com.floyd.onebuy.ui.activity.PayChargeActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
@@ -335,6 +336,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 startActivity(settingIntent);
                 break;
             case R.id.add_fee:
+                Intent it = new Intent(getActivity(), PayChargeActivity.class);
+                startActivity(it);
                 break;
             case R.id.head:
                 Intent myInfoIntent = new Intent(getActivity(), MyInfoActivity.class);

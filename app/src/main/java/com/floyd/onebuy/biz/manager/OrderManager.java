@@ -2,6 +2,7 @@ package com.floyd.onebuy.biz.manager;
 
 import android.text.TextUtils;
 
+import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
@@ -22,6 +23,8 @@ import java.util.Map;
  * Created by floyd on 16-5-5.
  */
 public class OrderManager {
+
+    public static final String TAOBAOTEST = "TAOBAOTEST";
 
     /**
      * 创建订单
@@ -89,7 +92,7 @@ public class OrderManager {
         AsyncJob<OrderPayVO> result = createOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString, remark).flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
             @Override
             public AsyncJob<OrderPayVO> call(final OrderVO orderVO) {
-                AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum, "TAOBAOTEST").map(new Func<List<String>, OrderPayVO>() {
+                AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum,  TAOBAOTEST).map(new Func<List<String>, OrderPayVO>() {
                     @Override
                     public OrderPayVO call(List<String> strings) {
                         OrderPayVO orderPayVO = new OrderPayVO();
@@ -101,6 +104,7 @@ public class OrderManager {
                 return a;
             }
         });
+
 
         return result;
 
@@ -159,12 +163,36 @@ public class OrderManager {
     }
 
     /**
+     * 创建订单并支付
+     *
+     * @param userId
+     * @param money
+     * @return
+     */
+    public static AsyncJob<Integer> createOrderAndPayCharge(Long userId, String money) {
+        final AsyncJob<Integer> chargeOrderJob = createChargeOrder(userId, money).flatMap(new Func<ChargeOrderVO, AsyncJob<Integer>>() {
+            @Override
+            public AsyncJob<Integer> call(final ChargeOrderVO chargeOrderVO) {
+                String orderNum = chargeOrderVO.orderNum;
+                return payCharge(orderNum, TAOBAOTEST);
+            }
+        });
+
+        return chargeOrderJob;
+    }
+
+    /**
      * 获取充值记录
+     * 
+     * @param userId
+     * @param pageNo
+     * @param pageSize
+     * @return
      */
     public static AsyncJob<List<ChargeVO>> getRecharge(Long userId, int pageNo, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "Recharge");
+        params.put("pageType", "ChargeList");
         params.put("userId", userId + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNo + "");
