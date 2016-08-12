@@ -24,12 +24,11 @@ public class ChargeVO {
     }
 
     public long getPayTime() {
-        long result = 0;
-        if (PayTime != null && PayTime != 0l) {
-            result = PayTime * 1000;
+        long time =0l;
+        if (this.PayTime != null && this.PayTime > 0) {
+            time = (long)this.PayTime * 1000;
         }
-
-        return result;
+        return time;
     }
 
 }
