@@ -2,6 +2,7 @@ package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckedTextView;
@@ -9,7 +10,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.ui.R;
 
 public class PayChargeActivity extends Activity implements View.OnClickListener {
@@ -140,6 +145,41 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
                 payTypeChecked = 0;
                 break;
             case R.id.add_fee_view:
+                int money = 0;
+                if (checkedIndex < 5) {
+                    money = values[checkedIndex];
+                } else {
+                    String moneyString = num6.getEditableText().toString();
+                    if (TextUtils.isEmpty(moneyString)) {
+                        Toast.makeText(this, "请输入金额", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (!TextUtils.isDigitsOnly(moneyString)) {
+                        Toast.makeText(this, "请输入数字", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    money = Integer.parseInt(moneyString);
+                }
+                Long userId = LoginManager.getLoginInfo(this).ID;
+                OrderManager.createOrderAndPayCharge(userId, money+"").startUI(new ApiCallback<Double>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+                        Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(Double money) {
+                        Toast.makeText(PayChargeActivity.this, "充值"+money+"成功!", Toast.LENGTH_SHORT).show();
+                        PayChargeActivity.this.finish();
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
 
                 //TODO 充值
                 break;

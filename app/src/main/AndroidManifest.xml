@@ -53,11 +53,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
         <activity
-            android:name=".activity.FeeRecordActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay" />
-        <activity
             android:name="com.floyd.zxing.MipcaActivityCapture"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
@@ -293,10 +288,15 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
-        <activity android:name=".activity.PayChargeActivity"
+        <activity
+            android:name=".activity.PayChargeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
+        <activity android:name=".activity.ChargeListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay"/>
     </application>
 
 </manifest>

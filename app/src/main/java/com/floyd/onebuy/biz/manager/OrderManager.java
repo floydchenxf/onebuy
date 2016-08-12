@@ -124,7 +124,7 @@ public class OrderManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
-    public static AsyncJob<Integer> payCharge(String orderNum, String taobaoNum) {
+    public static AsyncJob<Double> payCharge(String orderNum, String taobaoNum) {
 
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
@@ -132,13 +132,13 @@ public class OrderManager {
         params.put("orderNum", orderNum);
         params.put("taobaoNum", taobaoNum);
         AsyncJob<Map<String, String>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
-        return result.map(new Func<Map<String, String>, Integer>() {
+        return result.map(new Func<Map<String, String>, Double>() {
             @Override
-            public Integer call(Map<String, String> m) {
+            public Double call(Map<String, String> m) {
                 String moneyString = m.get("clientMoney");
-                int result = 0;
+                double result = 0;
                 if (!TextUtils.isEmpty(moneyString)) {
-                    result = Integer.parseInt(moneyString);
+                    result = Double.parseDouble(moneyString);
                 }
                 return result;
             }
@@ -169,10 +169,10 @@ public class OrderManager {
      * @param money
      * @return
      */
-    public static AsyncJob<Integer> createOrderAndPayCharge(Long userId, String money) {
-        final AsyncJob<Integer> chargeOrderJob = createChargeOrder(userId, money).flatMap(new Func<ChargeOrderVO, AsyncJob<Integer>>() {
+    public static AsyncJob<Double> createOrderAndPayCharge(Long userId, String money) {
+        final AsyncJob<Double> chargeOrderJob = createChargeOrder(userId, money).flatMap(new Func<ChargeOrderVO, AsyncJob<Double>>() {
             @Override
-            public AsyncJob<Integer> call(final ChargeOrderVO chargeOrderVO) {
+            public AsyncJob<Double> call(final ChargeOrderVO chargeOrderVO) {
                 String orderNum = chargeOrderVO.orderNum;
                 return payCharge(orderNum, TAOBAOTEST);
             }
