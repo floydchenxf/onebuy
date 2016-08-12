@@ -1,6 +1,7 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -30,6 +31,7 @@ public class ChargeListActivity extends Activity implements View.OnClickListener
     private int pageNo = 1;
     private int PAGE_SIZE = 10;
     private boolean needClear = false;
+    private TextView payAtOnceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,9 @@ public class ChargeListActivity extends Activity implements View.OnClickListener
         mListView = mPullToRefreshListView.getRefreshableView();
         mAdapter = new ChargeAdapter(this, new ArrayList<ChargeVO>());
         mListView.setAdapter(mAdapter);
+
+        payAtOnceView = (TextView) findViewById(R.id.pay_at_once_view);
+        payAtOnceView.setOnClickListener(this);
         loadData(true);
     }
 
@@ -109,7 +114,11 @@ public class ChargeListActivity extends Activity implements View.OnClickListener
             case R.id.title_back:
                 this.finish();
                 break;
-
+            case R.id.pay_at_once_view:
+                Intent it = new Intent(this, PayChargeActivity.class);
+                startActivity(it);
+                this.finish();
+                break;
         }
 
 
