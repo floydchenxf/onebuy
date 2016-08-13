@@ -67,6 +67,8 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
     private TextView takePhoneView;
     private TextView cancelView;
 
+    private View phoneLayout;
+
     private Dialog dataLoadingDialog;
 
     private File tempFile;
@@ -86,6 +88,9 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
         headImageView = (NetworkImageView) findViewById(R.id.head_image);
         View headLayout = findViewById(R.id.head_layout);
         headLayout.setOnClickListener(this);
+
+        phoneLayout = findViewById(R.id.phone_layout);
+        phoneLayout.setOnClickListener(this);
         phoneView = (TextView) findViewById(R.id.phone_num);
         nickNameView = (TextView) findViewById(R.id.nick);
         addressManagerView = findViewById(R.id.address_layout);
@@ -185,6 +190,11 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.title_back:
                 this.finish();
+                break;
+
+            case R.id.phone_layout:
+                Intent mobileBindIntent = new Intent(this, MobileBindActivity.class);
+                startActivity(mobileBindIntent);
                 break;
         }
     }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_frame" />
+
+    <EditText
+        android:id="@+id/mobile_view"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/title_layout"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/common_white_bord"
+        android:hint="绑定的手机号码"
+        android:paddingLeft="20dp"
+        android:textColor="#afafaf"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/check_code_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mobile_view"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/check_code"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:background="@drawable/common_white_bord"
+            android:gravity="center_vertical"
+            android:hint="验证码"
+            android:paddingLeft="20dp"
+            android:textColor="#afafaf"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/check_code_button"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/common_red_round_bord_bg"
+            android:gravity="center"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp"
+            android:text="获取验证码"
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
