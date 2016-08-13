@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_frame" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout">
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="成功邀请一位好友,可获取100积分奖励"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="14sp" />
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/mark_view"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_below="@+id/desc"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/invite_code_view"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/mark_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/common_white_button_bg"
+            android:gravity="center"
+            android:text="您的邀请码:xxxx"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/invite_friend_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/invite_code_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/common_round_red_bg"
+            android:gravity="center"
+            android:text="立即邀请"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

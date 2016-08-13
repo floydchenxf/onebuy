@@ -229,11 +229,14 @@ public class LoginManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
-    public static AsyncJob<Boolean> checkUserMobile(String mobile, String smsCode) {
+
+    public static AsyncJob<Boolean> bindClientMobile(Long userId, String mobile, String smsCode) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "checkUserMobile");
+        params.put("pageType", "bindClientMobile");
+        params.put("userId", userId+"");
         params.put("mobile", mobile);
+        params.put("code", smsCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 }
