@@ -7,12 +7,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FridayAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
@@ -23,11 +26,13 @@ public class FridayActivity extends Activity implements View.OnClickListener {
 
     private DataLoadingView dataLoadingView;
     private ImageLoader mImageLoader;
-    private int pageNo = 1;
-    private boolean needClear;
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
     private FridayAdapter fridayAdapter;
+
+    private int PAGE_SIZE = 10;
+    private int pageNo = 1;
+    private boolean needClear = true;
 
 
     @Override
@@ -43,25 +48,54 @@ public class FridayActivity extends Activity implements View.OnClickListener {
         titleName.setText("快乐星期五");
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.friday_list);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
+            @Override
+            public void onPullDownToRefresh() {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh() {
+                needClear = false;
+                pageNo++;
+                loadData(false);
+            }
+        });
+        View emptyView = View.inflate(this, R.layout.empty_item, null);
+        mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
         fridayAdapter = new FridayAdapter(this, new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(fridayAdapter);
         loadData(true);
     }
 
-    private void loadData(boolean isFirst) {
-        List<WinningInfo> winningRecordVOs = new ArrayList<WinningInfo>();
-        for(int i = 0; i < 20; i++) {
-            WinningInfo vo  = new WinningInfo();
-            vo.productUrl = "http://qmmt2015.b0.upaiyun.com/2016/4/12/70242b33-34df-4db5-a334-46000335e8f4.png";
-            vo.joinedCount=i+ 1;
-            vo.totalCount = 100;
-            vo.id = i;
-            vo.processPrecent=(50+i)+"";
-            vo.title = "小米手机５｜｜精彩开奖就送苹果";
-            winningRecordVOs.add(vo);
+    private void loadData(final boolean isFirst) {
+        if (isFirst) {
+            dataLoadingView.startLoading();
         }
-        fridayAdapter.addAll(winningRecordVOs, needClear);
+
+        ProductManager.fetchFridayProduct(pageNo, PAGE_SIZE).startUI(new ApiCallback<List<WinningInfo>>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                if (isFirst) {
+                    dataLoadingView.loadFail();
+                }
+            }
+
+            @Override
+            public void onSuccess(List<WinningInfo> winningInfos) {
+                if (isFirst) {
+                    dataLoadingView.loadSuccess();
+                }
+                fridayAdapter.addAll(winningInfos, needClear);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
     }
 
     @Override

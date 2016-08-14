@@ -67,14 +67,10 @@ public class FridayAdapter extends BaseAdapter {
             viewHolder.layout2 = convertView.findViewById(R.id.product_item_2);
             viewHolder.addBuyListView1 = (TextView) convertView.findViewById(R.id.add_buy_list_view_1);
             viewHolder.addBuyListView2 = (TextView) convertView.findViewById(R.id.add_buy_list_view_2);
-//            viewHolder.processPrecentDescView1 = (TextView) convertView.findViewById(R.id.progress_precent_desc_1);
-//            viewHolder.processPrecentDescView2 = (TextView) convertView.findViewById(R.id.progress_precent_desc_2);
             viewHolder.productImageView1 = (NetworkImageView) convertView.findViewById(R.id.product_pic_1);
             viewHolder.productImageView2 = (NetworkImageView) convertView.findViewById(R.id.product_pic_2);
             viewHolder.productTitleView1 = (TextView) convertView.findViewById(R.id.product_title_view_1);
             viewHolder.productTitleView2 = (TextView) convertView.findViewById(R.id.product_title_view_2);
-//            viewHolder.progressBarView1 = (ProgressBar) convertView.findViewById(R.id.progress_present_1);
-//            viewHolder.progressBarView2 = (ProgressBar) convertView.findViewById(R.id.progress_present_2);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -91,18 +87,16 @@ public class FridayAdapter extends BaseAdapter {
             viewHolder.layout2.setVisibility(View.VISIBLE);
             viewHolder.productImageView1.setImageUrl(winningInfo.productUrl, mImageLoader);
             viewHolder.productImageView2.setImageUrl(winningInfo2.productUrl, mImageLoader);
-//            viewHolder.progressBarView1.setProgress(winningInfo.processPrecent);
-//            viewHolder.progressBarView2.setProgress(winningInfo2.processPrecent);
             viewHolder.productTitleView1.setText(winningInfo.title);
             viewHolder.productTitleView2.setText(winningInfo2.title);
-//            viewHolder.processPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
-//            viewHolder.processPrecentDescView2.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo2.processPrecent + "</font>"));
-
             viewHolder.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo.id);
+                    it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo.id);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo.productId);
+                    it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FRI);
+                    it.putExtra(WinningDetailActivity.LASTEST, true);
                     mContext.startActivity(it);
                 }
             });
@@ -111,7 +105,10 @@ public class FridayAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo2.id);
+                    it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo2.id);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo2.productId);
+                    it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FRI);
+                    it.putExtra(WinningDetailActivity.LASTEST, true);
                     mContext.startActivity(it);
                 }
             });
@@ -120,15 +117,15 @@ public class FridayAdapter extends BaseAdapter {
             viewHolder.layout1.setVisibility(View.VISIBLE);
             viewHolder.layout2.setVisibility(View.INVISIBLE);
             viewHolder.productImageView1.setImageUrl(winningInfo.productUrl, mImageLoader);
-//            viewHolder.progressBarView1.setProgress(winningInfo.processPrecent);
             viewHolder.productTitleView1.setText(winningInfo.title);
-//            viewHolder.processPrecentDescView1.setText(Html.fromHtml("夺宝进度:<font color=\"blue\">" + winningInfo.processPrecent + "</font>"));
-
             viewHolder.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
-                    it.putExtra("id", winningInfo.id);
+                    it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo.id);
+                    it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo.productId);
+                    it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FRI);
+                    it.putExtra(WinningDetailActivity.LASTEST, true);
                     mContext.startActivity(it);
                 }
             });
@@ -143,15 +140,11 @@ public class FridayAdapter extends BaseAdapter {
     static class ViewHolder {
         public NetworkImageView productImageView1;
         public TextView productTitleView1;
-//        public TextView processPrecentDescView1;
-//        public ProgressBar progressBarView1;
         public TextView addBuyListView1;
         public View layout1;
 
         public NetworkImageView productImageView2;
         public TextView productTitleView2;
-//        public TextView processPrecentDescView2;
-//        public ProgressBar progressBarView2;
         public TextView addBuyListView2;
         public View layout2;
     }

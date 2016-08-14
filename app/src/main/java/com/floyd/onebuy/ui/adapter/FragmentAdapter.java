@@ -3,6 +3,7 @@ package com.floyd.onebuy.ui.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.floyd.onebuy.ui.fragment.CommonwealBaseFragment;
 
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by floyd on 16-7-24.
  */
-public class FragmentAdapter extends FragmentPagerAdapter {
+public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     private List<CommonwealBaseFragment> fragmentList = new ArrayList<CommonwealBaseFragment>();
 

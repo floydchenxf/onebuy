@@ -769,6 +769,56 @@ public class ProductManager {
         return infoList;
     }
 
+    private static List<WinningInfo> convert2FridayVO(JSONArray data) throws JSONException {
+        if (data == null || data.length() <= 0) {
+            return new ArrayList<WinningInfo>();
+        }
+
+        List<WinningInfo> infoList = new ArrayList<WinningInfo>();
+        for (int i = 0; i < data.length(); i++) {
+            WinningInfo info = new WinningInfo();
+            JSONObject wjson = data.getJSONObject(i);
+            info.lssueId = wjson.getLong("ProductLssueID");
+            info.id = info.lssueId;
+            info.code = wjson.getString("Code");
+            info.productId = wjson.getLong("ProID");
+            info.totalCount = wjson.getInt("TotalCount");
+            info.joinedCount = wjson.getInt("JoinedCount");
+            info.title = wjson.getString("ProName");
+            info.status = wjson.getInt("Status");
+            info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
+            if (wjson.has("ClientCodeList")) {
+                List<String> codeList = new ArrayList<String>();
+                String aa = wjson.getString("ClientCodeList");
+                if (!TextUtils.isEmpty(aa)) {
+
+                    String[] jj = aa.split(",");
+                    for (int j = 0; j < jj.length; j++) {
+                        String clientCode = jj[j];
+                        codeList.add(clientCode);
+                    }
+                }
+
+                info.myPrizeCodes = codeList;
+            }
+
+            if (wjson.has("PriceTime")) {
+                //加10秒，等待服务器计算
+                info.lotteryTime = (wjson.getLong("PriceTime") + 10) * 1000;
+            }
+
+            if (wjson.has("winnerInfo")) {
+                OwnerVO ownerVO = convert2OwnerVO(wjson);
+                ownerVO.joinNumber = info.myPrizeCodes == null ? 0 : info.myPrizeCodes.size();
+                info.ownerVO = ownerVO;
+            }
+
+            infoList.add(info);
+
+        }
+        return infoList;
+    }
+
 
     public static AsyncJob<List<ProductLssueWithWinnerVO>> fetchMyLuckRecords(long uid, int pageNum, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
@@ -784,12 +834,17 @@ public class ProductManager {
         return a;
     }
 
-    public static AsyncJob<FundJsonVO> fetchFundData(int pageSize, int pageNum) {
+    public static AsyncJob<FundJsonVO> fetchFundData(int pageSize, int pageNum, long typeId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetFoundsPageData");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
+        String typeIdStr = "";
+        if (typeId != 0) {
+            typeIdStr = typeId + "";
+        }
+        params.put("typeId", typeIdStr);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, FundJsonVO.class);
     }
 
@@ -809,6 +864,41 @@ public class ProductManager {
             @Override
             public List<ProductLssueVO> call(Map<String, List<ProductLssueVO>> stringListMap) {
                 return stringListMap.get("ProductLssueList");
+            }
+        });
+    }
+
+    public static AsyncJob<List<WinningInfo>> fetchFridayProduct(int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetFridayPageData");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNo + "");
+
+        return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<List<WinningInfo>>>() {
+            @Override
+            public AsyncJob<List<WinningInfo>> call(final String s) {
+                return new AsyncJob<List<WinningInfo>>() {
+                    @Override
+                    public void start(ApiCallback<List<WinningInfo>> callback) {
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(s);
+                            int status = j.getInt("status");
+                            if (status == 1) {
+                                JSONObject productData = j.getJSONObject("data");
+                                JSONArray data = productData.getJSONArray("ProductLssueList");
+                                List<WinningInfo> winningInfos = convert2FridayVO(data);
+                                callback.onSuccess(winningInfos);
+                            } else {
+                                String msg = j.getString("info");
+                                callback.onError(APIError.API_BIZ_ERROR, msg);
+                            }
+                        } catch (JSONException e) {
+                            callback.onError(APIError.API_JSON_PARSE_ERROR, e.getMessage());
+                        }
+                    }
+                };
             }
         });
     }
