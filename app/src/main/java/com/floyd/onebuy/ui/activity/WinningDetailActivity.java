@@ -14,6 +14,7 @@ import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -46,6 +47,10 @@ import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
 import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
+import com.floyd.onebuy.ui.buycar.BuycarOperator;
+import com.floyd.onebuy.ui.buycar.CommonwealBuycarOperator;
+import com.floyd.onebuy.ui.buycar.FridayBuycarOperator;
+import com.floyd.onebuy.ui.buycar.NormalProductBuycarOperator;
 import com.floyd.onebuy.ui.fragment.BannerFragment;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -141,6 +146,10 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     private int callTime = 0;
     private boolean isFirst;
+
+    private ImageView buyCarImageView;
+
+    private BuycarOperator buycarOperator;
 
     private Handler mHandler = new Handler() {
 
@@ -423,6 +432,16 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         isLatest = getIntent().getBooleanExtra(LASTEST, true);
         detailType = getIntent().getIntExtra(DETAIL_TYPE, DETAIL_TYPE_PRODUCT);
         productId = getIntent().getLongExtra(PRODUCT_ID, 0l);
+
+        buycarOperator = null;
+        if (detailType == DETAIL_TYPE_PRODUCT) {
+            buycarOperator = new NormalProductBuycarOperator(this, id, productId);
+        } else if (detailType == DETAIL_TYPE_FRI) {
+            buycarOperator = new FridayBuycarOperator(this, id, productId);
+        } else {
+            buycarOperator = new CommonwealBuycarOperator(this, id, productId);
+        }
+
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
@@ -435,6 +454,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         gotoJoinLayout = findViewById(R.id.goto_join_layout);
         gotoDetailView = (TextView) findViewById(R.id.goto_detail_view);
         gotoDetailView.setOnClickListener(this);
+
+        buyCarImageView = (ImageView) findViewById(R.id.view_buy_car);
+        buyCarImageView.setOnClickListener(this);
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.join_list);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
@@ -654,25 +676,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 loadData();
                 break;
             case R.id.join_buy_car_view:
-                if (LoginManager.isLogin(this)) {
-                    long userId = LoginManager.getLoginInfo(this).ID;
-                    CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
-                        @Override
-                        public void onError(int code, String errorInfo) {
-                            Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onSuccess(Boolean s) {
-                            Toast.makeText(WinningDetailActivity.this, "添加购物车成功", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onProgress(int progress) {
-
-                        }
-                    });
-                }
+                buycarOperator.addBuyCar();
                 break;
             case R.id.buy_now_view:
                 buyNow();
@@ -681,35 +685,18 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 Intent it = new Intent(this, WinningDetailActivity.class);
                 it.putExtra(PRODUCT_ID, productId);
                 it.putExtra(LASTEST, true);
+                it.putExtra(DETAIL_TYPE, detailType);
                 startActivity(it);
                 this.finish();
+                break;
+            case R.id.view_buy_car:
+                buycarOperator.viewBuyCar();
                 break;
         }
     }
 
     private void buyNow() {
-        if (LoginManager.isLogin(this)) {
-            long userId = LoginManager.getLoginInfo(this).ID;
-            CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
-                @Override
-                public void onError(int code, String errorInfo) {
-                    Toast.makeText(WinningDetailActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onSuccess(Boolean s) {
-                    Intent it = new Intent(WinningDetailActivity.this, MainActivity.class);
-                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    it.putExtra(MainActivity.TAB_INDEX, R.id.tab_buy_car);
-                    startActivity(it);
-                }
-
-                @Override
-                public void onProgress(int progress) {
-
-                }
-            });
-        }
+        buycarOperator.buyAtOnce();
         this.finish();
     }
 

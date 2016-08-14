@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.commonweal.TypeVO;
 import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.event.FundTypeEvent;
+import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
@@ -30,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +60,7 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
     private TextView fundFeeView;
 
     private List<TypeVO> typeList;
+    private long typeId;
 
     public FundFragment() {
     }
@@ -69,6 +76,7 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageLoader = ImageLoaderFactory.createImageLoader();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -84,6 +92,7 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
             public void onPullDownToRefresh() {
                 needClear = true;
                 pageNo = 1;
+                typeId = 0;
                 loadData(true);
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
@@ -103,14 +112,6 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
         initHead();
         fundAdapter = new FundAdapter(getActivity(), new ArrayList<ProductLssueVO>(), mImageLoader);
         mListView.setAdapter(fundAdapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -138,7 +139,7 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
         if (isFirst) {
             dataLoadingView.loadSuccess();
         }
-        ProductManager.fetchFundData(PAGE_SIZE, pageNo).startUI(new ApiCallback<FundJsonVO>() {
+        ProductManager.fetchFundData(PAGE_SIZE, pageNo, typeId).startUI(new ApiCallback<FundJsonVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -165,6 +166,16 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
         });
     }
 
+    @Subscribe
+    public void onEventMainThread(FundTypeEvent event) {
+        if (!getActivity().isFinishing()) {
+            typeId = event.typeId;
+            pageNo = 1;
+            needClear = true;
+            loadData(false);
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -179,5 +190,10 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("result", typeList);
         return params;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

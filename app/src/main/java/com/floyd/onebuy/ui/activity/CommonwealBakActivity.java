@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.floyd.onebuy.biz.vo.commonweal.TypeVO;
+import com.floyd.onebuy.event.FundTypeEvent;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FragmentAdapter;
 import com.floyd.onebuy.ui.fragment.CommonwealBaseFragment;
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class CommonwealBakActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -81,6 +85,17 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
             @Override
             public void initView(View v) {
                 fundTypeListView = (ListView) v.findViewById(R.id.fund_type_listview);
+
+                fundTypeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        TypeVO t = typeVOs.get(i);
+                        FundTypeEvent e = new FundTypeEvent();
+                        e.typeId = t.CodeID;
+                        EventBus.getDefault().post(e);
+                        myPopupWindow.hidePopUpWindow();
+                    }
+                });
             }
         });
     }
