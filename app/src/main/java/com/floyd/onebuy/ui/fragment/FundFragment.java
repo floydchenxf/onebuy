@@ -12,14 +12,11 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.commonweal.TypeVO;
 import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
-import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.event.FundTypeEvent;
-import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
@@ -120,6 +117,7 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
                 it.putExtra(WinningDetailActivity.LASTEST, true);
                 it.putExtra(WinningDetailActivity.PRODUCT_ID, lssueVo.ProID);
                 it.putExtra(WinningDetailActivity.LSSUE_ID, lssueVo.ProductLssueID);
+                it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FUND);
                 startActivity(it);
             }
         });

@@ -30,6 +30,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.JiFengManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
@@ -207,7 +208,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         initButton();
         loadData(true);
         init(view);
-        indexProductAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
+        indexProductAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(indexProductAdapter);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         View emptyView = inflater.inflate(R.layout.empty_item, container, false);

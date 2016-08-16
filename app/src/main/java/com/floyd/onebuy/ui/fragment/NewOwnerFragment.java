@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
@@ -90,7 +91,7 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
-        productLssueAdapter = new ProductLssueAdapter(this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
+        productLssueAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(productLssueAdapter);
         loadData(true);
         return view;

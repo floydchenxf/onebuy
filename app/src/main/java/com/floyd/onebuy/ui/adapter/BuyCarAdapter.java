@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -90,7 +91,7 @@ public class BuyCarAdapter extends BaseAdapter {
                         UserVO v = LoginManager.getLoginInfo(mContext);
                         if (v != null) {
                             long userId = v.ID;
-                            DBManager.deleteBuyCarNumber(mContext, userId, deleteLssueIds);
+                            DBManager.deleteBuyCarNumber(BuyCarType.NORMAL, mContext, userId, deleteLssueIds);
                         }
                     }
                 });

@@ -70,7 +70,7 @@ import de.greenrobot.event.Subscribe;
 public class WinningDetailActivity extends FragmentActivity implements View.OnClickListener {
 
     public static final int DETAIL_TYPE_PRODUCT = 0;
-    public static final int DETAIL_TYPE_COMMONWEAL = 1;
+    public static final int DETAIL_TYPE_FUND = 1;
     public static final int DETAIL_TYPE_FRI = 2;
     public static final int TIME_EVENT = 1;
     public static final String DETAIL_TYPE="DETAIL_TYPE";

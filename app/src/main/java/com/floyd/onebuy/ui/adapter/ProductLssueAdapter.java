@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
@@ -50,6 +51,8 @@ public class ProductLssueAdapter extends BaseAdapter {
 
     private Set<Long> requestSet = new ConcurrentSkipListSet<>();
     private Map<Long, Integer> callTimes = new ConcurrentHashMap<Long, Integer>();
+
+    private BuyCarType buyCarType;
 
     private Handler mHandler = new Handler() {
 
@@ -147,10 +150,11 @@ public class ProductLssueAdapter extends BaseAdapter {
         }
     }
 
-    public ProductLssueAdapter(Context context, List<WinningInfo> records, ImageLoader imageLoader) {
+    public ProductLssueAdapter(BuyCarType buyCarType, Context context, List<WinningInfo> records, ImageLoader imageLoader) {
         this.mContext = context;
         this.records = records;
         this.mImageLoader = imageLoader;
+        this.buyCarType = buyCarType;
     }
 
     public void addAll(List<WinningInfo> products, boolean needClear) {
@@ -494,7 +498,7 @@ public class ProductLssueAdapter extends BaseAdapter {
     public void addBuyCar(long lssueId, int num) {
         if (LoginManager.isLogin(mContext)) {
             long userId = LoginManager.getLoginInfo(mContext).ID;
-            CarManager.addCar(lssueId, userId, num).startUI(new ApiCallback<Boolean>() {
+            CarManager.addCar(buyCarType, lssueId, userId, num).startUI(new ApiCallback<Boolean>() {
                 @Override
                 public void onError(int code, String errorInfo) {
                     Toast.makeText(mContext, errorInfo, Toast.LENGTH_SHORT).show();
