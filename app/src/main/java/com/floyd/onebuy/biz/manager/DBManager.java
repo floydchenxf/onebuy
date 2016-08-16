@@ -2,13 +2,20 @@ package com.floyd.onebuy.biz.manager;
 
 import android.content.Context;
 
+import com.floyd.onebuy.biz.constants.BuyCarType;
+import com.floyd.onebuy.biz.manager.buycar.db.BuyCarDBServer;
+import com.floyd.onebuy.biz.manager.buycar.db.FridayBuyCarDBServer;
+import com.floyd.onebuy.biz.manager.buycar.db.FundBuyCarDBServer;
+import com.floyd.onebuy.biz.manager.buycar.db.NormalProductBuyCarDBServer;
 import com.floyd.onebuy.dao.BuyCarNumber;
 import com.floyd.onebuy.dao.BuyCarNumberDao;
 import com.floyd.onebuy.dao.DaoSession;
 import com.floyd.onebuy.dao.Search;
 import com.floyd.onebuy.dao.SearchDao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.dao.query.DeleteQuery;
 
@@ -16,6 +23,14 @@ import de.greenrobot.dao.query.DeleteQuery;
  * Created by floyd on 16-4-23.
  */
 public class DBManager {
+
+    private static Map<BuyCarType, BuyCarDBServer> buycarDBServers = new HashMap<BuyCarType, BuyCarDBServer>();
+
+    static {
+        buycarDBServers.put(BuyCarType.NORMAL, new NormalProductBuyCarDBServer());
+        buycarDBServers.put(BuyCarType.FRI, new FridayBuyCarDBServer());
+        buycarDBServers.put(BuyCarType.FUND, new FundBuyCarDBServer());
+    }
 
     public static void addSearchRecord(Context context, String searchContent) {
         DaoSession daoSession = DBHelper.getDaoSession(context);
@@ -47,48 +62,24 @@ public class DBManager {
         return searchDao.loadAll();
     }
 
-    public static void updateBuyCarNumber(Context context, long userId, long productLssueId, int number) {
-        DaoSession daoSession = DBHelper.getDaoSession(context);
-        BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        List<BuyCarNumber> numbers = buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.eq(productLssueId), BuyCarNumberDao.Properties.UserId.eq(userId)).list();
-        if (numbers != null && !numbers.isEmpty()) {
-            for (BuyCarNumber n:numbers) {
-                n.setBuyNumber(number);
-                buyCarNumberDao.insertOrReplace(n);
-            }
-        } else {
-            addBuyCarNumber(context, userId, productLssueId, number);
-        }
+    public static void updateBuyCarNumber(BuyCarType type, Context context, long userId, long productLssueId, int number) {
+        buycarDBServers.get(type).updateBuyCarNumber(context, userId, productLssueId, number);
     }
 
-    public static void addBuyCarNumber(Context context, long userId, long lssueId, int number) {
-        DaoSession daoSession = DBHelper.getDaoSession(context);
-        BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        BuyCarNumber numberVO = new BuyCarNumber();
-        numberVO.setUserId(userId);
-        numberVO.setProductLssueId(lssueId);
-        numberVO.setBuyNumber(number);
-        buyCarNumberDao.insertWithoutSettingPk(numberVO);
+    public static void addBuyCarNumber(BuyCarType type, Context context, long userId, long lssueId, int number) {
+        buycarDBServers.get(type).addBuyCarNumber(context, userId, lssueId, number);
     }
 
-    public static void deleteBuyCarNumber(Context context, long userId, long productLssueId) {
-        DaoSession daoSession = DBHelper.getDaoSession(context);
-        BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        DeleteQuery deleteQuery = buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.eq(productLssueId), BuyCarNumberDao.Properties.UserId.eq(userId)).buildDelete();
-        deleteQuery.executeDeleteWithoutDetachingEntities();
+    public static void deleteBuyCarNumber(BuyCarType type, Context context, long userId, long productLssueId) {
+        buycarDBServers.get(type).deleteBuyCarNumber(context, userId, productLssueId);
     }
 
 
-    public static void deleteBuyCarNumber(Context context, long userId, List<Long> productLssueIds) {
-        DaoSession daoSession = DBHelper.getDaoSession(context);
-        BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        DeleteQuery query = buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.ProductLssueId.in(productLssueIds), BuyCarNumberDao.Properties.UserId.eq(userId)).buildDelete();
-        query.executeDeleteWithoutDetachingEntities();
+    public static void deleteBuyCarNumber(BuyCarType type, Context context, long userId, List<Long> productLssueIds) {
+        buycarDBServers.get(type).deleteBuyCarNumber(context, userId, productLssueIds);
     }
 
-    public static List<BuyCarNumber> queryAllBuyNumbers(Context context, long userId) {
-        DaoSession daoSession = DBHelper.getDaoSession(context);
-        BuyCarNumberDao buyCarNumberDao = daoSession.getBuyCarNumberDao();
-        return buyCarNumberDao.queryBuilder().where(BuyCarNumberDao.Properties.UserId.eq(userId)).list();
+    public static <T> List<T> queryAllBuyNumbers(BuyCarType type, Context context, long userId) {
+        return  buycarDBServers.get(type).queryAllBuyNumbers(context, userId);
     }
 }

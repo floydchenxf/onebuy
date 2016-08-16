@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.ui.MainActivity;
@@ -27,7 +28,7 @@ public class NormalProductBuycarOperator implements BuycarOperator {
     public void buyAtOnce() {
         if (LoginManager.isLogin(mContext)) {
             long userId = LoginManager.getLoginInfo(mContext).ID;
-            CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
+            CarManager.addCar(BuyCarType.NORMAL, id, userId, 1).startUI(new ApiCallback<Boolean>() {
                 @Override
                 public void onError(int code, String errorInfo) {
                     Toast.makeText(mContext, errorInfo, Toast.LENGTH_SHORT).show();
@@ -53,7 +54,7 @@ public class NormalProductBuycarOperator implements BuycarOperator {
     public void addBuyCar() {
         if (LoginManager.isLogin(mContext)) {
             long userId = LoginManager.getLoginInfo(mContext).ID;
-            CarManager.addCar(id, userId, 1).startUI(new ApiCallback<Boolean>() {
+            CarManager.addCar(BuyCarType.NORMAL, id, userId, 1).startUI(new ApiCallback<Boolean>() {
                 @Override
                 public void onError(int code, String errorInfo) {
                     Toast.makeText(mContext, errorInfo, Toast.LENGTH_SHORT).show();

@@ -1,15 +1,13 @@
-package com.floyd.onebuy.ui.fragment;
+package com.floyd.onebuy.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +27,6 @@ import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.activity.PayResultActivity;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -43,10 +40,7 @@ import java.util.Set;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by floyd on 16-4-13.
- */
-public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class FridayBuyCarActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final int PAGE_SIZE = 10;
     private DataLoadingView dataLoadingView;
@@ -89,24 +83,21 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private BuyCarType buyCarType;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_buy_car);
+
         mImageLoader = ImageLoaderFactory.createImageLoader();
         pageNo = 1;
         needClear = true;
-        buyCarType = BuyCarType.NORMAL;
-    }
+        buyCarType = BuyCarType.FRI;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_buy_car, null);
         dataLoadingView = new DefaultDataLoadingView();
-        dataLoadingView.initView(view, this);
-        emptyLayout = view.findViewById(R.id.empty_layout);
-        bottomLayout = view.findViewById(R.id.bottom_layout);
+        dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
+        emptyLayout = findViewById(R.id.empty_layout);
+        bottomLayout = findViewById(R.id.bottom_layout);
 
-        mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.buy_car_list);
+        mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.buy_car_list);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
@@ -126,15 +117,15 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
+        mBuyCarAdapter = new BuyCarAdapter(this, null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
             @Override
             public void onClick(View v, final long lssueId, final int buyNumber) {
-                UserVO vo = LoginManager.getLoginInfo(BuyCarFragment.this.getActivity());
+                UserVO vo = LoginManager.getLoginInfo(FridayBuyCarActivity.this);
                 if (vo == null) {
                     return;
                 }
                 long userId = vo.ID;
-                DBManager.updateBuyCarNumber(buyCarType, BuyCarFragment.this.getActivity(), userId, lssueId, buyNumber);
+                DBManager.updateBuyCarNumber(buyCarType, FridayBuyCarActivity.this, userId, lssueId, buyNumber);
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
                 for (WinningInfo info : mBuyCarAdapter.getRecords()) {
@@ -153,16 +144,16 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         mListView.setAdapter(mBuyCarAdapter);
 
         initFooter();
-        titleNameView = (TextView) view.findViewById(R.id.title_name);
-        titleNameView.setText("购物车");
+        titleNameView = (TextView) findViewById(R.id.title_name);
+        titleNameView.setText("星期五购物车");
         titleNameView.setVisibility(View.VISIBLE);
-        payLayout = view.findViewById(R.id.pay_layout);
+        payLayout = findViewById(R.id.pay_layout);
         payLayout.setVisibility(View.GONE);
-        totalProductView = (TextView) view.findViewById(R.id.total_product_view);
-        payView = (TextView) view.findViewById(R.id.pay_view);
+        totalProductView = (TextView) findViewById(R.id.total_product_view);
+        payView = (TextView) findViewById(R.id.pay_view);
         payView.setOnClickListener(this);
 
-        editView = (TextView) view.findViewById(R.id.right);
+        editView = (TextView) findViewById(R.id.right);
         editView.setVisibility(View.VISIBLE);
         editView.setOnClickListener(this);
 
@@ -170,19 +161,18 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
         gotoIndexView.setOnClickListener(this);
 
-        deleteLayout = view.findViewById(R.id.delete_layout);
+        deleteLayout = findViewById(R.id.delete_layout);
         deleteLayout.setVisibility(View.GONE);
-        deleteDescView = (TextView) view.findViewById(R.id.delete_desc_view);
-        deleteButtonView = (TextView) view.findViewById(R.id.delete_button_view);
+        deleteDescView = (TextView) findViewById(R.id.delete_desc_view);
+        deleteButtonView = (TextView) findViewById(R.id.delete_button_view);
         deleteButtonView.setOnClickListener(this);
 
         mBuyCarAdapter.showRadiio(isEdit);
-        view.findViewById(R.id.title_back).setVisibility(View.GONE);
-        return view;
+        findViewById(R.id.title_back).setVisibility(View.GONE);
     }
 
     private void initFooter() {
-        View footer = View.inflate(getActivity(), R.layout.buycar_footer, null);
+        View footer = View.inflate(this, R.layout.buycar_footer, null);
         alipayLayout = footer.findViewById(R.id.alipay_layout);
         weixinLayout = footer.findViewById(R.id.weixin_layout);
         jiefengLayout = footer.findViewById(R.id.jifeng_layout);
@@ -207,7 +197,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     }
 
     private void loadData(final boolean isFirst) {
-        UserVO userVO = LoginManager.getLoginInfo(this.getActivity());
+        UserVO userVO = LoginManager.getLoginInfo(this);
         if (userVO == null) {
             showNoDataLayout();
             return;
@@ -217,7 +207,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         }
 
         long userId = userVO.ID;
-        CarManager.fetchBuyCarList(buyCarType, getActivity(), userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<WinningInfo>>() {
+        CarManager.fetchBuyCarList(buyCarType, this, userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<WinningInfo>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -279,11 +269,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
 
     @Override
-    public boolean onBackPressed() {
-        return false;
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.act_ls_fail_layout:
@@ -292,9 +277,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 loadData(true);
                 break;
             case R.id.pay_view:
-                UserVO vo = LoginManager.getLoginInfo(getActivity());
+                UserVO vo = LoginManager.getLoginInfo(this);
                 if (vo == null) {
-                    Toast.makeText(getActivity(), "请先登录用户!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请先登录用户!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -305,16 +290,16 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     productLssueDetail.append(info.lssueId).append("|").append(info.buyCount).append(",");
                 }
 
-                GoodsAddressVO goodsAddressVO = AddressManager.getDefaultAddressInfo(getActivity());
+                GoodsAddressVO goodsAddressVO = AddressManager.getDefaultAddressInfo(this);
                 String address = "";
                 if (goodsAddressVO != null) {
                     address = goodsAddressVO.getFullAddress();
                 }
 
-                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.FRI, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
-                        Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -322,7 +307,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                         CarManager.delCar(buyCarType, delCarIds).startUI(new ApiCallback<Boolean>() {
                             @Override
                             public void onError(int code, String errorInfo) {
-                                Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -340,7 +325,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                             }
                         });
-                        Intent intent = new Intent(getActivity(), PayResultActivity.class);
+                        Intent intent = new Intent(FridayBuyCarActivity.this, PayResultActivity.class);
                         intent.putExtra(APIConstants.PAY_ORDER_NO, orderVO.orderNum);
                         startActivity(intent);
                     }
@@ -355,7 +340,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 isEdit = !isEdit;
                 mBuyCarAdapter.showRadiio(isEdit);
 
-                UserVO userVO = LoginManager.getLoginInfo(this.getActivity());
+                UserVO userVO = LoginManager.getLoginInfo(this);
                 if (userVO != null) {
                     if (isEdit) {
                         deleteLayout.setVisibility(View.VISIBLE);
@@ -374,13 +359,13 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
             case R.id.delete_button_view:
                 final Set<Long> carIds = mBuyCarAdapter.getDeleteList();
                 if (carIds == null || carIds.isEmpty()) {
-                    Toast.makeText(getActivity(), "请选择删除记录", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请选择删除记录", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 CarManager.delCar(buyCarType, carIds).startUI(new ApiCallback<Boolean>() {
                     @Override
                     public void onError(int code, String errorInfo) {
-                        Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
