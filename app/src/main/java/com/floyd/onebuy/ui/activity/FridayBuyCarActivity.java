@@ -296,7 +296,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                     address = goodsAddressVO.getFullAddress();
                 }
 
-                OrderManager.createAndPayOrder(vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.FRI, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();

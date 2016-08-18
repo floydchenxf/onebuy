@@ -297,7 +297,7 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
                     address = goodsAddressVO.getFullAddress();
                 }
 
-                OrderManager.createAndPayOrder(vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.FUND, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(FundBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();

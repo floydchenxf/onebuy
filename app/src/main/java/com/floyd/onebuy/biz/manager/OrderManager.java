@@ -6,6 +6,7 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.vo.json.ChargeOrderVO;
 import com.floyd.onebuy.biz.vo.json.ChargeVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
@@ -87,9 +88,16 @@ public class OrderManager {
      * @param remark
      * @return
      */
-    public static AsyncJob<OrderPayVO> createAndPayOrder(long userId, String productLssueDetail, String linkName,
+    public static AsyncJob<OrderPayVO> createAndPayOrder(BuyCarType type, long userId, String productLssueDetail, String linkName,
                                                          String linkMobile, String receivingAdrString, String remark) {
-        AsyncJob<OrderPayVO> result = createOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString, remark).flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
+
+        AsyncJob<OrderVO> orderJob = null;
+        if (type == BuyCarType.FRI) {
+            orderJob = createFridayOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString,remark);
+        } else if (type == BuyCarType.NORMAL) {
+            orderJob = createOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString, remark);
+        }
+        AsyncJob<OrderPayVO> result = orderJob.flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
             @Override
             public AsyncJob<OrderPayVO> call(final OrderVO orderVO) {
                 AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum,  TAOBAOTEST).map(new Func<List<String>, OrderPayVO>() {
@@ -199,6 +207,20 @@ public class OrderManager {
         Type type = new TypeToken<List<ChargeVO>>() {
         }.getType();
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+    }
+
+    public static AsyncJob<OrderVO> createFridayOrder(long userId, String productLssueDetail, String linkName,
+                                                String linkMobile, String receivingAdrString, String remark) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "CreateFridayOrder");
+        params.put("userId", userId + "");
+        params.put("productLssueDetail", productLssueDetail);
+        params.put("linkName", linkName);
+        params.put("linkMobile", linkMobile);
+        params.put("receivingAdrString", receivingAdrString);
+        params.put("remark", remark);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, OrderVO.class);
     }
 
 

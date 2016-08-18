@@ -311,7 +311,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     address = goodsAddressVO.getFullAddress();
                 }
 
-                OrderManager.createAndPayOrder(vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();

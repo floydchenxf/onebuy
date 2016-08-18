@@ -37,7 +37,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/wxpay_icon" />
+            android:src="@drawable/weixin_pay" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/wxpay_icon" />
+            android:src="@drawable/jifeng_pay" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -118,7 +118,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/alipay_icon" />
+            android:src="@drawable/ali_pay" />
 
         <TextView
             android:layout_width="wrap_content"
