@@ -135,9 +135,9 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
 
     private void loadData(final boolean isFirst) {
         if (isFirst) {
-            dataLoadingView.loadSuccess();
+            dataLoadingView.startLoading();
         }
-        ProductManager.fetchFundData(PAGE_SIZE, pageNo, typeId).startUI(new ApiCallback<FundJsonVO>() {
+        ProductManager.fetchFundData(PAGE_SIZE, pageNo, typeId, null).startUI(new ApiCallback<FundJsonVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -176,6 +176,13 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.act_ls_fail_layout:
+                pageNo = 1;
+                needClear = true;
+                loadData(true);
+                break;
+        }
 
     }
 

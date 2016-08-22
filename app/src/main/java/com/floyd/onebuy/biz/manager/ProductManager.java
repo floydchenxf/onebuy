@@ -834,12 +834,13 @@ public class ProductManager {
         return a;
     }
 
-    public static AsyncJob<FundJsonVO> fetchFundData(int pageSize, int pageNum, long typeId) {
+    public static AsyncJob<FundJsonVO> fetchFundData(int pageSize, int pageNum, long typeId, Long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetFoundsPageData");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
+        params.put("userId", userId == null ? "" : userId + "");
         String typeIdStr = "";
         if (typeId != 0) {
             typeIdStr = typeId + "";

@@ -5,6 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.floyd.onebuy.ui.fragment.CommonwealBaseFragment;
+import com.floyd.onebuy.ui.fragment.ProfilePrizeFragment;
+import com.floyd.onebuy.ui.fragment.ProfileShowShareFragment;
+import com.floyd.onebuy.ui.fragment.ProfileWinningFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,22 +15,45 @@ import java.util.List;
 /**
  * Created by chenxiaofeng on 16/8/23.
  */
-public class ProfileFragmentAdapter extends FragmentStatePagerAdapter  {
+public class ProfileFragmentAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> fragmentList = new ArrayList<Fragment>();
+    private Long userId;
 
-    public ProfileFragmentAdapter(FragmentManager fm, List<Fragment> pagers) {
+    public ProfileFragmentAdapter(FragmentManager fm, Long userId) {
         super(fm);
-        this.fragmentList = pagers;
+        this.userId = userId;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragmentList.get(position);
+        Fragment f = null;
+
+        if (position < fragmentList.size()) {
+           f = fragmentList.get(position);
+        }
+
+        if (f == null) {
+            switch (position) {
+                case 0:
+                    f = ProfileWinningFragment.newInstance(userId);
+                    fragmentList.add(f);
+                    break;
+                case 1:
+                    f = ProfilePrizeFragment.newInstance(userId);
+                    fragmentList.add(f);
+                    break;
+                case 2:
+                    f = ProfileShowShareFragment.newInstance(userId);
+                    fragmentList.add(f);
+                    break;
+            }
+        }
+        return f;
     }
 
     @Override
     public int getCount() {
-        return fragmentList.size();
+        return 3;
     }
 }

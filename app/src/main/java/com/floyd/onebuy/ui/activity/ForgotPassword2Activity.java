@@ -17,7 +17,7 @@ import com.floyd.onebuy.ui.R;
 public class ForgotPassword2Activity extends Activity implements View.OnClickListener {
 
     private String mobileNum;
-    private String smsCode;
+    private Long userId;
 
     private EditText newPasswordView;
     private TextView showPasswordButton;
@@ -29,7 +29,7 @@ public class ForgotPassword2Activity extends Activity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password2);
         mobileNum = getIntent().getExtras().getString(ForgotPasswordActivity.MOBILE_NUMBER);
-        smsCode = getIntent().getExtras().getString(ForgotPasswordActivity.SMS_CODE);
+        userId = getIntent().getExtras().getLong(ForgotPasswordActivity.USER_ID, 0l);
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("找回密码");
@@ -76,17 +76,16 @@ public class ForgotPassword2Activity extends Activity implements View.OnClickLis
                     return;
                 }
 
-                LoginManager.forgetPassword(mobileNum, smsCode, newPassword).startUI(new ApiCallback<String>() {
+                LoginManager.forgetPaswordStep2(userId, newPassword).startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(ForgotPassword2Activity.this, errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSuccess(String s) {
+                    public void onSuccess(Long aLong) {
                         ForgotPassword2Activity.this.finish();
                         Toast.makeText(ForgotPassword2Activity.this, "找回密码成功", Toast.LENGTH_SHORT).show();
-
                     }
 
                     @Override
@@ -94,6 +93,25 @@ public class ForgotPassword2Activity extends Activity implements View.OnClickLis
 
                     }
                 });
+
+//                LoginManager.forgetPassword(mobileNum, smsCode, newPassword).startUI(new ApiCallback<String>() {
+//                    @Override
+//                    public void onError(int code, String errorInfo) {
+//                        Toast.makeText(ForgotPassword2Activity.this, errorInfo, Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(String s) {
+//                        ForgotPassword2Activity.this.finish();
+//                        Toast.makeText(ForgotPassword2Activity.this, "找回密码成功", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onProgress(int progress) {
+//
+//                    }
+//                });
 
                 break;
         }

@@ -20,7 +20,7 @@ import java.util.Map;
 public class ForgotPasswordActivity extends Activity implements View.OnClickListener {
 
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
-    public static final String SMS_CODE = "SMS_CODE";
+    public static final String USER_ID = "USER_ID";
     private EditText mobileView;
     private EditText checkCodeView;
     private TextView checkCodeButton;
@@ -68,24 +68,39 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                 this.finish();
                 break;
             case R.id.next_step:
-                //TODO 验证checkcode
-                String mobile = mobileView.getText().toString();
+                final String mobile = mobileView.getText().toString();
                 if (TextUtils.isEmpty(mobile)) {
                     Toast.makeText(this, "请输入注册手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                String checkCode = checkCodeView.getText().toString();
+                final String checkCode = checkCodeView.getText().toString();
                 if (TextUtils.isEmpty(checkCode)) {
                     Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Intent nextIntent = new Intent(this, ForgotPassword2Activity.class);
-                nextIntent.putExtra(MOBILE_NUMBER, mobile);
-                nextIntent.putExtra(SMS_CODE, checkCode);
-                startActivity(nextIntent);
-                this.finish();
+                LoginManager.forgetPaswordStep1(mobile, checkCode).startUI(new ApiCallback<Long>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+                        Toast.makeText(ForgotPasswordActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(Long aLong) {
+                        Intent nextIntent = new Intent(ForgotPasswordActivity.this, ForgotPassword2Activity.class);
+                        nextIntent.putExtra(MOBILE_NUMBER, mobile);
+                        nextIntent.putExtra(USER_ID, aLong);
+                        startActivity(nextIntent);
+                        ForgotPasswordActivity.this.finish();
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
+
                 break;
             case R.id.check_code_button:
                 String mobile1 = mobileView.getText().toString();
@@ -93,7 +108,7 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                     Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Boolean>() {
+                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(ForgotPasswordActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -101,12 +116,10 @@ public class ForgotPasswordActivity extends Activity implements View.OnClickList
                     }
 
                     @Override
-                    public void onSuccess(Boolean s) {
-                        if (s) {
-                            checkCodeButton.setEnabled(false);
-                            checkCodeButton.setText("60秒后重新获取");
-                            doUpdateTime(60);
-                        }
+                    public void onSuccess(Long s) {
+                        checkCodeButton.setEnabled(false);
+                        checkCodeButton.setText("60秒后重新获取");
+                        doUpdateTime(60);
                     }
 
                     @Override

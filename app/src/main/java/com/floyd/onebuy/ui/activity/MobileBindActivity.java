@@ -104,7 +104,7 @@ public class MobileBindActivity extends Activity implements View.OnClickListener
                     Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Boolean>() {
+                LoginManager.sendSms(mobile1).startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(MobileBindActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -112,12 +112,10 @@ public class MobileBindActivity extends Activity implements View.OnClickListener
                     }
 
                     @Override
-                    public void onSuccess(Boolean s) {
-                        if (s) {
-                            checkCodeButton.setEnabled(false);
-                            checkCodeButton.setText("60秒后重新获取");
-                            doUpdateTime(60);
-                        }
+                    public void onSuccess(Long s) {
+                        checkCodeButton.setEnabled(false);
+                        checkCodeButton.setText("60秒后重新获取");
+                        doUpdateTime(60);
                     }
 
                     @Override

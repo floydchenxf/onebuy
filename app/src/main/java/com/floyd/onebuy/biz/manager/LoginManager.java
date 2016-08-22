@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
+import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.aync.HttpJobFactory;
 import com.floyd.onebuy.aync.Processor;
 import com.floyd.onebuy.bean.MD5Util;
@@ -13,16 +14,20 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.func.AbstractJsonApiCallback;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.tools.PrefsTools;
+import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.channel.request.FileItem;
 import com.floyd.onebuy.channel.request.HttpMethod;
 import com.floyd.onebuy.ui.activity.LoginActivity;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -180,18 +185,63 @@ public class LoginManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, String.class);
     }
 
+    public static AsyncJob<Long> forgetPaswordStep1(String mobile, String smsCode) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "forgetPasswordstep1");
+        params.put("mobile", mobile);
+        params.put("code", smsCode);
+        Type type = new TypeToken<Map<String, Long>>() {
+        }.getType();
+        AsyncJob<Map<String, Long>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+        return job.map(new Func<Map<String, Long>, Long>() {
+            @Override
+            public Long call(Map<String, Long> map) {
+                return map.get("ID");
+            }
+        });
+    }
+
+    public static AsyncJob<Long> forgetPaswordStep2(Long userId, String newPasword) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "forgetPasswordstep2");
+        params.put("userId", userId+"");
+        params.put("newPassword", newPasword);
+        Type type = new TypeToken<Map<String, Long>>() {
+        }.getType();
+        AsyncJob<Map<String, Long>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+        return job.map(new Func<Map<String, Long>, Long>() {
+            @Override
+            public Long call(Map<String, Long> map) {
+                return map.get("ID");
+            }
+        });
+    }
+
+
     /**
      * 发送短信
      *
      * @param mobile
      * @return map key:code
      */
-    public static AsyncJob<Boolean> sendSms(String mobile) {
+    public static AsyncJob<Long> sendSms(String mobile) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "sendVerifyCode");
         params.put("mobile", mobile);
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+
+        Type type = new TypeToken<Map<String, Long>>() {
+        }.getType();
+
+        AsyncJob<Map<String, Long>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+        return job.map(new Func<Map<String, Long>, Long>() {
+            @Override
+            public Long call(Map<String, Long> map) {
+                return map.get("ID");
+            }
+        });
     }
 
 

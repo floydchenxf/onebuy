@@ -7,8 +7,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.manager.ProductManager;
+import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.adapter.LuckRecordAdapter;
+import com.floyd.onebuy.ui.loading.DataLoadingView;
+import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.pullrefresh.widget.PullToRefreshBase;
+import com.floyd.pullrefresh.widget.PullToRefreshListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,36 +35,27 @@ import com.floyd.onebuy.ui.R;
  * Use the {@link ProfilePrizeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfilePrizeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+public class ProfilePrizeFragment extends Fragment implements View.OnClickListener {
+    private static final String USER_ID = "USER_ID";
+    private static int PAGE_SIZE = 12;
+    private Long userId;
     private OnFragmentInteractionListener mListener;
+    private PullToRefreshListView mPullToRefreshListView;
+    private int pageNo = 1;
+    private boolean needClear;
+    private boolean isFirst;
+    private ListView mListView;
+    private DataLoadingView dataLoadingView;
+    private LuckRecordAdapter luckRecordAdapter;
+    private ImageLoader mImageLoader;
 
     public ProfilePrizeFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfilePrizeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfilePrizeFragment newInstance(String param1, String param2) {
+    public static ProfilePrizeFragment newInstance(Long userId) {
         ProfilePrizeFragment fragment = new ProfilePrizeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,19 +64,81 @@ public class ProfilePrizeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userId = getArguments().getLong(USER_ID, 0l);
         }
+
+        isFirst = true;
+        pageNo = 1;
+        mImageLoader = ImageLoaderFactory.createImageLoader();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_prize, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_prize, container, false);
+
+        dataLoadingView = new DefaultDataLoadingView();
+        dataLoadingView.initView(view, this);
+
+        mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.common_list);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
+            @Override
+            public void onPullDownToRefresh() {
+                pageNo = 1;
+                needClear = true;
+                isFirst = true;
+                loadData();
+                mPullToRefreshListView.onRefreshComplete(false, true);
+            }
+
+            @Override
+            public void onPullUpToRefresh() {
+                pageNo++;
+                needClear = false;
+                isFirst = false;
+                loadData();
+                mPullToRefreshListView.onRefreshComplete(false, true);
+
+            }
+        });
+        mListView = mPullToRefreshListView.getRefreshableView();
+        luckRecordAdapter = new LuckRecordAdapter(getActivity(), new ArrayList<ProductLssueWithWinnerVO>(), mImageLoader);
+        mListView.setAdapter(luckRecordAdapter);
+        View emptyView = View.inflate(getActivity(), R.layout.empty_item, null);
+        mPullToRefreshListView.setEmptyView(emptyView);
+        loadData();
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private void loadData() {
+        if (isFirst) {
+            dataLoadingView.startLoading();
+        }
+        ProductManager.fetchMyLuckRecords(userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<ProductLssueWithWinnerVO>>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                if (isFirst) {
+                    dataLoadingView.loadFail();
+                }
+            }
+
+            @Override
+            public void onSuccess(List<ProductLssueWithWinnerVO> productLssueWithWinnerVOs) {
+                if (isFirst) {
+                    dataLoadingView.loadSuccess();
+                }
+                luckRecordAdapter.addAll(productLssueWithWinnerVOs, needClear);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -81,18 +151,20 @@ public class ProfilePrizeFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.act_ls_fail_layout:
+                pageNo = 1;
+                needClear = true;
+                isFirst = true;
+                loadData();
+                break;
+        }
+
+    }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

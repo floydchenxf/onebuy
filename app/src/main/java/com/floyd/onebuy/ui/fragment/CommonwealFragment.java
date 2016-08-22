@@ -286,7 +286,7 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.act_lsloading:
+            case R.id.act_ls_fail_layout:
                 pageNo = 1;
                 needClear = true;
                 loadData(true);

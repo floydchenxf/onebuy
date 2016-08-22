@@ -34,6 +34,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
     private PullToRefreshListView mPullToRefreshListView;
     private int pageNo = 1;
     private boolean needClear;
+    private boolean isFirst;
     private ListView mListView;
     private DataLoadingView dataLoadingView;
     private LuckRecordAdapter luckRecordAdapter;
@@ -51,6 +52,9 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         TextView titleNameView = (TextView)findViewById(R.id.title_name);
         titleNameView.setText("中奖记录");
         titleNameView.setVisibility(View.VISIBLE);
+        pageNo = 1;
+        isFirst = true;
+        needClear = true;
 
         mImageLoader = ImageLoaderFactory.createImageLoader();
 
@@ -64,6 +68,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
             public void onPullDownToRefresh() {
                 pageNo = 1;
                 needClear = true;
+                isFirst = true;
                 loadData();
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
@@ -72,6 +77,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
             public void onPullUpToRefresh() {
                 pageNo++;
                 needClear = false;
+                isFirst = false;
                 loadData();
                 mPullToRefreshListView.onRefreshComplete(false, true);
 
@@ -90,14 +96,22 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
 
     private void loadData() {
         long uid = LoginManager.getLoginInfo(this).ID;
+        if (isFirst) {
+            dataLoadingView.startLoading();
+        }
         ProductManager.fetchMyLuckRecords(uid, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<ProductLssueWithWinnerVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
-                Toast.makeText(MyLuckActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                if (isFirst) {
+                    dataLoadingView.loadFail();
+                }
             }
 
             @Override
             public void onSuccess(List<ProductLssueWithWinnerVO> productLssueWithWinnerVOs) {
+                if (isFirst) {
+                    dataLoadingView.loadSuccess();
+                }
                 luckRecordAdapter.addAll(productLssueWithWinnerVOs, needClear);
                 if (luckRecordAdapter.getRecords().isEmpty()) {
                     mListView.setVisibility(View.GONE);
@@ -125,6 +139,9 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.act_ls_fail_layout:
+                pageNo = 1;
+                needClear = true;
+                isFirst = true;
                 loadData();
                 break;
             case R.id.goto_index:

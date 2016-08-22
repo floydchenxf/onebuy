@@ -112,6 +112,9 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
         fundFragment.initSwitchTabListener(new CommonwealBaseFragment.SwitchTabListener() {
             @Override
             public void onCallback(Map<String, Object> data) {
+                if (data == null) {
+                    return;
+                }
                 moreView.setVisibility(View.VISIBLE);
                 myPopupWindow.setLocationView(moreView);
 

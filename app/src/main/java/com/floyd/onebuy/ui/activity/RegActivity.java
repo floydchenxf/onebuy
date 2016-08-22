@@ -80,7 +80,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
             case R.id.check_code_button:
                 checkCodeButtonView.setEnabled(false);
                 String usernick2 = userNickView.getText().toString();
-                LoginManager.sendSms(usernick2).startUI(new ApiCallback<Boolean>() {
+                LoginManager.sendSms(usernick2).startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -88,12 +88,10 @@ public class RegActivity extends Activity implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onSuccess(Boolean s) {
-                        if (s) {
-                            checkCodeButtonView.setEnabled(false);
-                            checkCodeButtonView.setText("60秒后重新获取");
-                            doUpdateTime(60);
-                        }
+                    public void onSuccess(Long s) {
+                        checkCodeButtonView.setEnabled(false);
+                        checkCodeButtonView.setText("60秒后重新获取");
+                        doUpdateTime(60);
                     }
 
                     @Override

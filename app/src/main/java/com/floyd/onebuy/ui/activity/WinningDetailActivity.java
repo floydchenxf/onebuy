@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -478,6 +479,15 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         mListView.addHeaderView(mHeaderView);
         adapter = new JoinRecordAdapter(this, new ArrayList<JoinVO>());
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                JoinVO vo = adapter.getFeeRecords().get(pos - 2);
+                Intent it = new Intent(WinningDetailActivity.this, PersionProfileActivity.class);
+                it.putExtra(PersionProfileActivity.CURRENT_USER_ID, Long.parseLong(vo.ClientID));
+                startActivity(it);
+            }
+        });
         buyCarPopup = new LeftDownPopupWindow(this);
         buyCarPopup.initView(R.layout.choose_number, new LeftDownPopupWindow.ViewInit() {
             @Override
