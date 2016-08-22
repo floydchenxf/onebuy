@@ -303,13 +303,17 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
-
-        <activity android:name=".activity.FundBuyCarActivity"
+        <activity
+            android:name=".activity.FundBuyCarActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"/>
-
-        <activity android:name=".activity.FridayBuyCarActivity"
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.FridayBuyCarActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity android:name=".activity.PersionProfileActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay"/>
