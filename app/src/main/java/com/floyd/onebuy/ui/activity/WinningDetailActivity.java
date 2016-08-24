@@ -484,6 +484,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 JoinVO vo = adapter.getFeeRecords().get(pos - 2);
                 Intent it = new Intent(WinningDetailActivity.this, PersionProfileActivity.class);
+                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 it.putExtra(PersionProfileActivity.CURRENT_USER_ID, Long.parseLong(vo.ClientID));
                 startActivity(it);
             }
@@ -693,6 +694,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.goto_detail_view:
                 Intent it = new Intent(this, WinningDetailActivity.class);
+                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 it.putExtra(PRODUCT_ID, productId);
                 it.putExtra(LASTEST, true);
                 it.putExtra(DETAIL_TYPE, detailType);

@@ -88,6 +88,7 @@ public class HistoryPrizeAdapter extends BaseDataAdapter<HistoryPrizeVO> {
 
     private void gotoDetail(Long lssueId, long productId) {
         Intent it = new Intent(mContext, WinningDetailActivity.class);
+        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         it.putExtra(WinningDetailActivity.LSSUE_ID, lssueId);
         it.putExtra(WinningDetailActivity.PRODUCT_ID, productId);
         it.putExtra(WinningDetailActivity.LASTEST, false);

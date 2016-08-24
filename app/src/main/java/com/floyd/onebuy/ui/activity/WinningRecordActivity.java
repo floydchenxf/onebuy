@@ -98,14 +98,15 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
 
 
         mListView = mPullToRefreshListView.getRefreshableView();
-        adapter = new WinningRecordAdapter(this, mImageLoader, new ArrayList<WinningInfo>());
+        adapter = new WinningRecordAdapter(this, mImageLoader, new ArrayList<WinningInfo>(), true);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                WinningInfo info = adapter.getItem(position-1);
+                WinningInfo info = adapter.getItem(position - 1);
                 Intent it = new Intent(WinningRecordActivity.this, WinningDetailActivity.class);
-                if (info.status == WinningInfo.STATUS_CHOOSE ) {
+                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                if (info.status == WinningInfo.STATUS_CHOOSE) {
                     it.putExtra(WinningDetailActivity.LASTEST, true);
                 } else {
                     it.putExtra(WinningDetailActivity.LASTEST, false);

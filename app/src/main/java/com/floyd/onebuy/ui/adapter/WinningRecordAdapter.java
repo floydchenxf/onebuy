@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -35,6 +36,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
 
     private ImageLoader mImageLoader;
 
+    private boolean isSelf = true; //是否是自己的夺宝记录,用于区分
     private Set<Long> requestSet = new ConcurrentSkipListSet<>();
     private Map<Long, Integer> callTimes = new ConcurrentHashMap<Long, Integer>();
 
@@ -138,9 +140,10 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
     }
 
 
-    public WinningRecordAdapter(Context context, ImageLoader imageLoader, List<WinningInfo> records) {
+    public WinningRecordAdapter(Context context, ImageLoader imageLoader, List<WinningInfo> records, boolean isSelf) {
         super(context, records);
         this.mImageLoader = imageLoader;
+        this.isSelf = isSelf;
     }
 
     @Override
@@ -153,7 +156,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
         return new int[]{R.id.product_pic, R.id.code_title_view, R.id.total_count_view,
                 R.id.my_join_num_view, R.id.view_my_codes_view, R.id.lottest_time_layout,
                 R.id.owner_info_layout, R.id.owner_name_view, R.id.good_luck_num_view,
-                R.id.owner_join_num_view, R.id.owner_price_time_view, R.id.lottest_time_view};
+                R.id.owner_join_num_view, R.id.owner_price_time_view, R.id.lottest_time_view, R.id.follow_buy_view, R.id.progress_layout, R.id.progress_present};
     }
 
     @Override
@@ -170,6 +173,10 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
         TextView ownerGoodLuckNumView = (TextView) holder.get(R.id.good_luck_num_view);//幸运号码
         TextView ownerJoinNumView = (TextView) holder.get(R.id.owner_join_num_view);//获奖者参与次数
         TextView ownerPriceTimeView = (TextView) holder.get(R.id.owner_price_time_view);//揭晓时间
+        TextView followBuyView = (TextView) holder.get(R.id.follow_buy_view);
+        ProgressBar progressBar = (ProgressBar) holder.get(R.id.progress_present);
+        View progressLayout = holder.get(R.id.progress_layout);
+
         lottestLayout.setVisibility(View.GONE);
         ownerInfoLayout.setVisibility(View.GONE);
 
@@ -180,6 +187,11 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
         codeTileView.setText(codeTitleSB.toString());
         totalCountView.setText("共需" + winningInfo.totalCount + "人次");
         myJoinNumView.setText(Html.fromHtml("<font color=\"red\">" + winningInfo.myPrizeCodes.size() + "人次</font>"));
+        if (isSelf) {
+            viewMyCodesView.setText("看我的号码");
+        } else {
+            viewMyCodesView.setText("看TA的号码");
+        }
         viewMyCodesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,6 +205,9 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
 
         if (status == 1) {
             long left = winningInfo.lotteryTime - ServerTimeManager.getServerTime();
+            progressLayout.setVisibility(View.GONE);
+            progressBar.setProgress(100);
+            followBuyView.setVisibility(View.GONE);
             if (left <= 0) {
                 lottestTimeView.setText("正在计算...");
                 getWinnerInfo(winningInfo);
@@ -211,6 +226,9 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
             lottestLayout.setVisibility(View.VISIBLE);
             //开奖中
         } else if (status == 2) {
+            progressLayout.setVisibility(View.GONE);
+            progressBar.setProgress(100);
+            followBuyView.setVisibility(View.GONE);
             //已经揭晓
             OwnerVO ownerVO = winningInfo.ownerVO;
             if (ownerVO != null) {
@@ -221,6 +239,19 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                 ownerPriceTimeView.setText(dateString);
                 ownerInfoLayout.setVisibility(View.VISIBLE);
             }
+        } else if (status == 0) {
+
+            int precent = 0;
+            if (winningInfo.totalCount > 0) {
+                precent = winningInfo.joinedCount * 100 / winningInfo.totalCount;
+            }
+            progressBar.setProgress(precent);
+            if (!isSelf) {
+                followBuyView.setVisibility(View.VISIBLE);
+            } else {
+                followBuyView.setVisibility(View.GONE);
+            }
+            progressLayout.setVisibility(View.VISIBLE);
         }
 
     }

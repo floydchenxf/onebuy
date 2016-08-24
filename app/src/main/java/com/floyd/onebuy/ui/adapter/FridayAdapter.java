@@ -93,6 +93,7 @@ public class FridayAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo.id);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo.productId);
                     it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FRI);
@@ -105,6 +106,7 @@ public class FridayAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo2.id);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo2.productId);
                     it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FRI);
@@ -122,6 +124,7 @@ public class FridayAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.LSSUE_ID, winningInfo.id);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, winningInfo.productId);
                     it.putExtra(WinningDetailActivity.DETAIL_TYPE, WinningDetailActivity.DETAIL_TYPE_FRI);

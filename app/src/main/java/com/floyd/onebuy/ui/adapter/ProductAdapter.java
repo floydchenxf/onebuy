@@ -109,6 +109,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, info1.productId);
                     mContext.startActivity(it);
                 }
@@ -122,6 +123,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, info2.productId);
                     mContext.startActivity(it);
                 }
@@ -135,6 +137,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, info3.productId);
                     mContext.startActivity(it);
                 }
@@ -148,6 +151,7 @@ public class ProductAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(mContext, WinningDetailActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     it.putExtra(WinningDetailActivity.PRODUCT_ID, info1.productId);
                     mContext.startActivity(it);
                 }
@@ -170,6 +174,7 @@ public class ProductAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent it = new Intent(mContext, WinningDetailActivity.class);
+                        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         it.putExtra(WinningDetailActivity.PRODUCT_ID, info2.productId);
                         mContext.startActivity(it);
                     }

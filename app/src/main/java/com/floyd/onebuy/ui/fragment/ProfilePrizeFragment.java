@@ -81,15 +81,15 @@ public class ProfilePrizeFragment extends Fragment implements View.OnClickListen
         dataLoadingView.initView(view, this);
 
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.common_list);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-                pageNo = 1;
-                needClear = true;
-                isFirst = true;
-                loadData();
-                mPullToRefreshListView.onRefreshComplete(false, true);
+//                pageNo = 1;
+//                needClear = true;
+//                isFirst = true;
+//                loadData();
+//                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override

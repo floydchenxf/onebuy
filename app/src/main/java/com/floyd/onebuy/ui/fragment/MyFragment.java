@@ -242,6 +242,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                     }
 
                     Intent detailIntent = new Intent(getActivity(), WinningDetailActivity.class);
+                    detailIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     detailIntent.putExtra(WinningDetailActivity.LSSUE_ID, lssueIdStr);
                     startActivity(detailIntent);
                 }
