@@ -65,6 +65,9 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
     private int pageNo;
 
     private boolean isShowBanner;
+    private Long userId;
+
+    private boolean isPersion;
 
     private TextView commonwealFeeView;
     private ImageLoader mImageLoader;
@@ -92,9 +95,10 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
     public CommonwealFragment() {
     }
 
-    public static CommonwealFragment newInstance(String param1, String param2) {
+    public static CommonwealFragment newInstance(Long userId) {
         CommonwealFragment fragment = new CommonwealFragment();
         Bundle args = new Bundle();
+        args.putLong(USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,6 +106,10 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userId = getArguments().getLong(USER_ID, 0l);
+        }
+        isPersion = userId != null && userId > 0;
         mImageLoader = ImageLoaderFactory.createImageLoader();
         mTopBannerList = new ArrayList<AdvVO>();
         pageNo = 1;

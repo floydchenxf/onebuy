@@ -1,10 +1,12 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -74,6 +76,16 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
         View emptyView = View.inflate(this, R.layout.empty_item, null);
         mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                HistoryPrizeVO vo = adapter.getItem(i-1);
+                Intent it = new Intent(HistoryPrizeActivity.this, PersionProfileActivity.class);
+                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                it.putExtra(PersionProfileActivity.CURRENT_USER_ID, vo.ClientID);
+                startActivity(it);
+            }
+        });
         adapter = new HistoryPrizeAdapter(this, new ArrayList<HistoryPrizeVO>(), proId);
         mListView.setAdapter(adapter);
         loadData(true);
@@ -101,15 +113,6 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
                 List<HistoryPrizeVO> prizeVOs = prizeListVO.HistoryPrizeList;
                 adapter.addAll(prizeVOs, needClear);
                 pageNo++;
-//                if (adapter.getRecords() == null || adapter.getRecords().isEmpty()) {
-//                    TextView emptyView = new TextView(HistoryPrizeActivity.this);
-//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (40 * oneDp));
-//                    emptyView.setGravity(Gravity.CENTER);
-//                    emptyView.setLayoutParams(params);
-//                    emptyView.setText("暂无数据");
-//                    emptyView.setTextColor(Color.BLACK);
-//                    mPullToRefreshListView.setEmptyView(emptyView);
-//                }
             }
 
             @Override

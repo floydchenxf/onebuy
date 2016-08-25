@@ -29,7 +29,9 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class MyLuckActivity extends Activity implements View.OnClickListener {
+    public static final String IS_SELF = "is_self";
     private static final String TAG = "MyLuckActivity";
+
     private static int PAGE_SIZE = 12;
     private PullToRefreshListView mPullToRefreshListView;
     private int pageNo = 1;
@@ -41,6 +43,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
     private ImageLoader mImageLoader;
     private View emptyView;
     private TextView gotoIndexView;
+    private boolean isSelf;
 
     private TextView buyView;
 
@@ -48,6 +51,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_luck);
+        isSelf = getIntent().getBooleanExtra(IS_SELF, true);
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView)findViewById(R.id.title_name);
         titleNameView.setText("中奖记录");
@@ -84,7 +88,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        luckRecordAdapter = new LuckRecordAdapter(this, new ArrayList<ProductLssueWithWinnerVO>(), mImageLoader);
+        luckRecordAdapter = new LuckRecordAdapter(this, new ArrayList<ProductLssueWithWinnerVO>(), isSelf, mImageLoader);
         mListView.setAdapter(luckRecordAdapter);
         emptyView = findViewById(R.id.empty_view);
         gotoIndexView = (TextView) emptyView.findViewById(R.id.goto_index);

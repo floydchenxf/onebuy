@@ -113,6 +113,70 @@ public class ProductManager {
     }
 
 
+    public static AsyncJob<NewIndexVO> fetchAllProducts(int pageSize, long typeId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetAllProducts");
+        params.put("pageSize", pageSize + "");
+        params.put("typeId", typeId + "");
+        AsyncJob<IndexVO> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, IndexVO.class);
+        return job.map(new Func<IndexVO, NewIndexVO>() {
+            @Override
+            public NewIndexVO call(IndexVO indexVO) {
+                if (indexVO == null) {
+                    return null;
+                }
+                NewIndexVO vo = new NewIndexVO();
+                vo.wordList = indexVO.wordList;
+                vo.typeList = indexVO.typeList;
+                vo.newsImageUrl = APIConstants.HOST + indexVO.Image;
+                List<IndexAdvVO> adv = indexVO.advertisList;
+                if (adv != null && !adv.isEmpty()) {
+                    List<AdvVO> advList = new ArrayList<AdvVO>();
+                    for (IndexAdvVO a : adv) {
+                        if (a == null) {
+                            continue;
+                        }
+                        AdvVO b = new AdvVO();
+                        b.title = a.Url;
+                        if (a.NewsID != null) {
+                            b.id = a.NewsID;
+                        }
+                        b.imgUrl = APIConstants.HOST + a.SmallPic;
+                        advList.add(b);
+                    }
+                    vo.advertisList = advList;
+                }
+
+                List<ProductLssueItemVO> productVOs = indexVO.theNewList;
+                if (productVOs != null && !productVOs.isEmpty()) {
+                    List<WinningInfo> winningInfos = new ArrayList<WinningInfo>();
+                    for (ProductLssueItemVO v : productVOs) {
+                        WinningInfo info = new WinningInfo();
+                        info.totalCount = v.TotalCount;
+                        info.joinedCount = v.JoinedCount;
+                        if (v.TotalCount == 0) {
+                            info.processPrecent = "0%";
+                        } else {
+                            info.processPrecent = (v.JoinedCount * 100 / v.TotalCount) + "%";
+                        }
+                        info.productUrl = APIConstants.HOST + v.Pictures;
+                        info.title = v.ProName;
+                        info.id = v.ProID;
+                        info.productId = v.ProID;
+                        info.lssueId = v.ProductLssueID;
+                        info.status = 0;
+                        winningInfos.add(info);
+                    }
+                    vo.theNewList = winningInfos;
+                }
+
+                return vo;
+            }
+        });
+    }
+
+
     /**
      * 获取商品列表
      *
@@ -386,13 +450,34 @@ public class ProductManager {
      * @param pageNum
      * @return
      */
-    public static AsyncJob<PrizeShowListVO> getPrizeShow(long productLssueID, int pageSize, int pageNum) {
+    public static AsyncJob<PrizeShowListVO> getPrizeShow(long productLssueID, int typeID, int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "getPrizeShow");
+        params.put("typeID", typeID + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
         params.put("productLssueID", productLssueID + "");
+        AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
+        return result;
+    }
+
+    /**
+     * 获取我的晒单信息
+     *
+     * @param userId
+     * @param typeID
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public static AsyncJob<PrizeShowListVO> getMyPrizeShow(long userId, int typeID, int pageSize, int pageNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetClientPrizeShow");
+        params.put("typeID", typeID + "");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
         AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
         return result;
     }
@@ -587,34 +672,37 @@ public class ProductManager {
 
         List<WinningInfo> infoList = new ArrayList<WinningInfo>();
         for (int i = 0; i < data.length(); i++) {
-            WinningInfo info = new WinningInfo();
-            JSONObject wjson = data.getJSONObject(i);
-            info.lssueId = wjson.getLong("ProductLssueID");
-            info.id = info.lssueId;
-            info.code = wjson.getString("ProductLssueCode");
-            info.productId = wjson.getLong("ProID");
-            info.totalCount = wjson.getInt("TotalCount");
-            info.joinedCount = wjson.getInt("JoinCount");
-            info.title = wjson.getString("ProName");
-            info.status = wjson.getInt("Status");
-            info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
-            String priceTime = wjson.getString("PriceTime");
-            info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : (Long.parseLong(priceTime) + 10) * 1000;
-            if (wjson.has("ClientCodeList")) {
-                List<String> codeList = new ArrayList<String>();
-                String aa = wjson.getString("ClientCodeList");
-                if (!TextUtils.isEmpty(aa)) {
-
-                    String[] jj = aa.split(",");
-                    for (int j = 0; j < jj.length; j++) {
-                        String clientCode = jj[j];
-                        codeList.add(clientCode);
+            JSONObject oo = data.getJSONObject(i);
+            JSONArray orderArray = oo.getJSONArray("order");
+            for (int k = 0; k < orderArray.length(); k++ ) {
+                WinningInfo info = new WinningInfo();
+                JSONObject wjson = orderArray.getJSONObject(k);
+                info.lssueId = wjson.getLong("ProductLssueID");
+                info.id = info.lssueId;
+                info.code = wjson.getString("ProductLssueCode");
+                info.productId = wjson.getLong("ProID");
+                info.totalCount = wjson.getInt("TotalCount");
+                info.joinedCount = wjson.getInt("JoinCount");
+                info.title = wjson.getString("ProName");
+                info.status = wjson.getInt("Status");
+                info.productUrl = APIConstants.HOST + wjson.getString("Pictures");
+                String priceTime = wjson.getString("PriceTime");
+                info.lotteryTime = TextUtils.isEmpty(priceTime) ? 0 : (Long.parseLong(priceTime) + 10) * 1000;
+                if (wjson.has("ClientCodeList")) {
+                    List<String> codeList = new ArrayList<String>();
+                    String aa = wjson.getString("ClientCodeList");
+                    if (!TextUtils.isEmpty(aa)) {
+                        String[] jj = aa.split(",");
+                        for (int j = 0; j < jj.length; j++) {
+                            String clientCode = jj[j];
+                            codeList.add(clientCode);
+                        }
                     }
-                }
 
-                info.myPrizeCodes = codeList;
+                    info.myPrizeCodes = codeList;
+                }
+                infoList.add(info);
             }
-            infoList.add(info);
         }
         return infoList;
     }
@@ -840,7 +928,7 @@ public class ProductManager {
         params.put("pageType", "GetFoundsPageData");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
-        params.put("userId", userId == null ? "" : userId + "");
+        params.put("userId", (userId == null||userId ==0) ? "" : userId + "");
         String typeIdStr = "";
         if (typeId != 0) {
             typeIdStr = typeId + "";
@@ -869,12 +957,17 @@ public class ProductManager {
         });
     }
 
-    public static AsyncJob<List<WinningInfo>> fetchFridayProduct(int pageNo, int pageSize) {
+    public static AsyncJob<List<WinningInfo>> fetchFridayProduct(int pageNo, int pageSize, Long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetFridayPageData");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNo + "");
+        if (userId != null) {
+            params.put("userId", userId + "");
+        } else {
+            params.put("userId", 0+"");
+        }
 
         return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<List<WinningInfo>>>() {
             @Override
@@ -903,6 +996,4 @@ public class ProductManager {
             }
         });
     }
-
-
 }

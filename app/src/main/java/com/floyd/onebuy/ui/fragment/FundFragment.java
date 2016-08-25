@@ -59,12 +59,16 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
     private List<TypeVO> typeList;
     private long typeId;
 
+    private Long userId;
+    private boolean isPersion;
+
     public FundFragment() {
     }
 
-    public static FundFragment newInstance(String param1, String param2) {
+    public static FundFragment newInstance(Long userId) {
         FundFragment fragment = new FundFragment();
         Bundle args = new Bundle();
+        args.putLong(USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +76,11 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userId = getArguments().getLong(USER_ID, 0l);
+        }
+
+        isPersion = userId != null&&userId > 0;
         mImageLoader = ImageLoaderFactory.createImageLoader();
         EventBus.getDefault().register(this);
     }
@@ -131,6 +140,9 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
     private void initHead() {
         View v = View.inflate(getActivity(), R.layout.fund_head, null);
         fundFeeView = (TextView) v.findViewById(R.id.fund_fee_textview);
+        if (isPersion) {
+            fundFeeView.setVisibility(View.GONE);
+        }
         mListView.addHeaderView(v);
     }
 
@@ -138,7 +150,7 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ProductManager.fetchFundData(PAGE_SIZE, pageNo, typeId, null).startUI(new ApiCallback<FundJsonVO>() {
+        ProductManager.fetchFundData(PAGE_SIZE, pageNo, typeId, userId).startUI(new ApiCallback<FundJsonVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

@@ -84,7 +84,7 @@ public class LoginManager {
      * @param inviterCode 邀请码。可以为空
      * @return
      */
-    public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code, String inviterCode) {
+    public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code, String inviterCode, String deviceToken) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "register");
@@ -92,32 +92,23 @@ public class LoginManager {
         String md5Pass = MD5Util.encodeBy32BitMD5(password);
         params.put("password", md5Pass == null ? "" : md5Pass.toLowerCase());
         params.put("code", code);
-        if (!TextUtils.isEmpty(inviterCode)) {
-            params.put("inviterCode", inviterCode);
-        }
+        params.put("deviceToken", deviceToken);
+        params.put("inviterCode", inviterCode == null?"":inviterCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, UserVO.class);
     }
 
     /**
      * 获取用户基本信息
      *
-     * @param token
      * @return
      */
-    public static AsyncJob<UserVO> fetchUserInfo(final Context context, String token) {
+    public static AsyncJob<UserVO> fetchUserInfo(Long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "getUserInfo");
-        params.put("token", token);
-        AsyncJob<UserVO> result= JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, UserVO.class);
-        return result.process(new Processor<UserVO>() {
-            @Override
-            public void doProcess(UserVO userVO) {
-                UserVO oldVO = LoginManager.getLoginInfo(context);
-                userVO.Token = oldVO.Token;
-                saveLoginInfo(context, userVO);
-            }
-        });
+        params.put("pageType", "getUserInfoByUserID");
+        params.put("userId", userId + "");
+        AsyncJob<UserVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, UserVO.class);
+        return result;
     }
 
     /**
@@ -202,21 +193,14 @@ public class LoginManager {
         });
     }
 
-    public static AsyncJob<Long> forgetPaswordStep2(Long userId, String newPasword) {
+    public static AsyncJob<Boolean> forgetPaswordStep2(Long userId, String newPasword) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "forgetPasswordstep2");
         params.put("userId", userId+"");
-        params.put("newPassword", newPasword);
-        Type type = new TypeToken<Map<String, Long>>() {
-        }.getType();
-        AsyncJob<Map<String, Long>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
-        return job.map(new Func<Map<String, Long>, Long>() {
-            @Override
-            public Long call(Map<String, Long> map) {
-                return map.get("ID");
-            }
-        });
+        String md5Pass = MD5Util.encodeBy32BitMD5(newPasword).toLowerCase();
+        params.put("newPassword", md5Pass);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
     }
 
 
@@ -289,4 +273,6 @@ public class LoginManager {
         params.put("code", smsCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
+
+
 }

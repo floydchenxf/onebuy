@@ -75,7 +75,7 @@ public class FridayActivity extends Activity implements View.OnClickListener {
             dataLoadingView.startLoading();
         }
 
-        ProductManager.fetchFridayProduct(pageNo, PAGE_SIZE).startUI(new ApiCallback<List<WinningInfo>>() {
+        ProductManager.fetchFridayProduct(pageNo, PAGE_SIZE, null).startUI(new ApiCallback<List<WinningInfo>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

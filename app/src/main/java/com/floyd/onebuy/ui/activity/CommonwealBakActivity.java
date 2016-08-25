@@ -57,15 +57,22 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
 
     private float onedp;
 
+    private Long userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commonweal_bak);
 
         onedp = this.getResources().getDimension(R.dimen.one_dp);
+        userId = getIntent().getLongExtra("USER_ID", 0);
 
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
-        titleNameView.setText("公益");
+        if (userId == null || userId == 0) {
+            titleNameView.setText("公益");
+        } else {
+            titleNameView.setText("我的公益");
+        }
         titleNameView.setVisibility(View.VISIBLE);
         findViewById(R.id.title_back).setOnClickListener(this);
         moreView = (ImageView) findViewById(R.id.right);
@@ -76,7 +83,7 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
         commonwealPager = (ViewPager) findViewById(R.id.id_page_commonweal);
         tabCommonwealView = (CheckedTextView) findViewById(R.id.tab_commonweal_view);
         tabFundView = (CheckedTextView) findViewById(R.id.tab_fund_view);
-        initFragments();
+        initFragments(userId);
         tabCommonwealView.setOnClickListener(this);
         tabFundView.setOnClickListener(this);
 
@@ -100,15 +107,15 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
         });
     }
 
-    private void initFragments() {
-        CommonwealFragment commonwealFragment = new CommonwealFragment();
+    private void initFragments(Long userId) {
+        CommonwealFragment commonwealFragment = CommonwealFragment.newInstance(userId);
         commonwealFragment.initSwitchTabListener(new CommonwealBaseFragment.SwitchTabListener() {
             @Override
             public void onCallback(Map<String, Object> data) {
                 moreView.setVisibility(View.GONE);
             }
         });
-        FundFragment fundFragment = new FundFragment();
+        FundFragment fundFragment = FundFragment.newInstance(userId);
         fundFragment.initSwitchTabListener(new CommonwealBaseFragment.SwitchTabListener() {
             @Override
             public void onCallback(Map<String, Object> data) {

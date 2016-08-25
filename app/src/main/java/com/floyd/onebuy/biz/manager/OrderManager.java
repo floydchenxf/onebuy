@@ -11,8 +11,10 @@ import com.floyd.onebuy.biz.vo.json.ChargeOrderVO;
 import com.floyd.onebuy.biz.vo.json.ChargeVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.OrderVO;
+import com.floyd.onebuy.biz.vo.json.PayResultList;
 import com.floyd.onebuy.channel.request.HttpMethod;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.Result;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -24,8 +26,6 @@ import java.util.Map;
  * Created by floyd on 16-5-5.
  */
 public class OrderManager {
-
-    public static final String TAOBAOTEST = "TAOBAOTEST";
 
     /**
      * 创建订单
@@ -54,26 +54,13 @@ public class OrderManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, OrderVO.class);
     }
 
-    public static AsyncJob<List<String>> payOrder(String orderNo, String taobaoNum) {
+    public static AsyncJob<Boolean> payOrder(String orderNo) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "PayOrder");
         params.put("orderNum", orderNo);
-        params.put("taobaoNum", taobaoNum);
-        Type mapType = new TypeToken<Map<String, String>>() {
-        }.getType();
-        AsyncJob<Map<String, String>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, mapType);
-        return result.map(new Func<Map<String, String>, List<String>>() {
-            @Override
-            public List<String> call(Map<String, String> map) {
-                String list = map.get("ClientCodeList");
-                if (TextUtils.isEmpty(list)) {
-                    return null;
-                }
-                String[] l = list.split(",");
-                return Arrays.asList(l);
-            }
-        });
+        AsyncJob<Boolean> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
+        return result;
     }
 
 
@@ -100,12 +87,12 @@ public class OrderManager {
         AsyncJob<OrderPayVO> result = orderJob.flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
             @Override
             public AsyncJob<OrderPayVO> call(final OrderVO orderVO) {
-                AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum,  TAOBAOTEST).map(new Func<List<String>, OrderPayVO>() {
+                AsyncJob<OrderPayVO> a = payOrder(orderVO.orderNum).map(new Func<Boolean, OrderPayVO>() {
                     @Override
-                    public OrderPayVO call(List<String> strings) {
+                    public OrderPayVO call(Boolean b) {
                         OrderPayVO orderPayVO = new OrderPayVO();
                         orderPayVO.orderNum = orderVO.orderNum;
-                        orderPayVO.payList = strings;
+                        orderPayVO.result = b;
                         return orderPayVO;
                     }
                 });
@@ -132,13 +119,18 @@ public class OrderManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
 
-    public static AsyncJob<Double> payCharge(String orderNum, String taobaoNum) {
+    /**
+     * 模拟充值接口
+     *
+     * @param orderNum
+     * @return
+     */
+    public static AsyncJob<Double> payCharge(String orderNum) {
 
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "PayCharge");
         params.put("orderNum", orderNum);
-        params.put("taobaoNum", taobaoNum);
         AsyncJob<Map<String, String>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
         return result.map(new Func<Map<String, String>, Double>() {
             @Override
@@ -182,7 +174,7 @@ public class OrderManager {
             @Override
             public AsyncJob<Double> call(final ChargeOrderVO chargeOrderVO) {
                 String orderNum = chargeOrderVO.orderNum;
-                return payCharge(orderNum, TAOBAOTEST);
+                return payCharge(orderNum);
             }
         });
 
@@ -209,6 +201,17 @@ public class OrderManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
     }
 
+    /**
+     * 创建星期五订单
+     *
+     * @param userId
+     * @param productLssueDetail
+     * @param linkName
+     * @param linkMobile
+     * @param receivingAdrString
+     * @param remark
+     * @return
+     */
     public static AsyncJob<OrderVO> createFridayOrder(long userId, String productLssueDetail, String linkName,
                                                 String linkMobile, String receivingAdrString, String remark) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;

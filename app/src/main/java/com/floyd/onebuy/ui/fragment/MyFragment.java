@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.ImagerInfoManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.NavigationVO;
@@ -49,6 +51,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,6 +106,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(MyFragment.this.getActivity(), clazzs[k]);
+                    if (k == 1) {
+                        it.putExtra("USER_ID", LoginManager.getLoginInfo(getActivity()).ID);
+                    }
                     MyFragment.this.getActivity().startActivity(it);
                 }
             };
@@ -159,7 +165,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         }
 
         final UserVO vo = LoginManager.getLoginInfo(this.getActivity());
-        LoginManager.fetchUserInfo(getActivity(), vo.Token).startUI(new ApiCallback<UserVO>() {
+        LoginManager.fetchUserInfo(vo.ID).startUI(new ApiCallback<UserVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

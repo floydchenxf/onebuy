@@ -1,5 +1,6 @@
 package com.floyd.onebuy.ui.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +9,14 @@ import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.BitmapProcessor;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.tools.ImageUtils;
+import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.FragmentAdapter;
 import com.floyd.onebuy.ui.adapter.ProfileFragmentAdapter;
@@ -36,14 +45,27 @@ public class PersionProfileActivity extends FragmentActivity implements View.OnC
     private CheckedTextView tabPrizeView;
     private CheckedTextView tabShowShareView;
 
+    private ImageLoader mImageLoader;
+
+    private View infoLayout;
+    private NetworkImageView headImageView;
+    private TextView userNameView;
+    private TextView userIdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_persion_profile);
+        mImageLoader = ImageLoaderFactory.createImageLoader();
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("个人中心");
         titleNameView.setVisibility(View.VISIBLE);
         findViewById(R.id.title_back).setOnClickListener(this);
+
+        infoLayout = findViewById(R.id.persion_info);
+        headImageView = (NetworkImageView) findViewById(R.id.head);
+        userNameView = (TextView) findViewById(R.id.user_name_view);
+        userIdView = (TextView) findViewById(R.id.user_id_view);
 
         currentIndex = getIntent().getIntExtra(CURRENT_PAGE_INDEX, 0);
 
@@ -58,6 +80,35 @@ public class PersionProfileActivity extends FragmentActivity implements View.OnC
         userId = getIntent().getLongExtra(CURRENT_USER_ID, 0l);
 
         initFragment();
+
+        loadData();
+    }
+
+    private void loadData() {
+        LoginManager.fetchUserInfo(userId).startUI(new ApiCallback<UserVO>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+
+            }
+
+            @Override
+            public void onSuccess(UserVO userVO) {
+                infoLayout.setVisibility(View.VISIBLE);
+                headImageView.setImageUrl(userVO.getFullPic(), mImageLoader, new BitmapProcessor() {
+                    @Override
+                    public Bitmap processBitmap(Bitmap bitmap) {
+                        return ImageUtils.getCircleBitmap(bitmap, getResources().getDimension(R.dimen.cycle_head_image_size));
+                    }
+                });
+                userIdView.setText(("ID:" + userId));
+                userNameView.setText(userVO.getUserName());
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
     }
 
     private void initFragment() {

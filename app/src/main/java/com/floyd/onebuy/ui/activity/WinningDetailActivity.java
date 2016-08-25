@@ -74,7 +74,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     public static final int DETAIL_TYPE_FUND = 1;
     public static final int DETAIL_TYPE_FRI = 2;
     public static final int TIME_EVENT = 1;
-    public static final String DETAIL_TYPE="DETAIL_TYPE";
+    public static final String DETAIL_TYPE = "DETAIL_TYPE";
 
     private static final String TAG = "WinningDetailActivity";
     public static final String LASTEST = "lastest";
@@ -257,7 +257,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 priceTimeLayout.setVisibility(View.GONE);
                 ownerLayout.setVisibility(View.VISIBLE);
 
-                OwnerVO vo  = winningDetailInfo.ownerVO;
+                final OwnerVO vo = winningDetailInfo.ownerVO;
                 if (vo == null) {
                     ownerLayout.setVisibility(View.GONE);
                 } else {
@@ -270,11 +270,21 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     ownerHeadView.setDefaultImageResId(R.drawable.tupian);
                     ownerHeadView.setImageUrl(vo.getHeadImage(), mImageLoader);
                     ownerNameView.setText(vo.userName);
-                    ownerJoinNumView.setText((winningDetailInfo.myRecords==null?0:winningDetailInfo.myRecords.size())+"人次");
+                    ownerJoinNumView.setText((winningDetailInfo.myRecords == null ? 0 : winningDetailInfo.myRecords.size()) + "人次");
                     String k = DateUtil.getDateTime(vo.winTime);
                     ownerPriceTimeView.setText(k);
-                    ownerClientIdView.setText(vo.userId+"");
+                    ownerClientIdView.setText(vo.userId + "");
                     winnerNumberView.setText(vo.winNumber);
+
+                    ownerHeadView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent it = new Intent(WinningDetailActivity.this, PersionProfileActivity.class);
+                            it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            it.putExtra(PersionProfileActivity.CURRENT_USER_ID, vo.userId);
+                            startActivity(it);
+                        }
+                    });
                 }
 
                 joinLayout.setVisibility(View.GONE);

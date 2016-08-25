@@ -6,7 +6,7 @@ package com.floyd.onebuy.biz.constants;
 public class APIConstants {
     public static final String HOST = "http://yiyuan.zeego.cn/";
     public static final String HOST_API_PATH = HOST + "AppInterface/";
-    public static final String PRODUCT_DETAIL_URL_FORMAT = HOST + "ProDescription.aspx?ProID=%d";
+    public static final String PRODUCT_DETAIL_URL_FORMAT = HOST + "ProDescriptionForApp.aspx?ProID=%d";
 
     public static final String USER_MODULE = "UserService.ashx";
     public static final String PRODUCT_MODULE = "ProductService.ashx";

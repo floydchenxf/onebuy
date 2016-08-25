@@ -8,5 +8,5 @@ import java.util.List;
 public class OrderPayVO {
 
     public String orderNum;
-    public List<String> payList;
+    public Boolean result;
 }

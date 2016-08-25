@@ -29,6 +29,7 @@ import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -145,7 +146,7 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 needClear = true;
                 pageNo = 1;
                 typeAdapter.setCheckedIndex(position);
-                loadPageData();
+                loadData(false);
             }
         });
         loadData(true);
@@ -224,7 +225,7 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
             dataLoadingView.startLoading();
         }
 
-        ProductManager.fetchIndexData().startUI(new ApiCallback<NewIndexVO>() {
+        ProductManager.fetchAllProducts(PAGE_SIZE, typeId).startUI(new ApiCallback<NewIndexVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -239,7 +240,11 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 }
 
                 List<AdvVO> advVOs = indexVO.advertisList;
-                if (advVOs == null || advVOs.isEmpty()) {
+                if (advVOs == null) {
+                    advVOs = new ArrayList<AdvVO>();
+                }
+                if (advVOs.isEmpty()) {
+                    mBannerImageAdapter.addItems(advVOs);
                     mViewPagerContainer.setVisibility(View.GONE);
                 } else {
                     mViewPagerContainer.setVisibility(View.VISIBLE);
@@ -254,9 +259,15 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 }
 
                 List<WinningInfo> records = indexVO.theNewList;
+                if(records == null) {
+                    records = Collections.emptyList();
+                }
                 productAdapter.addAll(records, true);
 
                 List<ProductTypeVO> typeList = indexVO.typeList;
+                if (typeList == null) {
+                    typeList = new ArrayList<ProductTypeVO>();
+                }
                 ProductTypeVO allProductTypeVO = new ProductTypeVO();
                 allProductTypeVO.CodeName = "全部商品";
                 allProductTypeVO.CodeID = 0l;

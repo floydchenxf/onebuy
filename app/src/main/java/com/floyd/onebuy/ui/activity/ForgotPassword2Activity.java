@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.bean.MD5Util;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.ui.R;
 
@@ -76,16 +77,18 @@ public class ForgotPassword2Activity extends Activity implements View.OnClickLis
                     return;
                 }
 
-                LoginManager.forgetPaswordStep2(userId, newPassword).startUI(new ApiCallback<Long>() {
+                LoginManager.forgetPaswordStep2(userId, newPassword).startUI(new ApiCallback<Boolean>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(ForgotPassword2Activity.this, errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSuccess(Long aLong) {
-                        ForgotPassword2Activity.this.finish();
-                        Toast.makeText(ForgotPassword2Activity.this, "找回密码成功", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(Boolean aLong) {
+                        if (aLong) {
+                            ForgotPassword2Activity.this.finish();
+                            Toast.makeText(ForgotPassword2Activity.this, "找回密码成功", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

@@ -88,14 +88,14 @@ public class JoinRecordAdapter extends BaseAdapter {
         holder.headImage.setImageUrl(vo.getClientPic(), imageLoader, new BitmapProcessor() {
             @Override
             public Bitmap processBitmap(Bitmap bitmap) {
-                return ImageUtils.getCircleBitmap(bitmap, 40*onDp);
+                return ImageUtils.getCircleBitmap(bitmap, 40 * onDp);
             }
         });
-        holder.userNameView.setText(vo.ClientName+"("+vo.ClientIP+")");
+        holder.userNameView.setText(vo.ClientName + "(" + vo.ClientIP + ")");
         String dateTimeStr = "";
         if (!TextUtils.isEmpty(vo.InTime) && TextUtils.isDigitsOnly(vo.InTime)) {
             Long t = Long.parseLong(vo.InTime);
-            dateTimeStr = DateUtil.getDateTime(t*1000);
+            dateTimeStr = DateUtil.getDateTime(t * 1000);
         }
         holder.joinNumberView.setText(Html.fromHtml("参与了<font color=\"red\">" + vo.Number + "</font>次 " + dateTimeStr));
         return convertView;

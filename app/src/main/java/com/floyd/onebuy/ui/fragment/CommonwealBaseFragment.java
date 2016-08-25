@@ -9,6 +9,8 @@ import java.util.Map;
  */
 public abstract  class CommonwealBaseFragment extends Fragment {
 
+    protected static final String USER_ID = "USER_ID";
+
     protected SwitchTabListener listener;
 
     public void initSwitchTabListener(SwitchTabListener listener) {

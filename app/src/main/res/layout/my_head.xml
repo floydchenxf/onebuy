@@ -7,9 +7,9 @@
     <RelativeLayout
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="220dp"
         android:layout_marginBottom="10dp"
-        android:background="#076990">
+        android:background="@drawable/bg_info">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/head_bg"

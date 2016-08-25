@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.View;
 
@@ -53,6 +54,7 @@ public class ProductBannerImageAdapter extends FragmentStatePagerAdapter {
         args.putParcelable(BannerFragment.Banner, dataLists.get(position));
         args.putInt(BannerFragment.Position, position);
         args.putInt(BannerFragment.Height, height);
+        args.putInt(BannerFragment.SCALE_TYPE, BannerFragment.SCALE_FIT_CENTER);
         return BannerFragment.newInstance(args, mImagerClickListener);
     }
 
@@ -64,8 +66,10 @@ public class ProductBannerImageAdapter extends FragmentStatePagerAdapter {
         return 0;
     }
 
+
+    @Override
     public int getItemPosition(Object object) {
-        return super.getItemPosition(object);
+        return PagerAdapter.POSITION_NONE;
     }
 
     public long getItemId(int position) {

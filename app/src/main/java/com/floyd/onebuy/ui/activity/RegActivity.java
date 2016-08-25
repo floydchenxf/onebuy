@@ -124,7 +124,8 @@ public class RegActivity extends Activity implements View.OnClickListener {
                     return;
                 }
 
-                LoginManager.regUserJob(usernick, password, smsCode, null).startUI(new ApiCallback<UserVO>() {
+                String deviceToken = LoginManager.getDeviceId(this);
+                LoginManager.regUserJob(usernick, password, smsCode, null, deviceToken).startUI(new ApiCallback<UserVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();

@@ -103,7 +103,7 @@ public class ProfilePrizeFragment extends Fragment implements View.OnClickListen
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        luckRecordAdapter = new LuckRecordAdapter(getActivity(), new ArrayList<ProductLssueWithWinnerVO>(), mImageLoader);
+        luckRecordAdapter = new LuckRecordAdapter(getActivity(), new ArrayList<ProductLssueWithWinnerVO>(), false, mImageLoader);
         mListView.setAdapter(luckRecordAdapter);
         View emptyView = View.inflate(getActivity(), R.layout.empty_item, null);
         mPullToRefreshListView.setEmptyView(emptyView);
