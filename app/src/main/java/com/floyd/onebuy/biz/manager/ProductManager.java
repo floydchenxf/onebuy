@@ -20,6 +20,8 @@ import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
+import com.floyd.onebuy.biz.vo.json.ShareShowDetailVO;
+import com.floyd.onebuy.biz.vo.json.ShowCommentVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.JoinVO;
@@ -450,11 +452,12 @@ public class ProductManager {
      * @param pageNum
      * @return
      */
-    public static AsyncJob<PrizeShowListVO> getPrizeShow(long productLssueID, int typeID, int pageSize, int pageNum) {
+    public static AsyncJob<PrizeShowListVO> getPrizeShow(long productLssueID, long proId, int typeID, int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "getPrizeShow");
-        params.put("typeID", typeID + "");
+        params.put("typeid", typeID + "");
+        params.put("proid", proId + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
         params.put("productLssueID", productLssueID + "");
@@ -475,10 +478,10 @@ public class ProductManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetClientPrizeShow");
-        params.put("typeID", typeID + "");
+        params.put("typeid", typeID + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
-        params.put("userId", userId + "");
+        params.put("userid", userId + "");
         AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
         return result;
     }
@@ -909,6 +912,14 @@ public class ProductManager {
     }
 
 
+    /**
+     * 获取我的中奖记录
+     *
+     * @param uid
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     public static AsyncJob<List<ProductLssueWithWinnerVO>> fetchMyLuckRecords(long uid, int pageNum, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
@@ -997,4 +1008,64 @@ public class ProductManager {
             }
         });
     }
+
+    /**
+     * 查看晒单详情页面
+     *
+     * @param guestId
+     * @return
+     */
+    public static AsyncJob<ShareShowDetailVO> fetchShowDetail(long guestId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetShowImageDetail");
+        params.put("guestId", guestId + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, ShareShowDetailVO.class);
+    }
+
+    /**
+     * 按页获取评论
+     *
+     * @param guestId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public static AsyncJob<List<ShowCommentVO>> fetchShowCommentPage(Long guestId, int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetShowImageComment");
+        params.put("guestId", guestId + "");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNo + "");
+        Type type = new TypeToken<Map<String, List<ShowCommentVO>>>() {
+        }.getType();
+        AsyncJob<Map<String, List<ShowCommentVO>>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        return job.map(new Func<Map<String, List<ShowCommentVO>>, List<ShowCommentVO>>() {
+            @Override
+            public List<ShowCommentVO> call(Map<String, List<ShowCommentVO>> map) {
+                return map.get("ShowComment");
+            }
+        });
+    }
+
+    /**
+     * 添加评论
+     *
+     * @param guestId
+     * @param userId
+     * @param comment
+     * @return
+     */
+    public static AsyncJob<Boolean> addShowComment(long guestId, long userId, String comment) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "AddShowComment");
+        params.put("guestId", guestId + "");
+        params.put("userId", userId + "");
+        params.put("comment", comment);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
+    }
+
+
 }

@@ -1,0 +1,25 @@
+package com.floyd.onebuy.biz.vo.json;
+
+import java.util.List;
+
+/**
+ * Created by chenxiaofeng on 16/9/3.
+ */
+public class ShareShowDetailVO {
+
+    public Long ProductLssueID;
+    public String Pictures;
+    public String GuestTitle;
+    public String GuestContent;
+    public Long ProID;
+    public String ProPics;
+    public String GuestName;
+    public String GuestPic;
+    public Long GuestTime;
+    public String GuestID;
+    public int isVerify;//状态
+    public int TypeBook;
+    public String MediaUrl;//地址
+    public int CommentNum;
+    public List<ShowCommentVO> ShowComment;
+}

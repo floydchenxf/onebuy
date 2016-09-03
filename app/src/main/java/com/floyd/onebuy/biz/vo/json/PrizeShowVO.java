@@ -22,10 +22,14 @@ public class PrizeShowVO {
     public String GuestTime;
     public long GuestID;
 
-    public List<String> getGuestPics() {
+    public String MediaUrl;
+    public Integer CommentNum;
+    public int TypeBook;
+
+    public List<String> getMediaUrls() {
         List<String> result = new ArrayList<String>();
-        if (!TextUtils.isEmpty(GuestPic)) {
-            String[] urls = GuestPic.split("\\|");
+        if (!TextUtils.isEmpty(MediaUrl)) {
+            String[] urls = MediaUrl.split("\\|");
             for (String s : urls) {
                 result.add(APIConstants.HOST + s);
             }

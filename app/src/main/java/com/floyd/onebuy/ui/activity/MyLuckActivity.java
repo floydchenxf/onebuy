@@ -66,15 +66,10 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.common_list);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-                pageNo = 1;
-                needClear = true;
-                isFirst = true;
-                loadData();
-                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override

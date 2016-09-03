@@ -10,12 +10,10 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.json.PrizeShowVO;
 import com.floyd.onebuy.ui.R;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +66,7 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
             guestTimeView.setText(" " + timeStr + " ");
         }
 
-        List<String> picList = vo.getGuestPics();
+        List<String> picList = vo.getMediaUrls();
         if (picList.isEmpty()) {
             guestPicLayout.setVisibility(View.GONE);
             guestPicLayout.removeAllViews();

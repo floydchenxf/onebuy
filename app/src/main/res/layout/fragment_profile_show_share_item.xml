@@ -67,7 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@color/white"
-            android:text=" 2016-08-05 " />
+            android:text=" 2016-08-05 "
+            android:textColor="@color/gray_content" />
     </RelativeLayout>
 
 

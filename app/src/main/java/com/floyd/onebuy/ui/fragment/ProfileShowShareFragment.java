@@ -114,7 +114,7 @@ public class ProfileShowShareFragment extends Fragment implements View.OnClickLi
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ProductManager.getMyPrizeShow(userId, 1, PAGE_SIZE, pageNo).startUI(new ApiCallback<PrizeShowListVO>() {
+        ProductManager.getMyPrizeShow(userId, -1, PAGE_SIZE, pageNo).startUI(new ApiCallback<PrizeShowListVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
