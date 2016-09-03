@@ -1,5 +1,12 @@
 package com.floyd.onebuy.biz.vo.json;
 
+import android.text.TextUtils;
+
+import com.floyd.onebuy.biz.constants.APIConstants;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by floyd on 16-5-4.
  * 商品晒单
@@ -9,8 +16,20 @@ public class PrizeShowVO {
     public String Pictures;
     public String GuestTitle;
     public String GuestContent;
+    public String GuestPic;
     public long ProID;
     public String GuestName;
     public String GuestTime;
     public long GuestID;
+
+    public List<String> getGuestPics() {
+        List<String> result = new ArrayList<String>();
+        if (!TextUtils.isEmpty(GuestPic)) {
+            String[] urls = GuestPic.split("\\|");
+            for (String s : urls) {
+                result.add(APIConstants.HOST + s);
+            }
+        }
+        return result;
+    }
 }

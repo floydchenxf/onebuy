@@ -5,8 +5,10 @@ import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.channel.request.FileItem;
 import com.floyd.onebuy.channel.request.HttpMethod;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,7 +82,8 @@ public class ImagerInfoManager {
         params.put("content", content);
         params.put("url", surl);
         params.put("proid", proId + "");
-        AsyncJob<Map<String, Long>> aa = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Map.class);
+        Type typeClazz = new TypeToken<Map<String, Long>>(){}.getType();
+        AsyncJob<Map<String, Long>> aa = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, typeClazz);
         return aa.map(new Func<Map<String, Long>, Long>() {
             @Override
             public Long call(Map<String, Long> bb) {

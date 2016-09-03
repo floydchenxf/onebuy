@@ -106,11 +106,6 @@ public class ProfileWinningFragment extends Fragment implements View.OnClickList
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-//                pageNo = 1;
-//                needClear = true;
-//                isFirst = true;
-//                loadData();
-//                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override

@@ -7,5 +7,5 @@ import java.util.List;
  */
 public class PrizeShowListVO {
 
-    public List<PrizeShowVO> PrizeShowList;
+    public List<PrizeShowVO> ClientPrizeShowList;
 }

@@ -478,6 +478,7 @@ public class ProductManager {
         params.put("typeID", typeID + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
+        params.put("userId", userId + "");
         AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
         return result;
     }
@@ -674,7 +675,7 @@ public class ProductManager {
         for (int i = 0; i < data.length(); i++) {
             JSONObject oo = data.getJSONObject(i);
             JSONArray orderArray = oo.getJSONArray("order");
-            for (int k = 0; k < orderArray.length(); k++ ) {
+            for (int k = 0; k < orderArray.length(); k++) {
                 WinningInfo info = new WinningInfo();
                 JSONObject wjson = orderArray.getJSONObject(k);
                 info.lssueId = wjson.getLong("ProductLssueID");
@@ -928,7 +929,7 @@ public class ProductManager {
         params.put("pageType", "GetFoundsPageData");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
-        params.put("userId", (userId == null||userId ==0) ? "" : userId + "");
+        params.put("userId", (userId == null || userId == 0) ? "" : userId + "");
         String typeIdStr = "";
         if (typeId != 0) {
             typeIdStr = typeId + "";
@@ -966,7 +967,7 @@ public class ProductManager {
         if (userId != null) {
             params.put("userId", userId + "");
         } else {
-            params.put("userId", 0+"");
+            params.put("userId", 0 + "");
         }
 
         return HttpJobFactory.createHttpJob(url, params, HttpMethod.GET).map(new StringFunc()).flatMap(new Func<String, AsyncJob<List<WinningInfo>>>() {
