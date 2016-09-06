@@ -26,6 +26,8 @@ public class PrizeShowVO {
     public Integer CommentNum;
     public int TypeBook;
 
+    public int isVerify;
+
     public List<String> getMediaUrls() {
         List<String> result = new ArrayList<String>();
         if (!TextUtils.isEmpty(MediaUrl)) {

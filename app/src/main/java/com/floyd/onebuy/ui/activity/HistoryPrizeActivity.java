@@ -26,72 +26,39 @@ import com.floyd.pullrefresh.widget.PullToRefreshListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryPrizeActivity extends Activity implements View.OnClickListener {
+public class HistoryPrizeActivity extends CommonActivity {
 
-    private static final int PAGE_SIZE = 10;
-    private DataLoadingView dataLoadingView;
-    private PullToRefreshListView mPullToRefreshListView;
-    private ListView mListView;
     private HistoryPrizeAdapter adapter;
-    private int pageNo = 1;
-    private boolean needClear = true;
-    private TextView titleView;
     private float oneDp;
     private long proId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_common);
-
-        proId = getIntent().getLongExtra(APIConstants.PRO_ID, 0l);
-
-        oneDp = this.getResources().getDimension(R.dimen.one_dp);
-
-        findViewById(R.id.title_back).setOnClickListener(this);
-        titleView = (TextView) findViewById(R.id.title_name);
-        titleView.setText("往期揭晓");
-        titleView.setVisibility(View.VISIBLE);
-
-        dataLoadingView = new DefaultDataLoadingView();
-        dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
-
-        mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.common_list);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
-        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
-            @Override
-            public void onPullDownToRefresh() {
-
-            }
-
-            @Override
-            public void onPullUpToRefresh() {
-                pageNo++;
-                needClear = false;
-                loadData(false);
-                mPullToRefreshListView.onRefreshComplete(false, true);
-
-            }
-        });
-        View emptyView = View.inflate(this, R.layout.empty_item, null);
-        mPullToRefreshListView.setEmptyView(emptyView);
-        mListView = mPullToRefreshListView.getRefreshableView();
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                HistoryPrizeVO vo = adapter.getItem(i-1);
-                Intent it = new Intent(HistoryPrizeActivity.this, PersionProfileActivity.class);
-                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                it.putExtra(PersionProfileActivity.CURRENT_USER_ID, vo.ClientID);
-                startActivity(it);
-            }
-        });
-        adapter = new HistoryPrizeAdapter(this, new ArrayList<HistoryPrizeVO>(), proId);
-        mListView.setAdapter(adapter);
-        loadData(true);
     }
 
-    private void loadData(final boolean isFirst) {
+    protected void initData() {
+        proId = getIntent().getLongExtra(APIConstants.PRO_ID, 0l);
+        oneDp = this.getResources().getDimension(R.dimen.one_dp);
+        adapter = new HistoryPrizeAdapter(this, new ArrayList<HistoryPrizeVO>(), proId);
+    }
+
+    @Override
+    protected String fillTitleName() {
+        return "往期揭晓";
+    }
+
+    @Override
+    protected void initListView(ListView mListView) {
+        mListView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void loadIndexData() {
+        loadData();
+    }
+
+    private void loadData() {
         if (isFirst) {
             dataLoadingView.startLoading();
         }
@@ -120,21 +87,10 @@ public class HistoryPrizeActivity extends Activity implements View.OnClickListen
 
             }
         });
-
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.title_back:
-                this.finish();
-                break;
-            case R.id.act_ls_fail_layout:
-                pageNo = 1;
-                needClear = true;
-                loadData(true);
-                break;
-        }
+    protected void loadNextPageData() {
+        loadData();
     }
-
 }

@@ -1,5 +1,10 @@
 package com.floyd.onebuy.biz.vo.json;
 
+import android.text.TextUtils;
+
+import com.floyd.onebuy.biz.constants.APIConstants;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,4 +27,15 @@ public class ShareShowDetailVO {
     public String MediaUrl;//地址
     public int CommentNum;
     public List<ShowCommentVO> ShowComment;
+
+    public List<String> getMediaUrls() {
+        List<String> result = new ArrayList<String>();
+        if (!TextUtils.isEmpty(MediaUrl)) {
+            String[] urls = MediaUrl.split("\\|");
+            for (String s : urls) {
+                result.add(APIConstants.HOST + s);
+            }
+        }
+        return result;
+    }
 }

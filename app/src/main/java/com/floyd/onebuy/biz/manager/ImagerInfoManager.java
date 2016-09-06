@@ -71,7 +71,7 @@ public class ImagerInfoManager {
      * @param surl
      * @return
      */
-    public static AsyncJob<Long> shareImage(long userId, long lssueId, long proId, String title, String content, int type, String surl) {
+    public static AsyncJob<Long> shareImage(long userId, long lssueId, long proId, String title, String content, int type, String surl, String pic) {
         String url = APIConstants.HOST_API_PATH + APIConstants.IMGAEINFO_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "shareImage");
@@ -82,6 +82,7 @@ public class ImagerInfoManager {
         params.put("content", content);
         params.put("url", surl);
         params.put("proid", proId + "");
+        params.put("pic", pic);
         Type typeClazz = new TypeToken<Map<String, Long>>(){}.getType();
         AsyncJob<Map<String, Long>> aa = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, typeClazz);
         return aa.map(new Func<Map<String, Long>, Long>() {

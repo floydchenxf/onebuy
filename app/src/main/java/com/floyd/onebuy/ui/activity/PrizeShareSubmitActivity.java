@@ -52,6 +52,7 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
     private static final String TAG = "PrizeShareActivity";
     public static final String LSSUE_ID = "lssue_id";
     public static final String PRO_ID = "pro_id";
+    public static final String PRO_TITLE = "pro_title";
 
     private static final int CODE_GALLERY_REQUEST = 1;
     private static final int TAKE_PICTURE = 2;
@@ -65,7 +66,6 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
     private String avatorTmp = "avator_tmp.jpg";
 
     private TextView submitButton;
-    private EditText showTitleView;
     private EditText showContentView;
     private RadioButton typePicView;
     private RadioButton typeVideoView;
@@ -88,6 +88,7 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
     private long lssueId;
     private float onedp;
     private String videoUrl;
+    private String title;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +100,12 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
         userId = LoginManager.getLoginInfo(this).ID;
         proId = getIntent().getLongExtra(PRO_ID, 0l);
         lssueId = getIntent().getLongExtra(LSSUE_ID, 0l);
+        title = getIntent().getStringExtra(PRO_TITLE);
+
+        if (title == null||TextUtils.isEmpty(title)) {
+            Toast.makeText(this, "title is empty, pls check!", Toast.LENGTH_SHORT).show();
+            this.finish();
+        }
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("晒单");
@@ -106,7 +113,6 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
 
         submitButton = (TextView) findViewById(R.id.submit_button);
         submitButton.setOnClickListener(this);
-        showTitleView = (EditText) findViewById(R.id.show_title_view);
         showContentView = (EditText) findViewById(R.id.show_content_view);
         typePicLayout = findViewById(R.id.type_pic_layout);
         typeVideoLayout = findViewById(R.id.type_video_layout);
@@ -234,7 +240,7 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
                 }
                 break;
             case R.id.submit_button:
-                String showTitle = showTitleView.getText().toString();
+                String showTitle = title;
                 if (TextUtils.isEmpty(showTitle)) {
                     Toast.makeText(this, "请输入标题", Toast.LENGTH_SHORT).show();
                     return;
@@ -258,7 +264,7 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
                 int l = sb.toString().length();
                 String fillUrl = l > 0 ? sb.toString().substring(0, l - 1) : sb.toString();
                 loadingDialog.show();
-                ImagerInfoManager.shareImage(userId, lssueId, proId, showTitle, showContent, typeId, fillUrl).startUI(new ApiCallback<Long>() {
+                ImagerInfoManager.shareImage(userId, lssueId, proId, showTitle, showContent, typeId, fillUrl, "").startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         loadingDialog.dismiss();

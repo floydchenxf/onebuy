@@ -466,6 +466,27 @@ public class ProductManager {
     }
 
     /**
+     * 获取他人的晒单记录
+     *
+     * @param userId
+     * @param typeID
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public static AsyncJob<PrizeShowListVO> getClientPrizeShow(long userId, int typeID, int pageSize, int pageNum) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetClientPrizeShow");
+        params.put("typeid", typeID + "");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        params.put("userid", userId + "");
+        AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
+        return result;
+    }
+
+    /**
      * 获取我的晒单信息
      *
      * @param userId
@@ -477,7 +498,7 @@ public class ProductManager {
     public static AsyncJob<PrizeShowListVO> getMyPrizeShow(long userId, int typeID, int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "GetClientPrizeShow");
+        params.put("pageType", "GetMyPrizeShow");
         params.put("typeid", typeID + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");

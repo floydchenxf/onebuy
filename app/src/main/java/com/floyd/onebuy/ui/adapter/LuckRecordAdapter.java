@@ -62,6 +62,7 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
                     Intent submitIntent = new Intent(mContext, PrizeShareSubmitActivity.class);
                     submitIntent.putExtra(PrizeShareSubmitActivity.LSSUE_ID, vo.ProductLssueID);
                     submitIntent.putExtra(PrizeShareSubmitActivity.PRO_ID, vo.ProID);
+                    submitIntent.putExtra(PrizeShareSubmitActivity.PRO_TITLE, vo.getFullTitle());
                     mContext.startActivity(submitIntent);
                 }
             });

@@ -7,10 +7,22 @@
         android:id="@+id/title_layout"
         layout="@layout/title_frame" />
 
+    <LinearLayout
+        android:id="@+id/operate_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    </LinearLayout>
+
+
     <com.floyd.pullrefresh.widget.PullToRefreshListView
         android:id="@+id/common_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/operate_layout"
         android:layout_below="@+id/title_layout"
         android:background="@color/white"
         android:cacheColorHint="#00000000"
@@ -19,19 +31,6 @@
         android:fadingEdge="none"
         android:listSelector="#00000000" />
 
-    <LinearLayout
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="暂无数据" />
-
-    </LinearLayout>
 
     <include layout="@layout/diamod_data_loading" />
 

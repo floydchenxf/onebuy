@@ -9,24 +9,10 @@
         layout="@layout/title_frame" />
 
     <EditText
-        android:id="@+id/show_title_view"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/title_layout"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:hint="请输入标题"
-        android:paddingLeft="8dp"
-        android:singleLine="true"
-        android:textColor="@color/gray_content" />
-
-    <EditText
         android:id="@+id/show_content_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/show_title_view"
+        android:layout_below="@+id/title_layout"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="10dp"

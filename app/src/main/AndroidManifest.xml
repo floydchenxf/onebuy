@@ -318,12 +318,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
-
         <activity
             android:name=".activity.PrizeShareSubmitActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
+        <activity android:name=".activity.ShareShowDetailActivity"></activity>
     </application>
 
 </manifest>

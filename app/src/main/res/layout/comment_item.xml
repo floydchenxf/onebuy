@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/head"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/tupian" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/head"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_name_view"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+
+            android:gravity="center_vertical|left"
+            android:text="sss"
+            android:textColor="@color/gray_title"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/comment_content_view"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_below="@+id/user_name_view"
+            android:gravity="center_vertical|left"
+            android:text="sss"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/comment_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="2016-10-11"
+        android:layout_marginRight="14dp"
+        android:textSize="14dp" />
+
+
+</RelativeLayout>

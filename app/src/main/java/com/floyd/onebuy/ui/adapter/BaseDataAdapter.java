@@ -73,6 +73,12 @@ public abstract class BaseDataAdapter<T> extends BaseAdapter {
         }
 
         T t = getItem(position);
+        if (t == null) {
+            convertView.setVisibility(View.GONE);
+            return convertView;
+        } else {
+            convertView.setVisibility(View.VISIBLE);
+        }
         processHolder(holder, t);
         return convertView;
     }

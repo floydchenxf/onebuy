@@ -2,6 +2,7 @@ package com.floyd.onebuy.ui.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.json.PrizeShowVO;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.ShareShowDetailActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +50,7 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
     }
 
     @Override
-    void processHolder(Map holder, PrizeShowVO vo) {
+    void processHolder(Map holder, final PrizeShowVO vo) {
         TextView guestTitleView = (TextView) holder.get(R.id.guest_title_view);
         TextView guestContentView = (TextView) holder.get(R.id.guest_content_view);
         LinearLayout guestPicLayout = (LinearLayout) holder.get(R.id.guest_pic_layout);
@@ -57,6 +59,29 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
 
         guestTitleView.setText(vo.GuestTitle);
         guestContentView.setText(vo.GuestContent);
+
+        commentButton.setVisibility(View.VISIBLE);
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(mContext, ShareShowDetailActivity.class);
+                it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
+                mContext.startActivity(it);
+            }
+        });
+//        if (vo.isVerify > 0) {
+//            commentButton.setVisibility(View.VISIBLE);
+//            commentButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent it = new Intent(mContext, ShareShowDetailActivity.class);
+//                    it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
+//                    mContext.startActivity(it);
+//                }
+//            });
+//        } else {
+//            commentButton.setVisibility(View.GONE);
+//        }
 
         if (TextUtils.isEmpty(vo.GuestTime)) {
             guestTimeView.setVisibility(View.GONE);
