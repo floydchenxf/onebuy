@@ -38,7 +38,6 @@ public class PersionProfileActivity extends FragmentActivity implements View.OnC
     private int currentIndex;
     private int currentPager;
 
-    private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private ProfileFragmentAdapter mFragmentAdapter;
     private ViewPager profilePager;
     private CheckedTextView tabWinningView;

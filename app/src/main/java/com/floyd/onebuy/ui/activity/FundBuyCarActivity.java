@@ -208,7 +208,7 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
         }
 
         long userId = userVO.ID;
-        CarManager.fetchBuyCarList(buyCarType, this, userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<WinningInfo>>() {
+        CarManager.fetchBuyCarList(buyCarType, this, userId).startUI(new ApiCallback<List<WinningInfo>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

@@ -28,23 +28,25 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ProfileShowShareFragment.OnFragmentInteractionListener} interface
+ * {@link ShowShareFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ProfileShowShareFragment#newInstance} factory method to
+ * Use the {@link ShowShareFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileShowShareFragment extends Fragment implements View.OnClickListener {
+public class ShowShareFragment extends Fragment implements View.OnClickListener {
     private static final String USER_ID = "USER_ID";
+    private static final String IS_SELF = "IS_SELF";
+    private static final String TYPE_ID = "TYPE_ID";
     private static final int PAGE_SIZE = 20;
     private Long userId;
+    private int typeId;
 
     private OnFragmentInteractionListener mListener;
-
     private DataLoadingView dataLoadingView;
     private ImageLoader mImageLoader;
     private PullToRefreshListView mPullToRefreshListView;
-    private ListView mListView;
 
+    private ListView mListView;
     private int pageNo;
     private boolean isFirst;
     private boolean needClear;
@@ -52,13 +54,14 @@ public class ProfileShowShareFragment extends Fragment implements View.OnClickLi
     private ProfileShowShareAdapter adapter;
 
 
-    public ProfileShowShareFragment() {
+    public ShowShareFragment() {
     }
 
-    public static ProfileShowShareFragment newInstance(Long userId) {
-        ProfileShowShareFragment fragment = new ProfileShowShareFragment();
+    public static ShowShareFragment newInstance(Long userId, int typeId) {
+        ShowShareFragment fragment = new ShowShareFragment();
         Bundle args = new Bundle();
         args.putLong(USER_ID, userId);
+        args.putInt(TYPE_ID, typeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +71,7 @@ public class ProfileShowShareFragment extends Fragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userId = getArguments().getLong(USER_ID, 0l);
+            typeId = getArguments().getInt(TYPE_ID, 0);
         }
 
         isFirst = true;
@@ -117,7 +121,8 @@ public class ProfileShowShareFragment extends Fragment implements View.OnClickLi
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ShowShareManager.fetchPrizeShowList(getActivity(), userId, -1, PAGE_SIZE, pageNo).startUI(new ApiCallback<PrizeShowListVO>() {
+
+        ShowShareManager.fetchPrizeShowList(getActivity(), userId, typeId, PAGE_SIZE, pageNo).startUI(new ApiCallback<PrizeShowListVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

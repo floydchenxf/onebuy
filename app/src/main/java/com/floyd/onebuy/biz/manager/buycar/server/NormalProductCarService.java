@@ -59,19 +59,17 @@ public class NormalProductCarService implements  BuyCarService {
     }
 
     @Override
-    public AsyncJob<CarListVO> fetchCarList(long userId, int pageNo, int pageSize) {
+    public AsyncJob<CarListVO> fetchCarList(long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "CarList");
         params.put("userId", userId + "");
-        params.put("pageSize", pageSize + "");
-        params.put("pageNum", pageNo + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CarListVO.class);
     }
 
     @Override
-    public AsyncJob<List<WinningInfo>> fetchBuyCarList(final Context context, final long userId, int pageNo, int pageSize) {
-        AsyncJob<List<WinningInfo>> result = fetchCarList(userId, pageNo, pageSize).flatMap(new Func<CarListVO, AsyncJob<List<WinningInfo>>>() {
+    public AsyncJob<List<WinningInfo>> fetchBuyCarList(final Context context, final long userId) {
+        AsyncJob<List<WinningInfo>> result = fetchCarList(userId).flatMap(new Func<CarListVO, AsyncJob<List<WinningInfo>>>() {
             @Override
             public AsyncJob<List<WinningInfo>> call(final CarListVO carListVO) {
                 return new AsyncJob<List<WinningInfo>>() {
@@ -138,7 +136,7 @@ public class NormalProductCarService implements  BuyCarService {
         info.totalCount = vo.TotalCount;
         info.joinedCount = vo.JoinedCount;
         info.status = vo.status;
-        info.id = vo.carID;
+        info.id = vo.CarID;
         info.productUrl = APIConstants.HOST + vo.Pictures;
         info.title = vo.ProName;
         info.lssueId = vo.ProductLssueID;

@@ -323,7 +323,8 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
-        <activity android:name=".activity.ShareShowDetailActivity"></activity>
+        <activity android:name=".activity.ShareShowDetailActivity" />
+        <activity android:name=".activity.ShowShareActivity"></activity>
     </application>
 
 </manifest>

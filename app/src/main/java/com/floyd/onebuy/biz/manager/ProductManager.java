@@ -1087,6 +1087,4 @@ public class ProductManager {
         params.put("comment", comment);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
     }
-
-
 }

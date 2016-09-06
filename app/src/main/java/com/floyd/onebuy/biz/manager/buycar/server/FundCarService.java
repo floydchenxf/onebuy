@@ -25,12 +25,12 @@ public class FundCarService implements BuyCarService {
     }
 
     @Override
-    public AsyncJob<CarListVO> fetchCarList(long userId, int pageNo, int pageSize) {
+    public AsyncJob<CarListVO> fetchCarList(long userId) {
         return null;
     }
 
     @Override
-    public AsyncJob<List<WinningInfo>> fetchBuyCarList(Context context, long userId, int pageNo, int pageSize) {
+    public AsyncJob<List<WinningInfo>> fetchBuyCarList(Context context, long userId) {
         return null;
     }
 }

@@ -4,7 +4,7 @@ package com.floyd.onebuy.biz.vo.json;
  * Created by floyd on 16-4-30.
  */
 public class CarItemVO {
-    public long carID;//购物车ID
+    public long CarID;//购物车ID
     public long ProductLssueID;//期数id
     public long ProID;//产品ID
     public int TotalCount;//总数

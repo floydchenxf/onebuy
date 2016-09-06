@@ -37,11 +37,9 @@ public interface BuyCarService {
      * 获取购物车信息
      *
      * @param userId
-     * @param pageNo
-     * @param pageSize
      * @return
      */
-    AsyncJob<CarListVO> fetchCarList(long userId, int pageNo, int pageSize);
+    AsyncJob<CarListVO> fetchCarList(long userId);
 
 
     /**
@@ -49,9 +47,7 @@ public interface BuyCarService {
      *
      * @param context
      * @param userId
-     * @param pageNo
-     * @param pageSize
      * @return
      */
-    AsyncJob<List<WinningInfo>> fetchBuyCarList(final Context context, final long userId, int pageNo, int pageSize);
+    AsyncJob<List<WinningInfo>> fetchBuyCarList(final Context context, final long userId);
 }

@@ -64,13 +64,13 @@ public class CarManager {
      *
      * @return
      */
-    public static AsyncJob<CarListVO> fetchCarList(BuyCarType type, long userId, int pageNo, int pageSize) {
-        return buycarServers.get(type).fetchCarList(userId, pageNo, pageSize);
+    public static AsyncJob<CarListVO> fetchCarList(BuyCarType type, long userId) {
+        return buycarServers.get(type).fetchCarList(userId);
 
     }
 
-    public static AsyncJob<List<WinningInfo>> fetchBuyCarList(BuyCarType type, final Context context, final long userId, int pageNo, int pageSize) {
-        return buycarServers.get(type).fetchBuyCarList(context, userId, pageNo, pageSize);
+    public static AsyncJob<List<WinningInfo>> fetchBuyCarList(BuyCarType type, final Context context, final long userId) {
+        return buycarServers.get(type).fetchBuyCarList(context, userId);
     }
 
 }

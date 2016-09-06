@@ -102,7 +102,7 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
             int len = picList.size() > 2 ? 2 : picList.size();
             for (int i = 0; i < len; i++) {
                 String picUrl = picList.get(i);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(eachWidth, eachWidth);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(eachWidth, 3 * eachWidth / 4);
                 lp.setMargins(0, 0, (int) (10 * oneDp), 0);
 
                 NetworkImageView networkImage = new NetworkImageView(mContext);
