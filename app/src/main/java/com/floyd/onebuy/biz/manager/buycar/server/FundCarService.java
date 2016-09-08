@@ -28,9 +28,4 @@ public class FundCarService implements BuyCarService {
     public AsyncJob<CarListVO> fetchCarList(long userId) {
         return null;
     }
-
-    @Override
-    public AsyncJob<List<WinningInfo>> fetchBuyCarList(Context context, long userId) {
-        return null;
-    }
 }

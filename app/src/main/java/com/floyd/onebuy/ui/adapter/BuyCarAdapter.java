@@ -18,6 +18,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
@@ -37,7 +38,7 @@ public class BuyCarAdapter extends BaseAdapter {
 
     private Context mContext;
     private ImageLoader mImageLoader;
-    private List<WinningInfo> records = new ArrayList<WinningInfo>();
+    private List<CarItemVO> records = new ArrayList<CarItemVO>();
 
     private BuyClickListener buyClickListener;
     private CheckedListener checkedListener;
@@ -47,7 +48,7 @@ public class BuyCarAdapter extends BaseAdapter {
 
     private static byte[] lock = new byte[0];
 
-    public BuyCarAdapter(Context context, List<WinningInfo> args, ImageLoader imageLoader, BuyClickListener buyClickListener, CheckedListener checkedListener) {
+    public BuyCarAdapter(Context context, List<CarItemVO> args, ImageLoader imageLoader, BuyClickListener buyClickListener, CheckedListener checkedListener) {
         this.mContext = context;
         if (args != null && !args.isEmpty()) {
             this.records.addAll(args);
@@ -57,7 +58,7 @@ public class BuyCarAdapter extends BaseAdapter {
         this.checkedListener = checkedListener;
     }
 
-    public void addAll(List<WinningInfo> records, boolean needClear) {
+    public void addAll(List<CarItemVO> records, boolean needClear) {
         synchronized (lock) {
             if (needClear) {
                 this.records.clear();
@@ -71,31 +72,31 @@ public class BuyCarAdapter extends BaseAdapter {
         synchronized (lock) {
             final List<Long> deleteLssueIds = new ArrayList<Long>();
             for (Long carId : carIds) {
-                Iterator<WinningInfo> s = records.iterator();
-                WinningInfo info = null;
+                Iterator<CarItemVO> s = records.iterator();
+                CarItemVO info = null;
                 while (s.hasNext()) {
                     info = s.next();
-                    if (info.id == carId) {
+                    if (info.CarID == carId) {
                         s.remove();
-                        deleteLssueIds.add(info.lssueId);
+//                        deleteLssueIds.add(info.ProductLssueID);
                     }
                 }
 
                 deleteList.remove(carId);
             }
 
-            if (!deleteLssueIds.isEmpty()) {
-                WxDefaultExecutor.getInstance().executeHttp(new Runnable() {
-                    @Override
-                    public void run() {
-                        UserVO v = LoginManager.getLoginInfo(mContext);
-                        if (v != null) {
-                            long userId = v.ID;
-                            DBManager.deleteBuyCarNumber(BuyCarType.NORMAL, mContext, userId, deleteLssueIds);
-                        }
-                    }
-                });
-            }
+//            if (!deleteLssueIds.isEmpty()) {
+//                WxDefaultExecutor.getInstance().executeHttp(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        UserVO v = LoginManager.getLoginInfo(mContext);
+//                        if (v != null) {
+//                            long userId = v.ID;
+//                            DBManager.deleteBuyCarNumber(BuyCarType.NORMAL, mContext, userId, deleteLssueIds);
+//                        }
+//                    }
+//                });
+//            }
             this.notifyDataSetChanged();
         }
     }
@@ -111,7 +112,7 @@ public class BuyCarAdapter extends BaseAdapter {
     }
 
     @Override
-    public WinningInfo getItem(int position) {
+    public CarItemVO getItem(int position) {
         return this.records.get(position);
     }
 
@@ -138,13 +139,13 @@ public class BuyCarAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final WinningInfo info = getItem(position);
+        final CarItemVO info = getItem(position);
         holder.proudctImageView.setDefaultImageResId(R.drawable.default_image);
-        holder.proudctImageView.setImageUrl(info.productUrl, mImageLoader);
-        holder.totalLeftView.setText(Html.fromHtml("总需" + info.totalCount + "次, 剩余<font color=\"#ffaa66\">" + (info.totalCount - info.joinedCount) + "</font>次"));
-        holder.numberView.setText(info.buyCount + "");
+        holder.proudctImageView.setImageUrl(info.getPicUrl(), mImageLoader);
+        holder.totalLeftView.setText(Html.fromHtml("总需" + info.TotalCount + "次, 剩余<font color=\"#ffaa66\">" + (info.TotalCount - info.JoinedCount) + "</font>次"));
+        holder.numberView.setText(info.CarCount + "");
         if (shwoRadio) {
-            final long carId = info.id;
+            final long carId = info.CarID;
             holder.radioButton.setVisibility(View.VISIBLE);
             holder.radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -172,6 +173,7 @@ public class BuyCarAdapter extends BaseAdapter {
             holder.radioButton.setOnCheckedChangeListener(null);
         }
 
+        holder.subView.setTag(info);
         holder.subView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,19 +184,18 @@ public class BuyCarAdapter extends BaseAdapter {
                 }
                 if (num <= 1) {
                     holder.numberView.setText("1");
-                    info.buyCount = 1;
-                    return;
+                    num = 2;
                 }
 
                 int nn = --num;
-                info.buyCount = nn;
                 holder.numberView.setText(nn + "");
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.subView, info.lssueId, info.buyCount);
+                    buyClickListener.onClick(holder.subView, info.ProductLssueID, nn, info.CarCount);
                 }
             }
         });
 
+        holder.addView.setTag(info);
         holder.addView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,41 +204,40 @@ public class BuyCarAdapter extends BaseAdapter {
                 if (!TextUtils.isEmpty(numStr)) {
                     num = Integer.parseInt(holder.numberView.getText().toString());
                 }
-                int left = info.totalCount - info.joinedCount;
+                int left = info.TotalCount - info.JoinedCount;
                 if (num >= left) {
                     Toast.makeText(mContext, "数字大于尾数!", Toast.LENGTH_SHORT).show();
-                    return;
+                    num = --left;
                 }
 
                 int nn = ++num;
-                info.buyCount = nn;
                 holder.numberView.setText(nn + "");
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.addView, info.lssueId, info.buyCount);
+                    buyClickListener.onClick(holder.addView, info.ProductLssueID, nn, info.CarCount);
                 }
             }
         });
 
 
-        if (info.buyCount >= (info.totalCount - info.joinedCount)) {
+        if (info.CarCount >= (info.TotalCount - info.JoinedCount)) {
             holder.buyLeftView.setChecked(false);
         } else {
             holder.buyLeftView.setChecked(true);
         }
 
+        holder.buyLeftView.setTag(info);
         holder.buyLeftView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int left = info.totalCount - info.joinedCount;
-                info.buyCount = left;
-                holder.numberView.setText(info.buyCount + "");
-                if (info.buyCount >= left) {
+                int left = info.TotalCount - info.JoinedCount;
+                holder.numberView.setText(info.TotalCount + "");
+                if (info.CarCount >= left) {
                     holder.buyLeftView.setChecked(false);
                 } else {
                     holder.buyLeftView.setChecked(true);
                 }
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.buyLeftView, info.lssueId, info.buyCount);
+                    buyClickListener.onClick(holder.buyLeftView, info.ProductLssueID, info.TotalCount, info.CarCount);
                 }
             }
         });
@@ -248,7 +248,7 @@ public class BuyCarAdapter extends BaseAdapter {
         return this.deleteList;
     }
 
-    public List<WinningInfo> getRecords() {
+    public List<CarItemVO> getRecords() {
         return this.records;
     }
 
@@ -264,7 +264,7 @@ public class BuyCarAdapter extends BaseAdapter {
     }
 
     public interface BuyClickListener {
-        void onClick(View v, long lssueId, int buyCount);
+        void onClick(View v, long lssueId, int currentNum, int buyCount);
     }
 
     public interface CheckedListener {

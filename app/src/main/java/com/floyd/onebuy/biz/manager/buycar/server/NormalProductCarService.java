@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by chenxiaofeng on 16/8/16.
  */
-public class NormalProductCarService implements  BuyCarService {
+public class NormalProductCarService implements BuyCarService {
 
     public AsyncJob<Boolean> addCar(long productLssueId, long userId, int number) {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
@@ -53,7 +53,7 @@ public class NormalProductCarService implements  BuyCarService {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "DelCar");
-        String cards = carIds.toString().substring(1,carIds.toString().length()-1);
+        String cards = carIds.toString().substring(1, carIds.toString().length() - 1);
         params.put("carId", cards);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
     }
@@ -66,81 +66,4 @@ public class NormalProductCarService implements  BuyCarService {
         params.put("userId", userId + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CarListVO.class);
     }
-
-    @Override
-    public AsyncJob<List<WinningInfo>> fetchBuyCarList(final Context context, final long userId) {
-        AsyncJob<List<WinningInfo>> result = fetchCarList(userId).flatMap(new Func<CarListVO, AsyncJob<List<WinningInfo>>>() {
-            @Override
-            public AsyncJob<List<WinningInfo>> call(final CarListVO carListVO) {
-                return new AsyncJob<List<WinningInfo>>() {
-                    @Override
-                    public void start(ApiCallback<List<WinningInfo>> callback) {
-                        if (carListVO == null) {
-                            callback.onError(APIError.API_CONTENT_EMPTY, "content is empty!");
-                            return;
-                        }
-
-                        List<CarItemVO> items = carListVO.list;
-                        if (items == null) {
-                            callback.onError(APIError.API_CONTENT_EMPTY, "content is empty!");
-                            return;
-                        }
-
-                        Map<String, Integer> carNumberMap = new HashMap<String, Integer>();
-                        List<BuyCarNumber> buyCarNumbers = DBManager.queryAllBuyNumbers(BuyCarType.NORMAL, context, userId);
-                        boolean isDbEmpty = false;
-                        if (buyCarNumbers == null || buyCarNumbers.isEmpty()) {
-                            isDbEmpty = true;
-                        } else {
-                            isDbEmpty = false;
-                        }
-
-                        if (!isDbEmpty) {
-                            for (BuyCarNumber carNumber : buyCarNumbers) {
-                                carNumberMap.put(carNumber.getUserId() + "-" + carNumber.getProductLssueId(), carNumber.getBuyNumber());
-                            }
-                        }
-
-                        List<WinningInfo> result = new ArrayList<WinningInfo>();
-                        List<Long> deleteList = new ArrayList<Long>();
-                        for (CarItemVO vo : items) {
-                            WinningInfo info = convert2Info(vo);
-                            long productLssueId = vo.ProductLssueID;
-                            String k = userId + "-" + productLssueId;
-                            Integer num = carNumberMap.get(k);
-                            if (num != null) {
-                                info.buyCount = num;
-                            } else if (!isDbEmpty && num == null) {
-                                info.buyCount = 1;
-                                deleteList.add(productLssueId);
-                            } else {
-                                info.buyCount = 1;
-                            }
-
-                            result.add(info);
-                        }
-
-                        if (!deleteList.isEmpty()) {
-                            DBManager.deleteBuyCarNumber(BuyCarType.NORMAL, context, userId, deleteList);
-                        }
-                        callback.onSuccess(result);
-                    }
-                };
-            }
-        });
-        return result;
-    }
-
-    private static WinningInfo convert2Info(CarItemVO vo) {
-        WinningInfo info = new WinningInfo();
-        info.totalCount = vo.TotalCount;
-        info.joinedCount = vo.JoinedCount;
-        info.status = vo.status;
-        info.id = vo.CarID;
-        info.productUrl = APIConstants.HOST + vo.Pictures;
-        info.title = vo.ProName;
-        info.lssueId = vo.ProductLssueID;
-        return info;
-    }
-
 }

@@ -68,9 +68,4 @@ public class CarManager {
         return buycarServers.get(type).fetchCarList(userId);
 
     }
-
-    public static AsyncJob<List<WinningInfo>> fetchBuyCarList(BuyCarType type, final Context context, final long userId) {
-        return buycarServers.get(type).fetchBuyCarList(context, userId);
-    }
-
 }

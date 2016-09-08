@@ -22,6 +22,8 @@ import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
+import com.floyd.onebuy.biz.vo.json.CarItemVO;
+import com.floyd.onebuy.biz.vo.json.CarListVO;
 import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -85,6 +87,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private RadioButton[] radioButtons;
 
     private int payType = 1;
+    private long userId = 0l;
 
     private BuyCarType buyCarType;
 
@@ -95,6 +98,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         pageNo = 1;
         needClear = true;
         buyCarType = BuyCarType.NORMAL;
+        userId = LoginManager.getLoginInfo(getActivity()).ID;
     }
 
     @Override
@@ -107,14 +111,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         bottomLayout = view.findViewById(R.id.bottom_layout);
 
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.buy_car_list);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-                pageNo = 1;
-                needClear = true;
-                loadData(false);
-                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
@@ -128,20 +128,44 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         mListView = mPullToRefreshListView.getRefreshableView();
         mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
             @Override
-            public void onClick(View v, final long lssueId, final int buyNumber) {
-                UserVO vo = LoginManager.getLoginInfo(BuyCarFragment.this.getActivity());
-                if (vo == null) {
-                    return;
-                }
-                long userId = vo.ID;
-                DBManager.updateBuyCarNumber(buyCarType, BuyCarFragment.this.getActivity(), userId, lssueId, buyNumber);
+            public void onClick(final View v, final long lssueId, final int currentNum, final int buyNumber) {
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
-                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
-                    totalPrice += info.buyCount;
+                for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                    totalPrice += info.CarCount * info.SinglePrice;
                 }
 
                 totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
+
+                CarManager.addCar(buyCarType, lssueId, userId, currentNum - buyNumber).startUI(new ApiCallback<Boolean>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if (aBoolean) {
+                            CarItemVO cv = (CarItemVO)(v.getTag());
+                            cv.CarCount = currentNum;
+                            int productNum = mBuyCarAdapter.getRecords().size();
+                            int totalPrice = 0;
+                            for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                                totalPrice += info.CarCount * info.SinglePrice;
+                            }
+
+                            totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
+                        }
+
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
+
+
             }
         }, new BuyCarAdapter.CheckedListener() {
             @Override
@@ -217,7 +241,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         }
 
         long userId = userVO.ID;
-        CarManager.fetchBuyCarList(buyCarType, getActivity(), userId).startUI(new ApiCallback<List<WinningInfo>>() {
+        CarManager.fetchCarList(buyCarType, userId).startUI(new ApiCallback<CarListVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -226,16 +250,18 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
             }
 
             @Override
-            public void onSuccess(List<WinningInfo> winningInfos) {
+            public void onSuccess(CarListVO carListVO) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
-                mBuyCarAdapter.addAll(winningInfos, needClear);
 
-                int productNum = winningInfos.size();
+                List<CarItemVO> list = carListVO.list;
+                mBuyCarAdapter.addAll(list, needClear);
+
+                int productNum = list.size();
                 int totalPrice = 0;
-                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
-                    totalPrice += info.buyCount;
+                for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                    totalPrice += info.CarCount * info.SinglePrice;
                 }
                 if (totalPrice <= 0) {
                     showNoDataLayout();
@@ -300,18 +326,12 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                 StringBuilder productLssueDetail = new StringBuilder();
                 final Set<Long> delCarIds = new HashSet<Long>();
-                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
-                    delCarIds.add(info.id);
-                    productLssueDetail.append(info.lssueId).append("|").append(info.buyCount).append(",");
+                for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                    delCarIds.add(info.CarID);
+                    productLssueDetail.append(info.ProductLssueID).append("|").append(info.CarCount).append(",");
                 }
 
-                GoodsAddressVO goodsAddressVO = AddressManager.getDefaultAddressInfo(getActivity());
-                String address = "";
-                if (goodsAddressVO != null) {
-                    address = goodsAddressVO.getFullAddress();
-                }
-
-                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), 1).startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
@@ -332,7 +352,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                                 mBuyCarAdapter.showRadiio(isEdit);
                                 pageNo = 1;
                                 needClear = true;
-//                                loadData(false);
                             }
 
                             @Override

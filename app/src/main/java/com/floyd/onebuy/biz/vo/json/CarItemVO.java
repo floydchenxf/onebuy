@@ -1,5 +1,7 @@
 package com.floyd.onebuy.biz.vo.json;
 
+import com.floyd.onebuy.biz.constants.APIConstants;
+
 /**
  * Created by floyd on 16-4-30.
  */
@@ -13,5 +15,11 @@ public class CarItemVO {
     public int status;//状态
     public String Pictures;//产品图片
     public long PriceTime;//加入时间
+    public int CarCount;
+    public int SinglePrice;//单价
+
+    public String getPicUrl() {
+        return APIConstants.HOST + this.Pictures;
+    }
 
 }

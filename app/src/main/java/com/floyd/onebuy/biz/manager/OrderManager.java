@@ -34,23 +34,15 @@ public class OrderManager {
      * @param productLssueDetail ProductLssueDetail 为购物详情 内
      *                           容为 期数 ID|数量 多个产品用逗号
      *                           相连接
-     * @param linkName
-     * @param linkMobile
-     * @param receivingAdrString
-     * @param remark
      * @return
      */
-    public static AsyncJob<OrderVO> createOrder(long userId, String productLssueDetail, String linkName,
-                                                String linkMobile, String receivingAdrString, String remark) {
+    public static AsyncJob<OrderVO> createOrder(long userId, String productLssueDetail, int type) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "CreateOrder");
         params.put("userId", userId + "");
         params.put("productLssueDetail", productLssueDetail);
-        params.put("linkName", linkName);
-        params.put("linkMobile", linkMobile);
-        params.put("receivingAdrString", receivingAdrString);
-        params.put("remark", remark);
+        params.put("type", type + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, OrderVO.class);
     }
 
@@ -69,20 +61,15 @@ public class OrderManager {
      *
      * @param userId
      * @param productLssueDetail
-     * @param linkName
-     * @param linkMobile
-     * @param receivingAdrString
-     * @param remark
      * @return
      */
-    public static AsyncJob<OrderPayVO> createAndPayOrder(BuyCarType type, long userId, String productLssueDetail, String linkName,
-                                                         String linkMobile, String receivingAdrString, String remark) {
+    public static AsyncJob<OrderPayVO> createAndPayOrder(BuyCarType type, long userId, String productLssueDetail, int payType) {
 
         AsyncJob<OrderVO> orderJob = null;
         if (type == BuyCarType.FRI) {
-            orderJob = createFridayOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString,remark);
+            orderJob = createFridayOrder(userId, productLssueDetail, payType);
         } else if (type == BuyCarType.NORMAL) {
-            orderJob = createOrder(userId, productLssueDetail, linkName, linkMobile, receivingAdrString, remark);
+            orderJob = createOrder(userId, productLssueDetail, payType);
         }
         AsyncJob<OrderPayVO> result = orderJob.flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
             @Override
@@ -183,7 +170,7 @@ public class OrderManager {
 
     /**
      * 获取充值记录
-     * 
+     *
      * @param userId
      * @param pageNo
      * @param pageSize
@@ -206,23 +193,15 @@ public class OrderManager {
      *
      * @param userId
      * @param productLssueDetail
-     * @param linkName
-     * @param linkMobile
-     * @param receivingAdrString
-     * @param remark
      * @return
      */
-    public static AsyncJob<OrderVO> createFridayOrder(long userId, String productLssueDetail, String linkName,
-                                                String linkMobile, String receivingAdrString, String remark) {
+    public static AsyncJob<OrderVO> createFridayOrder(long userId, String productLssueDetail, int type) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "CreateFridayOrder");
         params.put("userId", userId + "");
         params.put("productLssueDetail", productLssueDetail);
-        params.put("linkName", linkName);
-        params.put("linkMobile", linkMobile);
-        params.put("receivingAdrString", receivingAdrString);
-        params.put("remark", remark);
+        params.put("type", type + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, OrderVO.class);
     }
 

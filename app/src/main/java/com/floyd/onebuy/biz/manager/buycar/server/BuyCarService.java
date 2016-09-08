@@ -41,13 +41,4 @@ public interface BuyCarService {
      */
     AsyncJob<CarListVO> fetchCarList(long userId);
 
-
-    /**
-     * 从数据库获取购物车物品
-     *
-     * @param context
-     * @param userId
-     * @return
-     */
-    AsyncJob<List<WinningInfo>> fetchBuyCarList(final Context context, final long userId);
 }

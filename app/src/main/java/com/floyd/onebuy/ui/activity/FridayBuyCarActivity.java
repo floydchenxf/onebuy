@@ -20,6 +20,8 @@ import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
+import com.floyd.onebuy.biz.vo.json.CarItemVO;
+import com.floyd.onebuy.biz.vo.json.CarListVO;
 import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -81,12 +83,14 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
     private int payType = 1;
 
     private BuyCarType buyCarType;
+    private Long userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_buy_car);
 
+        userId = LoginManager.getLoginInfo(this).ID;
         mImageLoader = ImageLoaderFactory.createImageLoader();
         pageNo = 1;
         needClear = true;
@@ -119,20 +123,42 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
         mListView = mPullToRefreshListView.getRefreshableView();
         mBuyCarAdapter = new BuyCarAdapter(this, null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
             @Override
-            public void onClick(View v, final long lssueId, final int buyNumber) {
-                UserVO vo = LoginManager.getLoginInfo(FridayBuyCarActivity.this);
-                if (vo == null) {
-                    return;
-                }
-                long userId = vo.ID;
-                DBManager.updateBuyCarNumber(buyCarType, FridayBuyCarActivity.this, userId, lssueId, buyNumber);
+            public void onClick(final View v, final long lssueId, final int currentNum, final int buyNumber) {
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
-                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
-                    totalPrice += info.buyCount;
+                for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                    totalPrice += info.CarCount * info.SinglePrice;
                 }
 
                 totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
+
+                CarManager.addCar(buyCarType, lssueId, userId, currentNum - buyNumber).startUI(new ApiCallback<Boolean>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if (aBoolean) {
+                            CarItemVO cv = (CarItemVO) (v.getTag());
+                            cv.CarCount = currentNum;
+                            int productNum = mBuyCarAdapter.getRecords().size();
+                            int totalPrice = 0;
+                            for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                                totalPrice += info.CarCount * info.SinglePrice;
+                            }
+
+                            totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
+                        }
+
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                });
             }
         }, new BuyCarAdapter.CheckedListener() {
             @Override
@@ -207,7 +233,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
         }
 
         long userId = userVO.ID;
-        CarManager.fetchBuyCarList(buyCarType, this, userId).startUI(new ApiCallback<List<WinningInfo>>() {
+        CarManager.fetchCarList(buyCarType, userId).startUI(new ApiCallback<CarListVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -216,16 +242,18 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
             }
 
             @Override
-            public void onSuccess(List<WinningInfo> winningInfos) {
+            public void onSuccess(CarListVO carListVO) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
-                mBuyCarAdapter.addAll(winningInfos, needClear);
 
-                int productNum = winningInfos.size();
+                List<CarItemVO> list = carListVO.list;
+                mBuyCarAdapter.addAll(list, needClear);
+
+                int productNum = list.size();
                 int totalPrice = 0;
-                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
-                    totalPrice += info.buyCount;
+                for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                    totalPrice += info.CarCount * info.SinglePrice;
                 }
                 if (totalPrice <= 0) {
                     showNoDataLayout();
@@ -285,9 +313,9 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
 
                 StringBuilder productLssueDetail = new StringBuilder();
                 final Set<Long> delCarIds = new HashSet<Long>();
-                for (WinningInfo info : mBuyCarAdapter.getRecords()) {
-                    delCarIds.add(info.id);
-                    productLssueDetail.append(info.lssueId).append("|").append(info.buyCount).append(",");
+                for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+                    delCarIds.add(info.CarID);
+                    productLssueDetail.append(info.ProductLssueID).append("|").append(info.CarCount).append(",");
                 }
 
                 GoodsAddressVO goodsAddressVO = AddressManager.getDefaultAddressInfo(this);
@@ -296,7 +324,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                     address = goodsAddressVO.getFullAddress();
                 }
 
-                OrderManager.createAndPayOrder(BuyCarType.FRI, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), vo.Name, vo.Mobile, address, "").startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.FRI, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), 1).startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
