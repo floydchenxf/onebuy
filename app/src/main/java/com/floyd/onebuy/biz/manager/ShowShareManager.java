@@ -15,7 +15,7 @@ public class ShowShareManager {
 
         AsyncJob<PrizeShowListVO> result = null;
         if (userId == 0l) {
-            //首页晒单
+            result = ProductManager.getPrizeShow(0, typeId, pageSize, pageNo);
             return result;
         }
 

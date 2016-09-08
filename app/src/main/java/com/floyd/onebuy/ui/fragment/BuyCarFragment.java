@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,17 +17,13 @@ import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.BuyCarType;
-import com.floyd.onebuy.biz.manager.AddressManager;
 import com.floyd.onebuy.biz.manager.CarManager;
-import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
-import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
-import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
@@ -35,8 +31,6 @@ import com.floyd.onebuy.ui.activity.PayResultActivity;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.floyd.pullrefresh.widget.PullToRefreshBase;
-import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,17 +44,12 @@ import de.greenrobot.event.EventBus;
  */
 public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private static final int PAGE_SIZE = 10;
     private DataLoadingView dataLoadingView;
-    private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
     private ImageLoader mImageLoader;
     private BuyCarAdapter mBuyCarAdapter;
-    private int pageNo;
-    private boolean needClear;
     private TextView titleNameView;
     private TextView editView;
-
     private boolean isEdit = false;
 
     private TextView totalProductView;//总计view
@@ -88,6 +77,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     private int payType = 1;
     private long userId = 0l;
+    private boolean needClear;
 
     private BuyCarType buyCarType;
 
@@ -95,10 +85,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageLoader = ImageLoaderFactory.createImageLoader();
-        pageNo = 1;
-        needClear = true;
         buyCarType = BuyCarType.NORMAL;
         userId = LoginManager.getLoginInfo(getActivity()).ID;
+        needClear = true;
     }
 
     @Override
@@ -110,25 +99,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         emptyLayout = view.findViewById(R.id.empty_layout);
         bottomLayout = view.findViewById(R.id.bottom_layout);
 
-        mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.buy_car_list);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
-        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
-            @Override
-            public void onPullDownToRefresh() {
-            }
-
-            @Override
-            public void onPullUpToRefresh() {
-                pageNo++;
-                needClear = false;
-                loadData(false);
-                mPullToRefreshListView.onRefreshComplete(false, true);
-            }
-        });
-        mListView = mPullToRefreshListView.getRefreshableView();
+        mListView = (ListView) view.findViewById(R.id.buy_car_list);
         mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
             @Override
-            public void onClick(final View v, final long lssueId, final int currentNum, final int buyNumber) {
+            public void onClick(final View v, final EditText numberView, final long lssueId, final int currentNum, final int buyNumber) {
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
                 for (CarItemVO info : mBuyCarAdapter.getRecords()) {
@@ -140,7 +114,8 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 CarManager.addCar(buyCarType, lssueId, userId, currentNum - buyNumber).startUI(new ApiCallback<Boolean>() {
                     @Override
                     public void onError(int code, String errorInfo) {
-
+                        Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+                        numberView.setText(buyNumber+"");
                     }
 
                     @Override
@@ -291,14 +266,14 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     private void showNoDataLayout() {
         editView.setVisibility(View.GONE);
-        mPullToRefreshListView.setVisibility(View.GONE);
+        mListView.setVisibility(View.GONE);
         emptyLayout.setVisibility(View.VISIBLE);
         bottomLayout.setVisibility(View.GONE);
     }
 
     private void hiddenNoDataLayout() {
         editView.setVisibility(View.VISIBLE);
-        mPullToRefreshListView.setVisibility(View.VISIBLE);
+        mListView.setVisibility(View.VISIBLE);
         emptyLayout.setVisibility(View.GONE);
         bottomLayout.setVisibility(View.VISIBLE);
     }
@@ -313,8 +288,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.act_ls_fail_layout:
-                pageNo = 1;
-                needClear = true;
                 loadData(true);
                 break;
             case R.id.pay_view:
@@ -350,8 +323,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                                 isEdit = false;
                                 mBuyCarAdapter.remove(delCarIds);
                                 mBuyCarAdapter.showRadiio(isEdit);
-                                pageNo = 1;
-                                needClear = true;
                             }
 
                             @Override
@@ -407,8 +378,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                         isEdit = false;
                         mBuyCarAdapter.remove(carIds);
                         mBuyCarAdapter.showRadiio(isEdit);
-                        pageNo = 1;
-                        needClear = true;
                         loadData(false);
                     }
 

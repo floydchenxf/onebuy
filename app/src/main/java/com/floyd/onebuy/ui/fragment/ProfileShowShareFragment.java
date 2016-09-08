@@ -130,7 +130,7 @@ public class ProfileShowShareFragment extends Fragment implements View.OnClickLi
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
-                List<PrizeShowVO> list = prizeShowListVO.ClientPrizeShowList;
+                List<PrizeShowVO> list = prizeShowListVO.PrizeShowList;
                 adapter.addAll(list, needClear);
             }
 

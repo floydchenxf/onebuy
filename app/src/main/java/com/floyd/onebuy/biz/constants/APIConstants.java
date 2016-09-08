@@ -35,4 +35,8 @@ public class APIConstants {
     public static final String PAY_ORDER_NO = "PAY_ORDER_NO";
 
     public static final String ADDRESS_MANAGEMENT_VO = "ADDRESS_MANAGEMENT_VO";
+
+    public static final int SHARE_SHOW_PIC_TYPE = 1;
+    public static final int SHARE_SHOW_VIDEO_TYPE = 2;
+    public static final int SHARE_SHOW_ALL = 3;
 }

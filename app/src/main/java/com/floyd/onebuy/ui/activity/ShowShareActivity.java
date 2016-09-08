@@ -12,12 +12,14 @@ import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.ProfileFragmentAdapter;
 import com.floyd.onebuy.ui.fragment.ProfilePrizeFragment;
 import com.floyd.onebuy.ui.fragment.ProfileShowShareFragment;
 import com.floyd.onebuy.ui.fragment.ProfileWinningFragment;
+import com.floyd.onebuy.ui.fragment.ShowShareFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,6 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
 
     private int currentIndex;
 
-    private ImageLoader mImageLoader;
     private ShowShareFragmentAdapter mFragmentAdapter;
 
     private long userId;
@@ -45,7 +46,6 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_share);
-        mImageLoader = ImageLoaderFactory.createImageLoader();
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("晒单分享");
         titleNameView.setVisibility(View.VISIBLE);
@@ -55,7 +55,7 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
         tabPicView = (CheckedTextView) findViewById(R.id.tab_pic);
         tabVideoView = (CheckedTextView) findViewById(R.id.tab_video);
         tabPicView.setOnClickListener(this);
-
+        tabVideoView.setOnClickListener(this);
         userId = getIntent().getLongExtra(CURRENT_USER_ID, 0l);
 
         initFragment();
@@ -139,11 +139,11 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
             if (f == null) {
                 switch (position) {
                     case 0:
-                        f = ProfileWinningFragment.newInstance(userId);
+                        f = ShowShareFragment.newInstance(userId, APIConstants.SHARE_SHOW_PIC_TYPE);
                         fragmentList.add(f);
                         break;
                     case 1:
-                        f = ProfilePrizeFragment.newInstance(userId);
+                        f = ShowShareFragment.newInstance(userId, APIConstants.SHARE_SHOW_VIDEO_TYPE);
                         fragmentList.add(f);
                         break;
                 }

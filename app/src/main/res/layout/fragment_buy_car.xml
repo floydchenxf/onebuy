@@ -83,7 +83,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.floyd.pullrefresh.widget.PullToRefreshListView
+    <ListView
         android:id="@+id/buy_car_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

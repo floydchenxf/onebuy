@@ -60,28 +60,19 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
         guestTitleView.setText(vo.GuestTitle);
         guestContentView.setText(vo.GuestContent);
 
-        commentButton.setVisibility(View.VISIBLE);
-        commentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent it = new Intent(mContext, ShareShowDetailActivity.class);
-                it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
-                mContext.startActivity(it);
-            }
-        });
-//        if (vo.isVerify > 0) {
-//            commentButton.setVisibility(View.VISIBLE);
-//            commentButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent it = new Intent(mContext, ShareShowDetailActivity.class);
-//                    it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
-//                    mContext.startActivity(it);
-//                }
-//            });
-//        } else {
-//            commentButton.setVisibility(View.GONE);
-//        }
+        if (vo.isVerify > 0) {
+            commentButton.setVisibility(View.VISIBLE);
+            commentButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent it = new Intent(mContext, ShareShowDetailActivity.class);
+                    it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
+                    mContext.startActivity(it);
+                }
+            });
+        } else {
+            commentButton.setVisibility(View.GONE);
+        }
 
         if (TextUtils.isEmpty(vo.GuestTime)) {
             guestTimeView.setVisibility(View.GONE);

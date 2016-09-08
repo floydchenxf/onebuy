@@ -51,6 +51,7 @@ import com.floyd.onebuy.ui.activity.CommonwealBakActivity;
 import com.floyd.onebuy.ui.activity.FridayActivity;
 import com.floyd.onebuy.ui.activity.H5Activity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
+import com.floyd.onebuy.ui.activity.ShowShareActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.ProductLssueAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -367,7 +368,13 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                         Intent it = new Intent(getActivity(), CommonwealBakActivity.class);
                         getActivity().startActivity(it);
                     }
-                },null,new View.OnClickListener() {
+                },new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent it = new Intent(getActivity(), ShowShareActivity.class);
+                        getActivity().startActivity(it);
+                    }
+                },new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent it = new Intent(getActivity(), FridayActivity.class);

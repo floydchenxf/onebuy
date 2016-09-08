@@ -447,12 +447,11 @@ public class ProductManager {
     /**
      * 获取商品期数晒单
      *
-     * @param productLssueID
      * @param pageSize
      * @param pageNum
      * @return
      */
-    public static AsyncJob<PrizeShowListVO> getPrizeShow(long productLssueID, long proId, int typeID, int pageSize, int pageNum) {
+    public static AsyncJob<PrizeShowListVO> getPrizeShow(long proId, int typeID, int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "getPrizeShow");
@@ -460,7 +459,6 @@ public class ProductManager {
         params.put("proid", proId + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
-        params.put("productLssueID", productLssueID + "");
         AsyncJob<PrizeShowListVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PrizeShowListVO.class);
         return result;
     }

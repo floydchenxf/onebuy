@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -123,7 +124,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
         mListView = mPullToRefreshListView.getRefreshableView();
         mBuyCarAdapter = new BuyCarAdapter(this, null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
             @Override
-            public void onClick(final View v, final long lssueId, final int currentNum, final int buyNumber) {
+            public void onClick(final View v, final EditText numberView, final long lssueId, final int currentNum, final int buyNumber) {
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
                 for (CarItemVO info : mBuyCarAdapter.getRecords()) {
@@ -135,7 +136,8 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                 CarManager.addCar(buyCarType, lssueId, userId, currentNum - buyNumber).startUI(new ApiCallback<Boolean>() {
                     @Override
                     public void onError(int code, String errorInfo) {
-
+                        Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        numberView.setText(buyNumber+"");
                     }
 
                     @Override

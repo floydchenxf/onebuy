@@ -190,7 +190,7 @@ public class BuyCarAdapter extends BaseAdapter {
                 int nn = --num;
                 holder.numberView.setText(nn + "");
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.subView, info.ProductLssueID, nn, info.CarCount);
+                    buyClickListener.onClick(holder.subView, holder.numberView, info.ProductLssueID, nn, info.CarCount);
                 }
             }
         });
@@ -213,7 +213,7 @@ public class BuyCarAdapter extends BaseAdapter {
                 int nn = ++num;
                 holder.numberView.setText(nn + "");
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.addView, info.ProductLssueID, nn, info.CarCount);
+                    buyClickListener.onClick(holder.addView, holder.numberView, info.ProductLssueID, nn, info.CarCount);
                 }
             }
         });
@@ -237,7 +237,7 @@ public class BuyCarAdapter extends BaseAdapter {
                     holder.buyLeftView.setChecked(true);
                 }
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.buyLeftView, info.ProductLssueID, info.TotalCount, info.CarCount);
+                    buyClickListener.onClick(holder.buyLeftView, holder.numberView, info.ProductLssueID, info.TotalCount, info.CarCount);
                 }
             }
         });
@@ -264,7 +264,7 @@ public class BuyCarAdapter extends BaseAdapter {
     }
 
     public interface BuyClickListener {
-        void onClick(View v, long lssueId, int currentNum, int buyCount);
+        void onClick(View v, EditText numberView, long lssueId, int currentNum, int buyCount);
     }
 
     public interface CheckedListener {

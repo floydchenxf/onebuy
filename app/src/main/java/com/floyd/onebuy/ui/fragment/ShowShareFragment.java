@@ -33,23 +33,23 @@ import java.util.List;
  * Use the {@link ShowShareFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowShareFragment extends Fragment implements View.OnClickListener {
+public class ShowShareFragment extends Fragment {
     private static final String USER_ID = "USER_ID";
     private static final String IS_SELF = "IS_SELF";
     private static final String TYPE_ID = "TYPE_ID";
     private static final int PAGE_SIZE = 20;
-    private Long userId;
-    private int typeId;
+    protected Long userId;
+    protected int typeId;
 
     private OnFragmentInteractionListener mListener;
-    private DataLoadingView dataLoadingView;
-    private ImageLoader mImageLoader;
-    private PullToRefreshListView mPullToRefreshListView;
+    protected DataLoadingView dataLoadingView;
+    protected ImageLoader mImageLoader;
+    protected PullToRefreshListView mPullToRefreshListView;
 
     private ListView mListView;
-    private int pageNo;
-    private boolean isFirst;
-    private boolean needClear;
+    protected int pageNo;
+    protected boolean isFirst;
+    protected boolean needClear;
 
     private ProfileShowShareAdapter adapter;
 
@@ -85,7 +85,15 @@ public class ShowShareFragment extends Fragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_profile_show_share, container, false);
 
         dataLoadingView = new DefaultDataLoadingView();
-        dataLoadingView.initView(v, this);
+        dataLoadingView.initView(v, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pageNo = 1;
+                needClear = true;
+                isFirst = true;
+                loadData();
+            }
+        });
         mImageLoader = ImageLoaderFactory.createImageLoader();
 
         mPullToRefreshListView = (PullToRefreshListView) v.findViewById(R.id.common_list);
@@ -135,7 +143,10 @@ public class ShowShareFragment extends Fragment implements View.OnClickListener 
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
-                List<PrizeShowVO> list = prizeShowListVO.ClientPrizeShowList;
+                List<PrizeShowVO> list = prizeShowListVO.PrizeShowList;
+                if (list == null) {
+                    list = new ArrayList<PrizeShowVO>();
+                }
                 adapter.addAll(list, needClear);
             }
 
@@ -156,18 +167,6 @@ public class ShowShareFragment extends Fragment implements View.OnClickListener 
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.act_ls_fail_layout:
-                pageNo = 1;
-                needClear = true;
-                isFirst = true;
-                loadData();
-                break;
-        }
     }
 
     public interface OnFragmentInteractionListener {
