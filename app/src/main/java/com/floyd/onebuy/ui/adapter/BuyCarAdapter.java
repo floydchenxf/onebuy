@@ -230,14 +230,14 @@ public class BuyCarAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 int left = info.TotalCount - info.JoinedCount;
-                holder.numberView.setText(info.TotalCount + "");
+                holder.numberView.setText(left + "");
                 if (info.CarCount >= left) {
                     holder.buyLeftView.setChecked(false);
                 } else {
                     holder.buyLeftView.setChecked(true);
                 }
                 if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.buyLeftView, holder.numberView, info.ProductLssueID, info.TotalCount, info.CarCount);
+                    buyClickListener.onClick(holder.buyLeftView, holder.numberView, info.ProductLssueID, left, info.CarCount);
                 }
             }
         });

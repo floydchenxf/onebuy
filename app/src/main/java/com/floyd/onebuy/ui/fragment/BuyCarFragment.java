@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Network;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.BuyCarType;
@@ -22,6 +25,7 @@ import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
+import com.floyd.onebuy.biz.vo.json.CarPayChannel;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.event.TabSwitchEvent;
@@ -31,6 +35,7 @@ import com.floyd.onebuy.ui.activity.PayResultActivity;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.onebuy.ui.multiimage.common.OnCheckChangedListener;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +47,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by floyd on 16-4-13.
  */
-public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener {
 
     private DataLoadingView dataLoadingView;
     private ListView mListView;
@@ -65,21 +70,14 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private View emptyLayout;
     private View bottomLayout;
 
-    private View weixinLayout;
-    private View alipayLayout;
-    private View jiefengLayout;
-
-    private RadioButton weixinButton;
-    private RadioButton alipayButton;
-    private RadioButton jifengButton;
-
-    private RadioButton[] radioButtons;
+    private LinearLayout payTypeLayout;
 
     private int payType = 1;
     private long userId = 0l;
     private boolean needClear;
 
     private BuyCarType buyCarType;
+    private boolean initedFooter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +86,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         buyCarType = BuyCarType.NORMAL;
         userId = LoginManager.getLoginInfo(getActivity()).ID;
         needClear = true;
+        initedFooter = false;
     }
 
     @Override
@@ -182,21 +181,8 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     private void initFooter() {
         View footer = View.inflate(getActivity(), R.layout.buycar_footer, null);
-        alipayLayout = footer.findViewById(R.id.alipay_layout);
-        weixinLayout = footer.findViewById(R.id.weixin_layout);
-        jiefengLayout = footer.findViewById(R.id.jifeng_layout);
-        alipayButton = (RadioButton) footer.findViewById(R.id.alipay_radio);
-        jifengButton = (RadioButton) footer.findViewById(R.id.jifeng_radio);
-        weixinButton = (RadioButton) footer.findViewById(R.id.wx_radio);
-        alipayButton.setOnCheckedChangeListener(this);
-        weixinButton.setOnCheckedChangeListener(this);
-        jifengButton.setOnCheckedChangeListener(this);
-
-        alipayLayout.setOnClickListener(this);
-        weixinLayout.setOnClickListener(this);
-        jiefengLayout.setOnClickListener(this);
-
-        radioButtons = new RadioButton[]{weixinButton, jifengButton, alipayButton};
+        mListView.removeFooterView(footer);
+        payTypeLayout = (LinearLayout) footer.findViewById(R.id.pay_type_layout);
         mListView.addFooterView(footer);
     }
 
@@ -254,6 +240,72 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     editView.setText("编辑");
                     totalProductView.setText(Html.fromHtml("共" + productNum + "件商品,总计：<font color=\"red\">" + totalPrice + "</font>夺宝币"));
                 }
+
+                if (!initedFooter) {
+                    List<CarPayChannel> payChannels = carListVO.PayChannel;
+                    if (payChannels != null && !payChannels.isEmpty()) {
+                        final RadioButton[] rbArray = new RadioButton[payChannels.size()];
+                        View.OnClickListener l = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Long id = (Long) view.getTag();
+                                for (RadioButton trb : rbArray) {
+                                    Long rbId = (Long) trb.getTag();
+                                    if (id.equals(rbId)) {
+                                        trb.setChecked(true);
+                                        payType = id.intValue();
+                                    } else {
+                                        trb.setChecked(false);
+                                    }
+                                }
+                            }
+                        };
+
+                        CompoundButton.OnCheckedChangeListener checkChangedListener = new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                if (!isChecked) {
+                                    compoundButton.setChecked(false);
+                                    return;
+                                }
+                                Long id = (Long) compoundButton.getTag();
+                                for (RadioButton trb : rbArray) {
+                                    Long rbId = (Long) trb.getTag();
+                                    if (id.equals(rbId)) {
+                                        trb.setChecked(true);
+                                        payType = id.intValue();
+                                    } else {
+                                        trb.setChecked(false);
+                                    }
+                                }
+                            }
+                        };
+                        int idx = 0;
+                        for (CarPayChannel channel : payChannels) {
+                            View v = View.inflate(getActivity(), R.layout.pay_type_item, null);
+                            v.setTag(channel.ID);
+                            NetworkImageView imageView = (NetworkImageView) v.findViewById(R.id.wx_icon);
+                            imageView.setImageUrl(channel.getPicUrl(), mImageLoader);
+                            TextView payNameView = (TextView) v.findViewById(R.id.pay_name_view);
+                            payNameView.setText(channel.Name);
+                            RadioButton rb = (RadioButton) v.findViewById(R.id.wx_radio);
+                            rb.setTag(channel.ID);
+                            rbArray[idx] = rb;
+                            if (idx == 0) {
+                                rb.setChecked(true);
+                            } else {
+                                rb.setChecked(false);
+                            }
+
+                            rb.setOnCheckedChangeListener(checkChangedListener);
+                            v.setOnClickListener(l);
+                            payTypeLayout.addView(v);
+                            idx ++;
+                        }
+                    }
+
+                    initedFooter = true;
+                }
             }
 
             @Override
@@ -304,7 +356,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     productLssueDetail.append(info.ProductLssueID).append("|").append(info.CarCount).append(",");
                 }
 
-                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), 1).startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), payType).startUI(new ApiCallback<OrderPayVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
@@ -387,50 +439,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     }
                 });
                 break;
-            case R.id.weixin_layout:
-                checkType(1);
-                break;
-            case R.id.jifeng_layout:
-                checkType(2);
-                break;
-            case R.id.alipay_layout:
-                checkType(3);
-                break;
             case R.id.goto_index:
                 EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 break;
         }
-    }
-
-
-    private void checkType(int type) {
-        payType = type;
-        int idx = 0;
-        for (RadioButton rb : radioButtons) {
-            if (++idx == type) {
-                rb.setChecked(true);
-            } else {
-                rb.setChecked(false);
-            }
-        }
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (!isChecked) {
-            return;
-        }
-        switch (buttonView.getId()) {
-            case R.id.wx_radio:
-                checkType(1);
-                break;
-            case R.id.alipay_radio:
-                checkType(3);
-                break;
-            case R.id.jifeng_radio:
-                checkType(2);
-                break;
-        }
-
     }
 }

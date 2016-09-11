@@ -44,7 +44,7 @@ import java.util.Set;
 
 import de.greenrobot.event.EventBus;
 
-public class FundBuyCarActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class FundBuyCarActivity extends Activity implements View.OnClickListener {
 
     private static final int PAGE_SIZE = 10;
     private DataLoadingView dataLoadingView;
@@ -72,15 +72,15 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
     private View emptyLayout;
     private View bottomLayout;
 
-    private View weixinLayout;
-    private View alipayLayout;
-    private View jiefengLayout;
+//    private View weixinLayout;
+//    private View alipayLayout;
+//    private View jiefengLayout;
+//
+//    private RadioButton weixinButton;
+//    private RadioButton alipayButton;
+//    private RadioButton jifengButton;
 
-    private RadioButton weixinButton;
-    private RadioButton alipayButton;
-    private RadioButton jifengButton;
-
-    private RadioButton[] radioButtons;
+//    private RadioButton[] radioButtons;
 
     private int payType = 1;
 
@@ -203,21 +203,21 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
 
     private void initFooter() {
         View footer = View.inflate(this, R.layout.buycar_footer, null);
-        alipayLayout = footer.findViewById(R.id.alipay_layout);
-        weixinLayout = footer.findViewById(R.id.weixin_layout);
-        jiefengLayout = footer.findViewById(R.id.jifeng_layout);
-        alipayButton = (RadioButton) footer.findViewById(R.id.alipay_radio);
-        jifengButton = (RadioButton) footer.findViewById(R.id.jifeng_radio);
-        weixinButton = (RadioButton) footer.findViewById(R.id.wx_radio);
-        alipayButton.setOnCheckedChangeListener(this);
-        weixinButton.setOnCheckedChangeListener(this);
-        jifengButton.setOnCheckedChangeListener(this);
+//        alipayLayout = footer.findViewById(R.id.alipay_layout);
+//        weixinLayout = footer.findViewById(R.id.weixin_layout);
+//        jiefengLayout = footer.findViewById(R.id.jifeng_layout);
+//        alipayButton = (RadioButton) footer.findViewById(R.id.alipay_radio);
+//        jifengButton = (RadioButton) footer.findViewById(R.id.jifeng_radio);
+//        weixinButton = (RadioButton) footer.findViewById(R.id.wx_radio);
+//        alipayButton.setOnCheckedChangeListener(this);
+//        weixinButton.setOnCheckedChangeListener(this);
+//        jifengButton.setOnCheckedChangeListener(this);
+//
+//        alipayLayout.setOnClickListener(this);
+//        weixinLayout.setOnClickListener(this);
+//        jiefengLayout.setOnClickListener(this);
 
-        alipayLayout.setOnClickListener(this);
-        weixinLayout.setOnClickListener(this);
-        jiefengLayout.setOnClickListener(this);
-
-        radioButtons = new RadioButton[]{weixinButton, jifengButton, alipayButton};
+//        radioButtons = new RadioButton[]{weixinButton, jifengButton, alipayButton};
         mListView.addFooterView(footer);
     }
 
@@ -416,15 +416,15 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
                     }
                 });
                 break;
-            case R.id.weixin_layout:
-                checkType(1);
-                break;
-            case R.id.jifeng_layout:
-                checkType(2);
-                break;
-            case R.id.alipay_layout:
-                checkType(3);
-                break;
+//            case R.id.weixin_layout:
+//                checkType(1);
+//                break;
+//            case R.id.jifeng_layout:
+//                checkType(2);
+//                break;
+//            case R.id.alipay_layout:
+//                checkType(3);
+//                break;
             case R.id.goto_index:
                 EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 break;
@@ -432,34 +432,34 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
     }
 
 
-    private void checkType(int type) {
-        payType = type;
-        int idx = 0;
-        for (RadioButton rb : radioButtons) {
-            if (++idx == type) {
-                rb.setChecked(true);
-            } else {
-                rb.setChecked(false);
-            }
-        }
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (!isChecked) {
-            return;
-        }
-        switch (buttonView.getId()) {
-            case R.id.wx_radio:
-                checkType(1);
-                break;
-            case R.id.alipay_radio:
-                checkType(3);
-                break;
-            case R.id.jifeng_radio:
-                checkType(2);
-                break;
-        }
-
-    }
+//    private void checkType(int type) {
+//        payType = type;
+//        int idx = 0;
+//        for (RadioButton rb : radioButtons) {
+//            if (++idx == type) {
+//                rb.setChecked(true);
+//            } else {
+//                rb.setChecked(false);
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//        if (!isChecked) {
+//            return;
+//        }
+//        switch (buttonView.getId()) {
+//            case R.id.wx_radio:
+//                checkType(1);
+//                break;
+//            case R.id.alipay_radio:
+//                checkType(3);
+//                break;
+//            case R.id.jifeng_radio:
+//                checkType(2);
+//                break;
+//        }
+//
+//    }
 }

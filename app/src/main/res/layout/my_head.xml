@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_info">
+        android:background="@drawable/bg_head_info">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/head_bg"
