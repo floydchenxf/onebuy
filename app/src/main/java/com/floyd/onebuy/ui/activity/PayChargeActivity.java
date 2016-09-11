@@ -8,14 +8,24 @@ import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
+import com.floyd.onebuy.biz.vo.json.CarPayChannel;
+import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.loading.DataLoadingView;
+import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+
+import java.util.List;
 
 public class PayChargeActivity extends Activity implements View.OnClickListener {
 
@@ -30,12 +40,10 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
     private EditText num6;
 
     private View payLayout;
-    private View alipayLayout;
-    private View wxpayLayout;
-    private RadioButton alipayButton;
-    private RadioButton wxpayButton;
-
     private CheckedTextView[] arrays;
+
+    private DataLoadingView dataLoadingView;
+    private ImageLoader mImageLoader;
 
     private int checkedIndex = 0;
     private int payTypeChecked = 0;
@@ -43,12 +51,21 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
     private int[] values = new int[]{20, 50, 100, 500, 1000};
 
     private TextView addFeeView;
+    private LinearLayout payTypeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_charge);
 
+        mImageLoader = ImageLoaderFactory.createImageLoader();
+        dataLoadingView = new DefaultDataLoadingView();
+        dataLoadingView.initView(findViewById(R.id.act_lsloading), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadData();
+            }
+        });
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("充值");
@@ -56,41 +73,7 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
 
         payLayout = findViewById(R.id.pay_layout);
 
-        alipayLayout = findViewById(R.id.alipay_layout);
-        wxpayLayout = findViewById(R.id.wxpay_layout);
-        alipayButton = (RadioButton) findViewById(R.id.alipay_button);
-        wxpayButton = (RadioButton) findViewById(R.id.wxpay_button);
-
-        alipayButton.setOnClickListener(this);
-        alipayButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    payTypeChecked = 0;
-                    wxpayButton.setChecked(false);
-                } else {
-                    payTypeChecked = 1;
-                    wxpayButton.setChecked(true);
-                }
-            }
-        });
-        alipayLayout.setOnClickListener(this);
-        wxpayButton.setOnClickListener(this);
-        wxpayButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    payTypeChecked = 1;
-                    alipayButton.setChecked(false);
-                } else {
-                    payTypeChecked = 0;
-                    alipayButton.setChecked(true);
-                }
-            }
-        });
-
-        wxpayLayout.setOnClickListener(this);
-
+        payTypeLayout = (LinearLayout)findViewById(R.id.pay_type_layout);
         num1 = (CheckedTextView) findViewById(R.id.num1);
         num2 = (CheckedTextView) findViewById(R.id.num2);
         num3 = (CheckedTextView) findViewById(R.id.num3);
@@ -119,6 +102,89 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
             v.setOnClickListener(this);
         }
 
+        loadData();
+    }
+
+    private void loadData() {
+        dataLoadingView.startLoading();
+        CarManager.getPayChannels().startUI(new ApiCallback<List<CarPayChannel>>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                dataLoadingView.loadFail();
+            }
+
+            @Override
+            public void onSuccess(List<CarPayChannel> carPayChannels) {
+                dataLoadingView.loadSuccess();
+                if (carPayChannels != null && !carPayChannels.isEmpty()) {
+                    final RadioButton[] rbArray = new RadioButton[carPayChannels.size()];
+                    View.OnClickListener l = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Long id = (Long) view.getTag();
+                            for (RadioButton trb : rbArray) {
+                                Long rbId = (Long) trb.getTag();
+                                if (id.equals(rbId)) {
+                                    trb.setChecked(true);
+                                    payTypeChecked = id.intValue();
+                                } else {
+                                    trb.setChecked(false);
+                                }
+                            }
+                        }
+                    };
+
+                    CompoundButton.OnCheckedChangeListener checkChangedListener = new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                            if (!isChecked) {
+                                compoundButton.setChecked(false);
+                                return;
+                            }
+                            Long id = (Long) compoundButton.getTag();
+                            for (RadioButton trb : rbArray) {
+                                Long rbId = (Long) trb.getTag();
+                                if (id.equals(rbId)) {
+                                    trb.setChecked(true);
+                                    payTypeChecked = id.intValue();
+                                } else {
+                                    trb.setChecked(false);
+                                }
+                            }
+                        }
+                    };
+                    int idx = 0;
+                    for (CarPayChannel channel : carPayChannels) {
+                        View v = View.inflate(PayChargeActivity.this, R.layout.pay_type_item, null);
+                        v.setTag(channel.ID);
+                        NetworkImageView imageView = (NetworkImageView) v.findViewById(R.id.wx_icon);
+                        imageView.setImageUrl(channel.getPicUrl(), mImageLoader);
+                        TextView payNameView = (TextView) v.findViewById(R.id.pay_name_view);
+                        payNameView.setText(channel.Name);
+                        RadioButton rb = (RadioButton) v.findViewById(R.id.wx_radio);
+                        rb.setTag(channel.ID);
+                        rbArray[idx] = rb;
+                        if (idx == 0) {
+                            rb.setChecked(true);
+                            payTypeChecked = channel.ID.intValue();
+                        } else {
+                            rb.setChecked(false);
+                        }
+
+                        rb.setOnCheckedChangeListener(checkChangedListener);
+                        v.setOnClickListener(l);
+                        payTypeLayout.addView(v);
+                        idx ++;
+                    }
+                }
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+
     }
 
     @Override
@@ -133,16 +199,6 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
             case R.id.num4:
             case R.id.num5:
                 checkClick(v.getId());
-                break;
-            case R.id.wxpay_layout:
-                wxpayButton.setChecked(true);
-                alipayButton.setChecked(false);
-                payTypeChecked = 1;
-                break;
-            case R.id.alipay_layout:
-                alipayButton.setChecked(true);
-                wxpayButton.setChecked(false);
-                payTypeChecked = 0;
                 break;
             case R.id.add_fee_view:
                 int money = 0;
@@ -163,7 +219,7 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
                     money = Integer.parseInt(moneyString);
                 }
                 Long userId = LoginManager.getLoginInfo(this).ID;
-                OrderManager.createOrderAndPayCharge(userId, money+"").startUI(new ApiCallback<Double>() {
+                OrderManager.createOrderAndPayCharge(userId, money + "", payTypeChecked).startUI(new ApiCallback<Double>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -171,7 +227,7 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
 
                     @Override
                     public void onSuccess(Double money) {
-                        Toast.makeText(PayChargeActivity.this, "充值"+money+"成功!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PayChargeActivity.this, "充值" + money + "成功!", Toast.LENGTH_SHORT).show();
                         PayChargeActivity.this.finish();
                     }
 
@@ -180,8 +236,6 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
 
                     }
                 });
-
-                //TODO 充值
                 break;
 
         }

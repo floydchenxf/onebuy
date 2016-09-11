@@ -157,6 +157,7 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
                 startActivity(it);
             }
         });
+        view.findViewById(R.id.commonweal_button).setOnClickListener(this);
         loadData(true);
         return view;
     }
@@ -302,6 +303,9 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
             case R.id.commonweal_fee_view:
                 Intent it = new Intent(getActivity(), CommonwealHelperActivity.class);
                 startActivity(it);
+                break;
+            case R.id.commonweal_button:
+
                 break;
         }
 

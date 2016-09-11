@@ -140,12 +140,13 @@ public class OrderManager {
      * @param money
      * @return
      */
-    public static AsyncJob<ChargeOrderVO> createChargeOrder(Long userId, String money) {
+    public static AsyncJob<ChargeOrderVO> createChargeOrder(Long userId, String money, int type) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "Recharge");
         params.put("userId", userId + "");
         params.put("money", money);
+        params.put("type", type+"");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, ChargeOrderVO.class);
     }
 
@@ -156,8 +157,8 @@ public class OrderManager {
      * @param money
      * @return
      */
-    public static AsyncJob<Double> createOrderAndPayCharge(Long userId, String money) {
-        final AsyncJob<Double> chargeOrderJob = createChargeOrder(userId, money).flatMap(new Func<ChargeOrderVO, AsyncJob<Double>>() {
+    public static AsyncJob<Double> createOrderAndPayCharge(Long userId, String money, int type) {
+        final AsyncJob<Double> chargeOrderJob = createChargeOrder(userId, money, type).flatMap(new Func<ChargeOrderVO, AsyncJob<Double>>() {
             @Override
             public AsyncJob<Double> call(final ChargeOrderVO chargeOrderVO) {
                 String orderNum = chargeOrderVO.orderNum;

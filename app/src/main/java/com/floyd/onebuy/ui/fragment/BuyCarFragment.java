@@ -293,6 +293,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                             rbArray[idx] = rb;
                             if (idx == 0) {
                                 rb.setChecked(true);
+                                payType = channel.ID.intValue();
                             } else {
                                 rb.setChecked(false);
                             }

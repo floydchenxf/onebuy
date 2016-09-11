@@ -1,25 +1,19 @@
 package com.floyd.onebuy.biz.manager;
 
-import android.content.Context;
-import android.text.TextUtils;
-
-import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.biz.constants.APIConstants;
-import com.floyd.onebuy.biz.constants.APIError;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.buycar.server.BuyCarService;
 import com.floyd.onebuy.biz.manager.buycar.server.FridayCarService;
 import com.floyd.onebuy.biz.manager.buycar.server.FundCarService;
 import com.floyd.onebuy.biz.manager.buycar.server.NormalProductCarService;
-import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
-import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.biz.vo.json.CarPayChannel;
 import com.floyd.onebuy.channel.request.HttpMethod;
-import com.floyd.onebuy.dao.BuyCarNumber;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +60,19 @@ public class CarManager {
      */
     public static AsyncJob<CarListVO> fetchCarList(BuyCarType type, long userId) {
         return buycarServers.get(type).fetchCarList(userId);
+    }
 
+    public static AsyncJob<List<CarPayChannel>> getPayChannels() {
+        String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "RechargeChannel");
+        Type type = new TypeToken<Map<String, List<CarPayChannel>>>(){}.getType();
+        AsyncJob<Map<String, List<CarPayChannel>>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        return job.map(new Func<Map<String, List<CarPayChannel>>, List<CarPayChannel>>() {
+            @Override
+            public List<CarPayChannel> call(Map<String, List<CarPayChannel>> stringListMap) {
+                return stringListMap.get("PayChannel");
+            }
+        });
     }
 }
