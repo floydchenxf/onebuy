@@ -11,11 +11,21 @@ import com.floyd.onebuy.biz.vo.json.UserVO;
  */
 public class ShowShareManager {
 
-    public static AsyncJob<PrizeShowListVO> fetchPrizeShowList(Context context, Long userId, int typeId, int pageSize, int pageNo) {
+    /**
+     * 获取晒单信息
+     * @param context
+     * @param objId 登陆用户/proId
+     * @param typeId
+     * @param pageSize
+     * @param pageNo
+     * @param isProduct 是否是商品
+     * @return
+     */
+    public static AsyncJob<PrizeShowListVO> fetchPrizeShowList(Context context, Long objId, int typeId, int pageSize, int pageNo, boolean isProduct) {
 
         AsyncJob<PrizeShowListVO> result = null;
-        if (userId == 0l) {
-            result = ProductManager.getPrizeShow(0, typeId, pageSize, pageNo);
+        if (isProduct || objId == 0l) {
+            result = ProductManager.getPrizeShow(objId, typeId, pageSize, pageNo);
             return result;
         }
 
@@ -23,13 +33,13 @@ public class ShowShareManager {
         UserVO vo = LoginManager.getLoginInfo(context);
         if (vo != null) {
             Long myUserId = vo.ID;
-            isSelf = myUserId.equals(userId);
+            isSelf = myUserId.equals(objId);
         }
 
         if (isSelf) {
-            result = ProductManager.getMyPrizeShow(userId, typeId, pageSize, pageNo);
+            result = ProductManager.getMyPrizeShow(objId, typeId, pageSize, pageNo);
         } else {
-            result = ProductManager.getClientPrizeShow(userId, typeId, pageSize, pageNo);
+            result = ProductManager.getClientPrizeShow(objId, typeId, pageSize, pageNo);
         }
 
         return result;

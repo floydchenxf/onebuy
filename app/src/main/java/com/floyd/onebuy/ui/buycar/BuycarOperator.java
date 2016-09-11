@@ -9,6 +9,12 @@ import android.content.Context;
 public interface BuycarOperator {
 
     /**
+     * 设置ID
+     * @param id
+     */
+    void setId(Long id);
+
+    /**
      * 立即购买
      */
     void buyAtOnce();

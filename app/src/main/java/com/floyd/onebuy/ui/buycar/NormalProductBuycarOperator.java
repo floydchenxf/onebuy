@@ -24,6 +24,12 @@ public class NormalProductBuycarOperator implements BuycarOperator {
         this.productId = productId;
         this.mContext = context;
     }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public void buyAtOnce() {
         if (LoginManager.isLogin(mContext)) {

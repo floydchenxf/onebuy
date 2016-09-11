@@ -31,6 +31,7 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
 
     public static final String CURRENT_PAGE_INDEX = "current_page_index";
     public static final String CURRENT_USER_ID = "current_user_id";
+    public static final String IS_PRODUCT = "IS_PRODUCT";
 
     private ViewPager showSharePager;
     private CheckedTextView tabPicView;
@@ -41,6 +42,7 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
     private ShowShareFragmentAdapter mFragmentAdapter;
 
     private long userId;
+    private boolean isProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +59,13 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
         tabPicView.setOnClickListener(this);
         tabVideoView.setOnClickListener(this);
         userId = getIntent().getLongExtra(CURRENT_USER_ID, 0l);
+        isProduct = getIntent().getBooleanExtra(IS_PRODUCT, false);
 
         initFragment();
     }
 
     private void initFragment() {
-        mFragmentAdapter = new ShowShareFragmentAdapter(this.getSupportFragmentManager(), userId);
+        mFragmentAdapter = new ShowShareFragmentAdapter(this.getSupportFragmentManager(), userId, isProduct);
         showSharePager.setAdapter(mFragmentAdapter);
 
         if (currentIndex > mFragmentAdapter.getCount()) {
@@ -121,11 +124,13 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
 
     public static class ShowShareFragmentAdapter extends FragmentStatePagerAdapter {
         private Long userId;
+        private boolean isProduct;
         private List<Fragment> fragmentList = new ArrayList<Fragment>();
 
-        public ShowShareFragmentAdapter(FragmentManager fm, Long userId) {
+        public ShowShareFragmentAdapter(FragmentManager fm, Long userId, boolean isProduct) {
             super(fm);
             this.userId = userId;
+            this.isProduct = isProduct;
         }
 
         @Override
@@ -139,11 +144,11 @@ public class ShowShareActivity extends FragmentActivity implements View.OnClickL
             if (f == null) {
                 switch (position) {
                     case 0:
-                        f = ShowShareFragment.newInstance(userId, APIConstants.SHARE_SHOW_PIC_TYPE);
+                        f = ShowShareFragment.newInstance(userId, APIConstants.SHARE_SHOW_PIC_TYPE, isProduct);
                         fragmentList.add(f);
                         break;
                     case 1:
-                        f = ShowShareFragment.newInstance(userId, APIConstants.SHARE_SHOW_VIDEO_TYPE);
+                        f = ShowShareFragment.newInstance(userId, APIConstants.SHARE_SHOW_VIDEO_TYPE, isProduct);
                         fragmentList.add(f);
                         break;
                 }

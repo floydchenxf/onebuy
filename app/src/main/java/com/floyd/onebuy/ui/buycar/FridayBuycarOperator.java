@@ -28,6 +28,11 @@ public class FridayBuycarOperator implements BuycarOperator {
         this.productId = productId;
     }
 
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void buyAtOnce() {
         Toast.makeText(mContext, "星期五立即购买", Toast.LENGTH_SHORT).show();
         if (LoginManager.isLogin(mContext)) {

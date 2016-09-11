@@ -218,6 +218,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
             WinningDetailActivity.this.winningDetailInfo = winningDetailInfo;
             id = winningDetailInfo.id;
+            buycarOperator.setId(id);
             StringBuilder titleAndStatusSb = new StringBuilder();
             int status = winningDetailInfo.status;
             if (status == WinningInfo.STATUS_CHOOSE) {
@@ -680,7 +681,10 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         showShareView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //晒单
+                Intent it = new Intent(WinningDetailActivity.this, ShowShareActivity.class);
+                it.putExtra(ShowShareActivity.CURRENT_USER_ID, productId);
+                it.putExtra(ShowShareActivity.IS_PRODUCT, true);
+                startActivity(it);
             }
         });
     }

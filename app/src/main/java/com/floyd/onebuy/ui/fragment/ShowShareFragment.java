@@ -37,6 +37,7 @@ public class ShowShareFragment extends Fragment {
     private static final String USER_ID = "USER_ID";
     private static final String IS_SELF = "IS_SELF";
     private static final String TYPE_ID = "TYPE_ID";
+    private static final String IS_PRODUCT = "is_product";
     private static final int PAGE_SIZE = 20;
     protected Long userId;
     protected int typeId;
@@ -50,6 +51,7 @@ public class ShowShareFragment extends Fragment {
     protected int pageNo;
     protected boolean isFirst;
     protected boolean needClear;
+    protected boolean isProduct;
 
     private ProfileShowShareAdapter adapter;
 
@@ -57,11 +59,12 @@ public class ShowShareFragment extends Fragment {
     public ShowShareFragment() {
     }
 
-    public static ShowShareFragment newInstance(Long userId, int typeId) {
+    public static ShowShareFragment newInstance(Long userId, int typeId, boolean isProduct) {
         ShowShareFragment fragment = new ShowShareFragment();
         Bundle args = new Bundle();
         args.putLong(USER_ID, userId);
         args.putInt(TYPE_ID, typeId);
+        args.putBoolean(IS_PRODUCT, isProduct);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +75,7 @@ public class ShowShareFragment extends Fragment {
         if (getArguments() != null) {
             userId = getArguments().getLong(USER_ID, 0l);
             typeId = getArguments().getInt(TYPE_ID, 0);
+            isProduct = getArguments().getBoolean(IS_PRODUCT, false);
         }
 
         isFirst = true;
@@ -130,7 +134,7 @@ public class ShowShareFragment extends Fragment {
             dataLoadingView.startLoading();
         }
 
-        ShowShareManager.fetchPrizeShowList(getActivity(), userId, typeId, PAGE_SIZE, pageNo).startUI(new ApiCallback<PrizeShowListVO>() {
+        ShowShareManager.fetchPrizeShowList(getActivity(), userId, typeId, PAGE_SIZE, pageNo, isProduct).startUI(new ApiCallback<PrizeShowListVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

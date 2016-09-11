@@ -17,6 +17,11 @@ public class CommonwealBuycarOperator implements BuycarOperator {
         this.productId = productId;
     }
 
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void buyAtOnce() {
         Toast.makeText(mContext, "基金立即购买", Toast.LENGTH_SHORT).show();
 
