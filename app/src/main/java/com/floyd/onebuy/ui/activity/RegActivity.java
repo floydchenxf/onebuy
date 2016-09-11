@@ -32,6 +32,11 @@ public class RegActivity extends Activity implements View.OnClickListener {
     private int time = 0;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int checkType;
+    private boolean hasInviteCode;
+    private View line4;
+    private View inviteCodeLayout;
+    private TextView inviteCodeShowView;
+    private EditText inviteCodeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +44,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_reg);
         backView = findViewById(R.id.title_back);
         backView.setOnClickListener(this);
-        TextView titleNameView = (TextView)findViewById(R.id.title_name);
+        TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("注册");
         titleNameView.setVisibility(View.VISIBLE);
         checkCodeView = (EditText) findViewById(R.id.check_code);
@@ -47,9 +52,17 @@ public class RegActivity extends Activity implements View.OnClickListener {
         userNickView = (EditText) findViewById(R.id.user_nick);
         passwordView = (EditText) findViewById(R.id.password);
         regButton = (TextView) findViewById(R.id.next_step);
+        inviteCodeShowView = (TextView) findViewById(R.id.invite_code_show_view);
+        inviteCodeShowView.setText("我有邀请码");
+        inviteCodeShowView.setOnClickListener(this);
+        line4 = findViewById(R.id.line4);
+        inviteCodeLayout = findViewById(R.id.invite_code_layout);
+        inviteCodeView = (EditText) findViewById(R.id.invite_code_view);
         regButton.setOnClickListener(this);
         checkCodeButtonView.setOnClickListener(this);
         regButton.setOnClickListener(this);
+
+        hasInviteCode = false;
 
     }
 
@@ -124,8 +137,17 @@ public class RegActivity extends Activity implements View.OnClickListener {
                     return;
                 }
 
+                String inviteCode = null;
+                if (hasInviteCode) {
+                    inviteCode = inviteCodeView.getText().toString();
+                    if (TextUtils.isEmpty(inviteCode)) {
+                        Toast.makeText(this, "请输入邀请码", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
                 String deviceToken = LoginManager.getDeviceId(this);
-                LoginManager.regUserJob(usernick, password, smsCode, null, deviceToken).startUI(new ApiCallback<UserVO>() {
+                LoginManager.regUserJob(usernick, password, smsCode, inviteCode, deviceToken).startUI(new ApiCallback<UserVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -146,6 +168,19 @@ public class RegActivity extends Activity implements View.OnClickListener {
 
                     }
                 });
+                break;
+            case R.id.invite_code_show_view:
+                if (hasInviteCode) {
+                    inviteCodeShowView.setText("我有邀请码");
+                    inviteCodeLayout.setVisibility(View.GONE);
+                    line4.setVisibility(View.GONE);
+                    hasInviteCode = false;
+                } else {
+                    inviteCodeShowView.setText("我没有邀请码");
+                    inviteCodeLayout.setVisibility(View.VISIBLE);
+                    line4.setVisibility(View.VISIBLE);
+                    hasInviteCode = true;
+                }
                 break;
         }
     }
