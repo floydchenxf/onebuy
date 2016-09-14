@@ -20,16 +20,20 @@ import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.vo.json.CarPayChannel;
+import com.floyd.onebuy.biz.vo.json.ChargeOrderVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.unionpay.UPPayAssistEx;
 
 import java.util.List;
 
-public class PayChargeActivity extends Activity implements View.OnClickListener {
+public class PayChargeActivity extends BasePayActivity implements View.OnClickListener {
 
     private static final String TAG = "PayChargeActivity";
+    public static final String IS_RECHARGE = "IS_RECHARGE";
+    public static final String PRODUCT_ID = "PRODUCT_ID";
 
     private CheckedTextView num1;
     private CheckedTextView num2;
@@ -53,11 +57,17 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
     private TextView addFeeView;
     private LinearLayout payTypeLayout;
 
+    private boolean isRecharge;
+    private long proId;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_charge);
 
+        isRecharge = getIntent().getBooleanExtra(IS_RECHARGE, true);
+        proId = getIntent().getLongExtra(PRODUCT_ID, 0l);
         mImageLoader = ImageLoaderFactory.createImageLoader();
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), new View.OnClickListener() {
@@ -219,23 +229,61 @@ public class PayChargeActivity extends Activity implements View.OnClickListener 
                     money = Integer.parseInt(moneyString);
                 }
                 Long userId = LoginManager.getLoginInfo(this).ID;
-                OrderManager.createOrderAndPayCharge(userId, money + "", payTypeChecked).startUI(new ApiCallback<Double>() {
-                    @Override
-                    public void onError(int code, String errorInfo) {
-                        Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                    }
+                if (isRecharge) {
 
-                    @Override
-                    public void onSuccess(Double money) {
-                        Toast.makeText(PayChargeActivity.this, "充值" + money + "成功!", Toast.LENGTH_SHORT).show();
-                        PayChargeActivity.this.finish();
-                    }
+                    OrderManager.createChargeOrder(userId, money+"", payTypeChecked).startUI(new ApiCallback<ChargeOrderVO>() {
+                        @Override
+                        public void onError(int code, String errorInfo) {
+                            Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        }
 
-                    @Override
-                    public void onProgress(int progress) {
+                        @Override
+                        public void onSuccess(ChargeOrderVO chargeOrderVO) {
+                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.orderNum, "01");
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+//                    OrderManager.createOrderAndPayCharge(userId, money + "", payTypeChecked).startUI(new ApiCallback<Double>() {
+//                        @Override
+//                        public void onError(int code, String errorInfo) {
+//                            Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(Double money) {
+//                            Toast.makeText(PayChargeActivity.this, "充值" + money + "成功!", Toast.LENGTH_SHORT).show();
+//                            PayChargeActivity.this.finish();
+//                        }
+//
+//                        @Override
+//                        public void onProgress(int progress) {
+//
+//                        }
+//                    });
+                } else {
+                    OrderManager.createCommonwealAndPay(userId, proId, money+"", "", payTypeChecked).startUI(new ApiCallback<Double>() {
+                        @Override
+                        public void onError(int code, String errorInfo) {
+                            Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(Double money) {
+                            Toast.makeText(PayChargeActivity.this, "捐款" + money + "成功!", Toast.LENGTH_SHORT).show();
+                            PayChargeActivity.this.finish();
+                        }
+
+                        @Override
+                        public void onProgress(int progress) {
+
+                        }
+                    });
+
+                }
                 break;
 
         }

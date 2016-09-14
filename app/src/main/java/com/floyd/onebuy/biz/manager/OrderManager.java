@@ -92,6 +92,40 @@ public class OrderManager {
 
     }
 
+    public static AsyncJob<OrderVO> createCommonwealOrder(Long userId, Long proId, String money, String remark, int type) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "CreateCommonwealOrder");
+        params.put("userId", userId + "");
+        params.put("pid", proId + "");
+        params.put("money", money);
+        params.put("remark", remark);
+        params.put("type", type+"");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, OrderVO.class);
+    }
+
+    /**
+     * 创建捐款
+     *
+     * @param userId
+     * @param proId
+     * @param money
+     * @param remark
+     * @param type
+     * @return
+     */
+    public static AsyncJob<Double> createCommonwealAndPay(Long userId, Long proId, String money, String remark, int type) {
+        final AsyncJob<Double> commonwealJob = createCommonwealOrder(userId, proId, money, remark, type).flatMap(new Func<OrderVO, AsyncJob<Double>>() {
+            @Override
+            public AsyncJob<Double> call(final OrderVO chargeOrderVO) {
+                String orderNum = chargeOrderVO.orderNum;
+                return payCharge(orderNum);
+            }
+        });
+
+        return commonwealJob;
+    }
+
     /**
      * 捐款模拟支付
      *

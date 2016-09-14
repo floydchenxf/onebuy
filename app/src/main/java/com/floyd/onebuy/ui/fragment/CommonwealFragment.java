@@ -25,6 +25,7 @@ import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.CommonwealDetailActivity;
 import com.floyd.onebuy.ui.activity.CommonwealHelperActivity;
+import com.floyd.onebuy.ui.activity.PayChargeActivity;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.CommonwealAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -305,8 +306,11 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
                 startActivity(it);
                 break;
             case R.id.commonweal_button:
-
-                break;
+                Intent aa = new Intent(getActivity(), PayChargeActivity.class);
+                aa.putExtra(PayChargeActivity.IS_RECHARGE, false);
+                aa.putExtra(PayChargeActivity.PRODUCT_ID, 0l);
+                startActivity(aa);
+                 break;
         }
 
     }

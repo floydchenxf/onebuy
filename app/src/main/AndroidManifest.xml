@@ -26,7 +26,9 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="org.simalliance.openmobileapi.SMARTCARD" />
+    <uses-feature android:name="android.hardware.nfc.hce"/>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -36,6 +38,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <uses-library android:name="org.simalliance.openmobileapi" android:required="false"/>
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -71,6 +75,12 @@
             android:noHistory="true"
             android:theme="@style/Theme.UMDialog"
             android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <activity
+            android:name="com.unionpay.uppay.PayActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard"
+            android:screenOrientation="portrait">
+        </activity>
 
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
