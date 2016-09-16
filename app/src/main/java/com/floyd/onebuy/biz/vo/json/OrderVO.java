@@ -6,4 +6,5 @@ package com.floyd.onebuy.biz.vo.json;
 public class OrderVO {
 
     public String orderNum;
+    public String tn;
 }

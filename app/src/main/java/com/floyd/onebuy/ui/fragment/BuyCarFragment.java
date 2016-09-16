@@ -1,5 +1,7 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -27,7 +29,10 @@ import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
 import com.floyd.onebuy.biz.vo.json.CarPayChannel;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
+import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.event.AddressModifiedEvent;
+import com.floyd.onebuy.event.PaySuccessEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
@@ -36,6 +41,10 @@ import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.multiimage.common.OnCheckChangedListener;
+import com.unionpay.UPPayAssistEx;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +52,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 /**
  * Created by floyd on 16-4-13.
@@ -79,6 +89,8 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     private BuyCarType buyCarType;
     private boolean initedFooter;
 
+    private String orderNum;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +99,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         userId = LoginManager.getLoginInfo(getActivity()).ID;
         needClear = true;
         initedFooter = false;
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -338,6 +351,46 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEventMainThread(PaySuccessEvent event) {
+        if (getActivity().isFinishing()) {
+            return;
+        }
+
+
+        final Set<Long> delCarIds = new HashSet<Long>();
+        for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+            delCarIds.add(info.CarID);
+        }
+
+        CarManager.delCar(buyCarType, delCarIds).startUI(new ApiCallback<Boolean>() {
+            @Override
+            public void onError(int code, String errorInfo) {
+                Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(Boolean s) {
+                isEdit = false;
+                mBuyCarAdapter.remove(delCarIds);
+                mBuyCarAdapter.showRadiio(isEdit);
+            }
+
+            @Override
+            public void onProgress(int progress) {
+            }
+        });
+        Intent intent = new Intent(getActivity(), PayResultActivity.class);
+        intent.putExtra(APIConstants.PAY_ORDER_NO, orderNum);
+        startActivity(intent);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.act_ls_fail_layout:
@@ -357,35 +410,16 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     productLssueDetail.append(info.ProductLssueID).append("|").append(info.CarCount).append(",");
                 }
 
-                OrderManager.createAndPayOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), payType).startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), payType).startUI(new ApiCallback<OrderVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSuccess(OrderPayVO orderVO) {
-                        CarManager.delCar(buyCarType, delCarIds).startUI(new ApiCallback<Boolean>() {
-                            @Override
-                            public void onError(int code, String errorInfo) {
-                                Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onSuccess(Boolean s) {
-                                isEdit = false;
-                                mBuyCarAdapter.remove(delCarIds);
-                                mBuyCarAdapter.showRadiio(isEdit);
-                            }
-
-                            @Override
-                            public void onProgress(int progress) {
-
-                            }
-                        });
-                        Intent intent = new Intent(getActivity(), PayResultActivity.class);
-                        intent.putExtra(APIConstants.PAY_ORDER_NO, orderVO.orderNum);
-                        startActivity(intent);
+                    public void onSuccess(OrderVO orderVO) {
+                        BuyCarFragment.this.orderNum = orderVO.orderNum;
+                        UPPayAssistEx.startPay(getActivity(), null, null, orderVO.tn, "01");
                     }
 
                     @Override
@@ -393,6 +427,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                     }
                 });
+
                 break;
             case R.id.right:
                 isEdit = !isEdit;

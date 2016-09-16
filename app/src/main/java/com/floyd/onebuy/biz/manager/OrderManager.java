@@ -56,6 +56,18 @@ public class OrderManager {
     }
 
 
+    public static AsyncJob<OrderVO> createOrder(BuyCarType type, long userId, String productLssueDetail, int payType) {
+        AsyncJob<OrderVO> orderJob = null;
+        if (type == BuyCarType.FRI) {
+            orderJob = createFridayOrder(userId, productLssueDetail, payType);
+        } else if (type == BuyCarType.NORMAL) {
+            orderJob = createOrder(userId, productLssueDetail, payType);
+        }
+
+        return orderJob;
+    }
+
+
     /**
      * 创建订单
      *
@@ -65,12 +77,7 @@ public class OrderManager {
      */
     public static AsyncJob<OrderPayVO> createAndPayOrder(BuyCarType type, long userId, String productLssueDetail, int payType) {
 
-        AsyncJob<OrderVO> orderJob = null;
-        if (type == BuyCarType.FRI) {
-            orderJob = createFridayOrder(userId, productLssueDetail, payType);
-        } else if (type == BuyCarType.NORMAL) {
-            orderJob = createOrder(userId, productLssueDetail, payType);
-        }
+        AsyncJob<OrderVO> orderJob = createOrder(type, userId, productLssueDetail, payType);
         AsyncJob<OrderPayVO> result = orderJob.flatMap(new Func<OrderVO, AsyncJob<OrderPayVO>>() {
             @Override
             public AsyncJob<OrderPayVO> call(final OrderVO orderVO) {

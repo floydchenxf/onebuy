@@ -239,7 +239,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         @Override
                         public void onSuccess(ChargeOrderVO chargeOrderVO) {
-                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.orderNum, "01");
+                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.tn, "01");
                         }
 
                         @Override

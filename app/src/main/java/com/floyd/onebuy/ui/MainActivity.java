@@ -2,8 +2,10 @@ package com.floyd.onebuy.ui;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.event.PaySuccessEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.fragment.AllProductFragemnt;
 import com.floyd.onebuy.ui.fragment.BackHandledFragment;
@@ -28,6 +31,9 @@ import com.floyd.onebuy.ui.fragment.FragmentTabAdapter;
 import com.floyd.onebuy.ui.fragment.IndexFragment;
 import com.floyd.onebuy.ui.fragment.MyFragment;
 import com.floyd.onebuy.ui.fragment.NewOwnerFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +44,10 @@ import de.greenrobot.event.Subscribe;
 
 
 public class MainActivity extends FragmentActivity implements BackHandledInterface, View.OnClickListener {
+
+    public static final String PAY_MODE = "01";
+    public static final String PAY_RESULT = "pay_result";
+    public static final String RESULT_DATA = "result_data";
 
     private static final String TAG = "MainActivity";
 
@@ -198,6 +208,69 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
             default:
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            return;
+        }
+
+        String msg = "";
+        String str = data.getExtras().getString(PAY_RESULT);
+        if (str.equalsIgnoreCase("success")) {
+            // 支付成功后，extra中如果存在result_data，取出校验
+            // result_data结构见c）result_data参数说明
+//            if (data.hasExtra(RESULT_DATA)) {
+//                String result = data.getExtras().getString(RESULT_DATA);
+//                try {
+//                    JSONObject resultJson = new JSONObject(result);
+//                    String sign = resultJson.getString("sign");
+//                    String dataOrg = resultJson.getString("data");
+                    // 验签证书同后台验签证书
+                    // 此处的verify，商户需送去商户后台做验签
+//                    boolean ret = verify(dataOrg, sign, PAY_MODE);
+//                    if (ret) {
+//                        msg = "支付成功！";
+//                    } else {
+//                        msg = "支付失败！";
+//                    }
+//                } catch (JSONException e) {
+//                }
+//            } else {
+                // 未收到签名信息
+                // 建议通过商户后台查询支付结果
+//                msg = "支付成功！";
+//            }
+
+            EventBus.getDefault().post(new PaySuccessEvent());
+            return;
+        }
+
+        if (str.equalsIgnoreCase("fail")) {
+            msg = "支付失败！";
+        } else if (str.equalsIgnoreCase("cancel")) {
+            msg = "用户取消了支付";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("支付结果通知");
+        builder.setMessage(msg);
+        builder.setInverseBackgroundForced(true);
+        // builder.setCustomTitle();
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private boolean verify(String dataOrg, String sign, String payMode) {
+        return true;
     }
 
 }
