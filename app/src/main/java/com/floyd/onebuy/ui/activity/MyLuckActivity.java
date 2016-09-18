@@ -1,9 +1,11 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +14,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
+import com.floyd.onebuy.biz.vo.json.LuckRecordVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
@@ -45,7 +48,12 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
     private TextView gotoIndexView;
     private boolean isSelf;
 
+    private LinearLayout defaultAddressLayout;
     private TextView buyView;
+    private TextView nameView;
+    private TextView phoneView;
+    private TextView addressView;
+    private TextView emptyAddressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,14 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         });
         mListView = mPullToRefreshListView.getRefreshableView();
         luckRecordAdapter = new LuckRecordAdapter(this, new ArrayList<ProductLssueWithWinnerVO>(), isSelf, mImageLoader);
+        View addressHeadview = View.inflate(MyLuckActivity.this, R.layout.luck_address_layout, null);
+        addressHeadview.setOnClickListener(this);
+        defaultAddressLayout = (LinearLayout) addressHeadview.findViewById(R.id.default_address_layout);
+        nameView = (TextView)addressHeadview.findViewById(R.id.name_view);
+        phoneView = (TextView) addressHeadview.findViewById(R.id.phone_view);
+        addressView = (TextView) addressHeadview.findViewById(R.id.address_view);
+        emptyAddressView = (TextView) addressHeadview.findViewById(R.id.empty_address_view);
+        mListView.addHeaderView(addressHeadview);
         mListView.setAdapter(luckRecordAdapter);
         emptyView = findViewById(R.id.empty_view);
         gotoIndexView = (TextView) emptyView.findViewById(R.id.goto_index);
@@ -98,7 +114,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ProductManager.fetchMyLuckRecords(uid, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<ProductLssueWithWinnerVO>>() {
+        ProductManager.fetchMyLuckRecords(uid, pageNo, PAGE_SIZE).startUI(new ApiCallback<LuckRecordVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -107,10 +123,26 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onSuccess(List<ProductLssueWithWinnerVO> productLssueWithWinnerVOs) {
+            public void onSuccess(LuckRecordVO recordVO) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
+
+                LuckRecordVO.LuckAddressVO luckAddressVO = recordVO.clientAddr;
+                if (luckAddressVO == null || luckAddressVO.ID == 0) {
+                    emptyAddressView.setVisibility(View.VISIBLE);
+                    defaultAddressLayout.setVisibility(View.GONE);
+                    luckRecordAdapter.setHasSetAddress(false);
+                } else {
+                    emptyAddressView.setVisibility(View.GONE);
+                    defaultAddressLayout.setVisibility(View.VISIBLE);
+                    nameView.setText(luckAddressVO.Name);
+                    addressView.setText(luckAddressVO.Address);
+                    phoneView.setText(luckAddressVO.Phone);
+                    luckRecordAdapter.setHasSetAddress(true);
+                }
+
+                List<ProductLssueWithWinnerVO> productLssueWithWinnerVOs = recordVO.proLssueList;
                 luckRecordAdapter.addAll(productLssueWithWinnerVOs, needClear);
                 if (luckRecordAdapter.getRecords().isEmpty()) {
                     mListView.setVisibility(View.GONE);
@@ -147,6 +179,10 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
             case R.id.buy_view:
                 EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 this.finish();
+                break;
+            case R.id.address_layout:
+                Intent addressIntent = new Intent(this, AddressManagerActivity.class);
+                startActivity(addressIntent);
                 break;
         }
 

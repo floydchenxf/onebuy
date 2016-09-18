@@ -9,6 +9,8 @@ public class ProductLssueWithWinnerVO extends ProductBaseLssueVO {
     public String ProductLssueCode;
     public String PriceCode;
     public Long PriceTime;
+    public int JonidedCount;
+    public int IsSend;
 
     public String getFullTitle() {
         StringBuilder sb = new StringBuilder();

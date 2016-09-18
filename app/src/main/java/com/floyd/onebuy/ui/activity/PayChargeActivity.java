@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
@@ -231,7 +232,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
                 Long userId = LoginManager.getLoginInfo(this).ID;
                 if (isRecharge) {
 
-                    OrderManager.createChargeOrder(userId, money+"", payTypeChecked).startUI(new ApiCallback<ChargeOrderVO>() {
+                    OrderManager.createChargeOrder(userId, money + "", payTypeChecked).startUI(new ApiCallback<ChargeOrderVO>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -239,7 +240,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         @Override
                         public void onSuccess(ChargeOrderVO chargeOrderVO) {
-                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.tn, "01");
+                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.tn, APIConstants.PAY_MODE);
                         }
 
                         @Override
@@ -247,25 +248,8 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         }
                     });
-//                    OrderManager.createOrderAndPayCharge(userId, money + "", payTypeChecked).startUI(new ApiCallback<Double>() {
-//                        @Override
-//                        public void onError(int code, String errorInfo) {
-//                            Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(Double money) {
-//                            Toast.makeText(PayChargeActivity.this, "充值" + money + "成功!", Toast.LENGTH_SHORT).show();
-//                            PayChargeActivity.this.finish();
-//                        }
-//
-//                        @Override
-//                        public void onProgress(int progress) {
-//
-//                        }
-//                    });
                 } else {
-                    OrderManager.createCommonwealAndPay(userId, proId, money+"", "", payTypeChecked).startUI(new ApiCallback<Double>() {
+                    OrderManager.createCommonwealAndPay(userId, proId, money + "", "", payTypeChecked).startUI(new ApiCallback<Double>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();

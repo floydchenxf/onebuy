@@ -36,7 +36,6 @@ public class AddressManagerActivity extends Activity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_manager);
-        EventBus.getDefault().register(this);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(findViewById(R.id.act_lsloading), this);
         mListView = (ListView) findViewById(R.id.address_list);
@@ -62,6 +61,11 @@ public class AddressManagerActivity extends Activity implements View.OnClickList
                 startActivity(addAddressIntent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadData();
     }
 
@@ -110,16 +114,8 @@ public class AddressManagerActivity extends Activity implements View.OnClickList
         }
     }
 
-    @Subscribe
-    public void onEventMainThread(AddressModifiedEvent event) {
-        if (!this.isFinishing()) {
-            loadData();
-        }
-    }
-
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
 }

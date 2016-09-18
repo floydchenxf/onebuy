@@ -300,7 +300,13 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                             NetworkImageView imageView = (NetworkImageView) v.findViewById(R.id.wx_icon);
                             imageView.setImageUrl(channel.getPicUrl(), mImageLoader);
                             TextView payNameView = (TextView) v.findViewById(R.id.pay_name_view);
-                            payNameView.setText(channel.Name);
+                            StringBuilder sb = new StringBuilder(channel.Name);
+                            if (channel.ID == 1) {
+                                sb.append(" (￥").append(carListVO.UserInfo.Amount).append(")");
+                            } else if (channel.ID == 2) {
+                                sb.append(" (").append(carListVO.UserInfo.JiFen).append(")");
+                            }
+                            payNameView.setText(sb.toString());
                             RadioButton rb = (RadioButton) v.findViewById(R.id.wx_radio);
                             rb.setTag(channel.ID);
                             rbArray[idx] = rb;
@@ -358,6 +364,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     @Subscribe
     public void onEventMainThread(PaySuccessEvent event) {
+        buySuccessCall();
+    }
+
+    private void buySuccessCall() {
         if (getActivity().isFinishing()) {
             return;
         }
@@ -368,23 +378,10 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
             delCarIds.add(info.CarID);
         }
 
-        CarManager.delCar(buyCarType, delCarIds).startUI(new ApiCallback<Boolean>() {
-            @Override
-            public void onError(int code, String errorInfo) {
-                Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
-            }
+        isEdit = false;
+        mBuyCarAdapter.remove(delCarIds);
+        mBuyCarAdapter.showRadiio(isEdit);
 
-            @Override
-            public void onSuccess(Boolean s) {
-                isEdit = false;
-                mBuyCarAdapter.remove(delCarIds);
-                mBuyCarAdapter.showRadiio(isEdit);
-            }
-
-            @Override
-            public void onProgress(int progress) {
-            }
-        });
         Intent intent = new Intent(getActivity(), PayResultActivity.class);
         intent.putExtra(APIConstants.PAY_ORDER_NO, orderNum);
         startActivity(intent);
@@ -407,7 +404,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 final Set<Long> delCarIds = new HashSet<Long>();
                 for (CarItemVO info : mBuyCarAdapter.getRecords()) {
                     delCarIds.add(info.CarID);
-                    productLssueDetail.append(info.ProductLssueID).append("|").append(info.CarCount).append(",");
+                    productLssueDetail.append(info.ProductLssueID).append("_").append(info.CarCount).append("|");
                 }
 
                 OrderManager.createOrder(BuyCarType.NORMAL, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), payType).startUI(new ApiCallback<OrderVO>() {
@@ -418,8 +415,13 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                     @Override
                     public void onSuccess(OrderVO orderVO) {
-                        BuyCarFragment.this.orderNum = orderVO.orderNum;
-                        UPPayAssistEx.startPay(getActivity(), null, null, orderVO.tn, "01");
+                        if (payType == 6) {
+                            BuyCarFragment.this.orderNum = orderVO.orderNum;
+                            UPPayAssistEx.startPay(getActivity(), null, null, orderVO.tn, APIConstants.PAY_MODE);
+                        } else {
+                            BuyCarFragment.this.orderNum = orderVO.orderNum;
+                            buySuccessCall();
+                        }
                     }
 
                     @Override

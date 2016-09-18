@@ -14,6 +14,7 @@ import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
+import com.floyd.onebuy.biz.vo.json.LuckRecordVO;
 import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
@@ -939,7 +940,7 @@ public class ProductManager {
      * @param pageSize
      * @return
      */
-    public static AsyncJob<List<ProductLssueWithWinnerVO>> fetchMyLuckRecords(long uid, int pageNum, int pageSize) {
+    public static AsyncJob<LuckRecordVO> fetchMyLuckRecords(long uid, int pageNum, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetLuckRecord");
@@ -947,9 +948,9 @@ public class ProductManager {
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
 
-        Type type = new TypeToken<List<ProductLssueWithWinnerVO>>() {
+        Type type = new TypeToken<LuckRecordVO>() {
         }.getType();
-        AsyncJob<List<ProductLssueWithWinnerVO>> a = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+        AsyncJob<LuckRecordVO> a = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
         return a;
     }
 

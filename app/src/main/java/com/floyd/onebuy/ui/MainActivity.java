@@ -45,7 +45,7 @@ import de.greenrobot.event.Subscribe;
 
 public class MainActivity extends FragmentActivity implements BackHandledInterface, View.OnClickListener {
 
-    public static final String PAY_MODE = "01";
+    public static final String PAY_MODE = APIConstants.PAY_MODE;
     public static final String PAY_RESULT = "pay_result";
     public static final String RESULT_DATA = "result_data";
 

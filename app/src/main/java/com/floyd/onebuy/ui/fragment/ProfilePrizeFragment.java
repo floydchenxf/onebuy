@@ -15,6 +15,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
+import com.floyd.onebuy.biz.vo.json.LuckRecordVO;
+import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
@@ -116,7 +118,7 @@ public class ProfilePrizeFragment extends Fragment implements View.OnClickListen
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ProductManager.fetchMyLuckRecords(userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<ProductLssueWithWinnerVO>>() {
+        ProductManager.fetchMyLuckRecords(userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<LuckRecordVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -125,11 +127,12 @@ public class ProfilePrizeFragment extends Fragment implements View.OnClickListen
             }
 
             @Override
-            public void onSuccess(List<ProductLssueWithWinnerVO> productLssueWithWinnerVOs) {
+            public void onSuccess(LuckRecordVO recordVO) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
-                luckRecordAdapter.addAll(productLssueWithWinnerVOs, needClear);
+                List<ProductLssueWithWinnerVO> aa = recordVO.proLssueList;
+                luckRecordAdapter.addAll(aa, needClear);
             }
 
             @Override

@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.floyd.onebuy.biz.constants.APIConstants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +16,7 @@ import org.json.JSONObject;
  */
 public abstract class BasePayActivity extends Activity {
 
-    public static final String PAY_MODE = "01";
+    public static final String PAY_MODE = APIConstants.PAY_MODE;
     public static final String PAY_RESULT = "pay_result";
     public static final String RESULT_DATA = "result_data";
 

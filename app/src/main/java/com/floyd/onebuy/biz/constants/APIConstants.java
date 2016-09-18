@@ -39,4 +39,6 @@ public class APIConstants {
     public static final int SHARE_SHOW_PIC_TYPE = 1;
     public static final int SHARE_SHOW_VIDEO_TYPE = 2;
     public static final int SHARE_SHOW_ALL = 3;
+
+    public static final String PAY_MODE = "00";
 }
