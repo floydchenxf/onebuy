@@ -1,6 +1,8 @@
 package com.floyd.onebuy.ui.adapter;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,22 +30,30 @@ public class ChargeAdapter extends BaseDataAdapter<ChargeVO> {
 
     @Override
     int[] cacheViews() {
-        return new int[]{R.id.charge_type_view, R.id.pay_time_view, R.id.money_view};
+        return new int[]{R.id.charge_type_view, R.id.pay_time_view, R.id.money_pay_status_view, R.id.order_no_view};
     }
 
     @Override
     void processHolder(Map<Integer, View> holder, ChargeVO chargeVO) {
         TextView chargeTypeView = (TextView) holder.get(R.id.charge_type_view);
         TextView payTimeView = (TextView) holder.get(R.id.pay_time_view);
-        TextView moneyView = (TextView) holder.get(R.id.money_view);
-        if (chargeVO.ChargeType == 0) {
-            chargeTypeView.setText("支付宝充值");
-        } else if (chargeVO.ChargeType == 1) {
-            chargeTypeView.setText("微信充值");
+        TextView moneyView = (TextView) holder.get(R.id.money_pay_status_view);
+        TextView orderNoView = (TextView) holder.get(R.id.order_no_view);
+        orderNoView.setText(chargeVO.OrderNum);
+        chargeTypeView.setText(chargeVO.ChargeTypeTitle);
+
+        int chargeStatus = chargeVO.ChargeState;
+        StringBuilder moneyPayStatus = new StringBuilder();
+        moneyPayStatus.append("<font color=\"red\">").append(chargeVO.Money).append("/");
+        if (chargeStatus == 0) {
+            moneyPayStatus.append("未支付");
+        } else {
+            moneyPayStatus.append("已支付");
         }
 
-        String dateTimeStr = DateUtil.getDateTime(chargeVO.getPayTime());
+        Spanned s = Html.fromHtml(moneyPayStatus.toString());
+        moneyView.setText(s);
+        String dateTimeStr = DateUtil.getDateTime("yy/MM/dd HH:mm:ss", chargeVO.getPayTime());
         payTimeView.setText(dateTimeStr);
-        moneyView.setText(chargeVO.Money + "元");
     }
 }

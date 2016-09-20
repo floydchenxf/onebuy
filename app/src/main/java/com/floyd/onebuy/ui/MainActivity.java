@@ -163,11 +163,11 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         if (!this.isFinishing()) {
             rgs.check(event.tabId);
 
-            Map<String,Object> data = event.data;
+            Map<String, Object> data = event.data;
             Object o = data.get(APIConstants.INDEX_PRODUCT_TYPE_ID);
             if (o != null) {
-                Long typeId =(Long)o;
-                ((AllProductFragemnt)fragments.get(1)).switchType(typeId);
+                Long typeId = (Long) o;
+                ((AllProductFragemnt) fragments.get(1)).switchType(typeId);
             }
         }
     }
@@ -218,55 +218,34 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
             return;
         }
 
-        String msg = "";
-        String str = data.getExtras().getString(PAY_RESULT);
-        if (str.equalsIgnoreCase("success")) {
-            // 支付成功后，extra中如果存在result_data，取出校验
-            // result_data结构见c）result_data参数说明
-//            if (data.hasExtra(RESULT_DATA)) {
-//                String result = data.getExtras().getString(RESULT_DATA);
-//                try {
-//                    JSONObject resultJson = new JSONObject(result);
-//                    String sign = resultJson.getString("sign");
-//                    String dataOrg = resultJson.getString("data");
-                    // 验签证书同后台验签证书
-                    // 此处的verify，商户需送去商户后台做验签
-//                    boolean ret = verify(dataOrg, sign, PAY_MODE);
-//                    if (ret) {
-//                        msg = "支付成功！";
-//                    } else {
-//                        msg = "支付失败！";
-//                    }
-//                } catch (JSONException e) {
-//                }
-//            } else {
-                // 未收到签名信息
-                // 建议通过商户后台查询支付结果
-//                msg = "支付成功！";
-//            }
-
-            EventBus.getDefault().post(new PaySuccessEvent());
-            return;
-        }
-
-        if (str.equalsIgnoreCase("fail")) {
-            msg = "支付失败！";
-        } else if (str.equalsIgnoreCase("cancel")) {
-            msg = "用户取消了支付";
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("支付结果通知");
-        builder.setMessage(msg);
-        builder.setInverseBackgroundForced(true);
-        // builder.setCustomTitle();
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        if (requestCode == 10) {
+            String msg = "";
+            String str = data.getExtras().getString(PAY_RESULT);
+            if (str.equalsIgnoreCase("success")) {
+                EventBus.getDefault().post(new PaySuccessEvent());
+                return;
             }
-        });
-        builder.create().show();
+
+            if (str.equalsIgnoreCase("fail")) {
+                msg = "支付失败！";
+            } else if (str.equalsIgnoreCase("cancel")) {
+                msg = "用户取消了支付";
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("支付结果通知");
+            builder.setMessage(msg);
+            builder.setInverseBackgroundForced(true);
+            // builder.setCustomTitle();
+            builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
+        }
+
     }
 
     private boolean verify(String dataOrg, String sign, String payMode) {

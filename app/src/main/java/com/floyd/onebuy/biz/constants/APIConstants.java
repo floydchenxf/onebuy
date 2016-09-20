@@ -18,6 +18,8 @@ public class APIConstants {
     public static final String APP_HANDLE_MODULE = "AppHandler.ashx";
 
     public static final String COMMONWEAL_MODULE = "CommonwealService.ashx";
+    public static final String SUBJECT_INFO_MODULE = "SpecialSubjectService.ashx";
+
     public static final String API_GET_ADVERT_LIST = "api/index/getAdvertList";//获取广告
     public static final String API_GET_MOTE_LIST = "api/index/getMoteList"; //获取首页模特信息
 

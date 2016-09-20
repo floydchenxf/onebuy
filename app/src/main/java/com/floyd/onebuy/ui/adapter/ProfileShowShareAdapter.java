@@ -3,6 +3,8 @@ package com.floyd.onebuy.ui.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +17,11 @@ import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.json.PrizeShowVO;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.ShareShowDetailActivity;
+import com.floyd.onebuy.ui.multiimage.MultiImageActivity;
+import com.floyd.onebuy.ui.multiimage.base.MulitImageVO;
+import com.floyd.onebuy.ui.multiimage.base.PicViewObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,9 +96,20 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
             guestPicLayout.setVisibility(View.VISIBLE);
             guestPicLayout.removeAllViews();
 
+            final List<PicViewObject> result = new ArrayList<PicViewObject>();
+            long idx = 1;
+            for (String path : picList) {
+                PicViewObject view = new PicViewObject();
+                view.setPicPreViewUrl(path);
+                view.setPicUrl(path);
+                view.setPicId(idx++);
+                view.setPicType(PicViewObject.IMAGE);
+                result.add(view);
+            }
+
             int len = picList.size() > 2 ? 2 : picList.size();
             for (int i = 0; i < len; i++) {
-                String picUrl = picList.get(i);
+                final String picUrl = picList.get(i);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(eachWidth, 3 * eachWidth / 4);
                 lp.setMargins(0, 0, (int) (10 * oneDp), 0);
 
@@ -101,6 +118,26 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
                 networkImage.setImageUrl(picUrl, mImageLoader);
                 networkImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 networkImage.setLayoutParams(lp);
+                final int k = i;
+                networkImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (vo.isPic()) {
+                            MulitImageVO vo = new MulitImageVO(k, result);
+                            Intent it = new Intent(mContext, MultiImageActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(MultiImageActivity.MULIT_IMAGE_VO, vo);
+                            it.putExtra(MultiImageActivity.MULIT_IMAGE_VO, bundle);
+                            it.putExtra(MultiImageActivity.MULIT_IMAGE_PICK_MODE,
+                                    MultiImageActivity.MULIT_IMAGE_PICK_MODE_PREVIEW);
+                            mContext.startActivity(it);
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse(picUrl), "video/mp4");
+                            mContext.startActivity(intent);
+                        }
+                    }
+                });
                 guestPicLayout.addView(networkImage);
             }
         }

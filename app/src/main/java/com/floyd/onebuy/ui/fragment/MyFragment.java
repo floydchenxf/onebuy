@@ -37,6 +37,7 @@ import com.floyd.onebuy.ui.activity.MyLuckActivity;
 import com.floyd.onebuy.ui.activity.PayChargeActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.ShowShareActivity;
+import com.floyd.onebuy.ui.activity.SubjectInfoActivity;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.adapter.NavigationAdapter;
@@ -244,15 +245,23 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle bundle = data.getExtras();
                     //显示扫描到的内容
-                    String lssueIdStr = bundle.getString("result");
-                    if (!TextUtils.isDigitsOnly(lssueIdStr)) {
-                        Toast.makeText(getActivity(), "不是有效的商品类型", Toast.LENGTH_SHORT).show();
+                    String resultString = bundle.getString("result");
+                    if (TextUtils.isEmpty(resultString) || !resultString.startsWith("suchengyungou_subject_")) {
+                        Toast.makeText(getActivity(), "不是有效的商品", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    Intent detailIntent = new Intent(getActivity(), WinningDetailActivity.class);
+                    String[] array = resultString.split("_");
+                    String idStr = array[2];
+                    if (!TextUtils.isDigitsOnly(idStr)) {
+                        Toast.makeText(getActivity(), "不是有效的商品ID", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Long id = Long.parseLong(idStr);
+                    Intent detailIntent = new Intent(getActivity(), SubjectInfoActivity.class);
                     detailIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    detailIntent.putExtra(WinningDetailActivity.LSSUE_ID, lssueIdStr);
+                    detailIntent.putExtra(SubjectInfoActivity.SUBJECT_ID, id);
                     startActivity(detailIntent);
                 }
                 break;

@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/source_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
@@ -31,14 +32,26 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/money_view"
+        android:id="@+id/order_no_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/source_layout"
+        android:text="订单号"
+        android:layout_marginRight="100dp"
+        android:textColor="@color/gray_content"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/money_pay_status_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
         android:text="50元"
-        android:textColor="@color/red"
+        android:textColor="@color/gray_content"
         android:textSize="14sp" />
 
 </RelativeLayout>

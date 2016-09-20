@@ -66,6 +66,8 @@ public class ChargeListActivity extends Activity implements View.OnClickListener
         View emptyView = View.inflate(this, R.layout.empty_item, null);
         mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
+        View v = View.inflate(this, R.layout.record_head, null);
+        mListView.addHeaderView(v);
         mAdapter = new ChargeAdapter(this, new ArrayList<ChargeVO>());
         mListView.setAdapter(mAdapter);
 

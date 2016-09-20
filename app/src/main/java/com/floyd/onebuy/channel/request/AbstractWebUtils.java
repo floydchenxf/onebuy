@@ -434,7 +434,7 @@ public abstract class AbstractWebUtils {
         if ("post".equalsIgnoreCase(method)) {
             conn.setDoOutput(true);
         }
-        conn.setRequestProperty("Accept", "text/xml,text/javascript,text/html,application/json");
+        conn.setRequestProperty("Accept", "text/xml,text/javascript,application/xhtml+xml,text/html,application/json,image/*");
         conn.setRequestProperty("User-Agent", getUserAgent());
         conn.setRequestProperty("Content-Type", ctype);
         conn.setRequestProperty("Accept-Encoding", "gzip");//support gzip

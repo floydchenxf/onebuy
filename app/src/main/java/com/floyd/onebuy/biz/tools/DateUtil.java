@@ -60,10 +60,14 @@ public class DateUtil {
     }
 
     public static String getDateTime(long time) {
+        return getDateTime("yyyy-MM-dd HH:mm:ss", time);
+    }
+
+    public static String getDateTime(String format, long time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
         Date date = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         return simpleDateFormat.format(date);
     }
 

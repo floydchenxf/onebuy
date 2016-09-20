@@ -59,6 +59,10 @@ import de.greenrobot.event.Subscribe;
  */
 public class BuyCarFragment extends BackHandledFragment implements View.OnClickListener {
 
+    public static final String PAY_MODE = APIConstants.PAY_MODE;
+    public static final String PAY_RESULT = "pay_result";
+    public static final String RESULT_DATA = "result_data";
+
     private DataLoadingView dataLoadingView;
     private ListView mListView;
     private ImageLoader mImageLoader;
@@ -481,5 +485,34 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String msg = "";
+        String str = data.getExtras().getString(PAY_RESULT);
+        if (str.equalsIgnoreCase("success")) {
+            EventBus.getDefault().post(new PaySuccessEvent());
+            return;
+        }
+
+        if (str.equalsIgnoreCase("fail")) {
+            msg = "支付失败！";
+        } else if (str.equalsIgnoreCase("cancel")) {
+            msg = "用户取消了支付";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("支付结果通知");
+        builder.setMessage(msg);
+        builder.setInverseBackgroundForced(true);
+        // builder.setCustomTitle();
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }

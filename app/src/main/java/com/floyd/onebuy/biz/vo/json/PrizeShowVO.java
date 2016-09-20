@@ -24,7 +24,7 @@ public class PrizeShowVO {
 
     public String MediaUrl;
     public Integer CommentNum;
-    public int TypeBook;
+    public int TypeBook; //类型 1:图片 2:视频
 
     public int isVerify;
 
@@ -37,5 +37,9 @@ public class PrizeShowVO {
             }
         }
         return result;
+    }
+
+    public boolean isPic() {
+        return this.TypeBook == APIConstants.SHARE_SHOW_PIC_TYPE;
     }
 }
