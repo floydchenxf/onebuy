@@ -17,7 +17,7 @@
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/tuqian" />
+            android:src="@drawable/tupian" />
 
         <TextView
             android:id="@+id/product_title_view_1"
@@ -54,7 +54,7 @@
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/tuqian" />
+            android:src="@drawable/tupian" />
 
         <TextView
             android:id="@+id/product_title_view_2"

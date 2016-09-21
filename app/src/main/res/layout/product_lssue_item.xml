@@ -21,7 +21,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/tuqian" />
+            android:src="@drawable/tupian" />
 
         <TextView
             android:id="@+id/product_title_view_1"
@@ -244,7 +244,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/tuqian" />
+            android:src="@drawable/tupian" />
 
         <TextView
             android:id="@+id/product_title_view_2"

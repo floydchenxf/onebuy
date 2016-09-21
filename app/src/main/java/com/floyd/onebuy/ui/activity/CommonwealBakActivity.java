@@ -185,6 +185,14 @@ public class CommonwealBakActivity extends FragmentActivity implements View.OnCl
 
             }
         });
+
+        if (currentIndex == 0) {
+            tabCommonwealView.setChecked(true);
+            tabFundView.setChecked(false);
+        } else{
+            tabCommonwealView.setChecked(false);
+            tabFundView.setChecked(true);
+        }
     }
 
     @Override

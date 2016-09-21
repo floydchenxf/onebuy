@@ -497,6 +497,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         typeDeses = new TextView[]{typeTextView1, typeTextView2, typeTextView3, typeTextView4, typeTextView5};
 
         newsImageView = (NetworkImageView) mHeaderView.findViewById(R.id.news_pic_view);
+        newsImageView.setOnClickListener(this);
         mListView.addHeaderView(mHeaderView);
     }
 
@@ -610,6 +611,11 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             case R.id.right_layout:
                 Intent it = new Intent(this.getActivity(), SearchActivity.class);
                 startActivity(it);
+                break;
+            case R.id.news_pic_view:
+                Intent wealIntent = new Intent(getActivity(), CommonwealBakActivity.class);
+                wealIntent.putExtra(CommonwealBakActivity.CURRENT_PAGE_INDEX, 1);
+                startActivity(wealIntent);
                 break;
         }
 

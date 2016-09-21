@@ -49,7 +49,7 @@ public class CommentAdapter extends BaseDataAdapter<ShowCommentVO> {
         TextView commentContentView = (TextView) holder.get(R.id.comment_content_view);
         TextView commentTimeView = (TextView) holder.get(R.id.comment_time_view);
 
-        headView.setDefaultImageResId(R.drawable.default_image);
+        headView.setDefaultImageResId(R.drawable.default_head);
         headView.setImageUrl(vo.getPicUrl(), mImageLoader, new BitmapProcessor() {
             @Override
             public Bitmap processBitmap(Bitmap bitmap) {

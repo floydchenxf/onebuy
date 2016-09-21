@@ -84,7 +84,7 @@ public class JoinRecordAdapter extends BaseAdapter {
         }
 
         JoinVO vo = getItem(position);
-        holder.headImage.setDefaultImageResId(R.drawable.default_image);
+        holder.headImage.setDefaultImageResId(R.drawable.default_head);
         holder.headImage.setImageUrl(vo.getClientPic(), imageLoader, new BitmapProcessor() {
             @Override
             public Bitmap processBitmap(Bitmap bitmap) {

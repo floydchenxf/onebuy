@@ -96,7 +96,7 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
         addressManagerView = findViewById(R.id.address_layout);
         oneDp = this.getResources().getDimension(R.dimen.one_dp);
 
-        headImageView.setDefaultImageResId(R.drawable.default_image);
+        headImageView.setDefaultImageResId(R.drawable.default_head);
         addressManagerView.setOnClickListener(this);
         popupWindow = new LeftDownPopupWindow(this);
         popupWindow.initView(R.layout.edit_head_pop, new LeftDownPopupWindow.ViewInit() {

@@ -44,7 +44,7 @@ public class ChargeAdapter extends BaseDataAdapter<ChargeVO> {
 
         int chargeStatus = chargeVO.ChargeState;
         StringBuilder moneyPayStatus = new StringBuilder();
-        moneyPayStatus.append("<font color=\"red\">").append(chargeVO.Money).append("/");
+        moneyPayStatus.append("<font color=\"red\">").append(chargeVO.Money).append("</font>").append("/");
         if (chargeStatus == 0) {
             moneyPayStatus.append("未支付");
         } else {
@@ -53,7 +53,7 @@ public class ChargeAdapter extends BaseDataAdapter<ChargeVO> {
 
         Spanned s = Html.fromHtml(moneyPayStatus.toString());
         moneyView.setText(s);
-        String dateTimeStr = DateUtil.getDateTime("yy/MM/dd HH:mm:ss", chargeVO.getPayTime());
+        String dateTimeStr = DateUtil.getDateTime("yy/MM/dd HH:mm", chargeVO.getPayTime());
         payTimeView.setText(dateTimeStr);
     }
 }

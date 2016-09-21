@@ -140,7 +140,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         bgHeadView = (NetworkImageView) headView.findViewById(R.id.head_bg);
         addFeeView.setOnClickListener(this);
         headImageView = (NetworkImageView) headView.findViewById(R.id.head);
-        headImageView.setDefaultImageResId(R.drawable.default_image);
+        headImageView.setDefaultImageResId(R.drawable.default_head);
         headImageView.setOnClickListener(this);
 
         operateListView = (ListView) view.findViewById(R.id.operate_listview);

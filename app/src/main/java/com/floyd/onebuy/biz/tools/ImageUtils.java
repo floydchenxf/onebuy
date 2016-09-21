@@ -257,7 +257,7 @@ public class ImageUtils {
 
 	public static Bitmap getDefaultHeadBitmap(Context context){
 		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.tuqian);
+				R.drawable.tupian);
 		Bitmap bitmapHead = ImageUtils.getCircleBitmap(bitmap, bitmap.getWidth() / 2);
 		bitmap.recycle();
 		return bitmapHead;

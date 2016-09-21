@@ -76,8 +76,8 @@ public class FridayAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.productImageView1.setDefaultImageResId(R.drawable.tuqian);
-        viewHolder.productImageView2.setDefaultImageResId(R.drawable.tuqian);
+        viewHolder.productImageView1.setDefaultImageResId(R.drawable.tupian);
+        viewHolder.productImageView2.setDefaultImageResId(R.drawable.tupian);
         int start = position * 2;
         int end = position * 2 + 1;
         if (records.size() - 1 >= end) {

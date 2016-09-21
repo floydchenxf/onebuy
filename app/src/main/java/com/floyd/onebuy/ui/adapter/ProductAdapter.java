@@ -92,9 +92,9 @@ public class ProductAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.productImage1.setDefaultImageResId(R.drawable.tuqian);
-        holder.productImage2.setDefaultImageResId(R.drawable.tuqian);
-        holder.productImage3.setDefaultImageResId(R.drawable.tuqian);
+        holder.productImage1.setDefaultImageResId(R.drawable.tupian);
+        holder.productImage2.setDefaultImageResId(R.drawable.tupian);
+        holder.productImage3.setDefaultImageResId(R.drawable.tupian);
 
         int start = position * 3;
         int end = position * 3 + 2;

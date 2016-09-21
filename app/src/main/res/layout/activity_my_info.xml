@@ -39,7 +39,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_image" />
+                android:src="@drawable/default_head" />
         </RelativeLayout>
 
 
