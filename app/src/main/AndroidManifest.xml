@@ -68,7 +68,7 @@
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="57af38af67e58e88e2004ba1" />
+            android:value="57c2fd4167e58ede500033b3" />
 
         <!-- ###################注册SDK使用的Activity###################### -->
         <activity
