@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/product_item_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
+        android:background="#ffffff">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/product_pic_1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tuqian" />
+
+        <TextView
+            android:id="@+id/product_title_view_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_pic_1"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="test1"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/product_code_layout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_title_view_1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="期号:"
+                android:textColor="@color/gray_content"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/product_code_view_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11111"
+                android:textColor="@color/gray_content"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/choose_layout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_code_layout_1"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/progress_layout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/progress_precent_desc_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="开奖进度"
+                    android:textColor="@color/red"
+                    android:textSize="12sp" />
+
+                <ProgressBar
+                    android:id="@+id/progress_present_1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="100dp"
+                    android:layout_height="4dp"
+                    android:max="100"
+                    android:progress="50"
+                    android:progressDrawable="@drawable/barcolor" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/add_buy_list_view_1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/progress_layout1"
+                android:paddingLeft="10dp"
+                android:paddingRight="6dp"
+                android:src="@drawable/addbuycar" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lottest_layout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_code_layout_1"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/left_time_view_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="20:00:11"
+                android:textColor="#ff0000"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/owner_layout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_code_layout_1"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="获奖者:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/winning_owner_view_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GoodLuck"
+                    android:textColor="#ff0000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="参与次数:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/join_winning_time_view_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10人次"
+                    android:textColor="#ff0000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="幸运号码:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/good_luck_num_view_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10000030"
+                    android:textColor="#ff0000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="揭晓时间:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/lottest_time_view_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="2016-04-25 15:00:00"
+                    android:textColor="#ff0000"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/product_item_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:background="#ffffff">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/product_pic_2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tuqian" />
+
+        <TextView
+            android:id="@+id/product_title_view_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_pic_2"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="test2"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/product_code_layout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_title_view_2"
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="期号:"
+                android:textColor="@color/gray_content"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/product_code_view_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11111"
+                android:textColor="@color/gray_content"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/choose_layout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_code_layout_2"
+            android:layout_marginLeft="10dp">
+
+            <LinearLayout
+                android:id="@+id/progress_layout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/progress_precent_desc_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="开奖进度"
+                    android:textColor="@color/red"
+                    android:textSize="12sp" />
+
+                <ProgressBar
+                    android:id="@+id/progress_present_2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="100dp"
+                    android:layout_height="4dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="50"
+                    android:progressDrawable="@drawable/barcolor" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/add_buy_list_view_2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/progress_layout2"
+                android:paddingLeft="10dp"
+                android:paddingRight="6dp"
+                android:src="@drawable/addbuycar" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lottest_layout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_code_layout_2"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/left_time_view_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="20:00:11"
+                android:textColor="#ff0000"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/owner_layout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_code_layout_2"
+            android:layout_marginLeft="4dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="获奖者:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/winning_owner_view_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GoodLuck"
+                    android:textColor="#ff0000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="参与次数:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/join_winning_time_view_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10人次"
+                    android:textColor="#ff0000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="幸运号码:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/good_luck_num_view_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10000030"
+                    android:textColor="#ff0000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="揭晓时间:"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/lottest_time_view_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="2016-04-25 15:00:00"
+                    android:textColor="#ff0000"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

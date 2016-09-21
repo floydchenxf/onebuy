@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Network;
 import com.android.volley.toolbox.ImageLoader;
@@ -17,6 +18,7 @@ import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.ProductLssueAdapter;
+import com.floyd.onebuy.ui.adapter.SubjectProductAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 
@@ -32,7 +34,7 @@ public class SubjectInfoActivity extends Activity {
     private DataLoadingView dataLoadingView;
     private ListView mListView;
     private ImageLoader mImageLoader;
-    private ProductLssueAdapter productAdapter;
+    private SubjectProductAdapter productAdapter;
     private NetworkImageView backgroudView;
 
     @Override
@@ -49,11 +51,17 @@ public class SubjectInfoActivity extends Activity {
                 loadData();
             }
         });
+        findViewById(R.id.title_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SubjectInfoActivity.this.finish();
+            }
+        });
 
         backgroudView = (NetworkImageView) findViewById(R.id.background_view);
         backgroudView.setDefaultImageResId(R.drawable.tupian);
         mListView = (ListView) findViewById(R.id.common_list);
-        productAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this, new ArrayList<WinningInfo>(), mImageLoader);
+        productAdapter = new SubjectProductAdapter(BuyCarType.NORMAL, this, new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(productAdapter);
         loadData();
     }
