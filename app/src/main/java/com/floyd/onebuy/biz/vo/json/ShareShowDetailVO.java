@@ -38,4 +38,8 @@ public class ShareShowDetailVO {
         }
         return result;
     }
+
+    public boolean isPic() {
+        return this.TypeBook == APIConstants.SHARE_SHOW_PIC_TYPE;
+    }
 }

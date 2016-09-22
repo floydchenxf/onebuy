@@ -24,8 +24,8 @@ public class QQShare implements IShare {
 
     @Override
     public void init() {
-        String appId = "1105636877";
-        String appKey = "WUNMS4IJbYvk8Fdh";
+        String appId = ShareConstants.QQ_APP_ID;
+        String appKey = ShareConstants.QQ_APP_KEY;
         // 添加QQ支持, 并且设置QQ分享内容的target url
         UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(mContext, appId, appKey);
         qqSsoHandler.addToSocialSDK();

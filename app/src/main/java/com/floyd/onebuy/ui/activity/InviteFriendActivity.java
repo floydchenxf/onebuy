@@ -67,22 +67,11 @@ public class InviteFriendActivity extends Activity implements View.OnClickListen
 
     private void initShare() {
         shareManager = ShareManager.getInstance(this);
-        shareManager.init(SHARE_MEDIA.WEIXIN,
-                SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,
-                SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);
-        SHARE_MEDIA[] medias = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN,
-                SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,
-                SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT};
+        shareManager.init();
         String title = "苏城云购";
         String content = "对发送发送到发送到发送地方";
         String url = "https://mp.weixin.qq.com/s?__biz=MzA3MzUxMjE0Nw==&mid=402986533&idx=1&sn=d503481e7048afe058d7b7b19613919d&scene=0&previewkey=Y0AJm9zrE7wRVUc950Fuc8NS9bJajjJKzz%2F0By7ITJA%3D&uin=NTgzMTExODgw&key=710a5d99946419d9b3463e089f1d876636ceb5d18633bbe0cb595068d607d845498fc2369c6cb0fb9af4c15c0132292e&devicetype=iMac14%2C2+OSX+OSX+10.11.1+build%2815B42%29&version=11000003&lang=zh_CN&pass_ticket=fsq9NnAUofrE%2FMjugdWnmN1G2g9xOx1w2bLs%2BwX9n2wOSxs8FzTcB4eb5CHVLpyy";
-        for (SHARE_MEDIA m : medias) {
-            IShare share = shareManager.createShare(m);
-            if (share != null) {
-                share.init();
-                share.setShareContent(title, content, url);
-            }
-        }
+        shareManager.setShareContent(title, content, url);
     }
 
     protected void onResume() {

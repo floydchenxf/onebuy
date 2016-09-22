@@ -96,17 +96,6 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
             guestPicLayout.setVisibility(View.VISIBLE);
             guestPicLayout.removeAllViews();
 
-            final List<PicViewObject> result = new ArrayList<PicViewObject>();
-            long idx = 1;
-            for (String path : picList) {
-                PicViewObject view = new PicViewObject();
-                view.setPicPreViewUrl(path);
-                view.setPicUrl(path);
-                view.setPicId(idx++);
-                view.setPicType(PicViewObject.IMAGE);
-                result.add(view);
-            }
-
             int len = picList.size() > 2 ? 2 : picList.size();
             for (int i = 0; i < len; i++) {
                 final String picUrl = picList.get(i);
@@ -119,25 +108,6 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
                 networkImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 networkImage.setLayoutParams(lp);
                 final int k = i;
-                networkImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (vo.isPic()) {
-                            MulitImageVO vo = new MulitImageVO(k, result);
-                            Intent it = new Intent(mContext, MultiImageActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(MultiImageActivity.MULIT_IMAGE_VO, vo);
-                            it.putExtra(MultiImageActivity.MULIT_IMAGE_VO, bundle);
-                            it.putExtra(MultiImageActivity.MULIT_IMAGE_PICK_MODE,
-                                    MultiImageActivity.MULIT_IMAGE_PICK_MODE_PREVIEW);
-                            mContext.startActivity(it);
-                        } else {
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.parse(picUrl), "video/mp4");
-                            mContext.startActivity(intent);
-                        }
-                    }
-                });
                 guestPicLayout.addView(networkImage);
             }
         }

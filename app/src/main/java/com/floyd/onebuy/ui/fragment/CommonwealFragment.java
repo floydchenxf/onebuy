@@ -152,6 +152,9 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position < 2 || position - 1 > mAdapter.getRecords().size()) {
+                    return;
+                }
                 CommonwealVO vo = mAdapter.getItem(position - 2);
                 Intent it = new Intent(getActivity(), CommonwealDetailActivity.class);
                 it.putExtra(CommonwealDetailActivity.PRODUCT_ID, vo.ProductLssueID);

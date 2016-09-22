@@ -121,6 +121,9 @@ public class FundFragment extends CommonwealBaseFragment implements View.OnClick
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position < 2 || position - 1 > fundAdapter.getRecords().size()) {
+                    return;
+                }
                 ProductLssueVO lssueVo = fundAdapter.getItem(position - 2);
                 Intent it = new Intent(getActivity(), WinningDetailActivity.class);
                 it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

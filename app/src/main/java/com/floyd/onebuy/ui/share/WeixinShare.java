@@ -23,8 +23,8 @@ public class WeixinShare implements IShare {
 
     @Override
     public void init() {
-        String appId = "wx6f4a5ebb3d2cd11e";
-        String appSecret = "64710023bac7d1b314c1b3ed3db5949d";
+        String appId = ShareConstants.WX_APP_ID;
+        String appSecret = ShareConstants.WX_APP_SECRITY;
 
         UMWXHandler wxHandler = new UMWXHandler(mContext, appId, appSecret);
         wxHandler.addToSocialSDK();

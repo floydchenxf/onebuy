@@ -23,8 +23,8 @@ public class QQZoneShare implements IShare {
 
     @Override
     public void init() {
-        String appId = "1105636877";
-        String appKey = "WUNMS4IJbYvk8Fdh";
+        String appId = ShareConstants.QQ_APP_ID;
+        String appKey = ShareConstants.QQ_APP_KEY;
 
         // 添加QZone平台
         QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mContext, appId, appKey);

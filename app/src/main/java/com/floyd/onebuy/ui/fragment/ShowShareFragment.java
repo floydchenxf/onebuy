@@ -1,11 +1,13 @@
 package com.floyd.onebuy.ui.fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -16,6 +18,7 @@ import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.PrizeShowVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.ShareShowDetailActivity;
 import com.floyd.onebuy.ui.adapter.ProfileShowShareAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
@@ -122,6 +125,17 @@ public class ShowShareFragment extends Fragment {
         View emptyView = View.inflate(getActivity(), R.layout.empty_item, null);
         mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                PrizeShowVO vo = adapter.getRecords().get(i - 1);
+                Intent s = new Intent(getActivity(), ShareShowDetailActivity.class);
+                s.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
+                s.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(s);
+            }
+        });
 
         adapter = new ProfileShowShareAdapter(getActivity(), new ArrayList<PrizeShowVO>(), mImageLoader);
         mListView.setAdapter(adapter);

@@ -23,8 +23,8 @@ public class WxCircleShare implements IShare {
 
     @Override
     public void init() {
-        String appId = "wx6f4a5ebb3d2cd11e";
-        String appSecret = "64710023bac7d1b314c1b3ed3db5949d";
+        String appId = ShareConstants.WX_APP_ID;
+        String appSecret = ShareConstants.WX_APP_SECRITY;
 
         UMWXHandler wxCircleHandler = new UMWXHandler(mContext, appId, appSecret);
         wxCircleHandler.setToCircle(true);
@@ -34,9 +34,8 @@ public class WxCircleShare implements IShare {
     @Override
     public void setShareContent(String title, String content, String url) {
         CircleShareContent circleMedia = new CircleShareContent();
-        circleMedia.setShareContent(content);
-        //设置朋友圈title
         circleMedia.setTitle(title);
+        circleMedia.setShareContent(content);
         circleMedia.setShareImage(new UMImage(mContext, R.drawable.icon));
         circleMedia.setTargetUrl(url);
         service.setShareMedia(circleMedia);

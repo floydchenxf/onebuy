@@ -16,30 +16,46 @@ import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenxiaofeng on 16/9/22.
  */
 public class ShareManager {
 
+    public static final String COM_UMENG_SHARE = "com.umeng.share";
     private UMSocialService service;
     private Activity mContext;
+    private Map<SHARE_MEDIA, IShare> shareMap = new HashMap<SHARE_MEDIA, IShare>();
 
     public ShareManager(Activity mContext) {
         this.mContext = mContext;
-        service = UMServiceFactory.getUMSocialService("com.umeng.share");
+        service = UMServiceFactory.getUMSocialService(COM_UMENG_SHARE);
     }
 
     public static ShareManager getInstance(Activity context) {
         return new ShareManager(context);
     }
 
-    public void init(SHARE_MEDIA... medias) {
-        service.getConfig().setPlatforms(medias);
+    public void init() {
+        service.getConfig().setPlatforms(SHARE_MEDIA.WEIXIN,
+                SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,
+                SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);
+        SHARE_MEDIA[] medias = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN,
+                SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,
+                SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT};
+        for (SHARE_MEDIA media : medias) {
+            IShare share = createShare(media);
+            if (share != null) {
+                share.init();
+                shareMap.put(media, share);
+            }
+        }
     }
 
-    public IShare createShare(SHARE_MEDIA m) {
+    private IShare createShare(SHARE_MEDIA m) {
         IShare share = null;
         if (m == SHARE_MEDIA.QQ) {
             share = new QQShare(service, mContext);
@@ -52,6 +68,12 @@ public class ShareManager {
         }
 
         return share;
+    }
+
+    public void setShareContent(String title, String content, String url) {
+        for (IShare s : shareMap.values()) {
+            s.setShareContent(title, content, url);
+        }
     }
 
     public void show(boolean show) {

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -67,11 +68,6 @@ public class CommonwealHelperActivity extends Activity implements View.OnClickLi
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-//                needClear = true;
-//                pageNo = 1;
-//                isFirst = true;
-//                loadData();
-//                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
@@ -126,7 +122,7 @@ public class CommonwealHelperActivity extends Activity implements View.OnClickLi
 
     private void initHeader() {
         LinearLayout totalNumLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         totalNumLayout.setLayoutParams(params);
         totalNumView = new TextView(this);
         totalNumView.setTextSize(14);

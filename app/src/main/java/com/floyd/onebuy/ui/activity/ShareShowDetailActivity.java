@@ -2,6 +2,8 @@ package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -27,6 +29,9 @@ import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.CommentAdapter;
+import com.floyd.onebuy.ui.multiimage.MultiImageActivity;
+import com.floyd.onebuy.ui.multiimage.base.MulitImageVO;
+import com.floyd.onebuy.ui.multiimage.base.PicViewObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +118,7 @@ public class ShareShowDetailActivity extends CommonActivity implements View.OnCl
             }
 
             @Override
-            public void onSuccess(ShareShowDetailVO vo) {
+            public void onSuccess(final ShareShowDetailVO vo) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }
@@ -128,7 +133,18 @@ public class ShareShowDetailActivity extends CommonActivity implements View.OnCl
 
                 urlLayout.removeAllViews();
                 List<String> urls = vo.getMediaUrls();
-                for (String u : urls) {
+                final List<PicViewObject> result = new ArrayList<PicViewObject>();
+                long idx = 1;
+                for (String path : urls) {
+                    PicViewObject view = new PicViewObject();
+                    view.setPicPreViewUrl(path);
+                    view.setPicUrl(path);
+                    view.setPicId(idx++);
+                    view.setPicType(PicViewObject.IMAGE);
+                    result.add(view);
+                }
+                for (int j =0; j < urls.size(); j++) {
+                    final String u = urls.get(j);
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     lp.setMargins(0, (int) (10 * oneDp), 0, 0);
 
@@ -137,6 +153,28 @@ public class ShareShowDetailActivity extends CommonActivity implements View.OnCl
                     networkImage.setImageUrl(u, mImageLoader);
                     networkImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     networkImage.setLayoutParams(lp);
+                    final int k = j;
+
+                    networkImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (vo.isPic()) {
+                                MulitImageVO vo = new MulitImageVO(k, result);
+                                Intent it = new Intent(ShareShowDetailActivity.this, MultiImageActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(MultiImageActivity.MULIT_IMAGE_VO, vo);
+                                it.putExtra(MultiImageActivity.MULIT_IMAGE_VO, bundle);
+                                it.putExtra(MultiImageActivity.MULIT_IMAGE_PICK_MODE,
+                                        MultiImageActivity.MULIT_IMAGE_PICK_MODE_PREVIEW);
+                                startActivity(it);
+                            } else {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.parse(u), "video/mp4");
+                                startActivity(intent);
+                            }
+                        }
+                    });
+
                     urlLayout.addView(networkImage);
                 }
 
@@ -182,13 +220,13 @@ public class ShareShowDetailActivity extends CommonActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_comment_button:
-                dataLoadingDialog.show();
                 Long userId = LoginManager.getLoginInfo(this).ID;
                 String comment = commentContentView.getText().toString();
                 if (TextUtils.isEmpty(comment)) {
                     Toast.makeText(ShareShowDetailActivity.this, "请输入评论", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                dataLoadingDialog.show();
                 ProductManager.addShowComment(guestId, userId, comment).startUI(new ApiCallback<Boolean>() {
                     @Override
                     public void onError(int code, String errorInfo) {
