@@ -151,8 +151,6 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         saomiaoView = (ImageView) view.findViewById(R.id.saomiao_view);
         saomiaoView.setOnClickListener(this);
 
-        shareLayout = view.findViewById(R.id.share);
-        shareLayout.setOnClickListener(this);
         loadData(true, true);
         return view;
     }
@@ -220,11 +218,6 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 Intent intent = new Intent(this.getActivity(), MipcaActivityCapture.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-                break;
-            case R.id.share:
-                Intent settingIntent = new Intent(this.getActivity(), SettingActivity.class);
-                settingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(settingIntent);
                 break;
             case R.id.add_fee:
                 Intent it = new Intent(getActivity(), PayChargeActivity.class);

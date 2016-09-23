@@ -165,9 +165,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 deleteDescView.setText(Html.fromHtml("共删除<font color=\"#ff0000\">" + kk.size() + "</font>件商品"));
             }
         });
-        mListView.setAdapter(mBuyCarAdapter);
 
         initFooter();
+        mListView.setAdapter(mBuyCarAdapter);
         titleNameView = (TextView) view.findViewById(R.id.title_name);
         titleNameView.setText("购物车");
         titleNameView.setVisibility(View.VISIBLE);
@@ -198,7 +198,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     private void initFooter() {
         View footer = View.inflate(getActivity(), R.layout.buycar_footer, null);
-        footer.setVisibility(View.VISIBLE);
         payTypeLayout = (LinearLayout) footer.findViewById(R.id.pay_type_layout);
         mListView.addFooterView(footer);
     }
