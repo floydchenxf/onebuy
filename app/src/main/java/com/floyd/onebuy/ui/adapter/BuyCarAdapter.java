@@ -78,25 +78,12 @@ public class BuyCarAdapter extends BaseAdapter {
                     info = s.next();
                     if (info.CarID == carId) {
                         s.remove();
-//                        deleteLssueIds.add(info.ProductLssueID);
                     }
                 }
 
                 deleteList.remove(carId);
             }
 
-//            if (!deleteLssueIds.isEmpty()) {
-//                WxDefaultExecutor.getInstance().executeHttp(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        UserVO v = LoginManager.getLoginInfo(mContext);
-//                        if (v != null) {
-//                            long userId = v.ID;
-//                            DBManager.deleteBuyCarNumber(BuyCarType.NORMAL, mContext, userId, deleteLssueIds);
-//                        }
-//                    }
-//                });
-//            }
             this.notifyDataSetChanged();
         }
     }

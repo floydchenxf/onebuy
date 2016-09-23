@@ -198,7 +198,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     private void initFooter() {
         View footer = View.inflate(getActivity(), R.layout.buycar_footer, null);
-        mListView.removeFooterView(footer);
+        footer.setVisibility(View.VISIBLE);
         payTypeLayout = (LinearLayout) footer.findViewById(R.id.pay_type_layout);
         mListView.addFooterView(footer);
     }

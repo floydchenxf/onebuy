@@ -137,7 +137,6 @@
                 <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
             </intent-filter>
         </receiver>
-
         <service
             android:name="com.tencent.android.tpush.service.XGPushService"
             android:exported="true"
