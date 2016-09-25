@@ -15,10 +15,12 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
 public class WeixinShare implements IShare {
     private UMSocialService service;
     private Activity mContext;
+    private UMImage umImage;
 
     public WeixinShare(UMSocialService service, Activity mContext) {
         this.service = service;
         this.mContext = mContext;
+        this.umImage = new UMImage(mContext, R.drawable.icon);
     }
 
     @Override
@@ -38,7 +40,12 @@ public class WeixinShare implements IShare {
         //设置分享内容跳转URL
         weixinContent.setTargetUrl(url);
         //设置分享图片
-        weixinContent.setShareImage(new UMImage(mContext, R.drawable.icon));
+        weixinContent.setShareImage(umImage);
         service.setShareMedia(weixinContent);
+    }
+
+    @Override
+    public void setUMImager(UMImage umImager) {
+        this.umImage = umImager;
     }
 }

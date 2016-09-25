@@ -36,10 +36,12 @@ public class ShareManager {
     }
 
     public static ShareManager getInstance(Activity context) {
-        return new ShareManager(context);
+        ShareManager s = new ShareManager(context);
+        s.init();
+        return s;
     }
 
-    public void init() {
+    private void init() {
         service.getConfig().setPlatforms(SHARE_MEDIA.WEIXIN,
                 SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,
                 SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);
@@ -68,6 +70,12 @@ public class ShareManager {
         }
 
         return share;
+    }
+
+    public void setUmImager(UMImage umImager) {
+        for (IShare s : shareMap.values()) {
+            s.setUMImager(umImager);
+        }
     }
 
     public void setShareContent(String title, String content, String url) {

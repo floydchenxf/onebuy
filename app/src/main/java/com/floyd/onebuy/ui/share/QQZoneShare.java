@@ -15,10 +15,12 @@ public class QQZoneShare implements IShare {
 
     private UMSocialService service;
     private Activity mContext;
+    private UMImage umImage;
 
     public QQZoneShare(UMSocialService service, Activity mContext) {
         this.service = service;
         this.mContext = mContext;
+        this.umImage = new UMImage(mContext, R.drawable.icon);
     }
 
     @Override
@@ -40,7 +42,12 @@ public class QQZoneShare implements IShare {
         qzone.setTargetUrl(url);
         qzone.setTitle(title);
         //设置分享图片
-        qzone.setShareImage(new UMImage(mContext, R.drawable.icon));
+        qzone.setShareImage(umImage);
         service.setShareMedia(qzone);
+    }
+
+    @Override
+    public void setUMImager(UMImage umImager) {
+        this.umImage = umImager;
     }
 }

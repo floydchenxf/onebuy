@@ -21,6 +21,7 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.Func;
 import com.floyd.onebuy.aync.JobFactory;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.FileUtils;
@@ -133,10 +134,30 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.notice_view:
+                Intent noticeIntent = new Intent(this, NewsActivity.class);
+                startActivity(noticeIntent);
                 break;
             case R.id.faq_view:
+                Intent faqIntent = new Intent(SettingActivity.this, H5Activity.class);
+                H5Activity.H5Data faqH5Data = new H5Activity.H5Data();
+                faqH5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                faqH5Data.data = APIConstants.FAQ;
+                faqH5Data.showProcess = true;
+                faqH5Data.showNav = true;
+                faqH5Data.title = "常见问题";
+                faqIntent.putExtra(H5Activity.H5Data.H5_DATA, faqH5Data);
+                startActivity(faqIntent);
                 break;
             case R.id.about_us_view:
+                Intent detailIntent = new Intent(SettingActivity.this, H5Activity.class);
+                H5Activity.H5Data h5Data = new H5Activity.H5Data();
+                h5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                h5Data.data = APIConstants.ABOUT_US;
+                h5Data.showProcess = true;
+                h5Data.showNav = true;
+                h5Data.title = "关于我们";
+                detailIntent.putExtra(H5Activity.H5Data.H5_DATA, h5Data);
+                startActivity(detailIntent);
                 break;
             case R.id.suggestion_view:
                 Intent suggestIntent = new Intent(this, FeedbackActivity.class);

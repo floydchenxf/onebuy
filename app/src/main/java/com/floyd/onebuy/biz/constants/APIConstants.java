@@ -16,9 +16,9 @@ public class APIConstants {
     public static final String IMGAEINFO_MODULE = "ImgaeInfoService.ashx";
     public static final String ADDRESS_MODULE = "AddressService.ashx";
     public static final String APP_HANDLE_MODULE = "AppHandler.ashx";
-
     public static final String COMMONWEAL_MODULE = "CommonwealService.ashx";
     public static final String SUBJECT_INFO_MODULE = "SpecialSubjectService.ashx";
+    public static final String NEWS_MODULE = "NewsService.ashx";
 
     public static final String API_GET_ADVERT_LIST = "api/index/getAdvertList";//获取广告
     public static final String API_GET_MOTE_LIST = "api/index/getMoteList"; //获取首页模特信息
@@ -43,4 +43,10 @@ public class APIConstants {
     public static final int SHARE_SHOW_ALL = 3;
 
     public static final String PAY_MODE = "00";
+
+    public static final String ABOUT_US = APIConstants.HOST+"app/aboutUs.aspx";
+    public static final String NOTICE = APIConstants.HOST + "app/agreement.aspx";
+    public static final String FAQ = APIConstants.HOST + "app/faq.aspx";
+
+    public static final String NEWS_DETAIL_URL_FORMAT = APIConstants.HOST + "app/newsinfo.aspx?id=%d";
 }

@@ -1,6 +1,7 @@
 package com.floyd.onebuy.ui.share;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 import com.floyd.onebuy.ui.R;
 import com.umeng.socialize.controller.UMSocialService;
@@ -9,6 +10,8 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 
+import java.io.File;
+
 /**
  * Created by chenxiaofeng on 16/9/22.
  */
@@ -16,10 +19,12 @@ public class QQShare implements IShare {
 
     private UMSocialService service;
     private Activity mContext;
+    private UMImage umImage;
 
     public QQShare(UMSocialService service, Activity mContext) {
         this.service = service;
         this.mContext = mContext;
+        this.umImage = new UMImage(mContext, R.drawable.icon);
     }
 
     @Override
@@ -39,9 +44,14 @@ public class QQShare implements IShare {
         //设置分享title
         qqShareContent.setTitle(title);
         //设置分享图片
-        qqShareContent.setShareImage(new UMImage(mContext, R.drawable.icon));
+        qqShareContent.setShareImage(umImage);
         //设置点击分享内容的跳转链接
         qqShareContent.setTargetUrl(url);
         service.setShareMedia(qqShareContent);
+    }
+
+    @Override
+    public void setUMImager(UMImage umImager) {
+        this.umImage = umImager;
     }
 }

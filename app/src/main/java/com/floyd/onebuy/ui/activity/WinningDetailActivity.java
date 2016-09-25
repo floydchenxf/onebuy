@@ -28,11 +28,13 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
+import com.floyd.onebuy.biz.tools.FileTools;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -56,11 +58,16 @@ import com.floyd.onebuy.ui.fragment.BannerFragment;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
+import com.floyd.onebuy.ui.share.ShareConstants;
+import com.floyd.onebuy.ui.share.ShareManager;
+import com.floyd.onebuy.utils.WXUtil;
 import com.floyd.onebuy.view.LoopViewPager;
 import com.floyd.onebuy.view.LeftDownPopupWindow;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
+import com.umeng.socialize.media.UMImage;
 
+import java.io.File;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,12 +152,18 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     private ImageLoader mImageLoader;
 
+    private ShareManager shareManager;
+
     private int callTime = 0;
     private boolean isFirst;
 
     private ImageView buyCarImageView;
 
     private BuycarOperator buycarOperator;
+
+    private String sharePicUrl;
+    private String shareContent;
+    private String shareUrl;
 
     private Handler mHandler = new Handler() {
 
@@ -301,6 +314,10 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             titleAndStatusView.setText(message);
 
             List<AdvVO> advVOs = winningDetailInfo.advVOList;
+            if (advVOs != null && !advVOs.isEmpty()) {
+                sharePicUrl = advVOs.get(0).imgUrl;
+            }
+            shareContent = winningDetailInfo.productTitle;
             mBannerImageAdapter.addItems(advVOs);
             mHeaderViewIndicator.setTotal(mBannerImageAdapter.getCount());
             mHeaderViewIndicator.setIndex(0);
@@ -436,9 +453,11 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winning_detail);
         mImageLoader = ImageLoaderFactory.createImageLoader();
+        shareManager = ShareManager.getInstance(this);
         EventBus.getDefault().register(this);
         findViewById(R.id.title_back).setOnClickListener(this);
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
+        findViewById(R.id.share_view).setOnClickListener(this);
         ((TextView) findViewById(R.id.title_name)).setText("商品详情");
         id = getIntent().getLongExtra(LSSUE_ID, 0l);
         isLatest = getIntent().getBooleanExtra(LASTEST, true);
@@ -600,6 +619,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             lssueId = id;
         }
 
+        shareUrl = String.format(ShareConstants.WINNING_DETAIL_SHARE_URL_FORMAT, lssueId);
+
         AsyncJob<WinningDetailInfo> job = null;
 
         if (!isLatest) {
@@ -717,6 +738,19 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.view_buy_car:
                 buycarOperator.viewBuyCar();
+                break;
+            case R.id.share_view:
+                if (!TextUtils.isEmpty(sharePicUrl)) {
+                    final String md5Name = WXUtil.getMD5FileName(sharePicUrl);
+                    File f = new File(EnvConstants.imageRootPath + File.separator + md5Name);
+                    if (f.exists()) {
+                        UMImage image = new UMImage(this, f);
+                        shareManager.setUmImager(image);
+                    }
+                }
+
+                shareManager.setShareContent(ShareConstants.WINNING_DETAIL_SHARE_TITLE, shareContent, shareUrl);
+                shareManager.show(false);
                 break;
         }
     }

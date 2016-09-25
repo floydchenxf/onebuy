@@ -15,10 +15,12 @@ public class WxCircleShare implements IShare {
 
     private UMSocialService service;
     private Activity mContext;
+    private UMImage umImage;
 
     public WxCircleShare(UMSocialService service, Activity mContext) {
         this.service = service;
         this.mContext = mContext;
+        this.umImage = new UMImage(mContext, R.drawable.icon);
     }
 
     @Override
@@ -36,8 +38,13 @@ public class WxCircleShare implements IShare {
         CircleShareContent circleMedia = new CircleShareContent();
         circleMedia.setTitle(title);
         circleMedia.setShareContent(content);
-        circleMedia.setShareImage(new UMImage(mContext, R.drawable.icon));
+        circleMedia.setShareImage(umImage);
         circleMedia.setTargetUrl(url);
         service.setShareMedia(circleMedia);
+    }
+
+    @Override
+    public void setUMImager(UMImage umImager) {
+        this.umImage = umImager;
     }
 }

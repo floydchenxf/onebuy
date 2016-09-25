@@ -24,7 +24,7 @@
             android:layout_height="50dp"
             android:drawableRight="@drawable/jiantou_next"
             android:gravity="center_vertical"
-            android:text="最新公告"
+            android:text="重要公告"
             android:textColor="#666666"
             android:textSize="14sp" />
 

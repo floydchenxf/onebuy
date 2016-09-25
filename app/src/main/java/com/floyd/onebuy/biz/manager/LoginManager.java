@@ -14,6 +14,7 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.func.AbstractJsonApiCallback;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.tools.PrefsTools;
+import com.floyd.onebuy.biz.vo.json.InviteVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.channel.request.FileItem;
@@ -272,6 +273,21 @@ public class LoginManager {
         params.put("mobile", mobile);
         params.put("code", smsCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+    }
+
+    /**
+     * 获取邀请信息
+     *
+     * @param userId
+     * @return
+     */
+    public static AsyncJob<InviteVO> fetchInviteInfo(Long userId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "genInviteCode");
+        params.put("userId", userId + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, InviteVO.class);
+
     }
 
 
