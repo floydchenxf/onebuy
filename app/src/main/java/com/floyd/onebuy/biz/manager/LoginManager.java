@@ -85,7 +85,7 @@ public class LoginManager {
      * @param inviterCode 邀请码。可以为空
      * @return
      */
-    public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code, String inviterCode, String deviceToken) {
+    public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code, String deviceToken) {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "register");
@@ -94,7 +94,6 @@ public class LoginManager {
         params.put("password", md5Pass == null ? "" : md5Pass.toLowerCase());
         params.put("code", code);
         params.put("deviceToken", deviceToken);
-        params.put("inviterCode", inviterCode == null?"":inviterCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, UserVO.class);
     }
 

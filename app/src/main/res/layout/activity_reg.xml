@@ -153,51 +153,39 @@
         </RelativeLayout>
 
         <View
-            android:id="@+id/line4"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="4dp"
-            android:background="#d5d5d5"
-            android:visibility="gone" />
-
-        <RelativeLayout
-            android:id="@+id/invite_code_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/line4"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/invite_code_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                android:text="邀请码"
-                android:textColor="#333333"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/invite_code_view"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_toRightOf="@+id/invite_code_desc"
-                android:background="@null"
-                android:hint="输入好友邀请码"
-                android:textColorHint="#afafaf"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
-        <View
             android:id="@+id/line3"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginTop="4dp"
             android:background="#d5d5d5" />
+
+        <LinearLayout
+            android:id="@+id/agree_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/agress_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="我同意"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/agreement_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="《苏城云购用户协议》"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/next_step"
@@ -209,17 +197,5 @@
             android:text="@string/phone_reg"
             android:textColor="@color/white"
             android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/invite_code_show_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="我有邀请码"
-            android:textColor="#0077ff"
-            android:textSize="13sp" />
-
     </LinearLayout>
-
 </RelativeLayout>

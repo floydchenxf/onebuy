@@ -1,17 +1,20 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.ui.R;
@@ -32,11 +35,8 @@ public class RegActivity extends Activity implements View.OnClickListener {
     private int time = 0;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int checkType;
-    private boolean hasInviteCode;
-    private View line4;
-    private View inviteCodeLayout;
-    private TextView inviteCodeShowView;
-    private EditText inviteCodeView;
+    private CheckBox agreeView;
+    private TextView agreemenetView;//用户协议
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +52,12 @@ public class RegActivity extends Activity implements View.OnClickListener {
         userNickView = (EditText) findViewById(R.id.user_nick);
         passwordView = (EditText) findViewById(R.id.password);
         regButton = (TextView) findViewById(R.id.next_step);
-        inviteCodeShowView = (TextView) findViewById(R.id.invite_code_show_view);
-        inviteCodeShowView.setText("我有邀请码");
-        inviteCodeShowView.setOnClickListener(this);
-        line4 = findViewById(R.id.line4);
-        inviteCodeLayout = findViewById(R.id.invite_code_layout);
-        inviteCodeView = (EditText) findViewById(R.id.invite_code_view);
         regButton.setOnClickListener(this);
         checkCodeButtonView.setOnClickListener(this);
+        agreeView = (CheckBox) findViewById(R.id.agress_view);
+        agreemenetView = (TextView) findViewById(R.id.agreement_view);
+        agreemenetView.setOnClickListener(this);
         regButton.setOnClickListener(this);
-
-        hasInviteCode = false;
-
     }
 
 
@@ -93,6 +87,11 @@ public class RegActivity extends Activity implements View.OnClickListener {
             case R.id.check_code_button:
                 checkCodeButtonView.setEnabled(false);
                 String usernick2 = userNickView.getText().toString();
+                if (TextUtils.isEmpty(usernick2)) {
+                    Toast.makeText(RegActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 LoginManager.sendSms(usernick2).startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
@@ -112,6 +111,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
 
                     }
                 });
+
                 break;
             case R.id.next_step:
                 String usernick = userNickView.getText().toString();
@@ -137,17 +137,14 @@ public class RegActivity extends Activity implements View.OnClickListener {
                     return;
                 }
 
-                String inviteCode = null;
-                if (hasInviteCode) {
-                    inviteCode = inviteCodeView.getText().toString();
-                    if (TextUtils.isEmpty(inviteCode)) {
-                        Toast.makeText(this, "请输入邀请码", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                boolean agreeChecked = agreeView.isChecked();
+                if (!agreeChecked) {
+                    Toast.makeText(this, "请阅读用户协议", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 String deviceToken = LoginManager.getDeviceId(this);
-                LoginManager.regUserJob(usernick, password, smsCode, inviteCode, deviceToken).startUI(new ApiCallback<UserVO>() {
+                LoginManager.regUserJob(usernick, password, smsCode, deviceToken).startUI(new ApiCallback<UserVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(RegActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
@@ -169,18 +166,16 @@ public class RegActivity extends Activity implements View.OnClickListener {
                     }
                 });
                 break;
-            case R.id.invite_code_show_view:
-                if (hasInviteCode) {
-                    inviteCodeShowView.setText("我有邀请码");
-                    inviteCodeLayout.setVisibility(View.GONE);
-                    line4.setVisibility(View.GONE);
-                    hasInviteCode = false;
-                } else {
-                    inviteCodeShowView.setText("我没有邀请码");
-                    inviteCodeLayout.setVisibility(View.VISIBLE);
-                    line4.setVisibility(View.VISIBLE);
-                    hasInviteCode = true;
-                }
+            case R.id.agreement_view:
+                Intent agreeIntent = new Intent(this, H5Activity.class);
+                H5Activity.H5Data faqH5Data = new H5Activity.H5Data();
+                faqH5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                faqH5Data.data = APIConstants.USER_AGREEMENT;
+                faqH5Data.showProcess = true;
+                faqH5Data.showNav = true;
+                faqH5Data.title = "用户协议";
+                agreeIntent.putExtra(H5Activity.H5Data.H5_DATA, faqH5Data);
+                startActivity(agreeIntent);
                 break;
         }
     }
