@@ -458,6 +458,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         findViewById(R.id.title_back).setOnClickListener(this);
         findViewById(R.id.title_name).setVisibility(View.VISIBLE);
         findViewById(R.id.share_view).setOnClickListener(this);
+        findViewById(R.id.index_view).setOnClickListener(this);
         ((TextView) findViewById(R.id.title_name)).setText("商品详情");
         id = getIntent().getLongExtra(LSSUE_ID, 0l);
         isLatest = getIntent().getBooleanExtra(LASTEST, true);
@@ -751,6 +752,12 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
                 shareManager.setShareContent(ShareConstants.WINNING_DETAIL_SHARE_TITLE, shareContent, shareUrl);
                 shareManager.show(false);
+                break;
+            case R.id.index_view:
+                Intent gotoIndex = new Intent(this, MainActivity.class);
+                gotoIndex.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                gotoIndex.putExtra(MainActivity.TAB_INDEX, R.id.tab_index_page);
+                startActivity(gotoIndex);
                 break;
         }
     }
