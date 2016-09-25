@@ -79,8 +79,6 @@ public class ShareShowDetailActivity extends CommonActivity implements View.OnCl
         addCommentButton.setOnClickListener(this);
         operateLayout.addView(addLayout);
         operateLayout.setVisibility(View.VISIBLE);
-
-
     }
 
     @Override
@@ -220,6 +218,9 @@ public class ShareShowDetailActivity extends CommonActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_comment_button:
+                if (!LoginManager.isLogin(this)) {
+                    return;
+                }
                 Long userId = LoginManager.getLoginInfo(this).ID;
                 String comment = commentContentView.getText().toString();
                 if (TextUtils.isEmpty(comment)) {

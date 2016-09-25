@@ -47,6 +47,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:text="2016-10-11"
+        android:textColor="@color/gray_content"
         android:layout_marginRight="14dp"
         android:textSize="14dp" />
 

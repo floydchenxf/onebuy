@@ -20,14 +20,29 @@
             android:textColor="@color/gray_sub_title"
             android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/comment_button"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="14dp"
-            android:src="@drawable/comment" />
+            android:layout_marginRight="14dp">
+
+            <ImageView
+                android:id="@+id/comment_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/comment" />
+
+            <TextView
+                android:id="@+id/comment_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="0"
+                android:textColor="@color/red"
+                android:textSize="14sp" />
+        </LinearLayout>
+
 
     </RelativeLayout>
 

@@ -59,7 +59,6 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
 
     private RadioGroup rgs;
 
-    private RadioButton myButton;
     private List<Fragment> fragments = new ArrayList<Fragment>();
     private FragmentTabAdapter tabAdapter;
 
@@ -78,8 +77,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         fragments.add(new MyFragment());
 
         rgs = (RadioGroup) findViewById(R.id.id_ly_bottombar);
-        myButton = (RadioButton) findViewById(R.id.tab_my);
-        myButton.setOnClickListener(this);
+        findViewById(R.id.tab_my).setOnClickListener(this);
+        findViewById(R.id.tab_buy_car).setOnClickListener(this);
 
         tabAdapter = new FragmentTabAdapter(this, fragments, R.id.id_content, rgs);
         tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
@@ -91,7 +90,7 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         tabAdapter.setOnLoginCheck(new FragmentTabAdapter.OnLoginCheck() {
             @Override
             public boolean needLogin(RadioGroup radioGroup, int preCheckedId, int idx) {
-                if (idx == 4) {
+                if (idx == 4 || idx == 3) {
                     UserVO loginVO = LoginManager.getLoginInfo(MainActivity.this);
                     if (loginVO == null) {
                         return true;
@@ -108,6 +107,9 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         super.onNewIntent(intent);
         int tabId = intent.getIntExtra(TAB_INDEX, -1);
         if (tabId != -1) {
+            if (tabId >=3 && !LoginManager.isLogin(this)) {
+                return;
+            }
             rgs.check(tabId);
         }
     }
@@ -161,6 +163,10 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     @Subscribe
     public void onEventMainThread(TabSwitchEvent event) {
         if (!this.isFinishing()) {
+            if (event.tabId >=3 && !LoginManager.isLogin(this)) {
+                return;
+            }
+
             rgs.check(event.tabId);
 
             Map<String, Object> data = event.data;
@@ -188,6 +194,7 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tab_my:
+            case R.id.tab_buy_car:
                 boolean isLogin = LoginManager.isLogin(this);
                 if (!isLogin) {
                     int currentTab = tabAdapter.getCurrentTab();

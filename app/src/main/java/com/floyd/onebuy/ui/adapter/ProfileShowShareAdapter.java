@@ -52,7 +52,7 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
 
     @Override
     int[] cacheViews() {
-        return new int[]{R.id.guest_title_view, R.id.guest_content_view, R.id.comment_button, R.id.guest_pic_layout, R.id.guest_time_view};
+        return new int[]{R.id.guest_title_view, R.id.guest_content_view, R.id.comment_button, R.id.guest_pic_layout, R.id.guest_time_view, R.id.comment_num};
     }
 
     @Override
@@ -62,23 +62,26 @@ public class ProfileShowShareAdapter extends BaseDataAdapter<PrizeShowVO> {
         LinearLayout guestPicLayout = (LinearLayout) holder.get(R.id.guest_pic_layout);
         ImageView commentButton = (ImageView) holder.get(R.id.comment_button);
         TextView guestTimeView = (TextView) holder.get(R.id.guest_time_view);
+        TextView commonNumView = (TextView) holder.get(R.id.comment_num);
 
         guestTitleView.setText(vo.GuestTitle);
         guestContentView.setText(vo.GuestContent);
 
-        if (vo.isVerify > 0) {
-            commentButton.setVisibility(View.VISIBLE);
-            commentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent it = new Intent(mContext, ShareShowDetailActivity.class);
-                    it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
-                    mContext.startActivity(it);
-                }
-            });
-        } else {
-            commentButton.setVisibility(View.GONE);
-        }
+        commonNumView.setText(vo.CommentNum+"");
+
+//        if (vo.isVerify > 0) {
+        commentButton.setVisibility(View.VISIBLE);
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(mContext, ShareShowDetailActivity.class);
+                it.putExtra(ShareShowDetailActivity.GUEST_ID, vo.GuestID);
+                mContext.startActivity(it);
+            }
+        });
+//        } else {
+//            commentButton.setVisibility(View.GONE);
+//        }
 
         if (TextUtils.isEmpty(vo.GuestTime)) {
             guestTimeView.setVisibility(View.GONE);
