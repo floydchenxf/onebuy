@@ -244,7 +244,12 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
                     mViewPagerContainer.setVisibility(View.GONE);
                 }
 
-                commonwealFeeView.setText(commonwealHomeVO.TotalMoney + "");
+                if (userId == null||userId ==0l) {
+                    commonwealFeeLayout.setVisibility(View.VISIBLE);
+                    commonwealFeeView.setText(commonwealHomeVO.TotalMoney + "");
+                } else {
+                    commonwealFeeLayout.setVisibility(View.GONE);
+                }
 
                 List<CommonwealVO> commonwealVO = commonwealHomeVO.FoundationList;
                 mAdapter.addAll(commonwealVO, needClear);
