@@ -9,16 +9,17 @@ import com.floyd.onebuy.biz.constants.APIConstants;
  */
 public class CommonwealVO {
 
-    public Long ProductLssueID;
+    public Long FoundationID;
     public String Code;
     public String Percent;
     public String TotalMoney;
     public String RaiseMoney;
     public Integer RaiseCount;
-    public String ProName;//产品名称
-    public String Content; //内容
+    public String FoundationName;//产品名称
+    public String Brief; //内容
     public String Pictures; //图片
     public Integer Status;//状态
+    public Integer IsCompany;//是否是公司的
 
     public String getPicUrl() {
         if (TextUtils.isEmpty(Pictures)) {

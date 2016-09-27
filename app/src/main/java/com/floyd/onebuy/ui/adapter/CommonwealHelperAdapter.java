@@ -60,12 +60,12 @@ public class CommonwealHelperAdapter extends BaseDataAdapter<CommonwealHelperVO>
         TextView helpNameView = (TextView) holder.get(R.id.helper_name_view);
         helpNameView.setText(vo.ClientName);
         TextView feeView = (TextView) holder.get(R.id.fee_view);
-        feeView.setText(vo.PayMoney);
+        feeView.setText(vo.Money);
 
         TextView remarkView = (TextView) holder.get(R.id.remark_view);
-        remarkView.setText(vo.Remark);
+//        remarkView.setText(vo.Remark);
 
         TextView payTimeView = (TextView) holder.get(R.id.time_view);
-        payTimeView.setText(DateUtil.getDateTime(vo.PayTime * 1000));
+//        payTimeView.setText(DateUtil.getDateTime(vo.PayTime * 1000));
     }
 }

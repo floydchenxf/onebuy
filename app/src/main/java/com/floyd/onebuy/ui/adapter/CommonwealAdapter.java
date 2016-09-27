@@ -51,8 +51,8 @@ public class CommonwealAdapter extends BaseDataAdapter<CommonwealVO> {
             commonwealPicView.setImageUrl("", mImageLoader);
         }
 
-        commonwealTitleView.setText(commonwealVO.ProName);
-        String content = commonwealVO.Content;
+        commonwealTitleView.setText(commonwealVO.FoundationName);
+        String content = commonwealVO.Brief;
         commonwealContentView.setText(content);
         commonwealFeeView.setText(Html.fromHtml("公益金额：<font color=\"red\">" + commonwealVO.RaiseMoney + "</font>"));
     }

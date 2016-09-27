@@ -6,6 +6,9 @@ import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +20,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.CommonwealManager;
+import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailVO;
@@ -60,6 +64,8 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
     private int screenWith;
     private float onedp;
     private ImageLoader mImageLoader;
+
+    private TextView commonwealButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +116,8 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
         personListView = (LinearLayout) findViewById(R.id.person_list_view);
         personLayout = findViewById(R.id.person_layout);
         proNameView = (TextView) findViewById(R.id.proName_view);
+        commonwealButton = (TextView) findViewById(R.id.commonweal_button);
+        commonwealButton.setOnClickListener(this);
         loadData();
     }
 
@@ -147,7 +155,8 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
                 raiseMoneyView.setText(vo.RaiseMoney);
                 progressView.setText(vo.Percent);
                 raiseCountView.setText(vo.RaiseCount + "");
-                contentView.setText(vo.Content);
+                Spanned s = Html.fromHtml(vo.Content);
+                contentView.setText(s);
                 raiseCountDescView.setText("感谢" + vo.RaiseCount + "位爱心朋友");
 
                 List<CommonwealHelperVO> helpers = vo.PersonList;
@@ -199,6 +208,14 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
                 Intent helperIntent = new Intent(this, CommonwealHelperActivity.class);
                 helperIntent.putExtra(CommonwealHelperActivity.PRODUCT_ID, pid);
                 startActivity(helperIntent);
+                break;
+            case R.id.commonweal_button:
+                if (LoginManager.isLogin(this)) {
+                    Intent commonwealIntent = new Intent(this, PayChargeActivity.class);
+                    commonwealIntent.putExtra(PayChargeActivity.IS_RECHARGE, false);
+                    commonwealIntent.putExtra(PayChargeActivity.PRODUCT_ID, pid);
+                    startActivity(commonwealIntent);
+                }
                 break;
         }
 

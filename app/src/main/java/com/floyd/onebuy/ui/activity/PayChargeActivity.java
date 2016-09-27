@@ -22,6 +22,7 @@ import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.vo.json.CarPayChannel;
 import com.floyd.onebuy.biz.vo.json.ChargeOrderVO;
+import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -249,16 +250,15 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
                         }
                     });
                 } else {
-                    OrderManager.createCommonwealAndPay(userId, proId, money + "", "", payTypeChecked).startUI(new ApiCallback<Double>() {
+                    OrderManager.createCommonwealOrder(userId, proId, money + "", "", payTypeChecked).startUI(new ApiCallback<OrderVO>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(PayChargeActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onSuccess(Double money) {
-                            Toast.makeText(PayChargeActivity.this, "捐款" + money + "成功!", Toast.LENGTH_SHORT).show();
-                            PayChargeActivity.this.finish();
+                        public void onSuccess(OrderVO orderVO) {
+                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
                         }
 
                         @Override

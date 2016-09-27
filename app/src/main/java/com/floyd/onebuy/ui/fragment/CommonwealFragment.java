@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.biz.manager.CommonwealManager;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHomeVO;
@@ -119,7 +120,7 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_commonweal, container, false);
+        View view = inflater.inflate(R.layout.fragment_commonweal, container, false);
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(view, this);
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.common_list);
@@ -157,11 +158,10 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
                 }
                 CommonwealVO vo = mAdapter.getItem(position - 2);
                 Intent it = new Intent(getActivity(), CommonwealDetailActivity.class);
-                it.putExtra(CommonwealDetailActivity.PRODUCT_ID, vo.ProductLssueID);
+                it.putExtra(CommonwealDetailActivity.PRODUCT_ID, vo.FoundationID);
                 startActivity(it);
             }
         });
-        view.findViewById(R.id.commonweal_button).setOnClickListener(this);
         loadData(true);
         return view;
     }
@@ -198,7 +198,14 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        CommonwealManager.fetchCommonwealHomeData(10).startUI(new ApiCallback<CommonwealHomeVO>() {
+
+        AsyncJob<CommonwealHomeVO> job = null;
+        if (userId == null||userId ==0l) {
+            job =  CommonwealManager.fetchCommonwealHomeData(10);
+        } else {
+            job = CommonwealManager.fetchMyFirstCommonweal(userId, pageNo, PAGE_SIZE);
+        }
+        job.startUI(new ApiCallback<CommonwealHomeVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -251,7 +258,14 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
     }
 
     private void loadPageData() {
-        CommonwealManager.fetchCommonwealList(pageNo, PAGE_SIZE).startUI(new ApiCallback<List<CommonwealVO>>() {
+
+        AsyncJob<List<CommonwealVO>> job = null;
+        if (userId == null||userId ==0l) {
+            job = CommonwealManager.fetchCommonwealList(pageNo, PAGE_SIZE);
+        } else {
+            job = CommonwealManager.fetchMyCommonwealList(userId, pageNo, PAGE_SIZE);
+        }
+        job.startUI(new ApiCallback<List<CommonwealVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 Toast.makeText(getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
@@ -308,12 +322,6 @@ public class CommonwealFragment extends CommonwealBaseFragment implements View.O
                 Intent it = new Intent(getActivity(), CommonwealHelperActivity.class);
                 startActivity(it);
                 break;
-            case R.id.commonweal_button:
-                Intent aa = new Intent(getActivity(), PayChargeActivity.class);
-                aa.putExtra(PayChargeActivity.IS_RECHARGE, false);
-                aa.putExtra(PayChargeActivity.PRODUCT_ID, 0l);
-                startActivity(aa);
-                 break;
         }
 
     }

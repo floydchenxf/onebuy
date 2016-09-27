@@ -12,8 +12,10 @@ import com.floyd.onebuy.biz.vo.commonweal.CommonwealHelperList;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHomeVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealJsonVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealVO;
+import com.floyd.onebuy.biz.vo.json.CommonwealAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.channel.request.HttpMethod;
+import com.floyd.onebuy.utils.CommonUtil;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -48,17 +50,16 @@ public class CommonwealManager {
 
                 CommonwealHomeVO r = new CommonwealHomeVO();
                 r.TotalMoney = v.TotalMoney;
-                r.TypeList = v.TypeList;
                 r.FoundationList = v.FoundationList;
                 if (v.Advertis != null) {
                     List<AdvVO> advList = new ArrayList<AdvVO>();
-                    for (IndexAdvVO iav : v.Advertis) {
+                    for (CommonwealAdvVO iav : v.Advertis) {
                         AdvVO av = new AdvVO();
-                        av.title = iav.Url;
-                        if (iav.NewsID != null) {
-                            av.id = iav.NewsID;
+                        av.title = iav.Title;
+                        if (iav.FoundationID != null) {
+                            av.id = iav.FoundationID;
                         }
-                        av.imgUrl = APIConstants.HOST + iav.SmallPic;
+                        av.imgUrl = iav.getPic();
                         advList.add(av);
                     }
 
@@ -109,7 +110,7 @@ public class CommonwealManager {
         params.put("pageType", "GetHelpPersonList");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNo + "");
-        params.put("pid", pid + "");
+        params.put("foundationId", pid + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealHelperList.class);
     }
 
@@ -123,42 +124,38 @@ public class CommonwealManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetCommonwealDetail");
-        params.put("pid", pid + "");
-        AsyncJob<CommonwealDetailJsonVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealDetailJsonVO.class);
-        return result.map(new Func<CommonwealDetailJsonVO, CommonwealDetailVO>() {
+        params.put("id", pid + "");
+
+        AsyncJob<CommonwealDetailJsonVO> tempResult = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealDetailJsonVO.class);
+        return tempResult.map(new Func<CommonwealDetailJsonVO, CommonwealDetailVO>() {
             @Override
             public CommonwealDetailVO call(CommonwealDetailJsonVO jsonVO) {
                 CommonwealDetailVO vo = new CommonwealDetailVO();
-                vo.TotalMoney = jsonVO.TotalMoney;
-                vo.Content = jsonVO.Content;
-                vo.Percent = jsonVO.Percent;
+                vo.TotalMoney = jsonVO.FoundationInfo.TotalMoney;
+                vo.Content = jsonVO.FoundationInfo.Description;
+                vo.Percent = jsonVO.FoundationInfo.Percent;
                 vo.PersonList = jsonVO.PersonList;
-                vo.ProductLssueID = jsonVO.ProductLssueID;
-                vo.ProName = jsonVO.ProName;
-                vo.RaiseCount = jsonVO.RaiseCount;
-                vo.RaiseMoney = jsonVO.RaiseMoney;
-                vo.Status = jsonVO.Status;
+                vo.ProductLssueID = jsonVO.FoundationInfo.FoundationID;
+                vo.ProName = jsonVO.FoundationInfo.FoundationName;
+                vo.RaiseCount = jsonVO.FoundationInfo.RaiseCount;
+                vo.RaiseMoney = jsonVO.FoundationInfo.RaiseMoney;
+                vo.Status = jsonVO.FoundationInfo.Status;
 
-                if (TextUtils.isEmpty(jsonVO.TotalMoney) || TextUtils.isEmpty(jsonVO.RaiseMoney)) {
+                if (TextUtils.isEmpty(jsonVO.FoundationInfo.TotalMoney) || TextUtils.isEmpty(jsonVO.FoundationInfo.RaiseMoney)) {
                     vo.percentNum = 0;
                 } else {
-                    Double total = Double.parseDouble(jsonVO.TotalMoney);
-                    Double raise = Double.parseDouble(jsonVO.RaiseMoney);
-                    vo.percentNum = (int)(raise * 100 / total);
+                    Double total = Double.parseDouble(jsonVO.FoundationInfo.TotalMoney);
+                    Double raise = Double.parseDouble(jsonVO.FoundationInfo.RaiseMoney);
+                    vo.percentNum = (int) (raise * 100 / total);
                 }
 
-                if (!TextUtils.isEmpty(jsonVO.Pictures)) {
+                if (!TextUtils.isEmpty(jsonVO.FoundationInfo.Pictures)) {
                     List<AdvVO> advVOs = new ArrayList<AdvVO>();
-                    String[] pics = jsonVO.Pictures.split("\\|");
-                    for (int i=0; i < pics.length; i++) {
+                    String[] pics = jsonVO.FoundationInfo.Pictures.split("\\|");
+                    for (int i = 0; i < pics.length; i++) {
                         AdvVO advVO = new AdvVO();
                         String pic = pics[i];
-                        if (pic.startsWith("http")) {
-                            advVO.imgUrl = pic;
-                        } else {
-                            advVO.imgUrl = APIConstants.HOST + pic;
-                        }
-
+                        advVO.imgUrl = CommonUtil.getImageUrl(pic);
                         advVOs.add(advVO);
                     }
 
@@ -166,6 +163,66 @@ public class CommonwealManager {
                 }
 
                 return vo;
+            }
+        });
+    }
+
+
+    public static AsyncJob<CommonwealHomeVO> fetchMyFirstCommonweal(Long userId, int pageNum, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetMyList");
+        params.put("userId", userId + "");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        AsyncJob<CommonwealJsonVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealJsonVO.class);
+        return result.map(new Func<CommonwealJsonVO, CommonwealHomeVO>() {
+            @Override
+            public CommonwealHomeVO call(CommonwealJsonVO v) {
+                if (v == null) {
+                    return null;
+                }
+
+                CommonwealHomeVO r = new CommonwealHomeVO();
+                r.TotalMoney = v.TotalMoney;
+                r.FoundationList = v.FoundationList;
+                if (v.Advertis != null) {
+                    List<AdvVO> advList = new ArrayList<AdvVO>();
+                    for (CommonwealAdvVO iav : v.Advertis) {
+                        AdvVO av = new AdvVO();
+                        av.title = iav.Title;
+                        if (iav.FoundationID != null) {
+                            av.id = iav.FoundationID;
+                        }
+                        av.imgUrl = iav.getPic();
+                        advList.add(av);
+                    }
+
+                    r.Advertis = advList;
+                } else {
+                    r.Advertis = new ArrayList<AdvVO>();
+                }
+
+                return r;
+            }
+        });
+    }
+
+    public static AsyncJob<List<CommonwealVO>> fetchMyCommonwealList(Long userId, int pageNum, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetMyList");
+        params.put("userId", userId + "");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNum + "");
+        Type type = new TypeToken<Map<String, List<CommonwealVO>>>() {
+        }.getType();
+        AsyncJob<Map<String, List<CommonwealVO>>> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+
+        return result.map(new Func<Map<String, List<CommonwealVO>>, List<CommonwealVO>>() {
+            @Override
+            public List<CommonwealVO> call(Map<String, List<CommonwealVO>> stringListMap) {
+                return stringListMap.get("FoundationList");
             }
         });
     }

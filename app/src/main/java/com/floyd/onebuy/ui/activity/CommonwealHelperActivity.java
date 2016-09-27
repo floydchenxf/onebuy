@@ -105,7 +105,7 @@ public class CommonwealHelperActivity extends Activity implements View.OnClickLi
             public void onSuccess(CommonwealHelperList commonwealHelperList) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
-                    totalNumView.setText("感谢"+commonwealHelperList.PersonCount+"位爱心朋友");
+                    totalNumView.setText("感谢" + commonwealHelperList.PersonCount + "位爱心朋友");
                 }
 
                 List<CommonwealHelperVO> personList = commonwealHelperList.PersonList;
@@ -127,7 +127,7 @@ public class CommonwealHelperActivity extends Activity implements View.OnClickLi
         totalNumView = new TextView(this);
         totalNumView.setTextSize(14);
         totalNumView.setTextColor(Color.parseColor("#666666"));
-        totalNumView.setPadding((int)(14*dp), (int)(10*dp), (int)(14*dp), (int)(10*dp));
+        totalNumView.setPadding((int) (14 * dp), (int) (10 * dp), (int) (14 * dp), (int) (10 * dp));
         totalNumLayout.addView(totalNumView);
         mListView.addHeaderView(totalNumLayout);
     }

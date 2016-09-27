@@ -11,9 +11,7 @@ public class CommonwealHelperVO {
     public String ClientID; //用户id
     public String ClientName; //用户名称
     public String ClientPic; //用户头像
-    public long PayTime;
-    public String Remark;
-    public String PayMoney;
+    public String Money;
 
     public String getClientPic() {
         if (TextUtils.isEmpty(ClientPic)) {

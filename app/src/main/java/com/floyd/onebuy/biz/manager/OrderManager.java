@@ -34,15 +34,18 @@ public class OrderManager {
      * @param productLssueDetail ProductLssueDetail 为购物详情 内
      *                           容为 期数 ID|数量 多个产品用逗号
      *                           相连接
+     * @param type 用来传商品类别，1表示普通商品   2表示快乐星期五  3表示基金
+     * @param paychannel 支付类型
      * @return
      */
-    public static AsyncJob<OrderVO> createOrder(long userId, String productLssueDetail, int type) {
+    public static AsyncJob<OrderVO> createOrder(long userId, String productLssueDetail, int type, int paychannel) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "CreateOrder");
         params.put("userId", userId + "");
         params.put("productLssueDetail", productLssueDetail);
         params.put("type", type + "");
+        params.put("paychannel", paychannel + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, OrderVO.class);
     }
 
@@ -57,13 +60,7 @@ public class OrderManager {
 
 
     public static AsyncJob<OrderVO> createOrder(BuyCarType type, long userId, String productLssueDetail, int payType) {
-        AsyncJob<OrderVO> orderJob = null;
-        if (type == BuyCarType.FRI) {
-            orderJob = createFridayOrder(userId, productLssueDetail, payType);
-        } else if (type == BuyCarType.NORMAL) {
-            orderJob = createOrder(userId, productLssueDetail, payType);
-        }
-
+        AsyncJob<OrderVO> orderJob = createOrder(userId, productLssueDetail, type.getCode(), payType);
         return orderJob;
     }
 
@@ -99,18 +96,6 @@ public class OrderManager {
 
     }
 
-    public static AsyncJob<OrderVO> createCommonwealOrder(Long userId, Long proId, String money, String remark, int type) {
-        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "CreateCommonwealOrder");
-        params.put("userId", userId + "");
-        params.put("pid", proId + "");
-        params.put("money", money);
-        params.put("remark", remark);
-        params.put("type", type+"");
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, OrderVO.class);
-    }
-
     /**
      * 创建捐款
      *
@@ -118,34 +103,21 @@ public class OrderManager {
      * @param proId
      * @param money
      * @param remark
-     * @param type
+     * @param paychannel
      * @return
      */
-    public static AsyncJob<Double> createCommonwealAndPay(Long userId, Long proId, String money, String remark, int type) {
-        final AsyncJob<Double> commonwealJob = createCommonwealOrder(userId, proId, money, remark, type).flatMap(new Func<OrderVO, AsyncJob<Double>>() {
-            @Override
-            public AsyncJob<Double> call(final OrderVO chargeOrderVO) {
-                String orderNum = chargeOrderVO.orderNum;
-                return payCharge(orderNum);
-            }
-        });
-
-        return commonwealJob;
-    }
-
-    /**
-     * 捐款模拟支付
-     *
-     * @param orderNum
-     * @return
-     */
-    public static AsyncJob<Boolean> payWeal(String orderNum) {
+    public static AsyncJob<OrderVO> createCommonwealOrder(Long userId, Long proId, String money, String remark, int paychannel) {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "PayWeal");
-        params.put("orderNum", orderNum);
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+        params.put("pageType", "CreateCommonwealOrder");
+        params.put("userid", userId + "");
+        params.put("id", proId + "");
+        params.put("money", money);
+        params.put("remark", remark);
+        params.put("paychannel", paychannel + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, OrderVO.class);
     }
+
 
     /**
      * 模拟充值接口
@@ -187,27 +159,8 @@ public class OrderManager {
         params.put("pageType", "Recharge");
         params.put("userId", userId + "");
         params.put("money", money);
-        params.put("type", type+"");
+        params.put("type", type + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, ChargeOrderVO.class);
-    }
-
-    /**
-     * 创建订单并支付
-     *
-     * @param userId
-     * @param money
-     * @return
-     */
-    public static AsyncJob<Double> createOrderAndPayCharge(Long userId, String money, int type) {
-        final AsyncJob<Double> chargeOrderJob = createChargeOrder(userId, money, type).flatMap(new Func<ChargeOrderVO, AsyncJob<Double>>() {
-            @Override
-            public AsyncJob<Double> call(final ChargeOrderVO chargeOrderVO) {
-                String orderNum = chargeOrderVO.orderNum;
-                return payCharge(orderNum);
-            }
-        });
-
-        return chargeOrderJob;
     }
 
     /**
