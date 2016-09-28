@@ -1,6 +1,8 @@
 package com.floyd.onebuy.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -28,8 +30,11 @@ import com.floyd.onebuy.biz.vo.json.CarListVO;
 import com.floyd.onebuy.biz.vo.json.CarPayChannel;
 import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
 import com.floyd.onebuy.biz.vo.json.OrderPayVO;
+import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
+import com.floyd.onebuy.event.PayFirdaySuccessEvent;
+import com.floyd.onebuy.event.PaySuccessEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
@@ -38,6 +43,7 @@ import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
+import com.unionpay.UPPayAssistEx;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,8 +51,11 @@ import java.util.List;
 import java.util.Set;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 public class FridayBuyCarActivity extends Activity implements View.OnClickListener {
+
+    public static final String PAY_RESULT = "pay_result";
 
     private DataLoadingView dataLoadingView;
     private ListView mListView;
@@ -75,12 +84,13 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
     private BuyCarType buyCarType;
     private Long userId;
     private boolean initedFooter;
+    private String orderNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_buy_car);
-
+        EventBus.getDefault().register(this);
         userId = LoginManager.getLoginInfo(this).ID;
         initedFooter = false;
         mImageLoader = ImageLoaderFactory.createImageLoader();
@@ -166,7 +176,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
         deleteButtonView.setOnClickListener(this);
 
         mBuyCarAdapter.showRadiio(isEdit);
-        findViewById(R.id.title_back).setVisibility(View.GONE);
+        findViewById(R.id.title_back).setOnClickListener(this);
     }
 
     private void initFooter() {
@@ -277,7 +287,13 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                             NetworkImageView imageView = (NetworkImageView) v.findViewById(R.id.wx_icon);
                             imageView.setImageUrl(channel.getPicUrl(), mImageLoader);
                             TextView payNameView = (TextView) v.findViewById(R.id.pay_name_view);
-                            payNameView.setText(channel.Name);
+                            StringBuilder sb = new StringBuilder(channel.Name);
+                            if (channel.ID == 1) {
+                                sb.append(" (￥").append(carListVO.UserInfo.Amount).append(")");
+                            } else if (channel.ID == 2) {
+                                sb.append(" (").append(carListVO.UserInfo.JiFen).append(")");
+                            }
+                            payNameView.setText(sb.toString());
                             RadioButton rb = (RadioButton) v.findViewById(R.id.wx_radio);
                             rb.setTag(channel.ID);
                             rbArray[idx] = rb;
@@ -328,6 +344,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                 loadData(true);
                 break;
             case R.id.pay_view:
+
                 UserVO vo = LoginManager.getLoginInfo(this);
                 if (vo == null) {
                     Toast.makeText(this, "请先登录用户!", Toast.LENGTH_SHORT).show();
@@ -338,44 +355,24 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                 final Set<Long> delCarIds = new HashSet<Long>();
                 for (CarItemVO info : mBuyCarAdapter.getRecords()) {
                     delCarIds.add(info.CarID);
-                    productLssueDetail.append(info.ProductLssueID).append("|").append(info.CarCount).append(",");
+                    productLssueDetail.append(info.ProductLssueID).append("_").append(info.CarCount).append("|");
                 }
 
-                GoodsAddressVO goodsAddressVO = AddressManager.getDefaultAddressInfo(this);
-                String address = "";
-                if (goodsAddressVO != null) {
-                    address = goodsAddressVO.getFullAddress();
-                }
-
-                OrderManager.createAndPayOrder(BuyCarType.FRI, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), payType).startUI(new ApiCallback<OrderPayVO>() {
+                OrderManager.createOrder(BuyCarType.FRI, vo.ID, productLssueDetail.substring(0, productLssueDetail.toString().length() - 1), payType).startUI(new ApiCallback<OrderVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSuccess(OrderPayVO orderVO) {
-                        CarManager.delCar(buyCarType, delCarIds).startUI(new ApiCallback<Boolean>() {
-                            @Override
-                            public void onError(int code, String errorInfo) {
-                                Toast.makeText(FridayBuyCarActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onSuccess(Boolean s) {
-                                isEdit = false;
-                                mBuyCarAdapter.remove(delCarIds);
-                                mBuyCarAdapter.showRadiio(isEdit);
-                            }
-
-                            @Override
-                            public void onProgress(int progress) {
-
-                            }
-                        });
-                        Intent intent = new Intent(FridayBuyCarActivity.this, PayResultActivity.class);
-                        intent.putExtra(APIConstants.PAY_ORDER_NO, orderVO.orderNum);
-                        startActivity(intent);
+                    public void onSuccess(OrderVO orderVO) {
+                        if (payType == 6) {
+                            FridayBuyCarActivity.this.orderNum = orderVO.orderNum;
+                            UPPayAssistEx.startPay(FridayBuyCarActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                        } else {
+                            FridayBuyCarActivity.this.orderNum = orderVO.orderNum;
+                            buySuccessCall();
+                        }
                     }
 
                     @Override
@@ -430,9 +427,75 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                     }
                 });
                 break;
+
             case R.id.goto_index:
-                EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
+                Intent it = new Intent(this, FridayActivity.class);
+                it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                this.startActivity(it);
+                break;
+            case R.id.title_back:
+                this.finish();
                 break;
         }
+    }
+
+    private void buySuccessCall() {
+        if (this.isFinishing()) {
+            return;
+        }
+
+
+        final Set<Long> delCarIds = new HashSet<Long>();
+        for (CarItemVO info : mBuyCarAdapter.getRecords()) {
+            delCarIds.add(info.CarID);
+        }
+
+        isEdit = false;
+        mBuyCarAdapter.remove(delCarIds);
+        mBuyCarAdapter.showRadiio(isEdit);
+
+        Intent intent = new Intent(this, PayResultActivity.class);
+        intent.putExtra(APIConstants.PAY_ORDER_NO, orderNum);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String msg = "";
+        String str = data.getExtras().getString(PAY_RESULT);
+        if (str.equalsIgnoreCase("success")) {
+            EventBus.getDefault().post(new PaySuccessEvent());
+            return;
+        }
+
+        if (str.equalsIgnoreCase("fail")) {
+            msg = "支付失败！";
+        } else if (str.equalsIgnoreCase("cancel")) {
+            msg = "用户取消了支付";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("支付结果通知");
+        builder.setMessage(msg);
+        builder.setInverseBackgroundForced(true);
+        // builder.setCustomTitle();
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Subscribe
+    public void onEventMainThread(PayFirdaySuccessEvent event) {
+        buySuccessCall();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
