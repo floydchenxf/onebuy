@@ -11,7 +11,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -29,12 +28,10 @@ import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.aync.JobFactory;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.EnvConstants;
-import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
-import com.floyd.onebuy.biz.tools.FileTools;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -51,7 +48,7 @@ import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
 import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
 import com.floyd.onebuy.ui.buycar.BuycarOperator;
-import com.floyd.onebuy.ui.buycar.CommonwealBuycarOperator;
+import com.floyd.onebuy.ui.buycar.FundBuycarOperator;
 import com.floyd.onebuy.ui.buycar.FridayBuycarOperator;
 import com.floyd.onebuy.ui.buycar.NormalProductBuycarOperator;
 import com.floyd.onebuy.ui.fragment.BannerFragment;
@@ -471,7 +468,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         } else if (detailType == DETAIL_TYPE_FRI) {
             buycarOperator = new FridayBuycarOperator(this, id, productId);
         } else {
-            buycarOperator = new CommonwealBuycarOperator(this, id, productId);
+            buycarOperator = new FundBuycarOperator(this, id, productId);
         }
 
         dataLoadingView = new DefaultDataLoadingView();

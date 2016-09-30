@@ -14,6 +14,7 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.func.AbstractJsonApiCallback;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.tools.PrefsTools;
+import com.floyd.onebuy.biz.vo.json.InviteFriendRecordVO;
 import com.floyd.onebuy.biz.vo.json.InviteVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -197,7 +198,7 @@ public class LoginManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "forgetPasswordstep2");
-        params.put("userId", userId+"");
+        params.put("userId", userId + "");
         String md5Pass = MD5Util.encodeBy32BitMD5(newPasword).toLowerCase();
         params.put("newPassword", md5Pass);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
@@ -268,7 +269,7 @@ public class LoginManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "bindClientMobile");
-        params.put("userId", userId+"");
+        params.put("userId", userId + "");
         params.put("mobile", mobile);
         params.put("code", smsCode);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
@@ -287,6 +288,18 @@ public class LoginManager {
         params.put("userId", userId + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, InviteVO.class);
 
+    }
+
+    public static AsyncJob<List<InviteFriendRecordVO>> getMyInvite(Long userId, int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "myInvite");
+        params.put("userId", userId + "");
+        params.put("pageNum", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        Type type = new TypeToken<List<InviteFriendRecordVO>>() {
+        }.getType();
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
     }
 
 

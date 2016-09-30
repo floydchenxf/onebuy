@@ -1,108 +1,104 @@
 package com.floyd.onebuy.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.biz.manager.LoginManager;
-import com.floyd.onebuy.biz.vo.json.InviteVO;
-import com.floyd.onebuy.biz.vo.json.UserVO;
-import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.ui.R;
-import com.floyd.onebuy.ui.loading.DataLoadingView;
-import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.floyd.onebuy.ui.share.IShare;
-import com.floyd.onebuy.ui.share.ShareManager;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.QQShareContent;
-import com.umeng.socialize.media.QZoneShareContent;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
+import com.floyd.onebuy.ui.fragment.InviteFriendFragment;
+import com.floyd.onebuy.ui.fragment.InviteFriendRecordFragment;
+import com.floyd.onebuy.ui.fragment.ShowShareFragment;
 
-public class InviteFriendActivity extends Activity implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
 
-    private TextView descView;
+/**
+ * 晒单页面
+ */
+public class InviteFriendActivity extends FragmentActivity implements View.OnClickListener {
 
-    private NetworkImageView weiImageView;//二维码图片
+    public static final String CURRENT_PAGE_INDEX = "current_page_index";
+    public static final String CURRENT_USER_ID = "current_user_id";
+    public static final String IS_PRODUCT = "IS_PRODUCT";
 
-    private TextView inviteCodeView;//邀请码
-    private TextView inviteFriendView;//立即邀请按钮
+    private ViewPager inviteFriendPager;
+    private CheckedTextView tabInviteView;
+    private CheckedTextView tabRecordView;
 
-    private DataLoadingView dataLoadingView;
-    private ImageLoader mImageLoader;
+    private int currentIndex;
 
-    private ShareManager shareManager;
-    private UserVO userVO;
+    private InviteFriendFragmentAdapter mFragmentAdapter;
 
+    private long userId;
+    private boolean isProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite_friend);
-        dataLoadingView = new DefaultDataLoadingView();
-        dataLoadingView.initView(findViewById(R.id.act_lsloading), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadData();
-            }
-        });
-
-        shareManager = ShareManager.getInstance(this);
-        findViewById(R.id.title_back).setOnClickListener(this);
+        setContentView(R.layout.activity_invite_record);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
         titleNameView.setText("邀请好友");
         titleNameView.setVisibility(View.VISIBLE);
+        findViewById(R.id.title_back).setOnClickListener(this);
 
-        mImageLoader = ImageLoaderFactory.createImageLoader();
-        descView = (TextView) findViewById(R.id.desc);
-        inviteCodeView = (TextView) findViewById(R.id.invite_code_view);
-        inviteFriendView = (TextView) findViewById(R.id.invite_friend_button);
-        inviteFriendView.setOnClickListener(this);
-        weiImageView = (NetworkImageView) findViewById(R.id.mark_view);
+        inviteFriendPager = (ViewPager) findViewById(R.id.page_invite);
+        tabInviteView = (CheckedTextView) findViewById(R.id.tab_invite);
+        tabRecordView = (CheckedTextView) findViewById(R.id.tab_invite_record);
+        tabInviteView.setOnClickListener(this);
+        tabInviteView.setOnClickListener(this);
+        userId = getIntent().getLongExtra(CURRENT_USER_ID, 0l);
+        isProduct = getIntent().getBooleanExtra(IS_PRODUCT, false);
 
-        loadData();
+        initFragment();
     }
 
-    private void loadData() {
-        dataLoadingView.startLoading();
-        userVO = LoginManager.getLoginInfo(this);
-        LoginManager.fetchInviteInfo(userVO.ID).startUI(new ApiCallback<InviteVO>() {
+    private void initFragment() {
+        mFragmentAdapter = new InviteFriendFragmentAdapter(this.getSupportFragmentManager(), userId);
+        inviteFriendPager.setAdapter(mFragmentAdapter);
+
+        if (currentIndex > mFragmentAdapter.getCount()) {
+            currentIndex = mFragmentAdapter.getCount() - 1;
+        }
+
+        if (currentIndex < 0) {
+            currentIndex = 0;
+        }
+
+        inviteFriendPager.setCurrentItem(currentIndex);
+        inviteFriendPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
-            public void onError(int code, String errorInfo) {
-                dataLoadingView.loadFail();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
-            public void onSuccess(InviteVO inviteVO) {
-                dataLoadingView.loadSuccess();
-                String title = "苏城云购";
-                String content = "对发送发送到发送到发送地方";
-                shareManager.setShareContent(title, content, inviteVO.url);
-                weiImageView.setImageUrl(inviteVO.getQrcode(), mImageLoader);
-                descView.setText(Html.fromHtml("成功邀请一位好友,可获取<font color=\"red\" size=\"16pt\">100</font>积分奖励"));
-                inviteCodeView.setText(Html.fromHtml("您的邀请码 <font color=\"red\">" + userVO.InviterCode + "</font>"));
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        tabInviteView.setChecked(true);
+                        tabRecordView.setChecked(false);
+                        break;
+                    case 1:
+                        tabInviteView.setChecked(false);
+                        tabRecordView.setChecked(true);
+                        break;
+                }
             }
 
             @Override
-            public void onProgress(int progress) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
-    }
 
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -111,11 +107,51 @@ public class InviteFriendActivity extends Activity implements View.OnClickListen
             case R.id.title_back:
                 this.finish();
                 break;
-            case R.id.invite_friend_button:
-                //分享
-                shareManager.show(false);
+            case R.id.tab_invite:
+                inviteFriendPager.setCurrentItem(0);
+                break;
+            case R.id.tab_invite_record:
+                inviteFriendPager.setCurrentItem(1);
                 break;
         }
 
+    }
+
+    public static class InviteFriendFragmentAdapter extends FragmentStatePagerAdapter {
+        private Long userId;
+        private List<Fragment> fragmentList = new ArrayList<Fragment>();
+
+        public InviteFriendFragmentAdapter(FragmentManager fm, Long userId) {
+            super(fm);
+            this.userId = userId;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment f = null;
+
+            if (position < fragmentList.size()) {
+                f = fragmentList.get(position);
+            }
+
+            if (f == null) {
+                switch (position) {
+                    case 0:
+                        f = InviteFriendFragment.newInstance(userId);
+                        fragmentList.add(f);
+                        break;
+                    case 1:
+                        f = InviteFriendRecordFragment.newInstance(userId);
+                        fragmentList.add(f);
+                        break;
+                }
+            }
+            return f;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }

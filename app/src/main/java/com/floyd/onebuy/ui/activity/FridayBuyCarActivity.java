@@ -149,6 +149,7 @@ public class FridayBuyCarActivity extends Activity implements View.OnClickListen
                 deleteDescView.setText(Html.fromHtml("共删除<font color=\"#ff0000\">" + kk.size() + "</font>件商品"));
             }
         });
+
         mListView.setAdapter(mBuyCarAdapter);
 
         initFooter();

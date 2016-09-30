@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/phone_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical"
+            android:text="15968809112"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/client_name_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="left|center_vertical"
+            android:text="晓峰"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:id="@+id/record_status_view"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="right|center_vertical"
+            android:text="注册"
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp">
+
+        <TextView
+            android:id="@+id/record_time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:gravity="left|center_vertical"
+            android:text="2016-10-11 12:00:00"
+            android:textColor="@color/gray_content"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/record_status_time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="right|center_vertical"
+            android:text="2016-10-11 12:00:00"
+            android:textColor="@color/gray_content"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

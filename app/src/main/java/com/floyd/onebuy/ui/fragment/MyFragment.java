@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.biz.manager.ImagerInfoManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.NavigationVO;
@@ -38,22 +36,12 @@ import com.floyd.onebuy.ui.activity.PayChargeActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.ShowShareActivity;
 import com.floyd.onebuy.ui.activity.SubjectInfoActivity;
-import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.adapter.NavigationAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.zxing.MipcaActivityCapture;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.QQShareContent;
-import com.umeng.socialize.media.QZoneShareContent;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +98,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                     Intent it = new Intent(MyFragment.this.getActivity(), clazzs[k]);
                     if (k == 1) {
                         it.putExtra("USER_ID", LoginManager.getLoginInfo(getActivity()).ID);
-                    } else if (k == 5) {
+                    } else if (k == 5 || k == 7) {
                         it.putExtra(ShowShareActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
                     }
                     MyFragment.this.getActivity().startActivity(it);

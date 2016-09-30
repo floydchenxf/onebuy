@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_frame" />
+
+    <LinearLayout
+        android:id="@+id/navigation_container"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/title_layout"
+        android:background="#ffffff"
+        android:gravity="center_vertical">
+
+        <CheckedTextView
+            android:id="@+id/tab_invite"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/red_line_button_bg"
+            android:checked="true"
+            android:gravity="center"
+            android:text="邀请好友"
+            android:textColor="@drawable/word_selector" />
+
+        <CheckedTextView
+            android:id="@+id/tab_invite_record"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/red_line_button_bg"
+            android:gravity="center"
+            android:text="邀请好友记录"
+            android:textColor="@drawable/word_selector" />
+
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/page_invite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/navigation_container" />
+
+
+</RelativeLayout>
