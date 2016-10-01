@@ -57,7 +57,7 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
     @Override
     public void onResume() {
         super.onResume();
-//        loadData(true);
+        loadData(true);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
         });
         productLssueAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
         mListView.setAdapter(productLssueAdapter);
-        loadData(true);
+//        loadData(true);
         return view;
     }
 
