@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.aync.AsyncJob;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
@@ -80,12 +81,20 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
         });
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
-        titleNameView.setText("充值");
+        addFeeView = (TextView) findViewById(R.id.add_fee_view);
+        addFeeView.setOnClickListener(this);
+        if (isRecharge) {
+            titleNameView.setText("充值");
+            addFeeView.setText("充值");
+        } else {
+            titleNameView.setText("捐款");
+            addFeeView.setText("捐款");
+        }
         titleNameView.setVisibility(View.VISIBLE);
 
         payLayout = findViewById(R.id.pay_layout);
 
-        payTypeLayout = (LinearLayout)findViewById(R.id.pay_type_layout);
+        payTypeLayout = (LinearLayout) findViewById(R.id.pay_type_layout);
         num1 = (CheckedTextView) findViewById(R.id.num1);
         num2 = (CheckedTextView) findViewById(R.id.num2);
         num3 = (CheckedTextView) findViewById(R.id.num3);
@@ -105,9 +114,6 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
             }
         });
 
-        addFeeView = (TextView) findViewById(R.id.add_fee_view);
-        addFeeView.setOnClickListener(this);
-
         arrays = new CheckedTextView[]{num1, num2, num3, num4, num5};
 
         for (CheckedTextView v : arrays) {
@@ -119,7 +125,13 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
     private void loadData() {
         dataLoadingView.startLoading();
-        CarManager.getPayChannels().startUI(new ApiCallback<List<CarPayChannel>>() {
+        String payType = null;
+        if (isRecharge) {
+            payType = "recharge";
+        } else {
+            payType = "gy";
+        }
+        CarManager.getPayChannels(payType, LoginManager.getLoginInfo(this).ID).startUI(new ApiCallback<List<CarPayChannel>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 dataLoadingView.loadFail();
@@ -186,7 +198,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
                         rb.setOnCheckedChangeListener(checkChangedListener);
                         v.setOnClickListener(l);
                         payTypeLayout.addView(v);
-                        idx ++;
+                        idx++;
                     }
                 }
             }
@@ -258,7 +270,16 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         @Override
                         public void onSuccess(OrderVO orderVO) {
-                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                            if (payTypeChecked == 6) {
+                                UPPayAssistEx.startPay(PayChargeActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                            } else {
+                                if (isRecharge) {
+                                    Toast.makeText(PayChargeActivity.this, "充值成功", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(PayChargeActivity.this, "捐款成功", Toast.LENGTH_SHORT).show();
+                                }
+                                PayChargeActivity.this.finish();
+                            }
                         }
 
                         @Override

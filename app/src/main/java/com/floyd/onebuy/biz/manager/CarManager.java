@@ -62,16 +62,26 @@ public class CarManager {
         return buycarServers.get(type).fetchCarList(userId);
     }
 
-    public static AsyncJob<List<CarPayChannel>> getPayChannels() {
+    /**
+     *
+     * @param payType db:夺宝 friday:快乐星期五 gy:公益 recharge:充值
+     * @param userId
+     * @return
+     */
+    public static AsyncJob<List<CarPayChannel>> getPayChannels(String payType, long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.CAR_MODULE;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("pageType", "RechargeChannel");
-        Type type = new TypeToken<Map<String, List<CarPayChannel>>>(){}.getType();
-        AsyncJob<Map<String, List<CarPayChannel>>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
-        return job.map(new Func<Map<String, List<CarPayChannel>>, List<CarPayChannel>>() {
+        params.put("pageType", "PayChannel");
+        params.put("type", payType);
+        params.put("userId", userId+"");
+        Type type = new TypeToken<Map<String, Object>>(){}.getType();
+        AsyncJob<Map<String, Object>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        return job.map(new Func<Map<String, Object>, List<CarPayChannel>>() {
             @Override
-            public List<CarPayChannel> call(Map<String, List<CarPayChannel>> stringListMap) {
-                return stringListMap.get("PayChannel");
+            public List<CarPayChannel> call(Map<String, Object> stringListMap) {
+                String payChannelString = GsonHelper.getGson().toJson(stringListMap.get("PayChannel"));
+                Type ss = new TypeToken<List<CarPayChannel>>(){}.getType();
+                return GsonHelper.getGson().fromJson(payChannelString, ss);
             }
         });
     }
