@@ -48,6 +48,7 @@ public class ImagerInfoManager {
         params.put("pageType", "upImage");
         params.put("productLssueID", productLssueId + "");
         params.put("userId", userId + "");
+        params.put("type", "4");
         Map<String, FileItem> files = new HashMap<String, FileItem>();
         FileItem fileItem = new FileItem(file, "image/jpeg");
         files.put("File", fileItem);

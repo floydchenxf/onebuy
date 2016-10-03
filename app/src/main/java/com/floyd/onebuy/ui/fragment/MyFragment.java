@@ -1,12 +1,18 @@
 package com.floyd.onebuy.ui.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +25,11 @@ import com.android.volley.toolbox.BitmapProcessor;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.aync.Func;
+import com.floyd.onebuy.aync.JobFactory;
+import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.tools.FileUtils;
 import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.NavigationVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -40,8 +50,10 @@ import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.adapter.NavigationAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.onebuy.view.UIAlertDialog;
 import com.floyd.zxing.MipcaActivityCapture;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +110,21 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                     Intent it = new Intent(MyFragment.this.getActivity(), clazzs[k]);
                     if (k == 1) {
                         it.putExtra("USER_ID", LoginManager.getLoginInfo(getActivity()).ID);
+                    } else if (k == 3) {
+                        UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());
+                        SpannableString message = new SpannableString("该板块暂未开发,敬请期待!");
+                        noticeBuilder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton("确认",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int id) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                        AlertDialog dialog2 = noticeBuilder.create();
+                        dialog2.show();
+                        return;
                     } else if (k == 5 || k == 7) {
                         it.putExtra(ShowShareActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
                     }

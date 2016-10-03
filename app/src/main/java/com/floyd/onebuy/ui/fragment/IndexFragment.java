@@ -209,7 +209,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         initButton();
         loadData(true);
         init(view);
-        indexProductAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
+        indexProductAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader, null);
         mListView.setAdapter(indexProductAdapter);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         View emptyView = inflater.inflate(R.layout.empty_item, container, false);
@@ -377,8 +377,21 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 },new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent it = new Intent(getActivity(), FridayActivity.class);
-                        getActivity().startActivity(it);
+//                        Intent it = new Intent(getActivity(), FridayActivity.class);
+//                        getActivity().startActivity(it);
+                        UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());
+                        SpannableString message = new SpannableString("该板块暂未开发,敬请期待!");
+                        noticeBuilder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton("确认",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int id) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                        AlertDialog dialog2 = noticeBuilder.create();
+                        dialog2.show();
                     }
                 }};
                 for (int i=0; i < 5; i++) {

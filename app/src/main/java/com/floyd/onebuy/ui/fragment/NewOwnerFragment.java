@@ -8,15 +8,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
+import com.floyd.onebuy.ui.PrizeListener;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.ProductLssueAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
+import com.floyd.onebuy.view.BasePopupWindow;
+import com.floyd.onebuy.view.CenterPopupWindow;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 
@@ -67,7 +71,7 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(view, this);
         view.findViewById(R.id.title_back).setVisibility(View.GONE);
-        TextView titleNameView = (TextView)view.findViewById(R.id.title_name);
+        TextView titleNameView = (TextView) view.findViewById(R.id.title_name);
         titleNameView.setText("最新揭晓");
         titleNameView.setVisibility(View.VISIBLE);
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
@@ -91,12 +95,15 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
                 mPullToRefreshListView.onRefreshComplete(false, true);
             }
         });
-        productLssueAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader);
+        productLssueAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader, new PrizeListener() {
+            @Override
+            public void prizeCallback(String title, String prizeCode, String productUrl) {
+
+            }
+        });
         mListView.setAdapter(productLssueAdapter);
-//        loadData(true);
         return view;
     }
-
 
 
     private void loadData(final boolean isFirst) {

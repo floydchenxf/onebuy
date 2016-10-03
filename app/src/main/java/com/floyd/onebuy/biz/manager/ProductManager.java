@@ -936,17 +936,19 @@ public class ProductManager {
      * 获取我的中奖记录
      *
      * @param uid
+     * @param luckType 1普通商品，2快乐星期五，3阳光基金
      * @param pageNum
      * @param pageSize
      * @return
      */
-    public static AsyncJob<LuckRecordVO> fetchMyLuckRecords(long uid, int pageNum, int pageSize) {
+    public static AsyncJob<LuckRecordVO> fetchMyLuckRecords(long uid, int luckType, int pageNum, int pageSize) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetLuckRecord");
         params.put("userId", uid + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
+        params.put("type", luckType+"");
 
         Type type = new TypeToken<LuckRecordVO>() {
         }.getType();

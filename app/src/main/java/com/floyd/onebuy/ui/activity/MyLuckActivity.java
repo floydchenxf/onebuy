@@ -33,6 +33,7 @@ import de.greenrobot.event.EventBus;
 
 public class MyLuckActivity extends Activity implements View.OnClickListener {
     public static final String IS_SELF = "is_self";
+    public static final String LUCK_TYPE = "LUCK_TYPE";
     private static final String TAG = "MyLuckActivity";
 
     private static int PAGE_SIZE = 12;
@@ -54,6 +55,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
     private TextView phoneView;
     private TextView addressView;
     private TextView emptyAddressView;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         pageNo = 1;
         isFirst = true;
         needClear = true;
+        type = getIntent().getIntExtra(LUCK_TYPE, 1);
 
         mImageLoader = ImageLoaderFactory.createImageLoader();
 
@@ -114,7 +117,7 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ProductManager.fetchMyLuckRecords(uid, pageNo, PAGE_SIZE).startUI(new ApiCallback<LuckRecordVO>() {
+        ProductManager.fetchMyLuckRecords(uid, type, pageNo, PAGE_SIZE).startUI(new ApiCallback<LuckRecordVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

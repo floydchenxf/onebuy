@@ -38,6 +38,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProfilePrizeFragment extends Fragment implements View.OnClickListener {
+    public static final String LUCK_TYPE = "LUCK_TYPE";
     private static final String USER_ID = "USER_ID";
     private static int PAGE_SIZE = 12;
     private Long userId;
@@ -118,7 +119,7 @@ public class ProfilePrizeFragment extends Fragment implements View.OnClickListen
         if (isFirst) {
             dataLoadingView.startLoading();
         }
-        ProductManager.fetchMyLuckRecords(userId, pageNo, PAGE_SIZE).startUI(new ApiCallback<LuckRecordVO>() {
+        ProductManager.fetchMyLuckRecords(userId, 1, pageNo, PAGE_SIZE).startUI(new ApiCallback<LuckRecordVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

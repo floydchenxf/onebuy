@@ -25,8 +25,10 @@ import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
 import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
+import com.floyd.onebuy.ui.PrizeListener;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 
@@ -51,6 +53,7 @@ public class ProductLssueAdapter extends BaseAdapter {
 
     private Set<Long> requestSet = new ConcurrentSkipListSet<>();
     private Map<Long, Integer> callTimes = new ConcurrentHashMap<Long, Integer>();
+    private PrizeListener prizeListener;
 
     private BuyCarType buyCarType;
 
@@ -134,9 +137,13 @@ public class ProductLssueAdapter extends BaseAdapter {
                         if (info.lssueId == ownerExtVO.lssueId) {
                             info.ownerVO = ownerExtVO;
                             info.status = WinningInfo.STATUS_LOTTERYED;
-//                            info.status = ownerExtVO.status;
                             break;
                         }
+                    }
+
+                    UserVO userVO = LoginManager.getLoginInfo(mContext);
+                    if (userVO != null && userVO.ID == ownerExtVO.userId && prizeListener != null) {
+                        prizeListener.prizeCallback(itemVO.getTitle(), ownerExtVO.winNumber, itemVO.getProductUrl());
                     }
 
                     ProductLssueAdapter.this.notifyDataSetChanged();
@@ -150,11 +157,12 @@ public class ProductLssueAdapter extends BaseAdapter {
         }
     }
 
-    public ProductLssueAdapter(BuyCarType buyCarType, Context context, List<WinningInfo> records, ImageLoader imageLoader) {
+    public ProductLssueAdapter(BuyCarType buyCarType, Context context, List<WinningInfo> records, ImageLoader imageLoader, PrizeListener prizeListener) {
         this.mContext = context;
         this.records = records;
         this.mImageLoader = imageLoader;
         this.buyCarType = buyCarType;
+        this.prizeListener = prizeListener;
     }
 
     public void addAll(List<WinningInfo> products, boolean needClear) {
@@ -426,7 +434,6 @@ public class ProductLssueAdapter extends BaseAdapter {
                 if (left <= 0) {
                     viewHolder.leftTimeView1.setText("正在计算...");
                     getWinnerInfo(winningInfo);
-                    //TODO 获取数据
                 } else {
                     String dateleft = DateUtil.getDateBefore(winningInfo.lotteryTime, ServerTimeManager.getServerTime());
                     viewHolder.leftTimeView1.setText(dateleft);

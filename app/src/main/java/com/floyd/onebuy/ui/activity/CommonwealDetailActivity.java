@@ -25,6 +25,7 @@ import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHelperVO;
+import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
@@ -66,6 +67,8 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
     private ImageLoader mImageLoader;
 
     private TextView commonwealButton;
+
+    private long userId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +121,16 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
         proNameView = (TextView) findViewById(R.id.proName_view);
         commonwealButton = (TextView) findViewById(R.id.commonweal_button);
         commonwealButton.setOnClickListener(this);
+        UserVO vo = LoginManager.getLoginInfo(this);
+        if (vo != null) {
+            userId = vo.ID;
+        }
         loadData();
     }
 
     private void loadData() {
         dataLoadingView.startLoading();
-        CommonwealManager.fetchCommonwealDetail(pid).startUI(new ApiCallback<CommonwealDetailVO>() {
+        CommonwealManager.fetchCommonwealDetail(pid, userId).startUI(new ApiCallback<CommonwealDetailVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 dataLoadingView.loadFail();

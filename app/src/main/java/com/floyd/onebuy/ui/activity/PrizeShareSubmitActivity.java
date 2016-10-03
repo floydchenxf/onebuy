@@ -252,6 +252,11 @@ public class PrizeShareSubmitActivity extends Activity implements View.OnClickLi
                     return;
                 }
 
+                if (urlList == null || urlList.isEmpty()) {
+                    Toast.makeText(this, "请上传至少一张图片", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 StringBuilder sb = new StringBuilder();
                 if (typeId == 1 && urlList != null && !urlList.isEmpty()) {
                     for (String s : urlList) {

@@ -120,11 +120,12 @@ public class CommonwealManager {
      * @param pid
      * @return
      */
-    public static AsyncJob<CommonwealDetailVO> fetchCommonwealDetail(long pid) {
+    public static AsyncJob<CommonwealDetailVO> fetchCommonwealDetail(long pid, long userId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetCommonwealDetail");
         params.put("id", pid + "");
+        params.put("userId", userId + "");
 
         AsyncJob<CommonwealDetailJsonVO> tempResult = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealDetailJsonVO.class);
         return tempResult.map(new Func<CommonwealDetailJsonVO, CommonwealDetailVO>() {

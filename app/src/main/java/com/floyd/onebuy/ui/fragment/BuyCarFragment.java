@@ -304,11 +304,11 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                             imageView.setImageUrl(channel.getPicUrl(), mImageLoader);
                             TextView payNameView = (TextView) v.findViewById(R.id.pay_name_view);
                             StringBuilder sb = new StringBuilder(channel.Name);
-                            if (channel.ID == 1) {
-                                sb.append(" (￥").append(carListVO.UserInfo.Amount).append(")");
-                            } else if (channel.ID == 2) {
-                                sb.append(" (").append(carListVO.UserInfo.JiFen).append(")");
-                            }
+//                            if (channel.ID == 1) {
+//                                sb.append(" (￥").append(carListVO.UserInfo.Amount).append(")");
+//                            } else if (channel.ID == 2) {
+//                                sb.append(" (").append(carListVO.UserInfo.JiFen).append(")");
+//                            }
                             payNameView.setText(sb.toString());
                             RadioButton rb = (RadioButton) v.findViewById(R.id.wx_radio);
                             rb.setTag(channel.ID);
