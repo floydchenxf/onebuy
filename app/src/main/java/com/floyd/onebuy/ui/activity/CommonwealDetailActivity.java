@@ -172,7 +172,7 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
                 contentView.setText(s);
 
                 CommonwealDetailJsonVO.JoinInfo info = vo.JoinInfo;
-                if (info == null) {
+                if (info == null || info.TotalCount <= 0) {
                     joinInfoLayout.setVisibility(View.GONE);
                 } else {
                     joinInfoLayout.setVisibility(View.VISIBLE);
