@@ -32,6 +32,7 @@ import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.event.AddressModifiedEvent;
+import com.floyd.onebuy.event.BuyCarNumEvent;
 import com.floyd.onebuy.event.PaySuccessEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
@@ -468,6 +469,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                     @Override
                     public void onSuccess(Boolean s) {
+                        EventBus.getDefault().post(new BuyCarNumEvent());
                         isEdit = false;
                         mBuyCarAdapter.remove(carIds);
                         mBuyCarAdapter.showRadiio(isEdit);

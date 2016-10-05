@@ -28,6 +28,7 @@ import com.floyd.onebuy.biz.vo.json.OwnerExtVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.biz.vo.product.WinningDetailInfo;
+import com.floyd.onebuy.event.BuyCarNumEvent;
 import com.floyd.onebuy.ui.PrizeListener;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.WinningDetailActivity;
@@ -39,6 +40,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by floyd on 16-4-24.
@@ -516,6 +519,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                 @Override
                 public void onSuccess(Boolean s) {
                     Toast.makeText(mContext, "添加购物车成功", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(new BuyCarNumEvent());
                 }
 
                 @Override

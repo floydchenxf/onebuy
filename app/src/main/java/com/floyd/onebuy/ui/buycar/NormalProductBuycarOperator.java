@@ -8,8 +8,11 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.event.BuyCarNumEvent;
 import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by chenxiaofeng on 16/8/14.
@@ -46,6 +49,7 @@ public class NormalProductBuycarOperator implements BuycarOperator {
                     it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     it.putExtra(MainActivity.TAB_INDEX, R.id.tab_buy_car);
                     mContext.startActivity(it);
+                    EventBus.getDefault().post(new BuyCarNumEvent());
                 }
 
                 @Override
@@ -69,6 +73,7 @@ public class NormalProductBuycarOperator implements BuycarOperator {
                 @Override
                 public void onSuccess(Boolean s) {
                     Toast.makeText(mContext, "添加购物车成功", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(new BuyCarNumEvent());
                 }
 
                 @Override

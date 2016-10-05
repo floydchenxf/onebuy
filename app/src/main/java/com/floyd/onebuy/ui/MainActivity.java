@@ -17,11 +17,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.constants.BuyCarType;
+import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.vo.json.CarItemVO;
+import com.floyd.onebuy.biz.vo.json.CarListVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.event.BuyCarNumEvent;
 import com.floyd.onebuy.event.PaySuccessEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.fragment.AllProductFragemnt;
@@ -64,6 +71,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
 
     private long exitTime = 0;
 
+    private TextView redRotNumView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +88,9 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         rgs = (RadioGroup) findViewById(R.id.id_ly_bottombar);
         findViewById(R.id.tab_my).setOnClickListener(this);
         findViewById(R.id.tab_buy_car).setOnClickListener(this);
+
+        redRotNumView = (TextView) findViewById(R.id.red_dot_view);
+        redRotNumView.setVisibility(View.GONE);
 
         tabAdapter = new FragmentTabAdapter(this, fragments, R.id.id_content, rgs);
         tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
@@ -100,6 +112,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
                 return false;
             }
         });
+
+        checkRedDot();
     }
 
     @Override
@@ -107,10 +121,40 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         super.onNewIntent(intent);
         int tabId = intent.getIntExtra(TAB_INDEX, -1);
         if (tabId != -1) {
-            if (tabId >=3 && !LoginManager.isLogin(this)) {
+            if (tabId >= 3 && !LoginManager.isLogin(this)) {
                 return;
             }
             rgs.check(tabId);
+        }
+    }
+
+    private void checkRedDot() {
+        UserVO vo = LoginManager.getLoginInfo(this);
+        if (vo != null) {
+            Long userId = vo.ID;
+            CarManager.fetchCarList(BuyCarType.NORMAL, userId).startUI(new ApiCallback<CarListVO>() {
+                @Override
+                public void onError(int code, String errorInfo) {
+
+                }
+
+                @Override
+                public void onSuccess(CarListVO carListVO) {
+                    List<CarItemVO> items = carListVO.list;
+                    if (items != null && items.size() > 0) {
+                        redRotNumView.setVisibility(View.VISIBLE);
+                        redRotNumView.setText(items.size()+"");
+                    } else {
+                        redRotNumView.setVisibility(View.GONE);
+                    }
+
+                }
+
+                @Override
+                public void onProgress(int progress) {
+
+                }
+            });
         }
     }
 
@@ -178,6 +222,12 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         }
     }
 
+    @Subscribe
+    public void onEventMainThread(BuyCarNumEvent event) {
+        if (!this.isFinishing()) {
+            checkRedDot();
+        }
+    }
 
     @Override
     public void setSelectedFragment(BackHandledFragment selectedFragment) {

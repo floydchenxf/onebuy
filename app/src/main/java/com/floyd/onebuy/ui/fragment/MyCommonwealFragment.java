@@ -100,10 +100,10 @@ public class MyCommonwealFragment extends Fragment implements View.OnClickListen
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position < 2 || position - 1 > mAdapter.getRecords().size()) {
+                if (position < 1 || position > mAdapter.getRecords().size()) {
                     return;
                 }
-                CommonwealVO vo = mAdapter.getItem(position - 2);
+                CommonwealVO vo = mAdapter.getItem(position - 1);
                 Intent it = new Intent(getActivity(), CommonwealDetailActivity.class);
                 it.putExtra(CommonwealDetailActivity.PRODUCT_ID, vo.FoundationID);
                 startActivity(it);
