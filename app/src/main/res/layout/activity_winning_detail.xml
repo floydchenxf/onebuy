@@ -50,8 +50,8 @@
                 android:id="@+id/index_view"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/home_nomal"
                 android:layout_marginLeft="10dp"
+                android:src="@drawable/home_nomal"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -101,21 +101,37 @@
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <ImageView
-                android:id="@+id/view_buy_car"
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:src="@drawable/buycar_normal" />
+                android:layout_weight="1">
 
+                <ImageView
+                    android:id="@+id/view_buy_car"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/buycar_normal" />
+
+                <ImageView
+                    android:id="@+id/red_dot_view"
+                    android:layout_width="16dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="4dp"
+                    android:layout_height="16dp"
+                    android:visibility="gone"
+                    android:src="@drawable/red_dot" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/goto_join_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="0dp"

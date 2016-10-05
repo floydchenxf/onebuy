@@ -48,8 +48,8 @@ import com.floyd.onebuy.ui.adapter.BannerImageAdapter;
 import com.floyd.onebuy.ui.adapter.JoinRecordAdapter;
 import com.floyd.onebuy.ui.adapter.JoinedNumAdapter;
 import com.floyd.onebuy.ui.buycar.BuycarOperator;
-import com.floyd.onebuy.ui.buycar.FundBuycarOperator;
 import com.floyd.onebuy.ui.buycar.FridayBuycarOperator;
+import com.floyd.onebuy.ui.buycar.FundBuycarOperator;
 import com.floyd.onebuy.ui.buycar.NormalProductBuycarOperator;
 import com.floyd.onebuy.ui.fragment.BannerFragment;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -58,8 +58,8 @@ import com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator;
 import com.floyd.onebuy.ui.share.ShareConstants;
 import com.floyd.onebuy.ui.share.ShareManager;
 import com.floyd.onebuy.utils.WXUtil;
-import com.floyd.onebuy.view.LoopViewPager;
 import com.floyd.onebuy.view.LeftDownPopupWindow;
+import com.floyd.onebuy.view.LoopViewPager;
 import com.floyd.pullrefresh.widget.PullToRefreshBase;
 import com.floyd.pullrefresh.widget.PullToRefreshListView;
 import com.umeng.socialize.media.UMImage;
@@ -145,6 +145,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private TextView popProductTitleView;
     private TextView popJoinedCountView;
     private ListView popJoinNumListView;
+    private ImageView redDotView;
     private JoinedNumAdapter joinedNumAdapter;
 
     private ImageLoader mImageLoader;
@@ -572,6 +573,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             }
         });
 
+        redDotView = (ImageView) findViewById(R.id.red_dot_view);
         isFirst = true;
         loadData();
     }
@@ -720,6 +722,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 loadData();
                 break;
             case R.id.join_buy_car_view:
+                redDotView.setVisibility(View.VISIBLE);
                 buycarOperator.addBuyCar();
                 break;
             case R.id.buy_now_view:

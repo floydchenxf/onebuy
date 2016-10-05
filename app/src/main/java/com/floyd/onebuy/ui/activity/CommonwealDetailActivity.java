@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -172,11 +173,11 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
                     personLayout.setVisibility(View.GONE);
                 } else {
                     raiseCountDescView.setOnClickListener(CommonwealDetailActivity.this);
-                    final float eachWidth = (screenWith - 42 * onedp) / 6;
+                    final float eachWidth = (screenWith - 50 * onedp) / 6;
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) eachWidth, (int) eachWidth);
                     lp.setMargins((int) (2 * onedp), 0, (int) (2 * onedp), 0);
                     int idx = 0;
-                    for (CommonwealHelperVO helperVO : helpers) {
+                    for (final CommonwealHelperVO helperVO : helpers) {
                         NetworkImageView imageView = new NetworkImageView(CommonwealDetailActivity.this);
                         imageView.setLayoutParams(lp);
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -185,6 +186,15 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
                             @Override
                             public Bitmap processBitmap(Bitmap bitmap) {
                                 return ImageUtils.getCircleBitmap(bitmap, eachWidth);
+                            }
+                        });
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent profileIntent = new Intent(CommonwealDetailActivity.this, PersionProfileActivity.class);
+                                profileIntent.putExtra(PersionProfileActivity.CURRENT_USER_ID, helperVO.ClientID);
+                                profileIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(profileIntent);
                             }
                         });
                         personListView.addView(imageView);
