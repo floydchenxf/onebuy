@@ -24,6 +24,7 @@ import com.floyd.onebuy.biz.manager.CommonwealManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.tools.ImageUtils;
 import com.floyd.onebuy.biz.vo.AdvVO;
+import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailJsonVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHelperVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
@@ -68,6 +69,8 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
     private ImageLoader mImageLoader;
 
     private TextView commonwealButton;
+    private View joinInfoLayout;
+    private TextView joinInfoView;
 
     private long userId = 0;
 
@@ -116,6 +119,8 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
         raiseCountView = (TextView) findViewById(R.id.raise_count_view);
         raiseCountDescView = (TextView) findViewById(R.id.total_count_textview);
         contentView = (TextView) findViewById(R.id.content_view);
+        joinInfoLayout = findViewById(R.id.join_info_layout);
+        joinInfoView = (TextView) findViewById(R.id.join_info_view);
 
         personListView = (LinearLayout) findViewById(R.id.person_list_view);
         personLayout = findViewById(R.id.person_layout);
@@ -165,6 +170,17 @@ public class CommonwealDetailActivity extends FragmentActivity implements View.O
                 raiseCountView.setText(vo.RaiseCount + "");
                 Spanned s = Html.fromHtml(vo.Content);
                 contentView.setText(s);
+
+                CommonwealDetailJsonVO.JoinInfo info = vo.JoinInfo;
+                if (info == null) {
+                    joinInfoLayout.setVisibility(View.GONE);
+                } else {
+                    joinInfoLayout.setVisibility(View.VISIBLE);
+                    String joinInfoFormat = CommonwealDetailActivity.this.getResources().getString(R.string.join_info);
+                    String infoDesc = String.format(joinInfoFormat, vo.JoinInfo.TotalCount, vo.JoinInfo.TotalMoney);
+                    joinInfoView.setText(Html.fromHtml(infoDesc));
+                }
+
                 raiseCountDescView.setText("感谢" + vo.RaiseCount + "位爱心朋友");
 
                 List<CommonwealHelperVO> helpers = vo.PersonList;

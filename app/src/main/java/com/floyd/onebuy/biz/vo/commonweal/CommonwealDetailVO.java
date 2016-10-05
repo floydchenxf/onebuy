@@ -19,4 +19,5 @@ public class CommonwealDetailVO {
     public int Status;//状态
     public List<AdvVO> advVOList;
     public int percentNum;
+    public CommonwealDetailJsonVO.JoinInfo JoinInfo;
 }

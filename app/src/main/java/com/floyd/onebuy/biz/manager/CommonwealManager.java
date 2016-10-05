@@ -141,6 +141,7 @@ public class CommonwealManager {
                 vo.RaiseCount = jsonVO.FoundationInfo.RaiseCount;
                 vo.RaiseMoney = jsonVO.FoundationInfo.RaiseMoney;
                 vo.Status = jsonVO.FoundationInfo.Status;
+                vo.JoinInfo = jsonVO.JoinInfo;
 
                 if (TextUtils.isEmpty(jsonVO.FoundationInfo.TotalMoney) || TextUtils.isEmpty(jsonVO.FoundationInfo.RaiseMoney)) {
                     vo.percentNum = 0;

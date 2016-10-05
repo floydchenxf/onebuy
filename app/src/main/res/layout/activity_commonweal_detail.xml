@@ -77,12 +77,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_alignParentBottom="true"
-                    android:paddingLeft="14dp"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:paddingRight="14dp"
                     android:background="#88222222"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:singleLine="true"
                     android:text="dsfasdfsad"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -213,6 +213,39 @@
                     </LinearLayout>
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/join_info_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#cfcfcf"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:text="感谢您的慷慨相助:"
+                        android:textColor="@color/gray_content"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/join_info_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="6dp"
+                        android:textColor="@color/gray_content"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout

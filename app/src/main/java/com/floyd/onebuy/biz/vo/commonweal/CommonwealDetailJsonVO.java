@@ -8,6 +8,7 @@ import java.util.List;
 public class CommonwealDetailJsonVO {
     public List<CommonwealHelperVO> PersonList;
     public FoundationInfo FoundationInfo;
+    public JoinInfo JoinInfo;
 
 
     public static class FoundationInfo {
@@ -22,5 +23,10 @@ public class CommonwealDetailJsonVO {
         public String Description;
         public String Pictures;//公益图片 多图用|分隔
         public Integer Status;//状态
+    }
+
+    public static class JoinInfo {
+        public String TotalMoney; //总价格
+        public int TotalCount;//参与次数
     }
 }
