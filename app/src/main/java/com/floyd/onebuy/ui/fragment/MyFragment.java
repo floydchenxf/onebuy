@@ -40,6 +40,7 @@ import com.floyd.onebuy.ui.activity.ChargeListActivity;
 import com.floyd.onebuy.ui.activity.CommonwealBakActivity;
 import com.floyd.onebuy.ui.activity.InviteFriendActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
+import com.floyd.onebuy.ui.activity.MyCommonwealActivity;
 import com.floyd.onebuy.ui.activity.MyInfoActivity;
 import com.floyd.onebuy.ui.activity.MyLuckActivity;
 import com.floyd.onebuy.ui.activity.PayChargeActivity;
@@ -91,7 +92,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private String[] texts = new String[]{"夺宝记录", "我的公益", "中奖记录", "快乐星期五", "充值记录", "我的晒单", "软件设置", "邀请好友", "我的积分"};
     private int[] images = new int[]{R.drawable.prize_record, R.drawable.gongyi, R.drawable.winning, R.drawable.fri, R.drawable.add_fee, R.drawable.shandan, R.drawable.setting, R.drawable.invite, R.drawable.jifeng};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, CommonwealBakActivity.class, MyLuckActivity.class, MyLuckActivity.class, ChargeListActivity.class, ShowShareActivity.class, SettingActivity.class, InviteFriendActivity.class, JiFengActivity.class};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, MyCommonwealActivity.class, MyLuckActivity.class, MyLuckActivity.class, ChargeListActivity.class, ShowShareActivity.class, SettingActivity.class, InviteFriendActivity.class, JiFengActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

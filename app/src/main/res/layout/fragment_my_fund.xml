@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.floyd.pullrefresh.widget.PullToRefreshListView
+        android:id="@+id/common_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/title_layout"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:divider="@color/gray_content"
+        android:dividerHeight="1px"
+        android:fadingEdge="none"
+        android:listSelector="#00000000" />
+
+    <include layout="@layout/diamod_data_loading" />
+
+
+</RelativeLayout>
