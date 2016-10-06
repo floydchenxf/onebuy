@@ -377,6 +377,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         }
 
 
+        EventBus.getDefault().post(new BuyCarNumEvent());
         final Set<Long> delCarIds = new HashSet<Long>();
         for (CarItemVO info : mBuyCarAdapter.getRecords()) {
             delCarIds.add(info.CarID);
