@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -42,13 +41,12 @@ import com.floyd.onebuy.biz.vo.json.UserVO;
 import com.floyd.onebuy.biz.vo.json.WordNewsVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;
 import com.floyd.onebuy.biz.vo.model.WinningInfo;
-import com.floyd.onebuy.biz.vo.product.ProductTypeVO;
 import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
+import com.floyd.onebuy.ui.activity.CommonwealActivity;
 import com.floyd.onebuy.ui.activity.CommonwealBakActivity;
-import com.floyd.onebuy.ui.activity.FridayActivity;
 import com.floyd.onebuy.ui.activity.H5Activity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.activity.ShowShareActivity;
@@ -365,7 +363,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent it = new Intent(getActivity(), CommonwealBakActivity.class);
+                        Intent it = new Intent(getActivity(), CommonwealActivity.class);
                         getActivity().startActivity(it);
                     }
                 },new View.OnClickListener() {

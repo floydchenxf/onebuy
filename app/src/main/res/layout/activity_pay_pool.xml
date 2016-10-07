@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_frame" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_layout"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="选择充值金额"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <CheckedTextView
+                android:id="@+id/num1"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/common_bord_bg"
+                android:checked="true"
+                android:gravity="center"
+                android:text="20元"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="12sp" />
+
+            <CheckedTextView
+                android:id="@+id/num2"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/common_bord_bg"
+                android:gravity="center"
+                android:text="50元"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="12sp" />
+
+            <CheckedTextView
+                android:id="@+id/num3"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/common_bord_bg"
+                android:gravity="center"
+                android:text="100元"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="12sp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pay_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <CheckedTextView
+                android:id="@+id/num4"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/common_bord_bg"
+                android:gravity="center"
+                android:text="500元"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="12sp" />
+
+            <CheckedTextView
+                android:id="@+id/num5"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/common_bord_bg"
+                android:gravity="center"
+                android:text="1000元"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/num6"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/common_bord_bg"
+                android:gravity="center"
+                android:hint="其他金额"
+                android:inputType="number"
+                android:maxLength="8"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="12sp" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="选择支付方式"
+            android:textColor="@color/gray_sub_title"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="20dp"
+            android:background="@color/gray_content" />
+
+        <LinearLayout
+            android:id="@+id/pay_type_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <EditText
+            android:id="@+id/remark_view"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/common_bord"
+            android:gravity="left|top"
+            android:hint="请输入当时的感想"
+            android:maxLines="3"
+            android:padding="4dp"
+            android:textColor="@color/gray_content"
+            android:textColorHint="#cecece"
+
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/add_fee_view"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/common_round_red_bg"
+            android:gravity="center"
+            android:text="立即充值"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <include layout="@layout/diamod_data_loading" />
+</RelativeLayout>

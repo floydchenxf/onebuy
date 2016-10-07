@@ -285,7 +285,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
         <activity
+            android:name=".activity.CommonwealActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity
             android:name=".activity.CommonwealHelperActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.CommonwealPoolPersionActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
@@ -296,6 +306,11 @@
             android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.PayChargeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
+        <activity
+            android:name=".activity.PayPoolActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />

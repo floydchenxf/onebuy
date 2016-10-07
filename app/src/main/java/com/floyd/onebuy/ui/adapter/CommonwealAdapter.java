@@ -39,6 +39,10 @@ public class CommonwealAdapter extends BaseDataAdapter<CommonwealVO> {
     @Override
     void processHolder(Map<Integer, View> holder, CommonwealVO commonwealVO) {
 
+        if (commonwealVO == null) {
+            return;
+        }
+
         NetworkImageView commonwealPicView = (NetworkImageView) holder.get(R.id.commonweal_pic_view);
         TextView commonwealTitleView = (TextView) holder.get(R.id.commonweal_title_view);
         TextView commonwealContentView = (TextView) holder.get(R.id.commonweal_content_view);

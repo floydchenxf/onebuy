@@ -10,7 +10,9 @@ import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailJsonVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealDetailVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHelperList;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealHomeVO;
+import com.floyd.onebuy.biz.vo.commonweal.CommonwealJsonNewVO;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealJsonVO;
+import com.floyd.onebuy.biz.vo.commonweal.CommonwealPoolList;
 import com.floyd.onebuy.biz.vo.commonweal.CommonwealVO;
 import com.floyd.onebuy.biz.vo.json.CommonwealAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
@@ -40,17 +42,17 @@ public class CommonwealManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "GetCommonwealHomeData");
         params.put("pageSize", pageSize + "");
-        AsyncJob<CommonwealJsonVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealJsonVO.class);
-        return result.map(new Func<CommonwealJsonVO, CommonwealHomeVO>() {
+        AsyncJob<CommonwealJsonNewVO> result = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealJsonNewVO.class);
+        return result.map(new Func<CommonwealJsonNewVO, CommonwealHomeVO>() {
             @Override
-            public CommonwealHomeVO call(CommonwealJsonVO v) {
+            public CommonwealHomeVO call(CommonwealJsonNewVO v) {
                 if (v == null) {
                     return null;
                 }
 
                 CommonwealHomeVO r = new CommonwealHomeVO();
                 r.TotalMoney = v.TotalMoney;
-                r.FoundationList = v.FoundationList;
+                r.FoundationHtml = v.FoundationHtml;
                 if (v.Advertis != null) {
                     List<AdvVO> advList = new ArrayList<AdvVO>();
                     for (CommonwealAdvVO iav : v.Advertis) {
@@ -112,6 +114,15 @@ public class CommonwealManager {
         params.put("pageNum", pageNo + "");
         params.put("foundationId", pid + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealHelperList.class);
+    }
+
+    public static AsyncJob<CommonwealPoolList> fetchPoolPersonList(int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.COMMONWEAL_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetPoolOrderPersonList");
+        params.put("pageSize", pageSize + "");
+        params.put("pageNum", pageNo + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommonwealPoolList.class);
     }
 
     /**

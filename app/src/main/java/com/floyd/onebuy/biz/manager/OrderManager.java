@@ -118,6 +118,18 @@ public class OrderManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, OrderVO.class);
     }
 
+    public static AsyncJob<OrderVO> createPoolOrder(Long userId, Long id, String money, String remark, int paychannel) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "CreatePoolOrder");
+        params.put("userid", userId + "");
+        params.put("id", id + "");
+        params.put("money", money);
+        params.put("remark", remark);
+        params.put("paychannel", paychannel + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, OrderVO.class);
+    }
+
 
     /**
      * 模拟充值接口

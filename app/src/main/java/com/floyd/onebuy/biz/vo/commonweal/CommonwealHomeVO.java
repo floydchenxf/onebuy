@@ -13,5 +13,7 @@ public class CommonwealHomeVO {
     public List<AdvVO> Advertis;
     public List<TypeVO> TypeList;
     public List<CommonwealVO> FoundationList;
+
+    public String FoundationHtml;
     public long TotalMoney;
 }
