@@ -37,7 +37,6 @@ import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.ChargeListActivity;
-import com.floyd.onebuy.ui.activity.CommonwealBakActivity;
 import com.floyd.onebuy.ui.activity.InviteFriendActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
 import com.floyd.onebuy.ui.activity.MyCommonwealActivity;

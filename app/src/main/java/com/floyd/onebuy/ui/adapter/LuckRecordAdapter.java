@@ -146,7 +146,7 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
         String totalDesc = "总需：<font color=\"red\">" + totalCount + "</font>人次";
         totalCountView.setText(Html.fromHtml(totalDesc));
 
-        String luckNumber = vo.PriceCode;
+        String luckNumber = vo.PrizeCode;
         luckNumberView.setText(luckNumber);
 
         Long priceTime = vo.PriceTime;

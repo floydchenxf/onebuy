@@ -46,7 +46,6 @@ import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.CommonwealActivity;
-import com.floyd.onebuy.ui.activity.CommonwealBakActivity;
 import com.floyd.onebuy.ui.activity.H5Activity;
 import com.floyd.onebuy.ui.activity.SearchActivity;
 import com.floyd.onebuy.ui.activity.ShowShareActivity;
@@ -624,8 +623,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 startActivity(it);
                 break;
             case R.id.news_pic_view:
-                Intent wealIntent = new Intent(getActivity(), CommonwealBakActivity.class);
-                wealIntent.putExtra(CommonwealBakActivity.CURRENT_PAGE_INDEX, 1);
+                Intent wealIntent = new Intent(getActivity(), CommonwealActivity.class);
+                wealIntent.putExtra(CommonwealActivity.CURRENT_PAGE_INDEX, 1);
                 startActivity(wealIntent);
                 break;
         }

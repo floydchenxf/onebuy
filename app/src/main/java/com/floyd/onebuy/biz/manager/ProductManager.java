@@ -20,7 +20,6 @@ import com.floyd.onebuy.biz.vo.json.PrizeShowListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueListVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
-import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
 import com.floyd.onebuy.biz.vo.json.ShareShowDetailVO;
 import com.floyd.onebuy.biz.vo.json.ShowCommentVO;
 import com.floyd.onebuy.biz.vo.model.NewIndexVO;

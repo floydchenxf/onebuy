@@ -7,7 +7,7 @@ import android.text.TextUtils;
  */
 public class ProductLssueWithWinnerVO extends ProductBaseLssueVO {
     public String ProductLssueCode;
-    public String PriceCode;
+    public String PrizeCode;
     public Long PriceTime;
     public int JonidedCount;
     public int IsSend;
