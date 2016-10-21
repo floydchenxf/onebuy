@@ -279,6 +279,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                     TextView ownerJoinNumView = (TextView) ownerLayout.findViewById(R.id.owner_join_num_view);
                     TextView ownerPriceTimeView = (TextView) ownerLayout.findViewById(R.id.owner_price_time_view);
                     TextView winnerNumberView = (TextView) ownerLayout.findViewById(R.id.luck_number_view);
+                    TextView computeView = (TextView) ownerLayout.findViewById(R.id.compute_desc_view2);
                     ownerHeadView.setDefaultImageResId(R.drawable.tupian);
                     ownerHeadView.setImageUrl(vo.getHeadImage(), mImageLoader);
                     ownerNameView.setText(vo.userName);
@@ -294,6 +295,15 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                             Intent it = new Intent(WinningDetailActivity.this, PersionProfileActivity.class);
                             it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             it.putExtra(PersionProfileActivity.CURRENT_USER_ID, vo.userId);
+                            startActivity(it);
+                        }
+                    });
+
+                    computeView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent it = new Intent(WinningDetailActivity.this, WinnerCalActivity.class);
+                            it.putExtra(WinnerCalActivity.LSSUE_ID, id);
                             startActivity(it);
                         }
                     });

@@ -11,6 +11,7 @@ import com.floyd.onebuy.biz.constants.APIError;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
+import com.floyd.onebuy.biz.vo.json.CalRecordsVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
@@ -1086,5 +1087,19 @@ public class ProductManager {
         params.put("userId", userId + "");
         params.put("comment", comment);
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
+    }
+
+    /**
+     * 获取开奖
+     *
+     * @param pid 商品ID
+     * @return
+     */
+    public static AsyncJob<CalRecordsVO> getCalRecords(Long pid) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GetCalcResult");
+        params.put("prolssueid", pid + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, CalRecordsVO.class);
     }
 }
