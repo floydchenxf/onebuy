@@ -134,6 +134,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private ImageLoader mImageLoader;
 
     private ViewFlipper mFlipper;
+    private LinearLayout viewFlipperLayout;
 
     private Long[] typeCodes = new Long[]{21l,22l};
     private int[] defaultImages = new int[]{R.drawable.ten_index, R.drawable.hun_index, R.drawable.gongyi_index,R.drawable.shandan_index, R.drawable.fri_index};
@@ -300,7 +301,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 }
 
                 List<WordNewsVO> wordList = indexVO.wordList;
-                if (wordList != null) {
+                if (wordList != null && !wordList.isEmpty()) {
+                    viewFlipperLayout.setVisibility(View.VISIBLE);
                     for (final WordNewsVO vo : wordList) {
                         TextView tv = new TextView(IndexFragment.this.getActivity());
                         tv.setTextSize(16);
@@ -322,11 +324,13 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                             }
                         });
                         mFlipper.addView(tv);
+                        mFlipper.setAutoStart(true);
+                        mFlipper.startFlipping();
                     }
+                } else {
+                    viewFlipperLayout.setVisibility(View.GONE);
                 }
 
-                mFlipper.setAutoStart(true);
-                mFlipper.startFlipping();
                 mViewPagerContainer.setVisibility(View.VISIBLE);
 
                 mTopBannerList.clear();
@@ -452,6 +456,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mHeaderView = LayoutInflater.from(this.getActivity()).inflate(R.layout.new_head, mListView, false);
         mViewPagerContainer = mHeaderView.findViewById(R.id.pager_layout);
         mViewPagerContainer.setVisibility(View.GONE);
+        viewFlipperLayout = (LinearLayout) mHeaderView.findViewById(R.id.viewflipper_layout);
         mFlipper = (ViewFlipper) mHeaderView.findViewById(R.id.viewflipper);
         mFlipper.setFlipInterval(1500);
         mFlipper.setInAnimation(this.getActivity(), R.anim.public_slide_up);

@@ -4,7 +4,7 @@ package com.floyd.onebuy.biz.constants;
  * Created by floyd on 15-11-28.
  */
 public class APIConstants {
-    public static final String HOST = "http://yiyuan.zeego.cn/";
+    public static final String HOST = "http://app.szshangbu.com/";
     public static final String HOST_API_PATH = HOST + "AppInterface/";
     public static final String PRODUCT_DETAIL_URL_FORMAT = HOST + "ProDescriptionForApp.aspx?ProID=%d";
 

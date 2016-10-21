@@ -52,7 +52,7 @@ public class InviteFriendActivity extends FragmentActivity implements View.OnCli
         tabInviteView = (CheckedTextView) findViewById(R.id.tab_invite);
         tabRecordView = (CheckedTextView) findViewById(R.id.tab_invite_record);
         tabInviteView.setOnClickListener(this);
-        tabInviteView.setOnClickListener(this);
+        tabRecordView.setOnClickListener(this);
         userId = getIntent().getLongExtra(CURRENT_USER_ID, 0l);
         isProduct = getIntent().getBooleanExtra(IS_PRODUCT, false);
 
