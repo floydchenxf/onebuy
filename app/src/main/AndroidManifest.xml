@@ -44,15 +44,21 @@
             android:required="false" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.IconActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/ContentOverlay"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.H5Activity"
@@ -383,7 +389,7 @@
             android:name=".activity.WinnerCalActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"/>
+            android:theme="@style/ContentOverlay" />
     </application>
 
 </manifest>

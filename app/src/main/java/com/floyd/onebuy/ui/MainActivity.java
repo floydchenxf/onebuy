@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,10 +28,14 @@ import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
+import com.floyd.onebuy.biz.vo.json.IconAdvVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
+import com.floyd.onebuy.biz.vo.model.WinningInfo;
 import com.floyd.onebuy.event.BuyCarNumEvent;
 import com.floyd.onebuy.event.PaySuccessEvent;
 import com.floyd.onebuy.event.TabSwitchEvent;
+import com.floyd.onebuy.ui.activity.H5Activity;
+import com.floyd.onebuy.ui.activity.WinningDetailActivity;
 import com.floyd.onebuy.ui.fragment.AllProductFragemnt;
 import com.floyd.onebuy.ui.fragment.BackHandledFragment;
 import com.floyd.onebuy.ui.fragment.BuyCarFragment;
@@ -60,6 +65,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
 
     public static final String TAB_INDEX = "TAB_INDEX";
 
+    public static final String ADV_OBJECt = "ADV_OBJECT";
+
     private FragmentTransaction fragmentTransaction;
 
     private BackHandledFragment mBackHandedFragment;
@@ -77,6 +84,30 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IconAdvVO advVO = (IconAdvVO) getIntent().getSerializableExtra(ADV_OBJECt);
+        // 广告跳转
+        if (advVO != null) {
+            long proId = advVO.ProID;
+            if (proId > 0) {
+                Intent detailIntent = new Intent(this, WinningDetailActivity.class);
+                detailIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                detailIntent.putExtra(WinningDetailActivity.PRODUCT_ID, proId);
+                startActivity(detailIntent);
+            } else {
+                if (!TextUtils.isEmpty(advVO.Url)) {
+                    Intent detailIntent = new Intent(this, H5Activity.class);
+                    H5Activity.H5Data h5Data = new H5Activity.H5Data();
+                    h5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                    h5Data.data = advVO.Url;
+                    h5Data.showProcess = true;
+                    h5Data.showNav = true;
+                    h5Data.title = "广告信息";
+                    detailIntent.putExtra(H5Activity.H5Data.H5_DATA, h5Data);
+                    startActivity(detailIntent);
+                }
+            }
+        }
 
         EventBus.getDefault().register(this);
         fragments.add(new IndexFragment());

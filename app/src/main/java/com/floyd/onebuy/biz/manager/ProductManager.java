@@ -13,6 +13,7 @@ import com.floyd.onebuy.biz.vo.AdvVO;
 import com.floyd.onebuy.biz.vo.fund.FundJsonVO;
 import com.floyd.onebuy.biz.vo.json.CalRecordsVO;
 import com.floyd.onebuy.biz.vo.json.HistoryPrizeListVO;
+import com.floyd.onebuy.biz.vo.json.IconAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexAdvVO;
 import com.floyd.onebuy.biz.vo.json.IndexVO;
 import com.floyd.onebuy.biz.vo.json.LuckRecordVO;
@@ -1147,5 +1148,12 @@ public class ProductManager {
         params.put("pageType", "GetCalcResult");
         params.put("prolssueid", pid + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, CalRecordsVO.class);
+    }
+
+    public static AsyncJob<IconAdvVO> getAdv() {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PRODUCT_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "StarAdv");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, IconAdvVO.class);
     }
 }
