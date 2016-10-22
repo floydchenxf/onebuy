@@ -225,8 +225,9 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                 lottestTimeView.setText("正在计算...");
                 getWinnerInfo(winningInfo);
             } else {
-                String dateleft = DateUtil.getDateBefore(left);
+                String dateleft = DateUtil.getDateBefore(winningInfo.lotteryTime, ServerTimeManager.getServerTime());
                 lottestTimeView.setText(dateleft);
+                lottestTimeView.setTag(R.id.LEFT_TIME_ID, winningInfo);
 
                 Message msg = new Message();
                 msg.what = TIME_EVENT;
