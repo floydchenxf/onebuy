@@ -21,6 +21,12 @@
             android:scaleType="fitCenter"
             android:src="@drawable/tupian" />
 
+        <ImageView
+            android:id="@+id/type_icon_view"
+            android:layout_width="30dp"
+            android:src="@drawable/ten_icon"
+            android:layout_height="30dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

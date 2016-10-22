@@ -901,6 +901,20 @@ public class ProductManager {
                 info.lotteryTime = (wjson.getLong("PriceTime") + 10) * 1000;
             }
 
+            if (wjson.has("TypeIDs")) {
+                String typeIDs = wjson.getString("TypeIDs");
+                if (!TextUtils.isEmpty(typeIDs)) {
+                    int result = 0;
+                    if (typeIDs.contains("|21|")) {
+                        result = 1;
+                    } else if (typeIDs.contains("|22|")) {
+                        result = 2;
+                    }
+
+                    info.productType = result;
+                }
+            }
+
             if (wjson.has("winnerInfo")) {
                 OwnerVO ownerVO = convert2OwnerVO(wjson);
                 ownerVO.joinNumber = info.myPrizeCodes == null ? 0 : info.myPrizeCodes.size();

@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -156,6 +157,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
         return new int[]{R.id.product_pic, R.id.code_title_view, R.id.total_count_view,
                 R.id.my_join_num_view, R.id.view_my_codes_view, R.id.lottest_time_layout,
                 R.id.owner_info_layout, R.id.owner_name_view, R.id.good_luck_num_view,
+                R.id.type_icon_view,
                 R.id.owner_join_num_view, R.id.owner_price_time_view, R.id.lottest_time_view, R.id.follow_buy_view, R.id.progress_layout, R.id.progress_present};
     }
 
@@ -175,10 +177,12 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
         TextView ownerPriceTimeView = (TextView) holder.get(R.id.owner_price_time_view);//揭晓时间
         TextView followBuyView = (TextView) holder.get(R.id.follow_buy_view);
         ProgressBar progressBar = (ProgressBar) holder.get(R.id.progress_present);
+        ImageView typeIconView = (ImageView) holder.get(R.id.type_icon_view);
         View progressLayout = holder.get(R.id.progress_layout);
 
         lottestLayout.setVisibility(View.GONE);
         ownerInfoLayout.setVisibility(View.GONE);
+        typeIconView.setVisibility(View.GONE);
 
         productPicView.setDefaultImageResId(R.drawable.tupian);
         productPicView.setImageUrl(winningInfo.productUrl, mImageLoader);
@@ -202,6 +206,15 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
         });
 
         int status = winningInfo.status;
+
+        int productType = winningInfo.productType;
+        if (productType == 1) {
+            typeIconView.setVisibility(View.VISIBLE);
+            typeIconView.setImageResource(R.drawable.ten_icon);
+        } else if (productType == 2) {
+            typeIconView.setVisibility(View.VISIBLE);
+            typeIconView.setImageResource(R.drawable.hun_icon);
+        }
 
         if (status == 1) {
             long left = winningInfo.lotteryTime - ServerTimeManager.getServerTime();
