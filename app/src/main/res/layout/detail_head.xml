@@ -29,6 +29,13 @@
             app:radius="3dp" />
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/type_icon_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ten_icon" />
+
     <LinearLayout
         android:id="@+id/winning_info_layout"
         android:layout_width="match_parent"

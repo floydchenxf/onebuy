@@ -11,15 +11,22 @@
         android:layout_marginBottom="4dp"
         android:layout_weight="1">
 
+        <ImageView
+            android:id="@+id/type_icon_view1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ten_icon" />
+
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/product_pic_1"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/tupian" />
 
@@ -68,8 +75,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_code_layout_1"
-            android:visibility="gone"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/progress_layout1"
@@ -234,15 +241,23 @@
         android:layout_marginBottom="4dp"
         android:layout_weight="1">
 
+        <ImageView
+            android:id="@+id/type_icon_view2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ten_icon" />
+
+
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/product_pic_2"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/tupian" />
 
@@ -312,10 +327,10 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="100dp"
                     android:layout_height="4dp"
+                    android:indeterminate="false"
                     android:max="100"
                     android:progress="50"
-                    android:progressDrawable="@drawable/barcolor"
-                    android:indeterminate="false" />
+                    android:progressDrawable="@drawable/barcolor" />
 
             </LinearLayout>
 

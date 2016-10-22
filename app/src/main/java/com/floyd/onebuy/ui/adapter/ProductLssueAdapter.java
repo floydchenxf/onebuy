@@ -232,6 +232,8 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.goodLuckNumView2 = (TextView) convertView.findViewById(R.id.good_luck_num_view_2);
             viewHolder.lottestTimeView1 = (TextView) convertView.findViewById(R.id.lottest_time_view_1);
             viewHolder.lottestTimeView2 = (TextView) convertView.findViewById(R.id.lottest_time_view_2);
+            viewHolder.typeIconView1 = (ImageView) convertView.findViewById(R.id.type_icon_view1);
+            viewHolder.typeIconView2 = (ImageView) convertView.findViewById(R.id.type_icon_view2);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -250,6 +252,26 @@ public class ProductLssueAdapter extends BaseAdapter {
             viewHolder.productImageView2.setImageUrl(winningInfo2.productUrl, mImageLoader);
             viewHolder.productTitleView1.setText(winningInfo.title);
             viewHolder.productTitleView2.setText(winningInfo2.title);
+
+            if (winningInfo.productType == 0) {
+                viewHolder.typeIconView1.setVisibility(View.GONE);
+            } else if (winningInfo.productType == 1) {
+                viewHolder.typeIconView1.setVisibility(View.VISIBLE);
+                viewHolder.typeIconView1.setImageResource(R.drawable.ten_icon);
+            } else if (winningInfo.productType == 2) {
+                viewHolder.typeIconView1.setVisibility(View.VISIBLE);
+                viewHolder.typeIconView1.setImageResource(R.drawable.hun_icon);
+            }
+
+            if (winningInfo2.productType == 0) {
+                viewHolder.typeIconView2.setVisibility(View.GONE);
+            } else if (winningInfo2.productType == 1) {
+                viewHolder.typeIconView2.setVisibility(View.VISIBLE);
+                viewHolder.typeIconView2.setImageResource(R.drawable.ten_icon);
+            } else if (winningInfo2.productType == 2) {
+                viewHolder.typeIconView2.setVisibility(View.VISIBLE);
+                viewHolder.typeIconView2.setImageResource(R.drawable.hun_icon);
+            }
             if (TextUtils.isEmpty(winningInfo.code)) {
                 viewHolder.productCodeLayout1.setVisibility(View.GONE);
             } else {
@@ -394,9 +416,22 @@ public class ProductLssueAdapter extends BaseAdapter {
                     addBuyCar(winningInfo.lssueId, 1);
                 }
             });
+
             viewHolder.addBuyCarView2.setOnClickListener(null);
             viewHolder.productImageView1.setImageUrl(winningInfo.productUrl, mImageLoader);
             viewHolder.productTitleView1.setText(winningInfo.title);
+
+            if (winningInfo.productType == 0) {
+                viewHolder.typeIconView1.setVisibility(View.GONE);
+            } else if (winningInfo.productType == 1) {
+                viewHolder.typeIconView1.setVisibility(View.VISIBLE);
+                viewHolder.typeIconView1.setImageResource(R.drawable.ten_icon);
+            } else if (winningInfo.productType == 2) {
+                viewHolder.typeIconView1.setVisibility(View.VISIBLE);
+                viewHolder.typeIconView1.setImageResource(R.drawable.hun_icon);
+            }
+
+            viewHolder.typeIconView2.setVisibility(View.GONE);
 
             if (TextUtils.isEmpty(winningInfo.code)) {
                 viewHolder.productCodeLayout1.setVisibility(View.GONE);
@@ -500,6 +535,9 @@ public class ProductLssueAdapter extends BaseAdapter {
         public TextView goodLuckNumView2;//幸运号码２
         public TextView lottestTimeView1;//开奖时间１
         public TextView lottestTimeView2;//开奖时间２
+
+        public ImageView typeIconView1;
+        public ImageView typeIconView2;
     }
 
     public static class MsgObj {

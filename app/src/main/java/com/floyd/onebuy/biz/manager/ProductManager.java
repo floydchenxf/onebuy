@@ -104,6 +104,7 @@ public class ProductManager {
                         info.id = v.ProID;
                         info.productId = v.ProID;
                         info.lssueId = v.ProductLssueID;
+                        info.productType = v.getType();
                         info.status = 0;
                         winningInfos.add(info);
                     }
@@ -169,6 +170,7 @@ public class ProductManager {
                         info.productId = v.ProID;
                         info.lssueId = v.ProductLssueID;
                         info.status = 0;
+                        info.productType = v.getType();
                         winningInfos.add(info);
                     }
                     vo.theNewList = winningInfos;
@@ -230,6 +232,7 @@ public class ProductManager {
                     }
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
+                    info.productType = vo.getType();
                     result.add(info);
                 }
                 return result;
@@ -362,6 +365,20 @@ public class ProductManager {
         detailInfo.id = productLssue.getLong("ProductLssueID");
         detailInfo.status = productLssue.getInt("Status");
         detailInfo.code = productLssue.getString("ProductLssueCode");
+
+        if (productLssue.has("TypeIDs")) {
+            String typeIDs = productLssue.getString("TypeIDs");
+            if (!TextUtils.isEmpty(typeIDs)) {
+                int result = 0;
+                if (typeIDs.contains("|21|")) {
+                    result = 1;
+                } else if (typeIDs.contains("|22|")) {
+                    result = 2;
+                }
+
+                detailInfo.productType = result;
+            }
+        }
 
         if (productLssue.has("winnerInfo")) {
             JSONObject o = productLssue.getJSONObject("winnerInfo");
@@ -544,6 +561,7 @@ public class ProductManager {
                     info.status = 1;
                     info.productUrl = APIConstants.HOST + vo.Pictures;
                     info.title = vo.ProName;
+                    info.productType = vo.getType();
                     result.add(info);
                 }
                 return result;
@@ -617,6 +635,20 @@ public class ProductManager {
             if (wjson.has("PriceTime")) {
                 info.lotteryTime = (wjson.getLong("PriceTime") + 10) * 1000;
             }
+
+            if (wjson.has("TypeIDs")) {
+                String typeIDs = wjson.getString("TypeIDs");
+                int result = 0;
+                if (TextUtils.isEmpty(typeIDs)) {
+                    result = 0;
+                } else if (typeIDs.contains("|21|")) {
+                    result = 1;
+                } else if (typeIDs.contains("|22|")) {
+                    result = 2;
+                }
+                info.productType = result;
+            }
+
             if (wjson.has("winnerInfo")) {
                 OwnerVO ownerVO = convert2OwnerVO(wjson);
                 ownerVO.joinNumber = info.myPrizeCodes == null ? 0 : info.myPrizeCodes.size();

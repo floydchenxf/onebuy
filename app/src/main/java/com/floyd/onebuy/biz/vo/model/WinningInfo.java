@@ -29,6 +29,8 @@ public class WinningInfo {
     public OwnerVO ownerVO; //中奖者
     public List<String> myPrizeCodes; //我购买的号码
 
+    public int productType;//商品类型
+
     public long getId() {
         return id;
     }

@@ -157,6 +157,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
 
     private ImageView buyCarImageView;
 
+    private ImageView typeIconView;
+
     private BuycarOperator buycarOperator;
 
     private String sharePicUrl;
@@ -232,6 +234,14 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             buycarOperator.setId(id);
             StringBuilder titleAndStatusSb = new StringBuilder();
             int status = winningDetailInfo.status;
+
+            if (winningDetailInfo.productType == 1) {
+                typeIconView.setVisibility(View.VISIBLE);
+                typeIconView.setImageResource(R.drawable.ten_icon);
+            } else if (winningDetailInfo.productType == 2) {
+                typeIconView.setVisibility(View.VISIBLE);
+                typeIconView.setImageResource(R.drawable.hun_icon);
+            }
             if (status == WinningInfo.STATUS_CHOOSE) {
                 joinLayout.setVisibility(View.VISIBLE);
                 gotoJoinLayout.setVisibility(View.GONE);
@@ -671,6 +681,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
         progressLayout = mHeaderView.findViewById(R.id.progress_layout);
         priceTimeLayout = mHeaderView.findViewById(R.id.price_time_layout);
         ownerLayout = mHeaderView.findViewById(R.id.owner_info_layout);
+        typeIconView = (ImageView) mHeaderView.findViewById(R.id.type_icon_view);
+        typeIconView.setVisibility(View.GONE);
         progressBar = (ProgressBar) progressLayout.findViewById(R.id.progress_present_view);
         totalView = (TextView) progressLayout.findViewById(R.id.total_view);
         leftView = (TextView) progressLayout.findViewById(R.id.left_view);

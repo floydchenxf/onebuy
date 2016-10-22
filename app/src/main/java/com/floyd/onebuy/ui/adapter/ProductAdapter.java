@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -87,6 +88,10 @@ public class ProductAdapter extends BaseAdapter {
             holder.line1 = convertView.findViewById(R.id.line1);
             holder.line2 = convertView.findViewById(R.id.line2);
 
+            holder.typeIconView1 = (ImageView) convertView.findViewById(R.id.type_icon_view1);
+            holder.typeIconView2 = (ImageView) convertView.findViewById(R.id.type_icon_view2);
+            holder.typeIconView3 = (ImageView) convertView.findViewById(R.id.type_icon_view3);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -115,6 +120,16 @@ public class ProductAdapter extends BaseAdapter {
                 }
             });
             holder.line1.setVisibility(View.VISIBLE);
+
+            holder.typeIconView1.setVisibility(View.GONE);
+            if (info1.productType == 1) {
+                holder.typeIconView1.setVisibility(View.VISIBLE);
+                holder.typeIconView1.setImageResource(R.drawable.ten_icon);
+            } else if (info1.productType == 2) {
+                holder.typeIconView1.setVisibility(View.VISIBLE);
+                holder.typeIconView1.setImageResource(R.drawable.hun_icon);
+            }
+
             final WinningInfo info2 = mList.get(start + 1);
             holder.productImage2.setImageUrl(info2.productUrl, imageLoader);
             holder.productNameView2.setText(info2.title);
@@ -129,6 +144,16 @@ public class ProductAdapter extends BaseAdapter {
                 }
             });
             holder.line2.setVisibility(View.VISIBLE);
+
+            holder.typeIconView2.setVisibility(View.GONE);
+            if (info2.productType == 1) {
+                holder.typeIconView2.setVisibility(View.VISIBLE);
+                holder.typeIconView2.setImageResource(R.drawable.ten_icon);
+            } else if (info2.productType == 2) {
+                holder.typeIconView2.setVisibility(View.VISIBLE);
+                holder.typeIconView2.setImageResource(R.drawable.hun_icon);
+            }
+
             final WinningInfo info3 = mList.get(start + 2);
             holder.productImage3.setImageUrl(info3.productUrl, imageLoader);
             holder.productNameView3.setText(info3.title);
@@ -142,6 +167,15 @@ public class ProductAdapter extends BaseAdapter {
                     mContext.startActivity(it);
                 }
             });
+
+            holder.typeIconView3.setVisibility(View.GONE);
+            if (info3.productType == 1) {
+                holder.typeIconView3.setVisibility(View.VISIBLE);
+                holder.typeIconView3.setImageResource(R.drawable.ten_icon);
+            } else if (info3.productType == 2) {
+                holder.typeIconView3.setVisibility(View.VISIBLE);
+                holder.typeIconView3.setImageResource(R.drawable.hun_icon);
+            }
         } else {
             final WinningInfo info1 = mList.get(start);
             holder.productImage1.setImageUrl(info1.getProductUrl(), imageLoader);
@@ -159,12 +193,23 @@ public class ProductAdapter extends BaseAdapter {
 
             holder.line1.setVisibility(View.VISIBLE);
 
+            holder.typeIconView1.setVisibility(View.GONE);
+            if (info1.productType == 1) {
+                holder.typeIconView1.setVisibility(View.VISIBLE);
+                holder.typeIconView1.setImageResource(R.drawable.ten_icon);
+            } else if (info1.productType == 2) {
+                holder.typeIconView1.setVisibility(View.VISIBLE);
+                holder.typeIconView1.setImageResource(R.drawable.hun_icon);
+            }
+
             if (mList.size() - 1 < start + 1) {
                 holder.layout2.setVisibility(View.INVISIBLE);
                 holder.layout3.setVisibility(View.INVISIBLE);
                 holder.line2.setVisibility(View.GONE);
                 holder.layout2.setOnClickListener(null);
                 holder.layout3.setOnClickListener(null);
+                holder.typeIconView2.setVisibility(View.GONE);
+                holder.typeIconView3.setVisibility(View.GONE);
             } else {
                 final WinningInfo info2 = mList.get(start + 1);
                 holder.productImage2.setImageUrl(info2.productUrl, imageLoader);
@@ -180,8 +225,19 @@ public class ProductAdapter extends BaseAdapter {
                     }
                 });
                 holder.line2.setVisibility(View.VISIBLE);
+
+                holder.typeIconView2.setVisibility(View.GONE);
+                if (info2.productType == 1) {
+                    holder.typeIconView2.setVisibility(View.VISIBLE);
+                    holder.typeIconView2.setImageResource(R.drawable.ten_icon);
+                } else if (info2.productType == 2) {
+                    holder.typeIconView2.setVisibility(View.VISIBLE);
+                    holder.typeIconView2.setImageResource(R.drawable.hun_icon);
+                }
+
                 holder.layout3.setVisibility(View.INVISIBLE);
                 holder.layout3.setOnClickListener(null);
+                holder.typeIconView3.setVisibility(View.GONE);
             }
         }
 
@@ -203,6 +259,10 @@ public class ProductAdapter extends BaseAdapter {
 
         private View line1;
         private View line2;
+
+        private ImageView typeIconView1;
+        private ImageView typeIconView2;
+        private ImageView typeIconView3;
 
 
     }

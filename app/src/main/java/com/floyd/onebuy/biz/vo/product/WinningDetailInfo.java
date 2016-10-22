@@ -1,5 +1,7 @@
 package com.floyd.onebuy.biz.vo.product;
 
+import android.text.TextUtils;
+
 import com.floyd.onebuy.biz.vo.AdvVO;
 
 import java.util.List;
@@ -22,4 +24,5 @@ public class WinningDetailInfo {
     public List<JoinVO> allJoinedRecords; //所有的参与号码
     public List<String> myRecords;
     public long priceTime;
+    public int  productType;
 }
