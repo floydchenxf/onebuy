@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
@@ -48,6 +49,8 @@ import de.greenrobot.event.EventBus;
  */
 public class ProductLssueAdapter extends BaseAdapter {
 
+    private static final String TAG = "ProductLssueAdapter";
+
     private Context mContext;
     private List<WinningInfo> records = new ArrayList<WinningInfo>();
     private ImageLoader mImageLoader;
@@ -77,15 +80,22 @@ public class ProductLssueAdapter extends BaseAdapter {
 
                     TextView timeView = view.get();
                     if (timeView == null) {
+                        Log.d(TAG, "timeView is null");
                         return;
                     }
 
                     WinningInfo itemVO = (WinningInfo) timeView.getTag(R.id.LEFT_TIME_ID);
                     if (itemVO == null || itemVO.id == 0l || id != itemVO.id) {
+                        Log.d(TAG, "exit id not equal:" + id + "---winning id:" + itemVO.id);
                         return;
                     }
 
                     if (itemVO.status != WinningInfo.STATUS_LOTTERY) {
+                        return;
+                    }
+
+                    if (itemVO.isExist) {
+                        Log.d(TAG, "is exit for id:" + id);
                         return;
                     }
 
@@ -102,7 +112,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     Message newMsg = new Message();
                     newMsg.what = TIME_EVENT;
                     newMsg.obj = o;
-                    mHandler.sendMessageDelayed(newMsg, 252);
+                    mHandler.sendMessageDelayed(newMsg, APIConstants.DELAY_MILLIS);
                     break;
             }
         }
@@ -130,7 +140,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     Integer num = callTimes.get(tmpId);
                     num++;
                     callTimes.put(tmpId, num);
-                    Log.i("ProductLssueAdapter", "-----------error:"+errorInfo+"request winner for" + itemVO.lssueId);
+                    Log.i("ProductLssueAdapter", "-----------error:" + errorInfo + "request winner for" + itemVO.lssueId);
                 }
 
                 @Override
@@ -346,13 +356,22 @@ public class ProductLssueAdapter extends BaseAdapter {
                     String dateleft = DateUtil.getDateBefore(winningInfo.lotteryTime, ServerTimeManager.getServerTime());
                     viewHolder.leftTimeView1.setText(dateleft);
 
-                    Message msg = new Message();
+                    final Message msg = new Message();
                     msg.what = TIME_EVENT;
                     MsgObj msgObj = new MsgObj();
                     msgObj.id = winningInfo.id;
                     msgObj.timeView = new SoftReference<TextView>(viewHolder.leftTimeView1);
                     msg.obj = msgObj;
-                    mHandler.sendMessage(msg);
+                    //用于中断
+                    winningInfo.isExist = true;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            winningInfo.isExist = false;
+                            mHandler.sendMessage(msg);
+                        }
+                    }, APIConstants.DELAY_MILLIS + 2);
+
                 }
 
             } else {
@@ -388,13 +407,21 @@ public class ProductLssueAdapter extends BaseAdapter {
                     String dateleft2 = DateUtil.getDateBefore(winningInfo2.lotteryTime, ServerTimeManager.getServerTime());
                     viewHolder.leftTimeView2.setText(dateleft2);
 
-                    Message msg = new Message();
+                    final Message msg = new Message();
                     msg.what = TIME_EVENT;
                     MsgObj msgObj = new MsgObj();
                     msgObj.id = winningInfo2.id;
                     msgObj.timeView = new SoftReference<TextView>(viewHolder.leftTimeView2);
                     msg.obj = msgObj;
-                    mHandler.sendMessage(msg);
+                    //用于中断
+                    winningInfo2.isExist = true;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            winningInfo2.isExist = false;
+                            mHandler.sendMessage(msg);
+                        }
+                    }, APIConstants.DELAY_MILLIS + 2);
                 }
             } else {
                 viewHolder.chooseLayout2.setVisibility(View.GONE);
@@ -476,13 +503,23 @@ public class ProductLssueAdapter extends BaseAdapter {
                     String dateleft = DateUtil.getDateBefore(winningInfo.lotteryTime, ServerTimeManager.getServerTime());
                     viewHolder.leftTimeView1.setText(dateleft);
 
-                    Message msg = new Message();
+                    final Message msg = new Message();
                     msg.what = TIME_EVENT;
                     MsgObj msgObj = new MsgObj();
                     msgObj.id = winningInfo.id;
                     msgObj.timeView = new SoftReference<TextView>(viewHolder.leftTimeView1);
                     msg.obj = msgObj;
-                    mHandler.sendMessage(msg);
+
+                    //用于中断
+                    winningInfo.isExist = true;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            winningInfo.isExist = false;
+                            mHandler.sendMessage(msg);
+                        }
+                    }, APIConstants.DELAY_MILLIS + 2);
+
                 }
             } else {
                 viewHolder.chooseLayout1.setVisibility(View.GONE);

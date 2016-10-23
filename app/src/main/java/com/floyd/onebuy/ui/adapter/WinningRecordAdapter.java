@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
+import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.ProductManager;
 import com.floyd.onebuy.biz.manager.ServerTimeManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
@@ -32,6 +33,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * Created by floyd on 16-4-14.
  */
 public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
+
+    private static final String TAG = "WinningRecordAdapter";
 
     private static final int TIME_EVENT = 1;
 
@@ -72,6 +75,11 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                         return;
                     }
 
+                    if (itemVO.isExist) {
+                        Log.d(TAG, "is exit for id:" + id);
+                        return;
+                    }
+
                     long left = itemVO.lotteryTime - ServerTimeManager.getServerTime();
                     if (left <= 0) {
                         timeView.setText("正在计算...");
@@ -85,7 +93,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                     Message newMsg = new Message();
                     newMsg.what = TIME_EVENT;
                     newMsg.obj = o;
-                    mHandler.sendMessageDelayed(newMsg, 300);
+                    mHandler.sendMessageDelayed(newMsg, APIConstants.DELAY_MILLIS);
                     break;
             }
         }
@@ -229,13 +237,24 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                 lottestTimeView.setText(dateleft);
                 lottestTimeView.setTag(R.id.LEFT_TIME_ID, winningInfo);
 
-                Message msg = new Message();
+                final Message msg = new Message();
                 msg.what = TIME_EVENT;
                 MsgObj msgObj = new MsgObj();
                 msgObj.id = winningInfo.id;
                 msgObj.timeView = new SoftReference<TextView>(lottestTimeView);
                 msg.obj = msgObj;
-                mHandler.sendMessage(msg);
+
+                //终止
+                winningInfo.isExist = true;
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        winningInfo.isExist = false;
+                        mHandler.sendMessage(msg);
+                    }
+                }, APIConstants.DELAY_MILLIS+2);
+
             }
             lottestLayout.setVisibility(View.VISIBLE);
             //开奖中

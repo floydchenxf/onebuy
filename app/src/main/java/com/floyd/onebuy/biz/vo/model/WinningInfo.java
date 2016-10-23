@@ -31,6 +31,8 @@ public class WinningInfo {
 
     public int productType;//商品类型
 
+    public boolean isExist;//是否退出状态
+
     public long getId() {
         return id;
     }
