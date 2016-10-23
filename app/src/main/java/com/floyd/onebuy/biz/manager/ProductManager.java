@@ -673,6 +673,10 @@ public class ProductManager {
         if (ownerInfoJson.has("PriceTime")) {
             ownerVO.winTime = ownerInfoJson.getLong("PriceTime") * 1000;
         }
+
+        if (ownerInfoJson.has("JoinNumber")) {
+            ownerVO.joinNumber = ownerInfoJson.getInt("JoinNumber");
+        }
         return ownerVO;
     }
 

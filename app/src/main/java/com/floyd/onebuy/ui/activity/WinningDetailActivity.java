@@ -260,6 +260,8 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 priceTimeLayout.setVisibility(View.VISIBLE);
 
                 TextView priceTimeView = (TextView) priceTimeLayout.findViewById(R.id.price_time_view);
+                TextView computeView1 = (TextView) priceTimeLayout.findViewById(R.id.compute_desc_view1);
+                computeView1.setOnClickListener(WinningDetailActivity.this);
                 long priceTime = winningDetailInfo.priceTime;
                 priceTimeView.setTag(R.id.LEFT_TIME_ID, priceTime);
 
@@ -309,14 +311,7 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                         }
                     });
 
-                    computeView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent it = new Intent(WinningDetailActivity.this, WinnerCalActivity.class);
-                            it.putExtra(WinnerCalActivity.LSSUE_ID, id);
-                            startActivity(it);
-                        }
-                    });
+                    computeView.setOnClickListener(WinningDetailActivity.this);
                 }
 
                 joinLayout.setVisibility(View.GONE);
@@ -780,6 +775,13 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                 gotoIndex.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 gotoIndex.putExtra(MainActivity.TAB_INDEX, R.id.tab_index_page);
                 startActivity(gotoIndex);
+                break;
+
+            case R.id.compute_desc_view1:
+            case R.id.compute_desc_view2:
+                Intent oo = new Intent(WinningDetailActivity.this, WinnerCalActivity.class);
+                oo.putExtra(WinnerCalActivity.LSSUE_ID, id);
+                startActivity(oo);
                 break;
         }
     }

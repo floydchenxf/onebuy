@@ -114,7 +114,7 @@ public class WinnerCalActivity extends Activity {
                             .append("条记录时间因子相加之和)");
                     step1View.setText(sb1.toString());
 
-                    StringBuilder sb2 = new StringBuilder("2. 最近下一期(20")
+                    StringBuilder sb2 = new StringBuilder("2. 最近下一期(")
                             .append(vo.Phase)
                             .append("期)\"时时彩\"开奖号码 ")
                             .append(vo.LotteryResult);

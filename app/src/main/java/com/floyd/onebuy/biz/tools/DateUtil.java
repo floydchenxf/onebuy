@@ -101,16 +101,21 @@ public class DateUtil {
             return null;
         }
 
-        long left = end-start;
+        long left = end - start;
         long secs = left / 1000;
-        long min = 0, sec = 0, yushu1,yushu2;
+        long min = 0, sec = 0, yushu1, yushu2;
         min = secs / 60;
         sec = secs % 60;
         yushu1 = (left / 100) % 10;
         yushu2 = (left / 10) % 10;
 
-//        Log.i(TAG, "min:" + min + "---sec:" + sec + "--yushu1:" + yushu1 + "---yushu2:" + yushu2);
-        String result = String.format("%1$02d:%2$02d:%3$1d%4$1d", min, sec, yushu1, yushu2);
+        String format = null;
+        if (min >= 100) {
+            format = "%1$03d:%2$02d:%3$1d%4$1d";
+        } else {
+            format = "%1$02d:%2$02d:%3$1d%4$1d";
+        }
+        String result = String.format(format, min, sec, yushu1, yushu2);
         return result;
     }
 }

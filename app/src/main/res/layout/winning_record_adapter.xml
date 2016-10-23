@@ -143,8 +143,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10:01:22"
-                    android:textColor="#666666"
-                    android:textSize="12sp" />
+                    android:textColor="@color/red"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
