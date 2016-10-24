@@ -63,6 +63,16 @@ public class ProductLssueAdapter extends BaseAdapter {
 
     private BuyCarType buyCarType;
 
+    public boolean isScroll() {
+        return isScroll;
+    }
+
+    public void setScroll(boolean scroll) {
+        isScroll = scroll;
+    }
+
+    private boolean isScroll;
+
     private Handler mHandler = new Handler() {
 
         @Override
@@ -85,8 +95,8 @@ public class ProductLssueAdapter extends BaseAdapter {
                     }
 
                     WinningInfo itemVO = (WinningInfo) timeView.getTag(R.id.LEFT_TIME_ID);
-                    if (itemVO == null || itemVO.id == 0l || id != itemVO.id) {
-                        Log.d(TAG, "exit id not equal:" + id + "---winning id:" + itemVO.id);
+                    if (itemVO == null || itemVO.id == 0l || id != itemVO.lssueId) {
+                        Log.d(TAG, "exit id not equal:" + id + "---winning id:" + itemVO.lssueId);
                         return;
                     }
 
@@ -96,6 +106,15 @@ public class ProductLssueAdapter extends BaseAdapter {
 
                     if (itemVO.isExist) {
                         Log.d(TAG, "is exit for id:" + id);
+                        return;
+                    }
+
+                    //防止太快导致无法下拉
+                    if (isScroll) {
+                        Message newMsg = new Message();
+                        newMsg.what = TIME_EVENT;
+                        newMsg.obj = o;
+                        mHandler.sendMessageDelayed(newMsg, APIConstants.FACTOR * APIConstants.DELAY_MILLIS);
                         return;
                     }
 
@@ -359,7 +378,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     final Message msg = new Message();
                     msg.what = TIME_EVENT;
                     MsgObj msgObj = new MsgObj();
-                    msgObj.id = winningInfo.id;
+                    msgObj.id = winningInfo.lssueId;
                     msgObj.timeView = new SoftReference<TextView>(viewHolder.leftTimeView1);
                     msg.obj = msgObj;
                     //用于中断
@@ -410,7 +429,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     final Message msg = new Message();
                     msg.what = TIME_EVENT;
                     MsgObj msgObj = new MsgObj();
-                    msgObj.id = winningInfo2.id;
+                    msgObj.id = winningInfo2.lssueId;
                     msgObj.timeView = new SoftReference<TextView>(viewHolder.leftTimeView2);
                     msg.obj = msgObj;
                     //用于中断
@@ -506,7 +525,7 @@ public class ProductLssueAdapter extends BaseAdapter {
                     final Message msg = new Message();
                     msg.what = TIME_EVENT;
                     MsgObj msgObj = new MsgObj();
-                    msgObj.id = winningInfo.id;
+                    msgObj.id = winningInfo.lssueId;
                     msgObj.timeView = new SoftReference<TextView>(viewHolder.leftTimeView1);
                     msg.obj = msgObj;
 

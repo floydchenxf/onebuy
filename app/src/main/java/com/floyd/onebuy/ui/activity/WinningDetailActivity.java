@@ -11,7 +11,9 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -165,6 +167,9 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
     private String shareContent;
     private String shareUrl;
 
+    private boolean isBottom;
+    private boolean isSroll;
+
     private Handler mHandler = new Handler() {
 
         @Override
@@ -193,6 +198,13 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
                         return;
                     }
 
+                    if (isSroll) {
+                        Message newMsg = new Message();
+                        newMsg.what = TIME_EVENT;
+                        newMsg.obj = o;
+                        mHandler.sendMessageDelayed(newMsg, APIConstants.FACTOR * APIConstants.DELAY_MILLIS);
+                        return;
+                    }
                     long left = priceTime - ServerTimeManager.getServerTime();
 
                     if (left <= 0) {
@@ -520,8 +532,34 @@ public class WinningDetailActivity extends FragmentActivity implements View.OnCl
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        mListView.addHeaderView(mHeaderView);
         adapter = new JoinRecordAdapter(this, new ArrayList<JoinVO>());
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                switch (i) {
+                    case SCROLL_STATE_TOUCH_SCROLL:
+                        if (isBottom) {
+                            isSroll = true;
+                        } else {
+                            isSroll = false;
+                        }
+                        break;
+                    case SCROLL_STATE_IDLE:
+                        isSroll = false;
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (visibleItemCount + firstVisibleItem == totalItemCount - 1) {
+                    isBottom = true;
+                } else {
+                    isBottom = false;
+                }
+            }
+        });
+        mListView.addHeaderView(mHeaderView);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

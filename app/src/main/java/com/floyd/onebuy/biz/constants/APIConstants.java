@@ -51,4 +51,5 @@ public class APIConstants {
     public static final String NEWS_DETAIL_URL_FORMAT = APIConstants.HOST + "app/newsinfo.aspx?id=%d";
 
     public static final int DELAY_MILLIS = 68;
+    public static final int FACTOR = 20;
 }

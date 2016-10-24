@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
@@ -57,6 +58,8 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
     private ListView popJoinNumListView;
     private JoinedNumAdapter joinedNumAdapter;
 
+    private boolean isBottom;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +101,32 @@ public class WinningRecordActivity extends Activity implements View.OnClickListe
 
 
         mListView = mPullToRefreshListView.getRefreshableView();
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                switch (i) {
+                    case SCROLL_STATE_TOUCH_SCROLL:
+                        if (isBottom) {
+                            adapter.setScroll(true);
+                        } else {
+                            adapter.setScroll(false);
+                        }
+                        break;
+                    case SCROLL_STATE_IDLE:
+                        adapter.setScroll(false);
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (visibleItemCount + firstVisibleItem == totalItemCount - 1) {
+                    isBottom = true;
+                } else {
+                    isBottom = false;
+                }
+            }
+        });
         adapter = new WinningRecordAdapter(this, mImageLoader, new ArrayList<WinningInfo>(), true);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

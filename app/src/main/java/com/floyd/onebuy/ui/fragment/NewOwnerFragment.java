@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,6 +43,8 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
     private DataLoadingView dataLoadingView;
     private ProductLssueAdapter productLssueAdapter;
     private ImageLoader mImageLoader;
+
+    private boolean isBottom;
 
     public static NewOwnerFragment newInstance(String param1, String param2) {
         NewOwnerFragment fragment = new NewOwnerFragment();
@@ -99,6 +102,33 @@ public class NewOwnerFragment extends BackHandledFragment implements View.OnClic
             @Override
             public void prizeCallback(String title, String prizeCode, String productUrl) {
 
+            }
+        });
+
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (visibleItemCount + firstVisibleItem == totalItemCount - 1) {
+                    isBottom = true;
+                } else {
+                    isBottom = false;
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                switch (i) {
+                    case SCROLL_STATE_TOUCH_SCROLL:
+                        if (isBottom) {
+                            productLssueAdapter.setScroll(true);
+                        } else {
+                            productLssueAdapter.setScroll(false);
+                        }
+                        break;
+                    case SCROLL_STATE_IDLE:
+                        productLssueAdapter.setScroll(false);
+                        break;
+                }
             }
         });
         mListView.setAdapter(productLssueAdapter);

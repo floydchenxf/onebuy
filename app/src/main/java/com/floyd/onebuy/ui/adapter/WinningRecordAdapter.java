@@ -46,6 +46,16 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
 
     private ViewJoinNumberClickListener viewJoinNumberClickListener;
 
+    private boolean isScroll;
+
+    public boolean isScroll() {
+        return isScroll;
+    }
+
+    public void setScroll(boolean scroll) {
+        isScroll = scroll;
+    }
+
     private Handler mHandler = new Handler() {
 
         @Override
@@ -67,7 +77,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                     }
 
                     WinningInfo itemVO = (WinningInfo) timeView.getTag(R.id.LEFT_TIME_ID);
-                    if (itemVO == null || itemVO.id == 0l || id != itemVO.id) {
+                    if (itemVO == null || itemVO.id == 0l || id != itemVO.lssueId) {
                         return;
                     }
 
@@ -77,6 +87,14 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
 
                     if (itemVO.isExist) {
                         Log.d(TAG, "is exit for id:" + id);
+                        return;
+                    }
+
+                    if (isScroll) {
+                        Message newMsg = new Message();
+                        newMsg.what = TIME_EVENT;
+                        newMsg.obj = o;
+                        mHandler.sendMessageDelayed(newMsg, APIConstants.FACTOR * APIConstants.DELAY_MILLIS);
                         return;
                     }
 
@@ -240,7 +258,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                 final Message msg = new Message();
                 msg.what = TIME_EVENT;
                 MsgObj msgObj = new MsgObj();
-                msgObj.id = winningInfo.id;
+                msgObj.id = winningInfo.lssueId;
                 msgObj.timeView = new SoftReference<TextView>(lottestTimeView);
                 msg.obj = msgObj;
 
@@ -253,7 +271,7 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                         winningInfo.isExist = false;
                         mHandler.sendMessage(msg);
                     }
-                }, APIConstants.DELAY_MILLIS+2);
+                }, APIConstants.DELAY_MILLIS + 2);
 
             }
             lottestLayout.setVisibility(View.VISIBLE);
