@@ -23,12 +23,27 @@
             android:layout_width="fill_parent"
             android:layout_height="40dip">
 
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/saomiao_view"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="14dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/shaomiao" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/usernick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="苏城云商"
+                android:text="苏城云购"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -39,13 +54,13 @@
                 android:gravity="right">
 
                 <ImageView
-                    android:id="@+id/saomiao_view"
+                    android:id="@+id/setting_view"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="14dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/shaomiao" />
+                    android:src="@drawable/new_setting" />
 
             </LinearLayout>
         </FrameLayout>

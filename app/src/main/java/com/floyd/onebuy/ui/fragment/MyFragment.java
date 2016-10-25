@@ -37,6 +37,7 @@ import com.floyd.onebuy.ui.DialogCreator;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.ChargeListActivity;
+import com.floyd.onebuy.ui.activity.FridayActivity;
 import com.floyd.onebuy.ui.activity.InviteFriendActivity;
 import com.floyd.onebuy.ui.activity.JiFengActivity;
 import com.floyd.onebuy.ui.activity.MyCommonwealActivity;
@@ -82,6 +83,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private TextView addFeeView;
     private ListView operateListView;
     private ImageView saomiaoView;
+    private ImageView settingView;
     private NetworkImageView headImageView;
     private NetworkImageView bgHeadView;
 
@@ -89,9 +91,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private NavigationAdapter adapter;
 
-    private String[] texts = new String[]{"夺宝记录", "我的公益", "中奖记录", "快乐星期五", "充值记录", "我的晒单", "软件设置", "邀请好友", "我的积分"};
-    private int[] images = new int[]{R.drawable.prize_record, R.drawable.gongyi, R.drawable.winning, R.drawable.fri, R.drawable.add_fee, R.drawable.shandan, R.drawable.setting, R.drawable.invite, R.drawable.jifeng};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, MyCommonwealActivity.class, MyLuckActivity.class, MyLuckActivity.class, ChargeListActivity.class, ShowShareActivity.class, SettingActivity.class, InviteFriendActivity.class, JiFengActivity.class};
+    private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的公益", "我的积分", "邀请好友", "快乐星期五", "我的晒单"};
+    private int[] images = new int[]{R.drawable.prize_record, R.drawable.btn_client_info, R.drawable.winning, R.drawable.add_fee, R.drawable.gongyi, R.drawable.jifeng, R.drawable.invite, R.drawable.fri, R.drawable.shandan};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, null, MyLuckActivity.class, ChargeListActivity.class, MyCommonwealActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,9 +110,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(MyFragment.this.getActivity(), clazzs[k]);
-                    if (k == 1) {
+                    if (k == 4) {
                         it.putExtra("USER_ID", LoginManager.getLoginInfo(getActivity()).ID);
-                    } else if (k == 3) {
+                    } else if (k == 7) {
                         UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());
                         SpannableString message = new SpannableString("该板块暂未开发,敬请期待!");
                         noticeBuilder.setMessage(message)
@@ -125,7 +127,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                         AlertDialog dialog2 = noticeBuilder.create();
                         dialog2.show();
                         return;
-                    } else if (k == 5 || k == 7) {
+                    } else if (k == 6 || k == 8) {
                         it.putExtra(ShowShareActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
                     }
                     MyFragment.this.getActivity().startActivity(it);
@@ -165,6 +167,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
         saomiaoView = (ImageView) view.findViewById(R.id.saomiao_view);
         saomiaoView.setOnClickListener(this);
+
+        settingView = (ImageView) view.findViewById(R.id.setting_view);
+        settingView.setOnClickListener(this);
 
         loadData(true, true);
         return view;
@@ -241,6 +246,10 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
             case R.id.head:
                 Intent myInfoIntent = new Intent(getActivity(), MyInfoActivity.class);
                 startActivity(myInfoIntent);
+                break;
+            case R.id.setting_view:
+                Intent settingIntent = new Intent(this.getActivity(), SettingActivity.class);
+                startActivity(settingIntent);
                 break;
         }
 
