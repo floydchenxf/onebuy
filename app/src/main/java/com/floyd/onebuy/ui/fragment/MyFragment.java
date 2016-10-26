@@ -47,6 +47,7 @@ import com.floyd.onebuy.ui.activity.PayChargeActivity;
 import com.floyd.onebuy.ui.activity.SettingActivity;
 import com.floyd.onebuy.ui.activity.ShowShareActivity;
 import com.floyd.onebuy.ui.activity.SubjectInfoActivity;
+import com.floyd.onebuy.ui.activity.UserCommissionActivity;
 import com.floyd.onebuy.ui.activity.WinningRecordActivity;
 import com.floyd.onebuy.ui.adapter.NavigationAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
@@ -93,7 +94,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的公益", "我的积分", "邀请好友", "快乐星期五", "我的晒单"};
     private int[] images = new int[]{R.drawable.prize_record, R.drawable.btn_client_info, R.drawable.winning, R.drawable.add_fee, R.drawable.gongyi, R.drawable.jifeng, R.drawable.invite, R.drawable.fri, R.drawable.shandan};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, null, MyLuckActivity.class, ChargeListActivity.class, MyCommonwealActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, UserCommissionActivity.class, MyLuckActivity.class, ChargeListActivity.class, MyCommonwealActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +111,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(MyFragment.this.getActivity(), clazzs[k]);
-                    if (k == 4) {
+                    if (k ==1) {
+                        it.putExtra(UserCommissionActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
+                    } else if (k == 4) {
                         it.putExtra("USER_ID", LoginManager.getLoginInfo(getActivity()).ID);
                     } else if (k == 7) {
                         UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());

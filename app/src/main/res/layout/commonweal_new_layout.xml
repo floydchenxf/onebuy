@@ -5,108 +5,9 @@
     android:layout_height="wrap_content"
     android:background="#f2f2f2">
 
-    <FrameLayout
-        android:id="@+id/pager_layout"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
-
-        <com.floyd.onebuy.view.LoopViewPager
-            android:id="@+id/loopViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white" />
-
-        <com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator
-            android:id="@+id/indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:padding="1dp"
-            app:radius="3dp" />
-    </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/commonweal_fee_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pager_layout"
-        android:background="@color/white"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:id="@+id/commonweal_desc_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/commonweal_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="14dp"
-                android:layout_marginTop="10dp"
-                android:text="苏城公益基金池："
-                android:textColor="@color/gray_sub_title"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/commonweal_fee_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/commonweal_desc"
-                android:textColor="@color/red"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="10dp"
-                android:drawablePadding="6dp"
-                android:drawableRight="@drawable/jiantou_next"
-                android:text="详情"
-                android:textColor="@color/gray_content"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/commonweal_desc_layout"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="14dp"
-            android:text="此苏城公益项目只针对苏州地区范围"
-            android:textColor="@color/blue" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/commonweal_desc_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/commonweal_fee_view"
-        android:layout_marginBottom="52dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:paddingTop="4dp"
-        android:textColor="@color/gray_content"
-        android:textSize="14sp" />
-
     <LinearLayout
+
+        android:id="@+id/commonweal_bottom_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -126,6 +27,118 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/commonweal_bottom_view"
+        android:scrollbars="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/pager_layout"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true">
+
+                <com.floyd.onebuy.view.LoopViewPager
+                    android:id="@+id/loopViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white" />
+
+                <com.floyd.onebuy.ui.pageindicator.CircleLoopPageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:padding="1dp"
+                    app:radius="3dp" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/commonweal_fee_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pager_layout"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/commonweal_desc_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/commonweal_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="10dp"
+                        android:text="苏城公益基金池："
+                        android:textColor="@color/gray_sub_title"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/commonweal_fee_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@+id/commonweal_desc"
+                        android:textColor="@color/red"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginTop="10dp"
+                        android:drawablePadding="6dp"
+                        android:drawableRight="@drawable/jiantou_next"
+                        android:text="详情"
+                        android:textColor="@color/gray_content"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/commonweal_desc_layout"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="14dp"
+                    android:text="此苏城公益项目只针对苏州地区范围"
+                    android:textColor="@color/blue" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/commonweal_desc_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/commonweal_fee_view"
+                android:layout_marginBottom="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="4dp"
+                android:textColor="@color/gray_content"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </ScrollView>
 
     <include layout="@layout/diamod_data_loading" />
 

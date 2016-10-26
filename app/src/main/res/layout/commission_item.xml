@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="14dp">
+
+        <TextView
+            android:id="@+id/remark_view"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:text="下级用户消费赚取"
+            android:textColor="@color/gray_content"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/record_time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:text="2016-12-14 12:00:00"
+            android:textColor="@color/gray_content"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/commission_rate_view"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:gravity="center_vertical"
+        android:text="+0.05"
+        android:textColor="@color/red"
+        android:textSize="16sp" />
+
+</RelativeLayout>

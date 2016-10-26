@@ -14,6 +14,7 @@ import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.func.AbstractJsonApiCallback;
 import com.floyd.onebuy.biz.func.StringFunc;
 import com.floyd.onebuy.biz.tools.PrefsTools;
+import com.floyd.onebuy.biz.vo.json.CommissionVO;
 import com.floyd.onebuy.biz.vo.json.InviteFriendRecordVO;
 import com.floyd.onebuy.biz.vo.json.InviteVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueVO;
@@ -83,7 +84,6 @@ public class LoginManager {
      * @param phoneNum
      * @param password
      * @param code
-     * @param inviterCode 邀请码。可以为空
      * @return
      */
     public static AsyncJob<UserVO> regUserJob(String phoneNum, String password, String code, String deviceToken) {
@@ -300,6 +300,27 @@ public class LoginManager {
         Type type = new TypeToken<List<InviteFriendRecordVO>>() {
         }.getType();
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, type);
+    }
+
+
+    /**
+     * 获取佣金信息
+     *
+     * @param userId
+     * @param type
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public static AsyncJob<CommissionVO> fetchUserCommission(Long userId, int type, int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "myCommissionLog");
+        params.put("userId", userId + "");
+        params.put("type", type+"");
+        params.put("pageNum", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommissionVO.class);
     }
 
 
