@@ -93,6 +93,22 @@
                     android:layout_marginLeft="10dip"
                     android:scaleType="centerCrop"
                     android:src="@drawable/circle_shape" />
+
+                <TextView
+                    android:id="@+id/client_level_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/common_round_red_bg"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="2dp"
+                    android:text="等级"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="50dp"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
             </RelativeLayout>
 
             <TextView
@@ -102,17 +118,17 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/white"
                 android:gravity="center_horizontal"
-                android:text="咖啡" />
+                android:text="咖啡"
+                android:textColor="@color/white" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="60dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -121,13 +137,26 @@
                     android:id="@+id/fee"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_toRightOf="@+id/fee_desc"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="余额：0"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/commission"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
 
                     android:layout_gravity="center"
                     android:layout_toRightOf="@+id/fee_desc"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center"
-                    android:textColor="@color/white"
-                    android:text="余额：0" />
+                    android:text="佣金：0"
+                    android:textSize="12sp"
+                    android:textColor="@color/white" />
 
 
                 <TextView
@@ -136,10 +165,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_toRightOf="@+id/fee_desc"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:gravity="center"
-                    android:textColor="@color/white"
-                    android:text="积分：0" />
+                    android:textSize="12sp"
+                    android:text="积分：0"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <TextView

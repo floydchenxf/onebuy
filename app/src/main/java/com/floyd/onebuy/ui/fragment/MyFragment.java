@@ -81,6 +81,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private TextView userNameView;
     private TextView feeView;
     private TextView jiFengView;
+    private TextView commissionView;
+    private TextView clientLevelView;
     private TextView addFeeView;
     private ListView operateListView;
     private ImageView saomiaoView;
@@ -155,6 +157,8 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
         userNameView = (TextView) headView.findViewById(R.id.user_name);
         feeView = (TextView) headView.findViewById(R.id.fee);
+        commissionView = (TextView) headView.findViewById(R.id.commission);
+        clientLevelView = (TextView) headView.findViewById(R.id.client_level_view);
         jiFengView = (TextView) headView.findViewById(R.id.jifeng);
         addFeeView = (TextView) headView.findViewById(R.id.add_fee);
         bgHeadView = (NetworkImageView) headView.findViewById(R.id.head_bg);
@@ -225,8 +229,10 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         });
 
         userNameView.setText(vo.getUserName());
-        feeView.setText("金额：" + vo.Amount);
+        feeView.setText("余额：" + vo.Amount);
         jiFengView.setText("积分：" + vo.JiFen);
+        commissionView.setText("佣金: " + vo.Commission);
+        clientLevelView.setText(vo.getLevel());
     }
 
     @Override

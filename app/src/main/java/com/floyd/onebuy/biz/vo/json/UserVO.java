@@ -3,6 +3,7 @@ package com.floyd.onebuy.biz.vo.json;
 import android.text.TextUtils;
 
 import com.floyd.onebuy.biz.constants.APIConstants;
+import com.floyd.onebuy.biz.constants.ClientLevelEnum;
 
 import java.io.File;
 
@@ -17,7 +18,9 @@ public class UserVO {
     public String Pic;//头像
     public long LastTime;//上次访问时间
     public int JiFen; //积分
-    public double Amount;//金额
+    public double Amount;//余额
+    public int ClientLevel; //等级
+    public Double Commission; //佣金
     public String Token; //Token
     public String InviterCode;//邀请code
 
@@ -36,5 +39,14 @@ public class UserVO {
         }
 
         return this.Mobile;
+    }
+
+    public String getLevel() {
+        if (this.ClientLevel < 1 || this.ClientLevel > 8) {
+            return "";
+        }
+
+        ClientLevelEnum level = ClientLevelEnum.values()[this.ClientLevel - 1];
+        return level.getDesc();
     }
 }
