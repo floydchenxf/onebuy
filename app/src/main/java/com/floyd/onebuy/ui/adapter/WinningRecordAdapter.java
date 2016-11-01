@@ -147,7 +147,6 @@ public class WinningRecordAdapter extends BaseDataAdapter<WinningInfo> {
                         if (info.lssueId == ownerExtVO.lssueId) {
                             info.ownerVO = ownerExtVO;
                             info.status = ownerExtVO.status;
-                            break;
                         }
                     }
 

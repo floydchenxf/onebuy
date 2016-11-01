@@ -169,7 +169,6 @@ public class ProductLssueAdapter extends BaseAdapter {
                         if (info.lssueId == ownerExtVO.lssueId) {
                             info.ownerVO = ownerExtVO;
                             info.status = WinningInfo.STATUS_LOTTERYED;
-                            break;
                         }
                     }
 
