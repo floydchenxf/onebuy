@@ -345,7 +345,7 @@ public class AddressModifyActivity extends Activity implements View.OnClickListe
                     AddressManager.modifiyAddress(goodsAddressVO).startUI(new ApiCallback<Boolean>() {
                         @Override
                         public void onError(int code, String errorInfo) {
-
+                            Toast.makeText(AddressModifyActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -368,7 +368,7 @@ public class AddressModifyActivity extends Activity implements View.OnClickListe
                     AddressManager.addAddress(goodsAddressVO).startUI(new ApiCallback<Long>() {
                         @Override
                         public void onError(int code, String errorInfo) {
-
+                            Toast.makeText(AddressModifyActivity.this, errorInfo, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
