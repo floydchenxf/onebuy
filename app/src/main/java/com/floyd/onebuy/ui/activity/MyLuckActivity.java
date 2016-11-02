@@ -109,6 +109,10 @@ public class MyLuckActivity extends Activity implements View.OnClickListener {
         gotoIndexView.setOnClickListener(this);
         buyView = (TextView) findViewById(R.id.buy_view);
         buyView.setOnClickListener(this);
+    }
+
+    protected void onResume() {
+        super.onResume();
         loadData();
     }
 

@@ -10,7 +10,10 @@ public class ProductLssueWithWinnerVO extends ProductBaseLssueVO {
     public String PrizeCode;
     public Long PriceTime;
     public int JonidedCount;
-    public int IsSend;
+    public int IsSend; //收货按钮显示
+    public int IsShow;//晒单按钮显示
+
+    public Long OrderID;//订单id
 
     public String getFullTitle() {
         StringBuilder sb = new StringBuilder();

@@ -7,11 +7,15 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.manager.LoginManager;
+import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.tools.DateUtil;
+import com.floyd.onebuy.biz.vo.json.ProductLssueItemVO;
 import com.floyd.onebuy.biz.vo.json.ProductLssueWithWinnerVO;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.activity.AddressManagerActivity;
@@ -31,11 +35,13 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
 
     private boolean isSelf;
     private boolean hasSetAddress;
+    private Long userId;
 
     public LuckRecordAdapter(Context context, List<ProductLssueWithWinnerVO> records, boolean isSelf, ImageLoader imageLoader) {
         super(context, records);
         this.mImageLoader = imageLoader;
         this.isSelf = isSelf;
+        this.userId = LoginManager.getLoginInfo(mContext).ID;
     }
 
     public void setHasSetAddress(boolean hasSetAddress) {
@@ -67,12 +73,27 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
 
         if (isSelf) {
             shareLayout.setVisibility(View.VISIBLE);
+            int isShared = vo.IsShow;
             int sendType = vo.IsSend;
+            if (isShared == 0 && sendType > 3) {
+                uploadInfoView.setBackgroundResource(R.drawable.common_round_red_bg);
+                uploadInfoView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent submitIntent = new Intent(mContext, PrizeShareSubmitActivity.class);
+                        submitIntent.putExtra(PrizeShareSubmitActivity.LSSUE_ID, vo.ProductLssueID);
+                        submitIntent.putExtra(PrizeShareSubmitActivity.PRO_ID, vo.ProID);
+                        submitIntent.putExtra(PrizeShareSubmitActivity.PRO_TITLE, vo.getFullTitle());
+                        mContext.startActivity(submitIntent);
+                    }
+                });
+            } else {
+                uploadInfoView.setBackgroundResource(R.drawable.common_round_bg);
+                uploadInfoView.setOnClickListener(null);
+            }
 
             switch (sendType) {
                 case 0://未发货  没有设置地址
-                    uploadInfoView.setBackgroundResource(R.drawable.common_round_bg);
-                    uploadInfoView.setOnClickListener(null);
                     if (hasSetAddress) {
                         goodsAddressView.setText("未发货");
                         goodsAddressView.setBackgroundResource(R.drawable.common_round_bg);
@@ -92,33 +113,48 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
                 case 1://配送中
                 case 2://发货中
                 case 3://已发货
-                    uploadInfoView.setBackgroundResource(R.drawable.common_round_bg);
-                    uploadInfoView.setOnClickListener(null);
-                    goodsAddressView.setBackgroundResource(R.drawable.common_round_bg);
+                    final long orderId = vo.OrderID;
+                    final long lssueId = vo.ProductLssueID;
+                    goodsAddressView.setBackgroundResource(R.drawable.common_round_red_bg);
                     goodsAddressView.setText("确认收货");
-                    goodsAddressView.setOnClickListener(null);
-                    break;
-                case 4:
-                    uploadInfoView.setBackgroundResource(R.drawable.common_round_red_bg);
-                    uploadInfoView.setOnClickListener(new View.OnClickListener() {
+                    goodsAddressView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent submitIntent = new Intent(mContext, PrizeShareSubmitActivity.class);
-                            submitIntent.putExtra(PrizeShareSubmitActivity.LSSUE_ID, vo.ProductLssueID);
-                            submitIntent.putExtra(PrizeShareSubmitActivity.PRO_ID, vo.ProID);
-                            submitIntent.putExtra(PrizeShareSubmitActivity.PRO_TITLE, vo.getFullTitle());
-                            mContext.startActivity(submitIntent);
+                            OrderManager.receiptGoods(orderId, userId).startUI(new ApiCallback<Boolean>() {
+                                @Override
+                                public void onError(int code, String errorInfo) {
+                                    Toast.makeText(mContext, errorInfo, Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onSuccess(Boolean aBoolean) {
+                                    if (aBoolean) {
+                                        for(ProductLssueWithWinnerVO aa:records) {
+                                            if (aa.ProductLssueID == lssueId) {
+                                                aa.IsSend = 4;
+                                                LuckRecordAdapter.this.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                                @Override
+                                public void onProgress(int progress) {
+
+                                }
+                            });
+
                         }
                     });
+                    break;
+                case 4:
                     goodsAddressView.setBackgroundResource(R.drawable.common_round_bg);
-                    goodsAddressView.setText("确认收货");
+                    goodsAddressView.setText("已收货");
                     goodsAddressView.setOnClickListener(null);
 
                     break;
                 default:
-                    uploadInfoView.setBackgroundResource(R.drawable.common_round_bg);
-                    uploadInfoView.setText("晒单");
-                    uploadInfoView.setOnClickListener(null);
                     goodsAddressView.setBackgroundResource(R.drawable.common_round_bg);
                     goodsAddressView.setText("确认收货");
                     goodsAddressView.setOnClickListener(null);

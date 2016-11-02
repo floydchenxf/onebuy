@@ -212,5 +212,21 @@ public class OrderManager {
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, OrderVO.class);
     }
 
+    /**
+     * 确认收货
+     *
+     * @param orderId
+     * @param userId
+     * @return
+     */
+    public static AsyncJob<Boolean> receiptGoods(long orderId, long userId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "ReceiptGoods");
+        params.put("id", orderId+"");
+        params.put("userid", userId + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+    }
+
 
 }
