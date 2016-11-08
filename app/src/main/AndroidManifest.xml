@@ -58,7 +58,7 @@
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"></activity>
+            android:theme="@style/ContentOverlay"/>
         <activity
             android:name=".activity.H5Activity"
             android:configChanges="keyboardHidden|orientation"
@@ -163,11 +163,11 @@
         <!-- 【必须】 请修改为APP的AccessId，“21”开头的10位数字，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_ID"
-            android:value="2100195484" />
+            android:value="2100241604" />
         <!-- 【必须】 请修改为APP的AccessKey，“A”开头的12位字符串，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_KEY"
-            android:value="A6UM3LHQ869S" />
+            android:value="AKP624YNJ41G" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"

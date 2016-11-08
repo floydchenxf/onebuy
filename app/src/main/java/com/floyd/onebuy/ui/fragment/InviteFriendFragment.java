@@ -96,8 +96,8 @@ public class InviteFriendFragment extends Fragment {
             @Override
             public void onSuccess(InviteVO inviteVO) {
                 dataLoadingView.loadSuccess();
-                String title = "苏城云购";
-                String content = "对发送发送到发送到发送地方";
+                String title = "给你推荐一款好玩又能赚钱的购物平台苏城云购，惊喜连连，静待你的加入。";
+                String content = "给你推荐一款好玩又能赚钱的购物平台苏城云购，惊喜连连，静待你的加入。";
                 shareManager.setShareContent(title, content, inviteVO.url);
                 weiImageView.setImageUrl(inviteVO.getQrcode(), mImageLoader);
             }

@@ -109,7 +109,7 @@ public class CommonwealNewFragment extends CommonwealBaseFragment implements Vie
 
         commonwealDescView = (TextView) view.findViewById(R.id.commonweal_desc_view);
 
-        mBannerImageAdapter = new BannerImageAdapter(getActivity().getSupportFragmentManager(), null, null, BannerFragment.SCALE_CENTER_CROP);
+        mBannerImageAdapter = new BannerImageAdapter(getActivity().getSupportFragmentManager(), null, null, BannerFragment.SCALE_FIT_XY);
         mHeaderViewPager.setAdapter(mBannerImageAdapter);
         mHeaderViewPager.setOnPageChangeListener(new LoopViewPager.OnPageChangeListener() {
             @Override

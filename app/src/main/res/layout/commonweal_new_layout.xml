@@ -40,7 +40,7 @@
             <FrameLayout
                 android:id="@+id/pager_layout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="120dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true">
 
