@@ -224,7 +224,7 @@ public class LoginManager {
         return job.map(new Func<Map<String, Long>, Long>() {
             @Override
             public Long call(Map<String, Long> map) {
-                return map.get("ID");
+                return map.get("Code");
             }
         });
     }

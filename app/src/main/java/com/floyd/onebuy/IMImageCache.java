@@ -28,6 +28,7 @@ import android.util.Log;
 import com.android.volley.toolbox.ImageLoader;
 import com.floyd.onebuy.biz.constants.EnvConstants;
 import com.floyd.onebuy.biz.tools.FileTools;
+import com.floyd.onebuy.channel.threadpool.WxDefaultExecutor;
 import com.floyd.onebuy.utils.WXUtil;
 
 import java.io.File;
@@ -237,12 +238,14 @@ public class IMImageCache implements ImageLoader.ImageCache {
         }
 
 
-//        WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
-//            @Override
-//            public void run() {
-//                FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
-//            }
-//        });
+        WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (FileTools.class) {
+                    FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
+                }
+            }
+        });
 
     }
 

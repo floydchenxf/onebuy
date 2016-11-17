@@ -137,6 +137,13 @@ public class FileUtils {
      */
     public static InputStream readFile(String pathName) {
         File file = new File(pathName);
+        if (!file.exists()) {
+            File p = file.getParentFile();
+            if (!p.exists()) {
+                p.mkdir();
+            }
+        }
+
         FileInputStream fis = null;
         if (file.exists() && file.isFile()) {
             try {

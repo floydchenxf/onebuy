@@ -74,6 +74,7 @@ public class FileTools {
 		if (pathName == null) {
 			return null;
 		}
+
 		InputStream in = FileUtils.readFile(pathName);
 		if (in != null) {
 			Bitmap bitmap = null;

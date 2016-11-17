@@ -19,6 +19,10 @@ public class EnvConstants {
     static {
         File f = new File(imageRootPath);
         if (!f.exists()) {
+            File oneBuyFile = new File(diamondPath);
+            if (!oneBuyFile.exists()) {
+                oneBuyFile.mkdir();
+            }
             f.mkdir();
         }
 
