@@ -24,10 +24,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("onebuy.keystore")
-            storePassword "diamondcxf128"
-            keyAlias "diamond"
-            keyPassword "diamondpwd"
+            storeFile file("interestbar.keystore")
+            storePassword "interestbar"
+            keyAlias "interestbar.keystore"
+            keyPassword "interestbar"
         }
     }
 
