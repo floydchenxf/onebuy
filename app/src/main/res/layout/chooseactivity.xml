@@ -117,7 +117,7 @@
                 android:textColor="#3d3d3d"
                 android:textSize="14sp" />
 
-            <com.floyd.diamond.bean.RangeSeekBar
+            <com.yyg365.diamond.bean.RangeSeekBar
                 android:id="@+id/seekBar_age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                 android:textColor="#3d3d3d"
                 android:textSize="14sp" />
 
-            <com.floyd.diamond.bean.RangeSeekBar
+            <com.yyg365.diamond.bean.RangeSeekBar
                 android:id="@+id/seekBar_height"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
                 android:textColor="#3d3d3d"
                 android:textSize="14sp" />
 
-            <com.floyd.diamond.bean.RangeSeekBar
+            <com.yyg365.diamond.bean.RangeSeekBar
                 android:id="@+id/seekBar_credit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -58,7 +58,7 @@
             android:textColor="#666666" />
     </LinearLayout>
 
-    <com.floyd.pullrefresh.widget.PullToRefreshListView
+    <com.yyg365.pullrefresh.widget.PullToRefreshListView
         android:id="@+id/winning_record_list"
         android:layout_width="fill_parent"
         android:background="@color/white"

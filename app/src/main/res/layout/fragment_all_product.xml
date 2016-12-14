@@ -91,7 +91,7 @@
             android:layout_weight="1" />
 
 
-        <com.floyd.pullrefresh.widget.PullToRefreshListView
+        <com.yyg365.pullrefresh.widget.PullToRefreshListView
             android:id="@+id/product_list"
             android:layout_width="0dp"
             android:layout_height="fill_parent"

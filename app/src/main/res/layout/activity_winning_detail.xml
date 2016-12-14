@@ -159,7 +159,7 @@
 
     </FrameLayout>
 
-    <com.floyd.pullrefresh.widget.PullToRefreshListView
+    <com.yyg365.pullrefresh.widget.PullToRefreshListView
         android:id="@+id/join_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

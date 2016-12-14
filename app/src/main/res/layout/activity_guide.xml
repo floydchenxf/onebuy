@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.floyd.diamond.ui.pageindicator.CustomViewPager
+    <com.yyg365.diamond.ui.pageindicator.CustomViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black" />
 
-    <com.floyd.diamond.ui.pageindicator.CirclePageIndicator
+    <com.yyg365.diamond.ui.pageindicator.CirclePageIndicator
         android:id="@+id/indicator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

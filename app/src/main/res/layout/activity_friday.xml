@@ -7,7 +7,7 @@
         android:id="@+id/title_layout"
         layout="@layout/title_frame" />
 
-    <com.floyd.pullrefresh.widget.PullToRefreshListView
+    <com.yyg365.pullrefresh.widget.PullToRefreshListView
         android:id="@+id/friday_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

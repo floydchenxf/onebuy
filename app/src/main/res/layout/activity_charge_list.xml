@@ -30,7 +30,7 @@
             android:text="立即充值" />
     </LinearLayout>
 
-    <com.floyd.pullrefresh.widget.PullToRefreshListView
+    <com.yyg365.pullrefresh.widget.PullToRefreshListView
         android:id="@+id/common_list"
         android:layout_above="@+id/operate_layout"
         android:layout_width="fill_parent"

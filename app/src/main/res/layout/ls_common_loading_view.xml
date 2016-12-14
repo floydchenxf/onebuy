@@ -6,7 +6,7 @@
     android:layout_gravity="center"
     android:orientation="vertical" >
 
-    <com.floyd.onebuy.ui.anim.LsLoadingView
+    <com.yyg365.interestbar.ui.anim.LsLoadingView
         android:id="@+id/ls_loading_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

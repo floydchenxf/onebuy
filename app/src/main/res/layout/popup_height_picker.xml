@@ -41,20 +41,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.floyd.pickview.LoopView
+            <com.yyg365.pickview.LoopView
                 android:id="@+id/picker_one"
                 android:layout_width="0dp"
                 android:layout_height="180dp"
                 android:layout_weight="1" />
 
-            <com.floyd.pickview.LoopView
+            <com.yyg365.pickview.LoopView
                 android:id="@+id/picker_two"
                 android:layout_width="0dp"
                 android:layout_height="180dp"
                 android:layout_marginLeft="1dp"
                 android:layout_weight="1" />
 
-            <com.floyd.pickview.LoopView
+            <com.yyg365.pickview.LoopView
                 android:id="@+id/picker_three"
                 android:layout_width="0dp"
                 android:layout_height="180dp"

@@ -56,7 +56,7 @@
 
         </com.zhy.android.percent.support.PercentFrameLayout>
 
-        <com.floyd.pullrefresh.widget.PullToRefreshListView
+        <com.yyg365.pullrefresh.widget.PullToRefreshListView
             android:id="@+id/gridview_filter"
             android:background="#eeeeee"
             android:layout_width="fill_parent"

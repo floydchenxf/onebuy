@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
 
-    <com.floyd.pullrefresh.widget.PullToRefreshListView
+    <com.yyg365.pullrefresh.widget.PullToRefreshListView
         android:id="@+id/common_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

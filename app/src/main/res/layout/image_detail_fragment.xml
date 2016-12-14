@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.floyd.onebuy.ui.multiimage.TouchImageView
+    <com.yyg365.interestbar.ui.multiimage.TouchImageView
         android:id="@+id/image_detail_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name" />
 
-    <com.floyd.onebuy.ui.multiimage.MutliImageGifView
+    <com.yyg365.interestbar.ui.multiimage.MutliImageGifView
         android:id="@+id/gif_image_detail_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:textColor="#7f7f7f"
         android:textSize="12sp" />
 
-    <com.floyd.onebuy.ui.multiimage.ProgressWheel
+    <com.yyg365.interestbar.ui.multiimage.ProgressWheel
         xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
         android:id="@+id/image_detail_progress"
         android:layout_width="28dp"
