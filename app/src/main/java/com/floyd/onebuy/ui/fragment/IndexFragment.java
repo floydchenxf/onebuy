@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -209,18 +210,18 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         init(view);
         indexProductAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader, null);
         mListView.setAdapter(indexProductAdapter);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         View emptyView = inflater.inflate(R.layout.empty_item, container, false);
         mPullToRefreshListView.setEmptyView(emptyView);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-                needClear = true;
-                loadData(false);
-                pageNo = 1;
-                sortType = 1;
-                checkSortType(1);
-                mPullToRefreshListView.onRefreshComplete(false, true);
+//                needClear = true;
+//                loadData(false);
+//                pageNo = 1;
+//                sortType = 1;
+//                checkSortType(1);
+//                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
@@ -402,46 +403,30 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     imageViews[i].setOnClickListener(listeners[i]);
                 }
 
-//                List<ProductTypeVO> typeList = indexVO.typeList;
-//                if (typeList != null && !typeList.isEmpty()) {
-//                    Map<Long, ProductTypeVO> productTypeVOMap = new HashMap<Long, ProductTypeVO>();
-//                    for (int i = 0; i < typeList.size(); i++) {
-//                        ProductTypeVO typeVO = typeList.get(i);
-//                        productTypeVOMap.put(typeVO.CodeID, typeVO);
-//                    }
-//
-//                    int typeSize = typeCodes.length > 5 ? 5 : typeCodes.length;
-//                    for (int k=0; k < typeSize; k++) {
-//                        ProductTypeVO vv = productTypeVOMap.get(typeCodes[k]);
-//                        if (vv == null) {
-//                            continue;
-//                        }
-//                        String typePic = vv.TypePic;
-//                        imageViews[k].setImageUrl(typePic, mImageLoader);
-//                        typeDeses[k].setText(vv.CodeName);
-//                        imageViews[k].setOnClickListener(listeners[k]);
-//                    }
-//                }
-
                 List<WinningInfo> winningRecordVOs = indexVO.theNewList;
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
 
                 final String newsImageUrl = indexVO.newsImageUrl;
-                newsImageView.setDefaultImageResId(R.drawable.news_pic);
-                newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
-                    @Override
-                    public Bitmap processBitmap(final Bitmap bitmap) {
+                if (TextUtils.isEmpty(newsImageUrl)) {
+                    newsImageView.setVisibility(View.GONE);
+                } else {
+                    newsImageView.setVisibility(View.VISIBLE);
+                    newsImageView.setDefaultImageResId(R.drawable.news_pic);
+                    newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
+                        @Override
+                        public Bitmap processBitmap(final Bitmap bitmap) {
 
-                        WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
-                            @Override
-                            public void run() {
-                                final String md5Name = WXUtil.getMD5FileName(newsImageUrl);
-                                FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
-                            }
-                        });
-                        return bitmap;
-                    }
-                });
+                            WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
+                                @Override
+                                public void run() {
+                                    final String md5Name = WXUtil.getMD5FileName(newsImageUrl);
+                                    FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
+                                }
+                            });
+                            return bitmap;
+                        }
+                    });
+                }
                 pageNo = 2;
             }
 
