@@ -357,13 +357,15 @@
         android:id="@+id/news_pic_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/viewflipper_layout"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/navigation_container"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/news_pic_view"
         android:background="#ffffff"
         android:gravity="center_vertical">

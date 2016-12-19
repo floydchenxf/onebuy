@@ -69,7 +69,9 @@ public class ProductManager {
                 NewIndexVO vo = new NewIndexVO();
                 vo.wordList = indexVO.wordList;
                 vo.typeList = indexVO.typeList;
-                vo.newsImageUrl = APIConstants.HOST + indexVO.Image;
+                if (!TextUtils.isEmpty(indexVO.Image)) {
+                    vo.newsImageUrl = APIConstants.HOST + indexVO.Image;
+                }
                 List<IndexAdvVO> adv = indexVO.advertisList;
                 if (adv != null && !adv.isEmpty()) {
                     List<AdvVO> advList = new ArrayList<AdvVO>();
@@ -134,7 +136,10 @@ public class ProductManager {
                 NewIndexVO vo = new NewIndexVO();
                 vo.wordList = indexVO.wordList;
                 vo.typeList = indexVO.typeList;
-                vo.newsImageUrl = APIConstants.HOST + indexVO.Image;
+                if (!TextUtils.isEmpty(indexVO.Image)) {
+                    vo.newsImageUrl = APIConstants.HOST + indexVO.Image;
+                }
+
                 List<IndexAdvVO> adv = indexVO.advertisList;
                 if (adv != null && !adv.isEmpty()) {
                     List<AdvVO> advList = new ArrayList<AdvVO>();

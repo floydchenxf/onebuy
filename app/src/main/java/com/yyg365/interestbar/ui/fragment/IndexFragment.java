@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -378,8 +379,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 },new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        Intent it = new Intent(getActivity(), FridayActivity.class);
-//                        getActivity().startActivity(it);
                         UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());
                         SpannableString message = new SpannableString("该板块暂未开发,敬请期待!");
                         noticeBuilder.setMessage(message)
@@ -402,46 +401,30 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     imageViews[i].setOnClickListener(listeners[i]);
                 }
 
-//                List<ProductTypeVO> typeList = indexVO.typeList;
-//                if (typeList != null && !typeList.isEmpty()) {
-//                    Map<Long, ProductTypeVO> productTypeVOMap = new HashMap<Long, ProductTypeVO>();
-//                    for (int i = 0; i < typeList.size(); i++) {
-//                        ProductTypeVO typeVO = typeList.get(i);
-//                        productTypeVOMap.put(typeVO.CodeID, typeVO);
-//                    }
-//
-//                    int typeSize = typeCodes.length > 5 ? 5 : typeCodes.length;
-//                    for (int k=0; k < typeSize; k++) {
-//                        ProductTypeVO vv = productTypeVOMap.get(typeCodes[k]);
-//                        if (vv == null) {
-//                            continue;
-//                        }
-//                        String typePic = vv.TypePic;
-//                        imageViews[k].setImageUrl(typePic, mImageLoader);
-//                        typeDeses[k].setText(vv.CodeName);
-//                        imageViews[k].setOnClickListener(listeners[k]);
-//                    }
-//                }
-
                 List<WinningInfo> winningRecordVOs = indexVO.theNewList;
                 indexProductAdapter.addAll(winningRecordVOs, needClear);
 
                 final String newsImageUrl = indexVO.newsImageUrl;
-                newsImageView.setDefaultImageResId(R.drawable.news_pic);
-                newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
-                    @Override
-                    public Bitmap processBitmap(final Bitmap bitmap) {
+                if (TextUtils.isEmpty(newsImageUrl)) {
+                    newsImageView.setVisibility(View.GONE);
+                } else {
+                    newsImageView.setVisibility(View.VISIBLE);
+                    newsImageView.setDefaultImageResId(R.drawable.news_pic);
+                    newsImageView.setImageUrl(newsImageUrl, mImageLoader, new BitmapProcessor() {
+                        @Override
+                        public Bitmap processBitmap(final Bitmap bitmap) {
 
-                        WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
-                            @Override
-                            public void run() {
-                                final String md5Name = WXUtil.getMD5FileName(newsImageUrl);
-                                FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
-                            }
-                        });
-                        return bitmap;
-                    }
-                });
+                            WxDefaultExecutor.getInstance().submitHighPriority(new Runnable() {
+                                @Override
+                                public void run() {
+                                    final String md5Name = WXUtil.getMD5FileName(newsImageUrl);
+                                    FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
+                                }
+                            });
+                            return bitmap;
+                        }
+                    });
+                }
                 pageNo = 2;
             }
 

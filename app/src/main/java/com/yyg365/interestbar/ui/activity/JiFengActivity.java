@@ -81,7 +81,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
 
         long userId = LoginManager.getLoginInfo(this).ID;
 
-        JiFengManager.fetchJiFengList(userId, PAGE_SIZE, pageNo, 1).startUI(new ApiCallback<List<JiFengVO>>() {
+        JiFengManager.fetchJiFengList(userId, PAGE_SIZE, pageNo).startUI(new ApiCallback<List<JiFengVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
