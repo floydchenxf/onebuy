@@ -33,14 +33,14 @@ public class JiFengManager {
         return job;
     }
 
-    public static AsyncJob<List<JiFengVO>> fetchJiFengList(long userId, int pageSize, int pageNum, int jftype) {
+    public static AsyncJob<List<JiFengVO>> fetchJiFengList(long userId, int pageSize, int pageNum) {
         String url = APIConstants.HOST_API_PATH + APIConstants.JIFENG_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "list");
         params.put("userId", userId + "");
         params.put("pageSize", pageSize + "");
         params.put("pageNum", pageNum + "");
-        params.put("jftype", jftype + "");
+        params.put("jftype", "");
         Type type = new TypeToken<List<JiFengVO>>(){}.getType();
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
     }
