@@ -94,7 +94,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private NavigationAdapter adapter;
 
-    private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的公益", "我的积分", "邀请好友", "快乐星期五", "我的晒单"};
+    private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的当铺", "我的积分", "邀请好友", "积分商城", "我的晒单"};
     private int[] images = new int[]{R.drawable.prize_record, R.drawable.btn_client_info, R.drawable.winning, R.drawable.add_fee, R.drawable.gongyi, R.drawable.jifeng, R.drawable.invite, R.drawable.fri, R.drawable.shandan};
     private Class[] clazzs = new Class[]{WinningRecordActivity.class, UserCommissionActivity.class, MyLuckActivity.class, ChargeListActivity.class, MyCommonwealActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
 

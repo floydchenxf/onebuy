@@ -210,18 +210,18 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         init(view);
         indexProductAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader, null);
         mListView.setAdapter(indexProductAdapter);
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         View emptyView = inflater.inflate(R.layout.empty_item, container, false);
         mPullToRefreshListView.setEmptyView(emptyView);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-                needClear = true;
-                loadData(false);
-                pageNo = 1;
-                sortType = 1;
-                checkSortType(1);
-                mPullToRefreshListView.onRefreshComplete(false, true);
+//                needClear = true;
+//                loadData(false);
+//                pageNo = 1;
+//                sortType = 1;
+//                checkSortType(1);
+//                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
