@@ -20,7 +20,7 @@
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/productImage1"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="70dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="6dp"
@@ -31,8 +31,7 @@
                 android:id="@+id/type_icon_view1"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="4dp"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ten_icon" />
         </RelativeLayout>
 
@@ -79,7 +78,7 @@
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/productImage2"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="70dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="6dp"
@@ -91,14 +90,71 @@
                 android:id="@+id/type_icon_view2"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="4dp"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ten_icon" />
         </RelativeLayout>
 
 
         <TextView
             android:id="@+id/productNameView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textColor="#666666"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#cecece" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="#cecece" />
+
+    <LinearLayout
+        android:id="@+id/productLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/productImage3"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="6dp"
+                android:scaleType="center"
+                android:src="@drawable/tupian" />
+
+
+            <ImageView
+                android:id="@+id/type_icon_view3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ten_icon" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/productNameView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
