@@ -16,7 +16,7 @@
             android:layout_width="fill_parent"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/head_lay" />
+            android:src="@drawable/tupian" />
 
         <FrameLayout
             android:id="@+id/title"
