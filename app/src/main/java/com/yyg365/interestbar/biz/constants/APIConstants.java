@@ -4,7 +4,7 @@ package com.yyg365.interestbar.biz.constants;
  * Created by floyd on 15-11-28.
  */
 public class APIConstants {
-    public static final String HOST = "http://app.szshangbu.com/";
+    public static final String HOST = "http://118.178.142.215/";
     public static final String HOST_API_PATH = HOST + "AppInterface/";
     public static final String PRODUCT_DETAIL_URL_FORMAT = HOST + "ProDescriptionForApp.aspx?ProID=%d";
 
@@ -19,6 +19,8 @@ public class APIConstants {
     public static final String COMMONWEAL_MODULE = "CommonwealService.ashx";
     public static final String SUBJECT_INFO_MODULE = "SpecialSubjectService.ashx";
     public static final String NEWS_MODULE = "NewsService.ashx";
+    public static final String PAWN_SHOP_MODULE = "PawnShopService.ashx";
+
 
     public static final String API_GET_ADVERT_LIST = "api/index/getAdvertList";//获取广告
     public static final String API_GET_MOTE_LIST = "api/index/getMoteList"; //获取首页模特信息

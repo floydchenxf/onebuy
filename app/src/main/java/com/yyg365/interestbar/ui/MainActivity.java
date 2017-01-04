@@ -43,6 +43,7 @@ import com.yyg365.interestbar.ui.fragment.FragmentTabAdapter;
 import com.yyg365.interestbar.ui.fragment.IndexFragment;
 import com.yyg365.interestbar.ui.fragment.MyFragment;
 import com.yyg365.interestbar.ui.fragment.NewOwnerFragment;
+import com.yyg365.interestbar.ui.fragment.PawnFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,7 +113,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         EventBus.getDefault().register(this);
         fragments.add(new IndexFragment());
         fragments.add(new AllProductFragemnt());
-        fragments.add(new NewOwnerFragment());
+//        fragments.add(new NewOwnerFragment());
+        fragments.add(new PawnFragment());
         fragments.add(new BuyCarFragment());
         fragments.add(new MyFragment());
 

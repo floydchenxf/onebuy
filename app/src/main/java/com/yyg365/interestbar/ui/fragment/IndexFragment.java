@@ -337,26 +337,31 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 mTopBannerList.clear();
 
                 List<AdvVO> advVOs = indexVO.advertisList;
-                mTopBannerList.addAll(advVOs);
-                mBannerImageAdapter.addItems(mTopBannerList);
-
-                if (mTopBannerList != null && mTopBannerList.size() > 0) {
-                    isShowBanner = true;
-                    int count = mBannerImageAdapter.getCount();
-                    mHeaderViewIndicator.setTotal(count);
-                    mHeaderViewIndicator.setIndex(0);
-                    mHeaderViewPager.setAdapter(mBannerImageAdapter);
-                    mBannerImageAdapter.notifyDataSetChanged();
-                    if (mTopBannerList.size() == 1) {
-                        mHeaderViewIndicator.setVisibility(View.GONE);
-                    } else {
-                        mHeaderViewIndicator.setVisibility(View.VISIBLE);
-                        stopBannerAutoLoop();
-                        startBannerAutoLoop();
-                    }
-                } else {
+                if (advVOs== null||advVOs.isEmpty()) {
                     isShowBanner = false;
                     mHeaderView.findViewById(R.id.pager_layout).setVisibility(View.GONE);
+                } else {
+                    mTopBannerList.addAll(advVOs);
+                    mBannerImageAdapter.addItems(mTopBannerList);
+
+                    if (mTopBannerList != null && mTopBannerList.size() > 0) {
+                        isShowBanner = true;
+                        int count = mBannerImageAdapter.getCount();
+                        mHeaderViewIndicator.setTotal(count);
+                        mHeaderViewIndicator.setIndex(0);
+                        mHeaderViewPager.setAdapter(mBannerImageAdapter);
+                        mBannerImageAdapter.notifyDataSetChanged();
+                        if (mTopBannerList.size() == 1) {
+                            mHeaderViewIndicator.setVisibility(View.GONE);
+                        } else {
+                            mHeaderViewIndicator.setVisibility(View.VISIBLE);
+                            stopBannerAutoLoop();
+                            startBannerAutoLoop();
+                        }
+                    } else {
+                        isShowBanner = false;
+                        mHeaderView.findViewById(R.id.pager_layout).setVisibility(View.GONE);
+                    }
                 }
 
                 mNavigationContainer.setVisibility(View.VISIBLE);
