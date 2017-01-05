@@ -43,12 +43,14 @@ import com.yyg365.interestbar.ui.activity.JiFengActivity;
 import com.yyg365.interestbar.ui.activity.MyCommonwealActivity;
 import com.yyg365.interestbar.ui.activity.MyInfoActivity;
 import com.yyg365.interestbar.ui.activity.MyLuckActivity;
+import com.yyg365.interestbar.ui.activity.MyPawnActivity;
 import com.yyg365.interestbar.ui.activity.PayChargeActivity;
 import com.yyg365.interestbar.ui.activity.SettingActivity;
 import com.yyg365.interestbar.ui.activity.ShowShareActivity;
 import com.yyg365.interestbar.ui.activity.SubjectInfoActivity;
 import com.yyg365.interestbar.ui.activity.UserCommissionActivity;
 import com.yyg365.interestbar.ui.activity.WinningRecordActivity;
+import com.yyg365.interestbar.ui.adapter.MyPawnAdapter;
 import com.yyg365.interestbar.ui.adapter.NavigationAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
@@ -94,9 +96,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private NavigationAdapter adapter;
 
-    private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的当铺", "我的积分", "邀请好友", "积分商城", "我的晒单"};
+    private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的當铺", "我的积分", "邀请好友", "积分商城", "我的晒单"};
     private int[] images = new int[]{R.drawable.prize_record, R.drawable.btn_client_info, R.drawable.winning, R.drawable.add_fee, R.drawable.gongyi, R.drawable.jifeng, R.drawable.invite, R.drawable.fri, R.drawable.shandan};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, UserCommissionActivity.class, MyLuckActivity.class, ChargeListActivity.class, MyCommonwealActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, UserCommissionActivity.class, MyLuckActivity.class, ChargeListActivity.class, MyPawnActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

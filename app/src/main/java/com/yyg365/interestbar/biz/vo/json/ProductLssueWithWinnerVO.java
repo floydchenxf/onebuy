@@ -13,6 +13,9 @@ public class ProductLssueWithWinnerVO extends ProductBaseLssueVO {
     public int IsSend; //收货按钮显示
     public int IsShow;//晒单按钮显示
 
+    public int IsPawn;//是否已当
+    public int IsRedeem; //是否已赎回
+
     public Long OrderID;//订单id
 
     public String getFullTitle() {
@@ -23,4 +26,13 @@ public class ProductLssueWithWinnerVO extends ProductBaseLssueVO {
         sb.append(this.ProName);
         return sb.toString();
     }
+
+    public boolean isPawn() {
+        return IsPawn > 0;
+    }
+
+    public boolean isRedeem() {
+        return IsRedeem > 0;
+    }
+
 }

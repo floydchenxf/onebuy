@@ -23,12 +23,21 @@ public class DangPuItemVO {
     public Integer RedeemDays; //赎回剩余时间
     public Long ProLssueID; //
     public Integer ProLssueNum; //期数
-    public boolean IsRedeem; //是否赎回
+    public int IsRedeem; //是否赎回
     public Integer RealRedeemPrice; //真正赎回价格
 
 
     public String getProductUrl() {
         return CommonUtil.getImageUrl(ProFirstPicture);
     }
+
+    public long getPawnTime() {
+        return PawnTime * 1000;
+    }
+
+    public boolean isRedeem() {
+        return IsRedeem > 0;
+    }
+
 
 }

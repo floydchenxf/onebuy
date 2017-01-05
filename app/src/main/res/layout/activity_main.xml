@@ -60,7 +60,7 @@
                 android:drawableTop="@drawable/prize_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
-                android:text="当铺"
+                android:text="當铺"
                 android:textColor="@drawable/word_selector"
                 android:textSize="14sp" />
 

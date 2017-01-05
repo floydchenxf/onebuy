@@ -55,7 +55,7 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
 
     @Override
     int[] cacheViews() {
-        return new int[]{R.id.product_pic, R.id.code_title_view, R.id.product_code_view, R.id.total_count_view, R.id.my_join_num_view, R.id.luck_number_view, R.id.lottest_time_view, R.id.share_layout, R.id.upload_info, R.id.goods_address};
+        return new int[]{R.id.product_pic, R.id.code_title_view, R.id.product_code_view, R.id.total_count_view, R.id.my_join_num_view, R.id.luck_number_view, R.id.lottest_time_view, R.id.share_layout, R.id.upload_info, R.id.goods_address, R.id.pawn_status_view};
     }
 
     @Override
@@ -70,6 +70,7 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
         View shareLayout = holder.get(R.id.share_layout);
         TextView uploadInfoView = (TextView) holder.get(R.id.upload_info);
         TextView goodsAddressView = (TextView) holder.get(R.id.goods_address);
+        TextView pawnStatusView = (TextView) holder.get(R.id.pawn_status_view);
 
         if (isSelf) {
             shareLayout.setVisibility(View.VISIBLE);
@@ -162,7 +163,19 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
 
 
             }
+
+
+            pawnStatusView.setVisibility(View.VISIBLE);
+            if (vo.isPawn()) {
+                pawnStatusView.setText("已當");
+            }
+
+            if (vo.isRedeem()) {
+                pawnStatusView.setText("已赎回");
+            }
+
         } else {
+            pawnStatusView.setVisibility(View.GONE);
             shareLayout.setVisibility(View.GONE);
             uploadInfoView.setOnClickListener(null);
             goodsAddressView.setOnClickListener(null);

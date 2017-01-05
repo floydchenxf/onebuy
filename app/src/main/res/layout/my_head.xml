@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="苏城云购"
+                android:text="趣玩吧"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 

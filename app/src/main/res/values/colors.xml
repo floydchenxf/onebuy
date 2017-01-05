@@ -15,6 +15,7 @@
     <color name="setting_line_color">#cccccc</color>
     <color name="black">#000000</color>
     <color name="bgcolor">#f2f2f2</color>
+    <color name="green">#00ff00</color>
 
     <color name="aliwx_color_blue">#00b4ff</color>
     <color name="aliwx_color_blue_light">#535A60</color>
