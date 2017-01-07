@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/pawn_level_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp">
+
+        <TextView
+            android:id="@+id/pawn_level_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="测试数据1"
+            android:textColor="@color/gray_content"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/pawn_level_choose"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/radio_check"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center_vertical" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

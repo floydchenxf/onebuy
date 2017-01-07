@@ -58,7 +58,7 @@
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/ContentOverlay"/>
+            android:theme="@style/ContentOverlay" />
         <activity
             android:name=".activity.H5Activity"
             android:configChanges="keyboardHidden|orientation"
@@ -399,7 +399,11 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/ContentOverlay" />
-
+        <activity
+            android:name=".activity.PawnLogActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/ContentOverlay" />
     </application>
 
 </manifest>

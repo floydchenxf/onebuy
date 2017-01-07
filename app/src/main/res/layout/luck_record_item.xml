@@ -184,22 +184,22 @@
             android:textSize="14sp" />
 
         <TextView
-        android:id="@+id/upload_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/split_line1"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/goods_address"
-        android:layout_toStartOf="@+id/goods_address"
-        android:background="@drawable/common_round_bg"
-        android:paddingBottom="6dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="6dp"
-        android:text="晒单"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
+            android:id="@+id/upload_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/split_line1"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/goods_address"
+            android:layout_toStartOf="@+id/goods_address"
+            android:background="@drawable/common_round_bg"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:text="晒单"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/pawn_status_view"

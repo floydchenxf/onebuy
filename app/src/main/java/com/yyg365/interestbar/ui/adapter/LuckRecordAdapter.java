@@ -19,6 +19,7 @@ import com.yyg365.interestbar.biz.vo.json.ProductLssueItemVO;
 import com.yyg365.interestbar.biz.vo.json.ProductLssueWithWinnerVO;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.activity.AddressManagerActivity;
+import com.yyg365.interestbar.ui.activity.PawnLogActivity;
 import com.yyg365.interestbar.ui.activity.PrizeShareSubmitActivity;
 import com.yyg365.interestbar.ui.activity.ShareShowDetailActivity;
 import com.yyg365.interestbar.ui.activity.ShowShareActivity;
@@ -168,6 +169,18 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
             pawnStatusView.setVisibility(View.VISIBLE);
             if (vo.isPawn()) {
                 pawnStatusView.setText("已當");
+            } else {
+                pawnStatusView.setBackgroundResource(R.drawable.common_round_red_bg);
+                pawnStatusView.setText("當");
+                pawnStatusView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent it = new Intent(mContext, PawnLogActivity.class);
+                        it.putExtra(PawnLogActivity.PAWN_PRODUCT_ID, vo.ProID);
+                        it.putExtra(PawnLogActivity.PAWN_PRODUCT_LSSUE_ID, vo.ProductLssueID);
+                        mContext.startActivity(it);
+                    }
+                });
             }
 
             if (vo.isRedeem()) {
