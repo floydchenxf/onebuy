@@ -90,8 +90,13 @@ public class MyPawnActivity extends Activity {
         });
         View emptyView = View.inflate(this, R.layout.empty_item, null);
         mPullToRefreshListView.setEmptyView(emptyView);
+    }
+
+    protected void onResume() {
+        super.onResume();
         loadData(true);
     }
+
 
 
     private void loadData(final boolean isFirst) {

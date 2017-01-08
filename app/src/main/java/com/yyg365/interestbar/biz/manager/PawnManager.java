@@ -8,6 +8,7 @@ import com.yyg365.interestbar.biz.vo.json.DangPuItemVO;
 import com.yyg365.interestbar.biz.vo.json.PawnLevelVO;
 import com.yyg365.interestbar.biz.vo.json.PawnLogInfoVO;
 import com.yyg365.interestbar.biz.vo.json.PawnLogVO;
+import com.yyg365.interestbar.biz.vo.json.RedeemInfoVO;
 import com.yyg365.interestbar.channel.request.HttpMethod;
 
 import java.lang.reflect.Type;
@@ -65,31 +66,20 @@ public class PawnManager {
         params.put("userid", uid + "");
         params.put("proid", proId + "");
         params.put("prolssueid", lssueId + "");
-//        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PawnLogVO.class);
-        Type type = new TypeToken<Map<String, Object>>() {
-        }.getType();
-        AsyncJob<Map<String, Object>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
-        return job.map(new Func<Map<String, Object>, PawnLogVO>() {
-            @Override
-            public PawnLogVO call(Map<String, Object> map) {
-                PawnLogVO vo = new PawnLogVO();
-                Object a = map.get("PawnLogInfo");
-                if (a != null) {
-                    vo.pawnLogInfoVO = GsonHelper.getGson().fromJson(GsonHelper.getGson().toJson(a), PawnLogInfoVO.class);
-                }
 
-                Object b = map.get("PawnLevelList");
-                if (b != null) {
-                    Type type = new TypeToken<List<PawnLevelVO>>() {
-                    }.getType();
-                    vo.pawnLevelVOs = GsonHelper.getGson().fromJson(GsonHelper.getGson().toJson(b), type);
-                }
-                return vo;
-            }
-        });
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, PawnLogVO.class);
     }
 
-    public static AsyncJob<Boolean> createPawnLog(Long uid, Long proId, Long lssueId, Long pawnLevelId) {
+    /**
+     * 创建典当
+     *
+     * @param uid
+     * @param proId
+     * @param lssueId
+     * @param pawnLevelId
+     * @return 返回典当价格
+     */
+    public static AsyncJob<Integer> createPawnLog(Long uid, Long proId, Long lssueId, Long pawnLevelId) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PAWN_SHOP_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "CreatePawnLog");
@@ -97,6 +87,50 @@ public class PawnManager {
         params.put("proid", proId + "");
         params.put("prolssueid", lssueId + "");
         params.put("pawnlevel", pawnLevelId + "");
-        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
+        Type type = new TypeToken<Map<String, Integer>>() {
+        }.getType();
+        AsyncJob<Map<String, Integer>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        return job.map(new Func<Map<String, Integer>, Integer>() {
+            @Override
+            public Integer call(Map<String, Integer> stringLongMap) {
+                return stringLongMap.get("PawnPrice");
+            }
+        });
     }
+
+    public static AsyncJob<RedeemInfoVO> fetchPawnRedeemInfoVO(Long id, Long uid) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PAWN_SHOP_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GenPawnLogInfo");
+        params.put("userid", uid + "");
+        params.put("id", id + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, RedeemInfoVO.class);
+    }
+
+    /**
+     * 赎回记录创建
+     *
+     * @param id
+     * @param uid
+     * @param paychannel
+     * @return 返回Id
+     */
+    public static AsyncJob<Long> createRedeemLog(Long id, Long uid, Long paychannel) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.PAWN_SHOP_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "Redeem");
+        params.put("userid", uid + "");
+        params.put("id", id + "");
+        params.put("paychannel", paychannel + "");
+        Type type = new TypeToken<Map<String, Long>>() {
+        }.getType();
+        AsyncJob<Map<String, Long>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
+        return job.map(new Func<Map<String, Long>, Long>() {
+            @Override
+            public Long call(Map<String, Long> stringLongMap) {
+                return stringLongMap.get("RealRedeemPrice");
+            }
+        });
+    }
+
 }

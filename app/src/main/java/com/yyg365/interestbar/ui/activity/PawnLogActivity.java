@@ -130,11 +130,11 @@ public class PawnLogActivity extends Activity implements View.OnClickListener {
                     return;
                 }
 
-                PawnLogInfoVO info = pawnLogVO.pawnLogInfoVO;
+                PawnLogInfoVO info = pawnLogVO.PawnLogInfo;
                 pawnMsPrice = info.ProMSPrice;
 
                 Integer ratio = 0;
-                List<PawnLevelVO> levelVOs = pawnLogVO.pawnLevelVOs;
+                List<PawnLevelVO> levelVOs = pawnLogVO.PawnLevelList;
                 if (levelVOs != null && levelVOs.size() > 1) {
                     PawnLevelVO d = levelVOs.get(1);
                     ratio = d.PawnLevelRatio;
@@ -170,7 +170,7 @@ public class PawnLogActivity extends Activity implements View.OnClickListener {
                 dataLoadingDialog.show();
                 Long levelId = mAdapter.getCheckedId();
 
-                PawnManager.createPawnLog(userId,proId, lssueId, levelId).startUI(new ApiCallback<Boolean>() {
+                PawnManager.createPawnLog(userId,proId, lssueId, levelId).startUI(new ApiCallback<Integer>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         dataLoadingDialog.dismiss();
@@ -178,7 +178,7 @@ public class PawnLogActivity extends Activity implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onSuccess(Boolean aBoolean) {
+                    public void onSuccess(Integer aBoolean) {
                         dataLoadingDialog.dismiss();
                         Toast.makeText(PawnLogActivity.this, "典当成功", Toast.LENGTH_SHORT).show();
                         PawnLogActivity.this.finish();

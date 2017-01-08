@@ -1,6 +1,7 @@
 package com.yyg365.interestbar.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
@@ -12,6 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.yyg365.interestbar.biz.tools.DateUtil;
 import com.yyg365.interestbar.biz.vo.json.DangPuItemVO;
 import com.yyg365.interestbar.ui.R;
+import com.yyg365.interestbar.ui.activity.RedeemLogActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -54,15 +56,27 @@ public class MyPawnAdapter extends BaseDataAdapter<DangPuItemVO> {
         Spanned s = Html.fromHtml("您于&nbsp;<font color=\"#3787d2\">" + DateUtil.getDateTime("yyyy-MM-dd HH:mm", dangPuItemVO.getPawnTime()) + "</font>,&nbsp;以<font color=\"red\">" + dangPuItemVO.PawnPrice + "</font>成功典當了本期商品!");
         pawnInfoView.setText(s);
 
+        final Long pawnId = dangPuItemVO.ID;
+
         if (dangPuItemVO.isRedeem()) {
             pawnActionView.setText("已赎回");
             pawnActionView.setBackgroundResource(R.drawable.common_round_green_bord_bg);
             pawnActionView.setTextColor(Color.GREEN);
-            pawnActionView.setClickable(false);
+            pawnActionView.setOnClickListener(null);
             Spanned t = Html.fromHtml("您已经以&nbsp;<font color=\"red\">" + dangPuItemVO.RealRedeemPrice + "</font>&nbsp;元成功赎回该商品！");
             pawnInfoStatusView.setText(t);
         } else {
             pawnActionView.setText("赎回");
+            pawnActionView.setBackgroundResource(R.drawable.common_round_red_bord_bg);
+            pawnActionView.setTextColor(Color.RED);
+            pawnActionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent it = new Intent(mContext, RedeemLogActivity.class);
+                    it.putExtra(RedeemLogActivity.PAWN_ID, pawnId);
+                    mContext.startActivity(it);
+                }
+            });
             if (dangPuItemVO.RedeemDays >= 0) {
                 pawnActionView.setClickable(true);
                 Spanned t = Html.fromHtml("该商品赎回期剩余&nbsp;<font color=\"red\">" + dangPuItemVO.RedeemDays + "</font>&nbsp;天!");

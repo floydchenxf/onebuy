@@ -7,6 +7,6 @@ import java.util.List;
  */
 public class PawnLogVO {
 
-    public PawnLogInfoVO pawnLogInfoVO;
-    public List<PawnLevelVO> pawnLevelVOs;
+    public PawnLogInfoVO PawnLogInfo;
+    public List<PawnLevelVO> PawnLevelList;
 }

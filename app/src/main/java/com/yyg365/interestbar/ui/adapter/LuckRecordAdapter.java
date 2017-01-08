@@ -169,6 +169,8 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
             pawnStatusView.setVisibility(View.VISIBLE);
             if (vo.isPawn()) {
                 pawnStatusView.setText("已當");
+                pawnStatusView.setBackgroundResource(R.drawable.common_round_bg);
+                pawnStatusView.setOnClickListener(null);
             } else {
                 pawnStatusView.setBackgroundResource(R.drawable.common_round_red_bg);
                 pawnStatusView.setText("當");
@@ -185,8 +187,9 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
 
             if (vo.isRedeem()) {
                 pawnStatusView.setText("已赎回");
+                pawnStatusView.setBackgroundResource(R.drawable.common_round_bg);
+                pawnStatusView.setOnClickListener(null);
             }
-
         } else {
             pawnStatusView.setVisibility(View.GONE);
             shareLayout.setVisibility(View.GONE);

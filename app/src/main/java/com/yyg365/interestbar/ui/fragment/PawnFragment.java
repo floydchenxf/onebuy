@@ -96,9 +96,7 @@ public class PawnFragment extends BackHandledFragment {
         });
         View emptyView = inflater.inflate(R.layout.empty_item, container, false);
         mPullToRefreshListView.setEmptyView(emptyView);
-
         loadData(true);
-
         return view;
     }
 
