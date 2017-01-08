@@ -53,7 +53,7 @@ public class MyPawnAdapter extends BaseDataAdapter<DangPuItemVO> {
         productPicView.setImageUrl(dangPuItemVO.getProductUrl(), mImageLoader);
 
         productTileView.setText(dangPuItemVO.ProTitle);
-        Spanned s = Html.fromHtml("您于&nbsp;<font color=\"#3787d2\">" + DateUtil.getDateTime("yyyy-MM-dd HH:mm", dangPuItemVO.getPawnTime()) + "</font>,&nbsp;以<font color=\"red\">" + dangPuItemVO.PawnPrice + "</font>成功典當了本期商品!");
+        Spanned s = Html.fromHtml("您于&nbsp;<font color=\"#3787d2\">" + DateUtil.getDateTime("yyyy-MM-dd HH:mm", dangPuItemVO.getPawnTime()) + "</font>,&nbsp;以<font color=\"red\">" + dangPuItemVO.PawnPrice + "</font>&nbsp;元成功典當了本期商品!");
         pawnInfoView.setText(s);
 
         final Long pawnId = dangPuItemVO.ID;

@@ -94,6 +94,7 @@ public class MyPawnActivity extends Activity {
 
     protected void onResume() {
         super.onResume();
+        pageNo = 1;
         loadData(true);
     }
 
