@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="46dp"
+                android:paddingTop="50dp"
                 android:text="十元专区"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="46dp"
+                android:paddingTop="50dp"
                 android:text="百元特享"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -206,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="46dp"
+                android:paddingTop="50dp"
                 android:text="公益"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -266,7 +266,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="46dp"
+                android:paddingTop="50dp"
                 android:text="晒单"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -326,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="46dp"
+                android:paddingTop="50dp"
                 android:text="快乐星期五"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -383,7 +383,8 @@
             android:background="@drawable/red_line_button_bg"
             android:gravity="center"
             android:text="最新"
-            android:textColor="@drawable/word_selector" />
+            android:textColor="@drawable/word_selector"
+            android:checked="false" />
 
         <CheckedTextView
             android:id="@+id/hottest_view"

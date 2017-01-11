@@ -49,6 +49,7 @@ import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.activity.CommonwealActivity;
 import com.yyg365.interestbar.ui.activity.H5Activity;
+import com.yyg365.interestbar.ui.activity.JFStoreActivity;
 import com.yyg365.interestbar.ui.activity.SearchActivity;
 import com.yyg365.interestbar.ui.activity.ShowShareActivity;
 import com.yyg365.interestbar.ui.adapter.BannerImageAdapter;
@@ -371,7 +372,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     View.OnClickListener[] clicks = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
+                            Intent it = new Intent(getActivity(), JFStoreActivity.class);
+                            getActivity().startActivity(it);
                         }
                     }, new View.OnClickListener() {
                         @Override

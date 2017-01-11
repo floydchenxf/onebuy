@@ -11,6 +11,7 @@ public class APIConstants {
     public static final String USER_MODULE = "UserService.ashx";
     public static final String PRODUCT_MODULE = "ProductService.ashx";
     public static final String JIFENG_MODULE = "JiFengRecordService.ashx";
+    public static final String JFSHOP_MODULE = "JiFenShopService.ashx";
     public static final String CAR_MODULE = "CarService.ashx";
     public static final String ORDER_MODULE = "OrderService.ashx";
     public static final String IMGAEINFO_MODULE = "ImgaeInfoService.ashx";

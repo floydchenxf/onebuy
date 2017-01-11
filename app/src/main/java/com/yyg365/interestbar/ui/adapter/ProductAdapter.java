@@ -54,7 +54,7 @@ public class ProductAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mList.size() % 3 == 0 ? mList.size() / 3 : mList.size() / 3 + 1;
+        return mList.size() % 2 == 0 ? mList.size() / 2 : mList.size() / 2 + 1;
     }
 
     @Override
