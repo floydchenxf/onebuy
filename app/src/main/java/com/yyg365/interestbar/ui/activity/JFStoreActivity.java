@@ -18,6 +18,8 @@ import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.adapter.JFStoreAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
+import com.yyg365.interestbar.view.BasePopupWindow;
+import com.yyg365.interestbar.view.RightTopPopupWindow;
 import com.yyg365.pullrefresh.widget.PullToRefreshBase;
 import com.yyg365.pullrefresh.widget.PullToRefreshListView;
 
@@ -27,6 +29,7 @@ import java.util.List;
 public class JFStoreActivity extends Activity implements View.OnClickListener {
 
     private static final int PAGE_SIZE = 10;
+    public static final String SEARCH_KEY = "SEARCH_KEY";
     private DataLoadingView dataLoadingView;
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
@@ -50,12 +53,25 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
     private CheckedTextView filterView;
     private ImageView priceStatusView;
     private CheckedTextView[] checkedTextViews;
+    private RightTopPopupWindow rightTopPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jfstore);
+
+        key = getIntent().getStringExtra(SEARCH_KEY);
+        if (key == null) {
+            key = "";
+        }
         mImageLoader = ImageLoaderFactory.createImageLoader();
+        rightTopPopupWindow = new RightTopPopupWindow(this);
+        rightTopPopupWindow.initView(R.layout.popup_filter_content, new BasePopupWindow.ViewInit() {
+            @Override
+            public void initView(View v) {
+
+            }
+        });
         initData();
         findViewById(R.id.title_back).setOnClickListener(this);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
@@ -123,7 +139,6 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
         this.pageNo = 1;
         this.jfdown = "";
         this.jfup = "";
-        this.key = "";
         this.isFrist = true;
         this.needClear = true;
         this.priceStatus = 0;
@@ -210,6 +225,7 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
                 loadData();
                 break;
             case R.id.filter_view:
+                rightTopPopupWindow.showPopUpWindow();
                 break;
         }
 
