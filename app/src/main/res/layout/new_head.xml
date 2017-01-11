@@ -40,6 +40,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
+            android:id="@+id/type1_layout"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -89,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="36dp"
+                android:paddingTop="46dp"
                 android:text="十元专区"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -97,6 +98,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
+            android:id="@+id/type2_layout"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -146,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="36dp"
+                android:paddingTop="46dp"
                 android:text="百元特享"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -154,6 +156,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
+            android:id="@+id/type3_layout"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -203,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="36dp"
+                android:paddingTop="46dp"
                 android:text="公益"
                 android:textColor="#999999"
                 android:textSize="12sp" />
@@ -211,6 +214,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
+            android:id="@+id/type4_layout"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -262,13 +266,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="36dp"
+                android:paddingTop="46dp"
                 android:text="晒单"
                 android:textColor="#999999"
                 android:textSize="12sp" />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/type5_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
@@ -321,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:paddingTop="36dp"
+                android:paddingTop="46dp"
                 android:text="快乐星期五"
                 android:textColor="#999999"
                 android:textSize="12sp" />

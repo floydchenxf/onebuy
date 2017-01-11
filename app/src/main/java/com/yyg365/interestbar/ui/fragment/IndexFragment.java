@@ -42,6 +42,7 @@ import com.yyg365.interestbar.biz.vo.json.UserVO;
 import com.yyg365.interestbar.biz.vo.json.WordNewsVO;
 import com.yyg365.interestbar.biz.vo.model.NewIndexVO;
 import com.yyg365.interestbar.biz.vo.model.WinningInfo;
+import com.yyg365.interestbar.biz.vo.product.ProductTypeVO;
 import com.yyg365.interestbar.channel.threadpool.WxDefaultExecutor;
 import com.yyg365.interestbar.event.TabSwitchEvent;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
@@ -124,7 +125,14 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private TextView typeTextView4;
     private TextView typeTextView5;
 
+    private View typeLayout1;
+    private View typeLayout2;
+    private View typeLayout3;
+    private View typeLayout4;
+    private View typeLayout5;
+
     private NetworkImageView[] imageViews;
+    private View[] typeLayout;
     private TextView[] typeDeses;
 
     private NetworkImageView newsImageView;
@@ -136,11 +144,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private ViewFlipper mFlipper;
     private LinearLayout viewFlipperLayout;
-
-    private Long[] typeCodes = new Long[]{21l,22l};
-    private int[] defaultImages = new int[]{R.drawable.ten_index, R.drawable.hun_index, R.drawable.gongyi_index,R.drawable.shandan_index, R.drawable.fri_index};
-    private String[] defaultTexts = new String[]{"十元区", "百元区", "公益", "晒单", "快乐星期五"};
-
 
     private Handler mChangeViewPagerHandler = new Handler() {
         @Override
@@ -216,12 +219,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
             public void onPullDownToRefresh() {
-//                needClear = true;
-//                loadData(false);
-//                pageNo = 1;
-//                sortType = 1;
-//                checkSortType(1);
-//                mPullToRefreshListView.onRefreshComplete(false, true);
             }
 
             @Override
@@ -367,43 +364,37 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 mNavigationContainer.setVisibility(View.VISIBLE);
 
                 categoryLayout.setVisibility(View.VISIBLE);
-                TypeClickListener tenTypeClickListener = new TypeClickListener(typeCodes[0]);
-                TypeClickListener hundeTypeClickListener = new TypeClickListener(typeCodes[1]);
-                listeners = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent it = new Intent(getActivity(), CommonwealActivity.class);
-                        getActivity().startActivity(it);
+                List<ProductTypeVO> productTypes = indexVO.typeList;
+                if (productTypes != null && !productTypes.isEmpty()) {
+                    TypeClickListener tenTypeClickListener = new TypeClickListener(21);
+                    TypeClickListener hundeTypeClickListener = new TypeClickListener(22);
+                    View.OnClickListener[] clicks = new View.OnClickListener[]{tenTypeClickListener, hundeTypeClickListener, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent it = new Intent(getActivity(), ShowShareActivity.class);
+                            getActivity().startActivity(it);
+                        }
+                    }, null};
+                    int size = productTypes.size() > 5 ? 5 : productTypes.size();
+                    for (int i = 0; i < size; i++) {
+                        ProductTypeVO typeVO = productTypes.get(i);
+                        typeLayout[i].setVisibility(View.VISIBLE);
+                        imageViews[i].setDefaultImageResId(R.drawable.tupian);
+                        imageViews[i].setImageUrl(typeVO.getTypePic(), mImageLoader);
+                        imageViews[i].setOnClickListener(clicks[i]);
+                        typeDeses[i].setText(typeVO.CodeName);
                     }
-                },new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent it = new Intent(getActivity(), ShowShareActivity.class);
-                        getActivity().startActivity(it);
+
+                    if (size < 5) {
+                        for(int j = 5; j > size ; j--) {
+                            typeLayout[j-1].setVisibility(View.GONE);
+                        }
                     }
-                },new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());
-                        SpannableString message = new SpannableString("该板块暂未开发,敬请期待!");
-                        noticeBuilder.setMessage(message)
-                                .setCancelable(true)
-                                .setPositiveButton("确认",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                                int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                        AlertDialog dialog2 = noticeBuilder.create();
-                        dialog2.show();
-                    }
-                }};
-                for (int i=0; i < 5; i++) {
-                    imageViews[i].setDefaultImageResId(defaultImages[i]);
-                    imageViews[i].setImageUrl(null, mImageLoader);
-                    typeDeses[i].setText(defaultTexts[i]);
-                    imageViews[i].setOnClickListener(listeners[i]);
                 }
 
                 List<WinningInfo> winningRecordVOs = indexVO.theNewList;
@@ -484,6 +475,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         });
 
         categoryLayout = mHeaderView.findViewById(R.id.category);
+
+
         typeImageView1 = (NetworkImageView) mHeaderView.findViewById(R.id.type1_imageView);
         typeImageView2 = (NetworkImageView) mHeaderView.findViewById(R.id.type2_imageView);
         typeImageView3 = (NetworkImageView) mHeaderView.findViewById(R.id.type3_imageView);
@@ -496,7 +489,14 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         typeTextView4 = (TextView) mHeaderView.findViewById(R.id.type4_textView);
         typeTextView5 = (TextView) mHeaderView.findViewById(R.id.type5_textView);
 
+        typeLayout1 = mHeaderView.findViewById(R.id.type1_layout);
+        typeLayout2 = mHeaderView.findViewById(R.id.type2_layout);
+        typeLayout3 = mHeaderView.findViewById(R.id.type3_layout);
+        typeLayout4 = mHeaderView.findViewById(R.id.type4_layout);
+        typeLayout5 = mHeaderView.findViewById(R.id.type5_layout);
+
         imageViews = new NetworkImageView[]{typeImageView1, typeImageView2, typeImageView3, typeImageView4, typeImageView5};
+        typeLayout = new View[]{typeLayout1, typeLayout2, typeLayout3, typeLayout4,typeLayout5};
         typeDeses = new TextView[]{typeTextView1, typeTextView2, typeTextView3, typeTextView4, typeTextView5};
 
         newsImageView = (NetworkImageView) mHeaderView.findViewById(R.id.news_pic_view);
