@@ -1,7 +1,7 @@
 package com.yyg365.interestbar.ui.activity;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
@@ -37,10 +37,11 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
 
     private ImageLoader mImageLoader;
     private int sort; //排序类型 0 最新  1 最热  2 积分增  3积分减
-    private int proType; //商品类型 1表示实体  2表示虚拟 0 or -1 全部
+    private int proType; //商品类型 1表示实体  2表示虚拟 0: 全部
     private int pageNo;
-    private String jfdown;
-    private String jfup;
+
+    private int jfScore; //选中的积分范围。默认 -1,表示未选中
+
     private String key;
     private boolean isFrist;
     private boolean needClear;
@@ -54,6 +55,23 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
     private ImageView priceStatusView;
     private CheckedTextView[] checkedTextViews;
     private RightTopPopupWindow rightTopPopupWindow;
+
+    private CheckedTextView proTypeView1, proTypeView2;
+    private CheckedTextView jfView1, jfView2, jfView3, jfView4, jfView5;
+    private TextView cancelButton, submitButton;
+
+    private CheckedTextView[] proTypeArray = new CheckedTextView[2];
+    private CheckedTextView[] jfViewArray = new CheckedTextView[5];
+
+    private ScoreRange r1 = new ScoreRange(-1, -1);
+    private ScoreRange r2 = new ScoreRange(0, 10000);
+    private ScoreRange r3 = new ScoreRange(10001, 1000000);
+    private ScoreRange r4 = new ScoreRange(1000001, 10000000);
+    private ScoreRange r5 = new ScoreRange(10000001, 1000000000);
+    private ScoreRange[] rangeArray = new ScoreRange[]{r1, r2, r3, r4, r5};
+
+    private int tmpProType, tmpJfScore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +87,35 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
         rightTopPopupWindow.initView(R.layout.popup_filter_content, new BasePopupWindow.ViewInit() {
             @Override
             public void initView(View v) {
+                proTypeView1 = (CheckedTextView) v.findViewById(R.id.protype_view1);
+                proTypeView2 = (CheckedTextView) v.findViewById(R.id.protype_view2);
+                proTypeArray[0] = proTypeView1;
+                proTypeArray[1] = proTypeView2;
+                jfView1 = (CheckedTextView) v.findViewById(R.id.score_view1);
+                jfView2 = (CheckedTextView) v.findViewById(R.id.score_view2);
+                jfView3 = (CheckedTextView) v.findViewById(R.id.score_view3);
+                jfView4 = (CheckedTextView) v.findViewById(R.id.score_view4);
+                jfView5 = (CheckedTextView) v.findViewById(R.id.score_view5);
+                jfViewArray[0] = jfView1;
+                jfViewArray[1] = jfView2;
+                jfViewArray[2] = jfView3;
+                jfViewArray[3] = jfView4;
+                jfViewArray[4] = jfView5;
+
+                cancelButton = (TextView) v.findViewById(R.id.cancel_button);
+                submitButton = (TextView) v.findViewById(R.id.submit_button);
+
+                proTypeView1.setOnClickListener(JFStoreActivity.this);
+                proTypeView2.setOnClickListener(JFStoreActivity.this);
+
+                jfView1.setOnClickListener(JFStoreActivity.this);
+                jfView2.setOnClickListener(JFStoreActivity.this);
+                jfView3.setOnClickListener(JFStoreActivity.this);
+                jfView4.setOnClickListener(JFStoreActivity.this);
+                jfView5.setOnClickListener(JFStoreActivity.this);
+
+                cancelButton.setOnClickListener(JFStoreActivity.this);
+                submitButton.setOnClickListener(JFStoreActivity.this);
 
             }
         });
@@ -90,6 +137,8 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
         });
 
         mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.common_list);
+        View emptyView  = View.inflate(this, R.layout.empty_item, null);
+        mPullToRefreshListView.setEmptyView(emptyView);
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
         mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
             @Override
@@ -109,24 +158,22 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
 
         mListView = mPullToRefreshListView.getRefreshableView();
 
-        View headerView = View.inflate(this, R.layout.jfstore_head, null);
-        initHeader(headerView);
+        initHeader();
 
-        mListView.addHeaderView(headerView);
         mAdapter = new JFStoreAdapter(this, new ArrayList<JFGoodsVO>(), mImageLoader);
         mListView.setAdapter(mAdapter);
         loadData();
     }
 
-    private void initHeader(View headerView) {
-        hottestView = (CheckedTextView) headerView.findViewById(R.id.hottest_view);
-        lastestView = (CheckedTextView) headerView.findViewById(R.id.lastest_view);
-        priceView = (CheckedTextView) headerView.findViewById(R.id.price_view);
-        filterView = (CheckedTextView) headerView.findViewById(R.id.filter_view);
-        priceStatusView = (ImageView)headerView.findViewById(R.id.price_status_view);
+    private void initHeader() {
+        hottestView = (CheckedTextView) findViewById(R.id.hottest_view);
+        lastestView = (CheckedTextView) findViewById(R.id.lastest_view);
+        priceView = (CheckedTextView) findViewById(R.id.price_view);
+        filterView = (CheckedTextView) findViewById(R.id.filter_view);
+        priceStatusView = (ImageView) findViewById(R.id.price_status_view);
         lastestView.setChecked(true);
 
-        checkedTextViews = new CheckedTextView[] {lastestView, hottestView, priceView, priceView};
+        checkedTextViews = new CheckedTextView[]{lastestView, hottestView, priceView, priceView};
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
         priceView.setOnClickListener(this);
@@ -135,19 +182,33 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
 
     private void initData() {
         this.sort = 0;
-        this.proType = 0;
         this.pageNo = 1;
-        this.jfdown = "";
-        this.jfup = "";
         this.isFrist = true;
         this.needClear = true;
         this.priceStatus = 0;
+        initFilter();
+    }
+
+    private void initFilter() {
+        this.proType = 0;
+        this.jfScore = -1;
     }
 
     private void loadData() {
         if (isFrist) {
             dataLoadingView.startLoading();
         }
+
+        String jfdown, jfup;
+        if (jfScore == -1) {
+            jfdown = "";
+            jfup = "";
+        } else {
+            ScoreRange sr = rangeArray[jfScore];
+            jfdown = sr.start + "";
+            jfup = sr.end + "";
+        }
+
         JiFengManager.fetchJFGoodList(null, proType, jfdown, jfup, sort, key, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<JFGoodsVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
@@ -199,6 +260,38 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
         this.needClear = true;
     }
 
+    private void checkProType(int idx) {
+        for (int i = 0; i < proTypeArray.length; i++) {
+            if (i == idx) {
+                if (idx == tmpProType - 1) {
+                    proTypeArray[i].setChecked(false);
+                    tmpProType = 0;
+                } else {
+                    proTypeArray[i].setChecked(true);
+                    tmpProType = idx + 1;
+                }
+            } else {
+                proTypeArray[i].setChecked(false);
+            }
+        }
+    }
+
+    private void checkJfScore(int idx) {
+        for (int i = 0; i < jfViewArray.length; i++) {
+            if (idx == i) {
+                if (tmpJfScore == idx) {
+                    jfViewArray[i].setChecked(false);
+                    tmpJfScore = -1;
+                } else {
+                    jfViewArray[i].setChecked(true);
+                    tmpJfScore = idx;
+                }
+            } else {
+                jfViewArray[i].setChecked(false);
+            }
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -206,7 +299,8 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.right:
-                //TODO 跳转到搜索
+                Intent it = new Intent(this, JFSearchActivity.class);
+                startActivity(it);
                 break;
             case R.id.lastest_view:
                 checkSortType(0);
@@ -217,7 +311,7 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
                 loadData();
                 break;
             case R.id.price_view:
-                if (priceStatus == 0  || priceStatus == 2) {
+                if (priceStatus == 0 || priceStatus == 2) {
                     checkSortType(2);
                 } else if (priceStatus == 1) {
                     checkSortType(3);
@@ -226,8 +320,67 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.filter_view:
                 rightTopPopupWindow.showPopUpWindow();
+                tmpProType = proType;
+                tmpJfScore = jfScore;
+                for (int i = 0; i < proTypeArray.length; i++) {
+                    if (tmpProType - 1 == i) {
+                        proTypeArray[i].setChecked(true);
+                    } else {
+                        proTypeArray[i].setChecked(false);
+                    }
+                }
+
+                for (int i = 0; i < jfViewArray.length; i++) {
+                    if (tmpJfScore == i) {
+                        jfViewArray[i].setChecked(true);
+                    } else {
+                        jfViewArray[i].setChecked(false);
+                    }
+                }
+
+                break;
+            case R.id.cancel_button:
+                rightTopPopupWindow.hidePopUpWindow();
+                break;
+            case R.id.submit_button:
+                proType = tmpProType;
+                jfScore = tmpJfScore;
+                rightTopPopupWindow.hidePopUpWindow();
+                needClear = true;
+                loadData();
+                break;
+            case R.id.protype_view1:
+                checkProType(0);
+                break;
+            case R.id.protype_view2:
+                checkProType(1);
+                break;
+            case R.id.score_view1:
+                checkJfScore(0);
+                break;
+            case R.id.score_view2:
+                checkJfScore(1);
+                break;
+            case R.id.score_view3:
+                checkJfScore(2);
+                break;
+            case R.id.score_view4:
+                checkJfScore(3);
+                break;
+            case R.id.score_view5:
+                checkJfScore(4);
                 break;
         }
 
+    }
+
+    public static class ScoreRange {
+        public int start;
+        public int end;
+
+        public ScoreRange(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
     }
 }

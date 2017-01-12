@@ -10,6 +10,8 @@ import com.yyg365.interestbar.biz.manager.buycar.db.NormalProductBuyCarDBServer;
 import com.yyg365.interestbar.dao.BuyCarNumber;
 import com.yyg365.interestbar.dao.BuyCarNumberDao;
 import com.yyg365.interestbar.dao.DaoSession;
+import com.yyg365.interestbar.dao.JFSearch;
+import com.yyg365.interestbar.dao.JFSearchDao;
 import com.yyg365.interestbar.dao.Search;
 import com.yyg365.interestbar.dao.SearchDao;
 
@@ -43,10 +45,28 @@ public class DBManager {
         searchDao.insertWithoutSettingPk(search);
     }
 
+    public static void addJFSearchRecord(Context context, String searchContent) {
+        DaoSession daoSession = DBHelper.getDaoSession(context);
+        JFSearchDao searchDao = daoSession.getJfSearchDao();
+        boolean isExists = isJFExists(context, searchContent);
+        if (isExists) {
+            return;
+        }
+        JFSearch search = new JFSearch(null, searchContent);
+        searchDao.insertWithoutSettingPk(search);
+    }
+
     public static boolean isExists(Context context, String content) {
         DaoSession daoSession = DBHelper.getDaoSession(context);
         SearchDao searchDao = daoSession.getSearchDao();
         List<Search> existsList = searchDao.queryBuilder().where(SearchDao.Properties.Content.eq(content)).list();
+        return existsList!=null && !existsList.isEmpty();
+    }
+
+    public static boolean isJFExists(Context context, String content) {
+        DaoSession daoSession = DBHelper.getDaoSession(context);
+        JFSearchDao searchDao = daoSession.getJfSearchDao();
+        List<JFSearch> existsList = searchDao.queryBuilder().where(JFSearchDao.Properties.Content.eq(content)).list();
         return existsList!=null && !existsList.isEmpty();
     }
 
@@ -56,10 +76,22 @@ public class DBManager {
         searchDao.deleteAll();
     }
 
+    public static void deleteJFSearchRecords(Context context) {
+        DaoSession daoSession = DBHelper.getDaoSession(context);
+        JFSearchDao searchDao = daoSession.getJfSearchDao();
+        searchDao.deleteAll();
+    }
+
     public static List<Search> queryAllSearchRecords(Context context){
         DaoSession daoSession = DBHelper.getDaoSession(context);
         SearchDao searchDao = daoSession.getSearchDao();
         return searchDao.loadAll();
+    }
+
+    public static List<JFSearch> queryAllJFSearchRecords(Context context) {
+        DaoSession daoSession = DBHelper.getDaoSession(context);
+        JFSearchDao jfSearchDao = daoSession.getJfSearchDao();
+        return jfSearchDao.loadAll();
     }
 
     public static void updateBuyCarNumber(BuyCarType type, Context context, long userId, long productLssueId, int number) {

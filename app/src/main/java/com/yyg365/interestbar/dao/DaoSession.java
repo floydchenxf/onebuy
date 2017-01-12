@@ -32,9 +32,11 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig searchDaoConfig;
     private final DaoConfig fridayBuyCarNumberDaoConfig;
     private final DaoConfig fundBuyCarNumberDaoConfig;
+    private final DaoConfig jfSearchDaoConfig;
 
     private final BuyCarNumberDao buyCarNumberDao;
     private final SearchDao searchDao;
+    private final JFSearchDao jfSearchDao;
     private final FridayBuyCarNumberDao fridayBuyCarNumberDao;
     private final FundBuyCarNumberDao fundBuyCarNumberDao;
 
@@ -48,6 +50,9 @@ public class DaoSession extends AbstractDaoSession {
         searchDaoConfig = daoConfigMap.get(SearchDao.class).clone();
         searchDaoConfig.initIdentityScope(type);
 
+        jfSearchDaoConfig = daoConfigMap.get(JFSearchDao.class).clone();
+        jfSearchDaoConfig.initIdentityScope(type);
+
         fridayBuyCarNumberDaoConfig = daoConfigMap.get(FridayBuyCarNumberDao.class).clone();
         fridayBuyCarNumberDaoConfig.initIdentityScope(type);
 
@@ -56,11 +61,13 @@ public class DaoSession extends AbstractDaoSession {
 
         buyCarNumberDao = new BuyCarNumberDao(buyCarNumberDaoConfig, this);
         searchDao = new SearchDao(searchDaoConfig, this);
+        jfSearchDao = new JFSearchDao(jfSearchDaoConfig, this);
         fridayBuyCarNumberDao = new FridayBuyCarNumberDao(fridayBuyCarNumberDaoConfig, this);
         fundBuyCarNumberDao = new FundBuyCarNumberDao(fundBuyCarNumberDaoConfig, this);
 
         registerDao(BuyCarNumber.class, buyCarNumberDao);
         registerDao(Search.class, searchDao);
+        registerDao(JFSearch.class, jfSearchDao);
         registerDao(FridayBuyCarNumber.class, fridayBuyCarNumberDao);
         registerDao(FundBuyCarNumber.class, fundBuyCarNumberDao);
     }
@@ -68,6 +75,7 @@ public class DaoSession extends AbstractDaoSession {
     public void clear() {
         buyCarNumberDaoConfig.getIdentityScope().clear();
         searchDaoConfig.getIdentityScope().clear();
+        jfSearchDaoConfig.getIdentityScope().clear();
         fridayBuyCarNumberDaoConfig.getIdentityScope().clear();
         fundBuyCarNumberDaoConfig.getIdentityScope().clear();
     }
@@ -78,6 +86,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public SearchDao getSearchDao() {
         return searchDao;
+    }
+
+    public JFSearchDao getJfSearchDao() {
+        return jfSearchDao;
     }
 
     public FridayBuyCarNumberDao getFridayBuyCarNumberDao() {

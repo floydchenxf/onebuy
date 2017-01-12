@@ -18,12 +18,13 @@ import com.yyg365.interestbar.dao.FundBuyCarNumberDao;
  * Master of DAO (schema version 2): knows all DAOs.
 */
 public class DaoMaster extends AbstractDaoMaster {
-    public static final int SCHEMA_VERSION = 2;
+    public static final int SCHEMA_VERSION = 3;
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
         BuyCarNumberDao.createTable(db, ifNotExists);
         SearchDao.createTable(db, ifNotExists);
+        JFSearchDao.createTable(db, ifNotExists);
         FridayBuyCarNumberDao.createTable(db, ifNotExists);
         FundBuyCarNumberDao.createTable(db, ifNotExists);
     }
@@ -32,6 +33,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         BuyCarNumberDao.dropTable(db, ifExists);
         SearchDao.dropTable(db, ifExists);
+        JFSearchDao.dropTable(db, ifExists);
         FridayBuyCarNumberDao.dropTable(db, ifExists);
         FundBuyCarNumberDao.dropTable(db, ifExists);
     }
@@ -67,6 +69,7 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(BuyCarNumberDao.class);
         registerDaoClass(SearchDao.class);
+        registerDaoClass(JFSearchDao.class);
         registerDaoClass(FridayBuyCarNumberDao.class);
         registerDaoClass(FundBuyCarNumberDao.class);
     }
