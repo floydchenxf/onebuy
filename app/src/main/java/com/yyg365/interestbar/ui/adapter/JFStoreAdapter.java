@@ -7,19 +7,16 @@ import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsVO;
-import com.yyg365.interestbar.biz.vo.model.WinningInfo;
 import com.yyg365.interestbar.ui.R;
-import com.yyg365.interestbar.ui.activity.WinningDetailActivity;
+import com.yyg365.interestbar.ui.activity.JFDetailGoodsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by chenxiaofeng on 2017/1/11.
@@ -106,7 +103,9 @@ public class JFStoreAdapter extends BaseAdapter {
             holder.productLayout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent detailIntent = new Intent(mContext, JFDetailGoodsActivity.class);
+                    detailIntent.putExtra(JFDetailGoodsActivity.JF_DETAIL_GOODS_ID, info1.ID);
+                    mContext.startActivity(detailIntent);
                 }
             });
 
@@ -120,7 +119,9 @@ public class JFStoreAdapter extends BaseAdapter {
             holder.productLayout2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent detailIntent = new Intent(mContext, JFDetailGoodsActivity.class);
+                    detailIntent.putExtra(JFDetailGoodsActivity.JF_DETAIL_GOODS_ID, info2.ID);
+                    mContext.startActivity(detailIntent);
                 }
             });
 
@@ -134,7 +135,9 @@ public class JFStoreAdapter extends BaseAdapter {
             holder.productLayout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent detailIntent = new Intent(mContext, JFDetailGoodsActivity.class);
+                    detailIntent.putExtra(JFDetailGoodsActivity.JF_DETAIL_GOODS_ID, info1.ID);
+                    mContext.startActivity(detailIntent);
                 }
             });
 

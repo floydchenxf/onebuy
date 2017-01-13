@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_white_frame" />
+
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="#efefef"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp">
+
+        <TextView
+            android:id="@+id/jf_desc_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="积分"
+            android:textColor="@color/gray_content"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/jf_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/jf_desc_view"
+            android:text="积分"
+            android:textColor="@color/red"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/duihuan_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/common_round_red_bg"
+            android:paddingBottom="6dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="6dp"
+            android:text="立即兑换"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_below="@+id/title_layout"
+        android:layout_marginTop="1dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/product_pic_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="34dp"
+                android:layout_marginRight="34dp"
+                android:layout_marginTop="30dp" />
+
+            <TextView
+                android:id="@+id/product_title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="test test test"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="14sp" />
+
+            <WebView
+                android:id="@+id/jf_goods_webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/diamod_data_loading" />
+
+</RelativeLayout>

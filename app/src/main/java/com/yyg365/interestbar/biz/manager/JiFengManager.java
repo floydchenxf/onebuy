@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.yyg365.interestbar.aync.AsyncJob;
 import com.yyg365.interestbar.aync.Func;
 import com.yyg365.interestbar.biz.constants.APIConstants;
+import com.yyg365.interestbar.biz.vo.json.JFGoodsDetailVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsVO;
 import com.yyg365.interestbar.biz.vo.json.JiFengVO;
 import com.yyg365.interestbar.biz.vo.json.SignInVO;
@@ -93,5 +94,11 @@ public class JiFengManager {
         });
     }
 
-
+    public static AsyncJob<JFGoodsDetailVO> fetchJFGoodsDetail(Long id) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.JFSHOP_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "JiFenProInfo");
+        params.put("id", id+"");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, JFGoodsDetailVO.class);
+    }
 }
