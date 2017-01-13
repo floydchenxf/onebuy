@@ -21,7 +21,7 @@ public class ProductBannerImageAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = "testProduct";
 
-    public static int BANNER_HEIGHT_IN_DP = 300;
+    public static int BANNER_HEIGHT_IN_DP = 280;
 
     private int height;
 
@@ -54,7 +54,7 @@ public class ProductBannerImageAdapter extends FragmentStatePagerAdapter {
         args.putParcelable(BannerFragment.Banner, dataLists.get(position));
         args.putInt(BannerFragment.Position, position);
         args.putInt(BannerFragment.Height, height);
-        args.putInt(BannerFragment.SCALE_TYPE, BannerFragment.SCALE_FIT_CENTER);
+        args.putInt(BannerFragment.SCALE_TYPE, BannerFragment.SCALE_CENTER_CROP);
         return BannerFragment.newInstance(args, mImagerClickListener);
     }
 
