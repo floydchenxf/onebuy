@@ -182,7 +182,6 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
     @Subscribe
     public void onEventMainThread(AddressModifiedEvent event) {
         if (!this.isFinishing()) {
-            isFirst = false;
             loadData();
         }
     }
