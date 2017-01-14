@@ -1,7 +1,7 @@
 package com.yyg365.interestbar.ui.activity;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -11,7 +11,8 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.yyg365.interestbar.aync.ApiCallback;
-import com.yyg365.interestbar.biz.manager.JiFengManager;
+import com.yyg365.interestbar.biz.manager.JiFenManager;
+import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsDetailVO;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
@@ -83,7 +84,11 @@ public class JFDetailGoodsActivity extends Activity {
         duihuanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO 兑换
+                if (LoginManager.isLogin(JFDetailGoodsActivity.this)) {
+                    Intent payActivityIntent = new Intent(JFDetailGoodsActivity.this, PayJFGoodsActivity.class);
+                    payActivityIntent.putExtra(PayJFGoodsActivity.JF_PRODUCT_ID, id);
+                    startActivity(payActivityIntent);
+                }
             }
         });
 
@@ -92,7 +97,7 @@ public class JFDetailGoodsActivity extends Activity {
 
     private void loadData() {
         dataLoadingView.startLoading();
-        JiFengManager.fetchJFGoodsDetail(id).startUI(new ApiCallback<JFGoodsDetailVO>() {
+        JiFenManager.fetchJFGoodsDetail(id).startUI(new ApiCallback<JFGoodsDetailVO>() {
             @Override
             public void onError(int code, String errorInfo) {
                 dataLoadingView.loadFail();

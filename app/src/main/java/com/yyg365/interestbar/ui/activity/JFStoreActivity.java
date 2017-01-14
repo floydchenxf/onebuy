@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.yyg365.interestbar.aync.ApiCallback;
-import com.yyg365.interestbar.biz.manager.JiFengManager;
+import com.yyg365.interestbar.biz.manager.JiFenManager;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsVO;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
@@ -209,7 +209,7 @@ public class JFStoreActivity extends Activity implements View.OnClickListener {
             jfup = sr.end + "";
         }
 
-        JiFengManager.fetchJFGoodList(null, proType, jfdown, jfup, sort, key, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<JFGoodsVO>>() {
+        JiFenManager.fetchJFGoodList(null, proType, jfdown, jfup, sort, key, pageNo, PAGE_SIZE).startUI(new ApiCallback<List<JFGoodsVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFrist) {

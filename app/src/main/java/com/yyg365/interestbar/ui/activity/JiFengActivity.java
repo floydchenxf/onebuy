@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yyg365.interestbar.aync.ApiCallback;
-import com.yyg365.interestbar.biz.manager.JiFengManager;
+import com.yyg365.interestbar.biz.manager.JiFenManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.vo.json.JiFengVO;
 import com.yyg365.interestbar.ui.R;
@@ -81,7 +81,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
 
         long userId = LoginManager.getLoginInfo(this).ID;
 
-        JiFengManager.fetchJiFengList(userId, PAGE_SIZE, pageNo).startUI(new ApiCallback<List<JiFengVO>>() {
+        JiFenManager.fetchJiFengList(userId, PAGE_SIZE, pageNo).startUI(new ApiCallback<List<JiFengVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {

@@ -81,12 +81,22 @@
                 android:id="@+id/product_title_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="test test test"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="14dp"
+                android:text="【图文详情】"
                 android:textColor="@color/gray_sub_title"
                 android:textSize="14sp" />
 

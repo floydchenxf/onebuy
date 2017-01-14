@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.yyg365.interestbar.biz.vo.json.RedeemPayVO;
+import com.yyg365.interestbar.biz.vo.json.PayChannelVO;
 import com.yyg365.interestbar.ui.R;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by chenxiaofeng on 2017/1/7.
  */
-public class RedeemPayAdapter extends BaseDataAdapter<RedeemPayVO> {
+public class PayChannelAdapter extends BaseDataAdapter<PayChannelVO> {
 
     private ImageLoader mImageLoader;
 
@@ -25,7 +25,7 @@ public class RedeemPayAdapter extends BaseDataAdapter<RedeemPayVO> {
 
     private Long payId;
 
-    public RedeemPayAdapter(Context context, List<RedeemPayVO> records, ImageLoader imageLoader) {
+    public PayChannelAdapter(Context context, List<PayChannelVO> records, ImageLoader imageLoader) {
         super(context, records);
         this.mImageLoader = imageLoader;
     }
@@ -50,7 +50,7 @@ public class RedeemPayAdapter extends BaseDataAdapter<RedeemPayVO> {
     }
 
     @Override
-    void processHolder(Map<Integer, View> holder, final RedeemPayVO vo) {
+    void processHolder(Map<Integer, View> holder, final PayChannelVO vo) {
 
         NetworkImageView payImageView = (NetworkImageView) holder.get(R.id.pay_image_view);
         TextView payNameView = (TextView) holder.get(R.id.pay_name_view);
@@ -72,7 +72,7 @@ public class RedeemPayAdapter extends BaseDataAdapter<RedeemPayVO> {
 
                 payId = id;
                 states.put(id, payChooseView.isChecked());
-                RedeemPayAdapter.this.notifyDataSetChanged();
+                PayChannelAdapter.this.notifyDataSetChanged();
             }
         });
 

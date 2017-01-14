@@ -8,7 +8,7 @@ import java.util.List;
 public class RedeemInfoVO {
 
     public PawnRedeemVO PawnLogInfo;
-    public List<RedeemPayVO> PayChannel;
+    public List<PayChannelVO> PayChannel;
     public Integer PayStatus;
 
 

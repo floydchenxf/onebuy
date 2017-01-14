@@ -5,6 +5,7 @@ import com.yyg365.interestbar.aync.AsyncJob;
 import com.yyg365.interestbar.aync.Func;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsDetailVO;
+import com.yyg365.interestbar.biz.vo.json.JFGoodsPayVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsVO;
 import com.yyg365.interestbar.biz.vo.json.JiFengVO;
 import com.yyg365.interestbar.biz.vo.json.SignInVO;
@@ -18,10 +19,10 @@ import java.util.Map;
 
 /**
  * Created by floyd on 16-4-29.
- * <p/>
+ * <p>
  * 积分管理类
  */
-public class JiFengManager {
+public class JiFenManager {
 
     /**
      * 每日签到
@@ -52,7 +53,8 @@ public class JiFengManager {
 
     /**
      * 获取积分商城list
-     * @param uid 用户id
+     *
+     * @param uid      用户id
      * @param protype
      * @param jfdown
      * @param jfup
@@ -98,7 +100,28 @@ public class JiFengManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.JFSHOP_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "JiFenProInfo");
-        params.put("id", id+"");
+        params.put("id", id + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, JFGoodsDetailVO.class);
+    }
+
+    public static AsyncJob<JFGoodsPayVO> payJiFengGoods(Long uid, Long proId) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.JFSHOP_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GenJiFenProOrderInfo");
+        params.put("userid", uid + "");
+        params.put("proid", proId + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, JFGoodsPayVO.class);
+    }
+
+    public static AsyncJob<Boolean> createJiFenProOrder(Long uid, Long proId, Long addressId, String phone) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.JFSHOP_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "CreateJiFenProOrder");
+        params.put("userid", uid + "");
+        params.put("proid", proId + "");
+        params.put("addrid", addressId + "");
+        params.put("phone", phone);
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, Boolean.class);
+
     }
 }

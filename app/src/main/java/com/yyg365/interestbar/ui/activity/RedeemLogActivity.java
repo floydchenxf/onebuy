@@ -17,11 +17,11 @@ import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.manager.PawnManager;
 import com.yyg365.interestbar.biz.vo.json.PawnRedeemVO;
 import com.yyg365.interestbar.biz.vo.json.RedeemInfoVO;
-import com.yyg365.interestbar.biz.vo.json.RedeemPayVO;
+import com.yyg365.interestbar.biz.vo.json.PayChannelVO;
 import com.yyg365.interestbar.ui.DialogCreator;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
-import com.yyg365.interestbar.ui.adapter.RedeemPayAdapter;
+import com.yyg365.interestbar.ui.adapter.PayChannelAdapter;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
     private TextView redeemDaysTypeView;
     private TextView pawnTimeView;
     private ListView redeemPayListView;
-    private RedeemPayAdapter mAdapter;
+    private PayChannelAdapter mAdapter;
     private ImageLoader mImageLoader;
     private DefaultDataLoadingView dataLoadingView;
     private Dialog dataLoadingDialog;
@@ -99,7 +99,7 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
         redeemButton = (TextView) findViewById(R.id.redeem_button);
         redeemButton.setOnClickListener(this);
         redeemPriceTipView = (TextView) findViewById(R.id.redeem_price_tip_view);
-        mAdapter = new RedeemPayAdapter(this, new ArrayList<RedeemPayVO>(), mImageLoader);
+        mAdapter = new PayChannelAdapter(this, new ArrayList<PayChannelVO>(), mImageLoader);
         redeemPayListView.setAdapter(mAdapter);
 
         loadData();
@@ -127,7 +127,7 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
                     return;
                 }
 
-                List<RedeemPayVO> payChannels = redeemInfoVO.PayChannel;
+                List<PayChannelVO> payChannels = redeemInfoVO.PayChannel;
                 mAdapter.addAll(payChannels, isFirst);
 
                 Integer status = redeemInfoVO.PayStatus;

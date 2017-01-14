@@ -16,9 +16,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Network;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.unionpay.UPPayAssistEx;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.constants.BuyCarType;
@@ -28,10 +28,8 @@ import com.yyg365.interestbar.biz.manager.OrderManager;
 import com.yyg365.interestbar.biz.vo.json.CarItemVO;
 import com.yyg365.interestbar.biz.vo.json.CarListVO;
 import com.yyg365.interestbar.biz.vo.json.CarPayChannel;
-import com.yyg365.interestbar.biz.vo.json.OrderPayVO;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
 import com.yyg365.interestbar.biz.vo.json.UserVO;
-import com.yyg365.interestbar.event.AddressModifiedEvent;
 import com.yyg365.interestbar.event.BuyCarNumEvent;
 import com.yyg365.interestbar.event.PaySuccessEvent;
 import com.yyg365.interestbar.event.TabSwitchEvent;
@@ -41,11 +39,6 @@ import com.yyg365.interestbar.ui.activity.PayResultActivity;
 import com.yyg365.interestbar.ui.adapter.BuyCarAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
-import com.yyg365.interestbar.ui.multiimage.common.OnCheckChangedListener;
-import com.unionpay.UPPayAssistEx;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.HashSet;

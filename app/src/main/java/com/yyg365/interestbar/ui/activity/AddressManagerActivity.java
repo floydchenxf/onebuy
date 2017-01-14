@@ -13,7 +13,6 @@ import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.manager.AddressManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.vo.json.GoodsAddressVO;
-import com.yyg365.interestbar.event.AddressModifiedEvent;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.adapter.GoodsAddressAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;

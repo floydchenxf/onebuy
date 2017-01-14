@@ -5,7 +5,7 @@ import com.yyg365.interestbar.utils.CommonUtil;
 /**
  * Created by chenxiaofeng on 2017/1/8.
  */
-public class RedeemPayVO {
+public class PayChannelVO {
     public Long ID;
     public String Name;
     public Double Balance;

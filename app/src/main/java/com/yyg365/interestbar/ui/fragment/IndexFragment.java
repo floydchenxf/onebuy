@@ -32,7 +32,7 @@ import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.constants.BuyCarType;
 import com.yyg365.interestbar.biz.constants.EnvConstants;
-import com.yyg365.interestbar.biz.manager.JiFengManager;
+import com.yyg365.interestbar.biz.manager.JiFenManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.manager.ProductManager;
 import com.yyg365.interestbar.biz.tools.FileTools;
@@ -582,7 +582,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             case R.id.left_layout:
                 if (LoginManager.isLogin(IndexFragment.this.getActivity())){
                     UserVO vo = LoginManager.getLoginInfo(IndexFragment.this.getActivity());
-                    JiFengManager.dailySignIn(vo.ID).startUI(new ApiCallback<SignInVO>() {
+                    JiFenManager.dailySignIn(vo.ID).startUI(new ApiCallback<SignInVO>() {
                         @Override
                         public void onError(int code, String errorInfo) {
                             Toast.makeText(IndexFragment.this.getActivity(), errorInfo, Toast.LENGTH_SHORT).show();
