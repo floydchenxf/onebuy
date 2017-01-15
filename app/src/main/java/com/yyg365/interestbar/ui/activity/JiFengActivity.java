@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.manager.JiFenManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
-import com.yyg365.interestbar.biz.vo.json.JiFengVO;
+import com.yyg365.interestbar.biz.vo.json.JiFenVO;
 import com.yyg365.interestbar.ui.R;
-import com.yyg365.interestbar.ui.adapter.JiFengAdapter;
+import com.yyg365.interestbar.ui.adapter.JiFenAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
 import com.yyg365.pullrefresh.widget.PullToRefreshBase;
@@ -28,7 +28,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
     private DataLoadingView dataLoadingView;
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
-    private JiFengAdapter adapter;
+    private JiFenAdapter adapter;
     private int pageNo = 1;
     private int PAGE_SIZE = 10;
     private boolean needClear = false;
@@ -68,7 +68,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
             }
         });
         mListView = mPullToRefreshListView.getRefreshableView();
-        adapter = new JiFengAdapter(this, new ArrayList<JiFengVO>());
+        adapter = new JiFenAdapter(this, new ArrayList<JiFenVO>());
         mListView.setAdapter(adapter);
         loadData(true);
 
@@ -81,7 +81,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
 
         long userId = LoginManager.getLoginInfo(this).ID;
 
-        JiFenManager.fetchJiFengList(userId, PAGE_SIZE, pageNo).startUI(new ApiCallback<List<JiFengVO>>() {
+        JiFenManager.fetchJiFengList(userId, PAGE_SIZE, pageNo).startUI(new ApiCallback<List<JiFenVO>>() {
             @Override
             public void onError(int code, String errorInfo) {
                 if (isFirst) {
@@ -90,7 +90,7 @@ public class JiFengActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onSuccess(List<JiFengVO> jiFengVOs) {
+            public void onSuccess(List<JiFenVO> jiFengVOs) {
                 if (isFirst) {
                     dataLoadingView.loadSuccess();
                 }

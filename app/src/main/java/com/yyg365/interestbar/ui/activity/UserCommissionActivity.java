@@ -40,7 +40,7 @@ public class UserCommissionActivity extends FragmentActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_commission);
         TextView titleNameView = (TextView) findViewById(R.id.title_name);
-        titleNameView.setText("我的佣金");
+        titleNameView.setText("我的金豆");
         titleNameView.setVisibility(View.VISIBLE);
         findViewById(R.id.title_back).setOnClickListener(this);
 

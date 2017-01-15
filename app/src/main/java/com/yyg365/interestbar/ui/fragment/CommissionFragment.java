@@ -42,11 +42,13 @@ public class CommissionFragment extends Fragment {
     protected boolean isFirst;
     protected boolean needClear;
 
-    private ImageView levelView;
-    private TextView levelNameView;
-    private TextView commissionRateView;
+//    private ImageView levelView;
+//    private TextView levelNameView;
+//    private TextView commissionRateView;
 
     private CommissionAdapter adapter;
+
+//    private View headView;
 
     private static final Map<Integer, Integer> iconMap = new HashMap<Integer, Integer>();
 
@@ -122,7 +124,7 @@ public class CommissionFragment extends Fragment {
         mPullToRefreshListView.setEmptyView(emptyView);
         mListView = mPullToRefreshListView.getRefreshableView();
 
-        initHeader(mListView);
+//        initHeader(mListView);
         adapter = new CommissionAdapter(getActivity(), new ArrayList<CommissionItemVO>());
 
         mListView.setAdapter(adapter);
@@ -130,13 +132,13 @@ public class CommissionFragment extends Fragment {
         return v;
     }
 
-    private void initHeader(ListView mListView) {
-        View header = View.inflate(getActivity(), R.layout.commission_head, null);
-        levelNameView = (TextView) header.findViewById(R.id.level_name_view);
-        levelView = (ImageView) header.findViewById(R.id.level_view);
-        commissionRateView = (TextView) header.findViewById(R.id.commission_rate_view);
-        mListView.addHeaderView(header);
-    }
+//    private void initHeader(ListView mListView) {
+//        headView = View.inflate(getActivity(), R.layout.commission_head, null);
+//        levelNameView = (TextView) headView.findViewById(R.id.level_name_view);
+//        levelView = (ImageView) headView.findViewById(R.id.level_view);
+//        commissionRateView = (TextView) headView.findViewById(R.id.commission_rate_view);
+//        mListView.addHeaderView(headView);
+//    }
 
     private void loadData() {
         if (isFirst) {
@@ -159,15 +161,16 @@ public class CommissionFragment extends Fragment {
 
                 UserCommissionVO userCommissionVO = commissionVO.UserInfo;
                 int level = userCommissionVO.CommissionLevel;
-                Integer icon = iconMap.get(level);
-                if (icon != null) {
-                    levelView.setImageResource(icon);
-                }
+//                Integer icon = iconMap.get(level);
+//                if (icon != null) {
+//                    levelView.setImageResource(icon);
+//                }
+//
+//                StringBuilder sb = new StringBuilder(userCommissionVO.CommissionLevelName);
+//                sb.append("  (").append("提成:<font color=\"red\">").append(100 * userCommissionVO.CommissionRatio).append("%</font>)");
+//                levelNameView.setText(Html.fromHtml(sb.toString()));
+//                commissionRateView.setText(Html.fromHtml("金豆:<font color=\"red\">" + userCommissionVO.CommissionRatio + "</font>"));
 
-                StringBuilder sb = new StringBuilder(userCommissionVO.CommissionLevelName);
-                sb.append("  (").append("提成:<font color=\"red\">").append(100 * userCommissionVO.CommissionRatio).append("%</font>)");
-                levelNameView.setText(Html.fromHtml(sb.toString()));
-                commissionRateView.setText(Html.fromHtml("佣金:<font color=\"red\">" + userCommissionVO.CommissionRatio + "</font>"));
                 List<CommissionItemVO> list = commissionVO.list;
                 if (list == null) {
                     list = new ArrayList<CommissionItemVO>();

@@ -3,7 +3,7 @@ package com.yyg365.interestbar.biz.vo.json;
 /**
  * Created by floyd on 16-5-6.
  */
-public class JiFengVO {
+public class JiFenVO {
     public long ClientID;
     public String UserName;
     public boolean IsXiaoFei;

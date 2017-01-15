@@ -42,6 +42,7 @@ import com.yyg365.interestbar.ui.activity.InviteFriendActivity;
 import com.yyg365.interestbar.ui.activity.JiFengActivity;
 import com.yyg365.interestbar.ui.activity.MyCommonwealActivity;
 import com.yyg365.interestbar.ui.activity.MyInfoActivity;
+import com.yyg365.interestbar.ui.activity.MyJFGoodsActivity;
 import com.yyg365.interestbar.ui.activity.MyLuckActivity;
 import com.yyg365.interestbar.ui.activity.MyPawnActivity;
 import com.yyg365.interestbar.ui.activity.PayChargeActivity;
@@ -96,9 +97,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private NavigationAdapter adapter;
 
-    private String[] texts = new String[]{"夺宝记录", "我的佣金", "中奖记录", "充值记录", "我的當铺", "我的积分", "邀请好友", "积分商城", "我的晒单"};
-    private int[] images = new int[]{R.drawable.prize_record, R.drawable.btn_client_info, R.drawable.winning, R.drawable.add_fee, R.drawable.gongyi, R.drawable.jifeng, R.drawable.invite, R.drawable.fri, R.drawable.shandan};
-    private Class[] clazzs = new Class[]{WinningRecordActivity.class, UserCommissionActivity.class, MyLuckActivity.class, ChargeListActivity.class, MyPawnActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyLuckActivity.class, ShowShareActivity.class};
+    private String[] texts = new String[]{"夺宝记录", "我的金豆", "中奖记录", "充值记录", "我的當铺", "我的积分", "邀请好友", "积分商城", "我的晒单"};
+    private int[] images = new int[]{R.drawable.prize_record, R.drawable.bean, R.drawable.winning, R.drawable.add_fee, R.drawable.gongyi, R.drawable.jifeng, R.drawable.invite, R.drawable.fri, R.drawable.shandan};
+    private Class[] clazzs = new Class[]{WinningRecordActivity.class, UserCommissionActivity.class, MyLuckActivity.class, ChargeListActivity.class, MyPawnActivity.class, JiFengActivity.class, InviteFriendActivity.class, MyJFGoodsActivity.class, ShowShareActivity.class};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,21 +120,6 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
                         it.putExtra(UserCommissionActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
                     } else if (k == 4) {
                         it.putExtra("USER_ID", LoginManager.getLoginInfo(getActivity()).ID);
-                    } else if (k == 7) {
-                        UIAlertDialog.Builder noticeBuilder = new UIAlertDialog.Builder(getActivity());
-                        SpannableString message = new SpannableString("该板块暂未开发,敬请期待!");
-                        noticeBuilder.setMessage(message)
-                                .setCancelable(true)
-                                .setPositiveButton("确认",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                                int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                        AlertDialog dialog2 = noticeBuilder.create();
-                        dialog2.show();
-                        return;
                     } else if (k == 6 || k == 8) {
                         it.putExtra(ShowShareActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
                     }
@@ -231,9 +217,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         });
 
         userNameView.setText(vo.getUserName());
-        feeView.setText("余额：" + vo.Amount);
+        feeView.setText("金币：" + vo.Amount);
         jiFengView.setText("积分：" + vo.JiFen);
-        commissionView.setText("佣金: " + vo.Commission);
+        commissionView.setText("金豆: " + vo.Commission);
         clientLevelView.setText(vo.getLevel());
     }
 

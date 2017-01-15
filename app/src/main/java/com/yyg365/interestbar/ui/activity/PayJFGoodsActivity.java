@@ -65,6 +65,7 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
 
     private Long addressId = 0l;
     private String phone = "";
+    private int proType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +123,9 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
     }
 
     private void loadData() {
-        dataLoadingView.startLoading();
+        if (isFirst) {
+            dataLoadingView.startLoading();
+        }
         JiFenManager.payJiFengGoods(userId, proId).startUI(new ApiCallback<JFGoodsPayVO>() {
             @Override
             public void onError(int code, String errorInfo) {
@@ -138,6 +141,8 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                 }
 
                 JFGoodsDetailVO detailVO = jfvo.JFProInfo;
+
+                proType = detailVO.ProType;
                 productPicView.setImageUrl(detailVO.getFirstPicUrl(), mImageLoader);
                 productTitleView.setText(detailVO.Name);
 
@@ -199,7 +204,13 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                 }
 
                 dataLoadingDialog.show();
-                JiFenManager.createJiFenProOrder(userId, proId, addressId, phone).startUI(new ApiCallback<Boolean>() {
+                //实体
+                if (proType == 1) {
+                    phone = "";
+                } else if (proType == 2) {
+                    addressId = 0l;
+                }
+                JiFenManager.createJiFenProOrder(userId, proId, addressId, phone).startUI(new ApiCallback<Long>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         dataLoadingDialog.dismiss();
@@ -207,7 +218,7 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                     }
 
                     @Override
-                    public void onSuccess(Boolean aBoolean) {
+                    public void onSuccess(Long aBoolean) {
                         dataLoadingDialog.dismiss();
                         PayJFGoodsActivity.this.finish();
                         Toast.makeText(PayJFGoodsActivity.this, "兑换成功", Toast.LENGTH_SHORT).show();

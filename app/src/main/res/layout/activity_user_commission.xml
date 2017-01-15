@@ -25,7 +25,7 @@
             android:background="@drawable/red_line_button_bg"
             android:checked="true"
             android:gravity="center"
-            android:text="佣金来源"
+            android:text="金豆来源"
             android:textColor="@drawable/word_selector" />
 
         <CheckedTextView
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:background="@drawable/red_line_button_bg"
             android:gravity="center"
-            android:text="佣金消费"
+            android:text="金豆消费"
             android:textColor="@drawable/word_selector" />
 
     </LinearLayout>

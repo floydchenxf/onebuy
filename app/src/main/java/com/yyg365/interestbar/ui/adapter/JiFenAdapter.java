@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.yyg365.interestbar.biz.vo.json.JiFengVO;
+import com.yyg365.interestbar.biz.vo.json.JiFenVO;
 import com.yyg365.interestbar.ui.R;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.Map;
 /**
  * Created by floyd on 16-5-6.
  */
-public class JiFengAdapter extends BaseDataAdapter<JiFengVO> {
+public class JiFenAdapter extends BaseDataAdapter<JiFenVO> {
 
-    public JiFengAdapter(Context context, List<JiFengVO> records) {
+    public JiFenAdapter(Context context, List<JiFenVO> records) {
         super(context, records);
     }
 
@@ -30,14 +30,14 @@ public class JiFengAdapter extends BaseDataAdapter<JiFengVO> {
     }
 
     @Override
-    void processHolder(Map<Integer, View> holder, JiFengVO jiFengVO) {
+    void processHolder(Map<Integer, View> holder, JiFenVO jiFenVO) {
         TextView jifengNumView = (TextView) holder.get(R.id.jifeng_num_view);
         TextView jifengSourceView = (TextView) holder.get(R.id.jifeng_source_view);
         TextView inTimeView = (TextView) holder.get(R.id.in_time_vew);
 
-        jifengNumView.setText(jiFengVO.BuyJf + "");
-        jifengSourceView.setText(jiFengVO.JFSourceInfo);
-        inTimeView.setText(jiFengVO.InTime);
+        jifengNumView.setText(jiFenVO.BuyJf + "");
+        jifengSourceView.setText(jiFenVO.JFSourceInfo);
+        inTimeView.setText(jiFenVO.InTime);
 
     }
 }
