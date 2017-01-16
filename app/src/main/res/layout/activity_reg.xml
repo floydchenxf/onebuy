@@ -181,7 +181,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:text="《苏城云购用户协议》"
+                android:text="《趣玩吧用户协议》"
                 android:textColor="@color/red"
                 android:textSize="12sp" />
         </LinearLayout>

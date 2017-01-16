@@ -73,7 +73,7 @@
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="57c2fd4167e58ede500033b3" />
+            android:value="587c66b56e27a47bad0016b7" />
 
         <!-- ###################注册SDK使用的Activity###################### -->
         <activity
@@ -163,11 +163,11 @@
         <!-- 【必须】 请修改为APP的AccessId，“21”开头的10位数字，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_ID"
-            android:value="2100241604" />
+            android:value="2100249341" />
         <!-- 【必须】 请修改为APP的AccessKey，“A”开头的12位字符串，中间没空格 -->
         <meta-data
             android:name="XG_V2_ACCESS_KEY"
-            android:value="AKP624YNJ41G" />
+            android:value="A5I89WGA15SB" />
 
         <activity
             android:name=".wxapi.WXEntryActivity"

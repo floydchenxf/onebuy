@@ -7,11 +7,11 @@ import com.yyg365.interestbar.biz.constants.APIConstants;
  */
 public class ShareConstants {
 
-    public static final String QQ_APP_ID = "1105636877";
-    public static final String QQ_APP_KEY = "WUNMS4IJbYvk8Fdh";
-    public static final String WX_APP_ID = "wx0738d0d475486043";
-    public static final String WX_APP_SECRITY = "9182771a82d8b309f3b3ce70598bc1ae";
+    public static final String QQ_APP_ID = "1105951882";
+    public static final String QQ_APP_KEY = "VYyOFhc86YuMbRmI";
+    public static final String WX_APP_ID = "wxa96995b03a32f769";
+    public static final String WX_APP_SECRITY = "ba3652b4db589930b5d00e67533b7c03";
 
-    public static final String WINNING_DETAIL_SHARE_TITLE = "苏城云购的好东西，必须分享！";
+    public static final String WINNING_DETAIL_SHARE_TITLE = "趣玩吧的好东西，必须分享！";
     public static final String WINNING_DETAIL_SHARE_URL_FORMAT = APIConstants.HOST + "buydetailForApp.aspx?id=%d";
 }
