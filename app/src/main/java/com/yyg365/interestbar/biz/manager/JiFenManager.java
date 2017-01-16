@@ -7,6 +7,7 @@ import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsDetailVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsPayVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsVO;
+import com.yyg365.interestbar.biz.vo.json.JFOrderDtailInfoVO;
 import com.yyg365.interestbar.biz.vo.json.JiFenVO;
 import com.yyg365.interestbar.biz.vo.json.SignInVO;
 import com.yyg365.interestbar.channel.request.HttpMethod;
@@ -149,6 +150,15 @@ public class JiFenManager {
                 return GsonHelper.getGson().fromJson(map.get("JFProductList"), listType);
             }
         });
+    }
+
+    public static AsyncJob<JFOrderDtailInfoVO> fetchMyJFOrderDetailInfo(Long uid, Long id) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.JFSHOP_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "GenMyJiFenProOrderInfo");
+        params.put("userid", uid + "");
+        params.put("id", id + "");
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, JFOrderDtailInfoVO.class);
     }
 
 }

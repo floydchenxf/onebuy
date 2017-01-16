@@ -15,6 +15,7 @@ import com.yyg365.interestbar.biz.vo.json.DangPuItemVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsDetailVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsVO;
 import com.yyg365.interestbar.ui.R;
+import com.yyg365.interestbar.ui.activity.MyJFGoodsDetailActivity;
 import com.yyg365.interestbar.ui.activity.RedeemLogActivity;
 
 import java.util.List;
@@ -43,12 +44,14 @@ public class MyJFGoodsAdapter extends BaseDataAdapter<JFGoodsVO> {
     }
 
     @Override
-    void processHolder(Map<Integer, View> holder, JFGoodsVO vo) {
+    void processHolder(Map<Integer, View> holder, final JFGoodsVO vo) {
         View jfLayout = holder.get(R.id.jf_layout);
         jfLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO
+                Intent it = new Intent(mContext, MyJFGoodsDetailActivity.class);
+                it.putExtra(MyJFGoodsDetailActivity.GOODS_ID, vo.ID);
+                mContext.startActivity(it);
             }
         });
         NetworkImageView productPicView = (NetworkImageView) holder.get(R.id.product_pic);

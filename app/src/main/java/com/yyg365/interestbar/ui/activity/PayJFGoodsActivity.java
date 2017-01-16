@@ -17,8 +17,10 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.manager.JiFenManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
+import com.yyg365.interestbar.biz.vo.json.ClientAddr;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsDetailVO;
 import com.yyg365.interestbar.biz.vo.json.JFGoodsPayVO;
+import com.yyg365.interestbar.biz.vo.json.JFUserInfoVO;
 import com.yyg365.interestbar.biz.vo.json.PayChannelVO;
 import com.yyg365.interestbar.event.AddressModifiedEvent;
 import com.yyg365.interestbar.ui.DialogCreator;
@@ -153,7 +155,7 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                     mAdapter.setDefaultChecked(payId);
                 }
 
-                JFGoodsPayVO.UserInfo userInfo = jfvo.UserInfo;
+                JFUserInfoVO userInfo = jfvo.UserInfo;
 
                 Spanned jfScore = Html.fromHtml("兑换积分:&nbsp;<font color=\"red\">" + jfvo.PayJiFen + "</font>");
                 jfPriceView.setText(jfScore);
@@ -162,7 +164,7 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                 jfDiscountView.setText(discount);
                 jfTipView.setText(jfScore);
 
-                JFGoodsPayVO.ClientAddr addressVO = jfvo.ClientAddr;
+                ClientAddr addressVO = jfvo.ClientAddr;
                 if (addressVO == null || addressVO.ID == 0) {
                     emptyAddressView.setVisibility(View.VISIBLE);
                     defaultAddressLayout.setVisibility(View.GONE);
