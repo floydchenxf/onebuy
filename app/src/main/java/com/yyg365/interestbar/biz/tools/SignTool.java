@@ -54,4 +54,20 @@ public class SignTool {
         md5Content.append(FIX_SIGN_KEY);
         return MD5Util.encodeBy32BitMD5(md5Content.toString());
     }
+
+    public static String generateWxSign(Map<String, String> params, String key) {
+        if (params == null || params.isEmpty()) {
+            return null;
+        }
+
+        String[] keys = params.keySet().toArray(new String[params.size()]);
+        Arrays.sort(keys);
+        StringBuilder md5Content = new StringBuilder();
+        for (String k : keys) {
+            String value = params.get(k);
+            md5Content.append(k).append("=").append(value).append("&");
+        }
+        md5Content.append("key=").append(key);
+        return MD5Util.encodeBy32BitMD5(md5Content.toString());
+    }
 }

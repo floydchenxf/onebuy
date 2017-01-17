@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.unionpay.UPPayAssistEx;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.constants.APIConstants;
@@ -33,12 +36,14 @@ import com.yyg365.interestbar.biz.vo.json.UserVO;
 import com.yyg365.interestbar.event.BuyCarNumEvent;
 import com.yyg365.interestbar.event.PaySuccessEvent;
 import com.yyg365.interestbar.event.TabSwitchEvent;
+import com.yyg365.interestbar.event.WxPayEvent;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.activity.PayResultActivity;
 import com.yyg365.interestbar.ui.adapter.BuyCarAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
+import com.yyg365.interestbar.ui.share.ShareConstants;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,6 +94,8 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     private String orderNum;
 
+    private IWXAPI iwxapi;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +105,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         needClear = true;
         initedFooter = false;
         EventBus.getDefault().register(this);
+
+        iwxapi = WXAPIFactory.createWXAPI(getActivity(), ShareConstants.WX_APP_ID);
+        iwxapi.registerApp(ShareConstants.WX_APP_ID);
     }
 
     @Override
@@ -364,6 +374,20 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         buySuccessCall();
     }
 
+    @Subscribe
+    public void onEventMainThread(WxPayEvent event) {
+        if (!getActivity().isFinishing()) {
+            int errorCode = event.errorCode;
+            if (errorCode == BaseResp.ErrCode.ERR_OK) {
+                buySuccessCall();
+            } else if (errorCode == BaseResp.ErrCode.ERR_USER_CANCEL){
+                Toast.makeText(getActivity(), "已取消支付", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "支付失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void buySuccessCall() {
         if (getActivity().isFinishing()) {
             return;
@@ -413,11 +437,12 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                     @Override
                     public void onSuccess(OrderVO orderVO) {
+                        BuyCarFragment.this.orderNum = orderVO.orderNum;
                         if (payType == 6) {
-                            BuyCarFragment.this.orderNum = orderVO.orderNum;
                             UPPayAssistEx.startPay(getActivity(), null, null, orderVO.tn, APIConstants.PAY_MODE);
+                        } else if (payType == 4) { //微信
+                            OrderManager.pay(orderVO.tn, iwxapi);
                         } else {
-                            BuyCarFragment.this.orderNum = orderVO.orderNum;
                             buySuccessCall();
                         }
                     }

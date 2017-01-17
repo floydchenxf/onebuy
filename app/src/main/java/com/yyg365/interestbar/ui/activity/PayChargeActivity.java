@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.aync.AsyncJob;
 import com.yyg365.interestbar.biz.constants.APIConstants;
@@ -24,13 +27,19 @@ import com.yyg365.interestbar.biz.manager.OrderManager;
 import com.yyg365.interestbar.biz.vo.json.CarPayChannel;
 import com.yyg365.interestbar.biz.vo.json.ChargeOrderVO;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
+import com.yyg365.interestbar.event.BuyCarNumEvent;
+import com.yyg365.interestbar.event.WxPayEvent;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
 import com.unionpay.UPPayAssistEx;
+import com.yyg365.interestbar.ui.share.ShareConstants;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 public class PayChargeActivity extends BasePayActivity implements View.OnClickListener {
 
@@ -63,11 +72,17 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
     private boolean isRecharge;
     private long proId;
 
+    private IWXAPI iwxapi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_charge);
+
+        iwxapi = WXAPIFactory.createWXAPI(this, ShareConstants.WX_APP_ID);
+        iwxapi.registerApp(ShareConstants.WX_APP_ID);
+        EventBus.getDefault().register(this);
 
         isRecharge = getIntent().getBooleanExtra(IS_RECHARGE, true);
         proId = getIntent().getLongExtra(PRODUCT_ID, 0l);
@@ -253,7 +268,9 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         @Override
                         public void onSuccess(ChargeOrderVO chargeOrderVO) {
-                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.tn, APIConstants.PAY_MODE);
+                            if (payTypeChecked == 4) { //微信
+                                OrderManager.pay(chargeOrderVO.tn, iwxapi);
+                            }
                         }
 
                         @Override
@@ -272,6 +289,8 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
                         public void onSuccess(OrderVO orderVO) {
                             if (payTypeChecked == 6) {
                                 UPPayAssistEx.startPay(PayChargeActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                            } else if (payTypeChecked == 4) { //微信
+                                OrderManager.pay(orderVO.tn, iwxapi);
                             } else {
                                 if (isRecharge) {
                                     Toast.makeText(PayChargeActivity.this, "充值成功", Toast.LENGTH_SHORT).show();
@@ -295,6 +314,21 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
     }
 
+    @Subscribe
+    public void onEventMainThread(WxPayEvent event) {
+        if (!this.isFinishing()) {
+            int errorCode = event.errorCode;
+            if (errorCode == BaseResp.ErrCode.ERR_OK) {
+                Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+                this.finish();
+            } else if (errorCode == BaseResp.ErrCode.ERR_USER_CANCEL){
+                Toast.makeText(this, "已取消支付", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "支付失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void checkClick(int id) {
         int idx = 0;
         for (CheckedTextView v : arrays) {
@@ -310,5 +344,11 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
         }
 
         Log.i(TAG, "checkedIndex---------" + checkedIndex);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        iwxapi.unregisterApp();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -2,22 +2,22 @@ package com.yyg365.interestbar.biz.manager;
 
 import android.text.TextUtils;
 
-import com.yyg365.interestbar.aync.ApiCallback;
+import com.google.gson.reflect.TypeToken;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.yyg365.interestbar.aync.AsyncJob;
 import com.yyg365.interestbar.aync.Func;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.constants.BuyCarType;
+import com.yyg365.interestbar.biz.tools.SignTool;
 import com.yyg365.interestbar.biz.vo.json.ChargeOrderVO;
 import com.yyg365.interestbar.biz.vo.json.ChargeVO;
 import com.yyg365.interestbar.biz.vo.json.OrderPayVO;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
-import com.yyg365.interestbar.biz.vo.json.PayResultList;
 import com.yyg365.interestbar.channel.request.HttpMethod;
-import com.google.gson.reflect.TypeToken;
-import com.google.zxing.Result;
+import com.yyg365.interestbar.ui.share.ShareConstants;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +34,8 @@ public class OrderManager {
      * @param productLssueDetail ProductLssueDetail 为购物详情 内
      *                           容为 期数 ID|数量 多个产品用逗号
      *                           相连接
-     * @param type 用来传商品类别，1表示普通商品   2表示快乐星期五  3表示基金
-     * @param paychannel 支付类型
+     * @param type               用来传商品类别，1表示普通商品   2表示快乐星期五  3表示基金
+     * @param paychannel         支付类型
      * @return
      */
     public static AsyncJob<OrderVO> createOrder(long userId, String productLssueDetail, int type, int paychannel) {
@@ -223,9 +223,36 @@ public class OrderManager {
         String url = APIConstants.HOST_API_PATH + APIConstants.ORDER_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "ReceiptGoods");
-        params.put("id", orderId+"");
+        params.put("id", orderId + "");
         params.put("userid", userId + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+    }
+
+    public static void pay(String tn, IWXAPI api) {
+        PayReq request = new PayReq();
+        request.appId = ShareConstants.WX_APP_ID;
+        request.partnerId = ShareConstants.MCHID;
+        request.prepayId = tn;
+        request.packageValue = ShareConstants.WX_PACKAGE;
+        String timeStamp = (System.currentTimeMillis() / 1000) + "";
+        request.timeStamp = timeStamp;
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("appid", ShareConstants.WX_APP_ID);
+        params.put("package", ShareConstants.WX_PACKAGE);
+        params.put("partnerid", ShareConstants.MCHID);
+        params.put("prepayid", tn);
+        params.put("timestamp", timeStamp);
+
+        if (params != null && !params.isEmpty()) {
+            String noncestr = SignTool.getRandomString(16);
+            params.put("noncestr", noncestr);
+            request.nonceStr = noncestr;
+        }
+
+        String sign = SignTool.generateWxSign(params, "e10adc3849ba56abbe56e056f20f8831").toUpperCase();
+        request.sign = sign;
+        api.sendReq(request);
     }
 
 

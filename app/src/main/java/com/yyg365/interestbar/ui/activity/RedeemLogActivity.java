@@ -191,6 +191,7 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
                         dataLoadingDialog.dismiss();
                         Toast.makeText(RedeemLogActivity.this, "赎回成功!", Toast.LENGTH_SHORT).show();
                         RedeemLogActivity.this.finish();
+                        //TODO
                     }
 
                     @Override
