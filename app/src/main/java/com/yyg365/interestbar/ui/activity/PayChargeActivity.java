@@ -24,16 +24,17 @@ import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.manager.CarManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.manager.OrderManager;
+import com.yyg365.interestbar.biz.vo.json.AlipayOrderVO;
 import com.yyg365.interestbar.biz.vo.json.CarPayChannel;
 import com.yyg365.interestbar.biz.vo.json.ChargeOrderVO;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
+import com.yyg365.interestbar.biz.vo.pay.PayResult;
 import com.yyg365.interestbar.event.BuyCarNumEvent;
 import com.yyg365.interestbar.event.WxPayEvent;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
-import com.unionpay.UPPayAssistEx;
 import com.yyg365.interestbar.ui.share.ShareConstants;
 
 import java.util.List;
@@ -270,6 +271,35 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
                         public void onSuccess(ChargeOrderVO chargeOrderVO) {
                             if (payTypeChecked == 4) { //微信
                                 OrderManager.pay(chargeOrderVO.tn, iwxapi);
+                            } else if (payTypeChecked == 3) { //支付宝
+                                AlipayOrderVO orderVO = chargeOrderVO.orders;
+                                OrderManager.payByAlipay(PayChargeActivity.this, orderVO).startUI(new ApiCallback<PayResult>() {
+                                    @Override
+                                    public void onError(int code, String errorInfo) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(PayResult result) {
+                                        String resultStatus = result.getResultStatus();
+                                        if (TextUtils.equals(resultStatus, "9000")) {
+                                            if (!PayChargeActivity.this.isFinishing()) {
+                                                PayChargeActivity.this.finish();
+                                            }
+                                        } else {
+                                            if (TextUtils.equals(resultStatus, "8000")) {
+                                                Toast.makeText(PayChargeActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(PayChargeActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onProgress(int progress) {
+
+                                    }
+                                });
                             }
                         }
 
@@ -287,9 +317,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         @Override
                         public void onSuccess(OrderVO orderVO) {
-                            if (payTypeChecked == 6) {
-                                UPPayAssistEx.startPay(PayChargeActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
-                            } else if (payTypeChecked == 4) { //微信
+                            if (payTypeChecked == 4) { //微信
                                 OrderManager.pay(orderVO.tn, iwxapi);
                             } else {
                                 if (isRecharge) {

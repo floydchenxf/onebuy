@@ -8,4 +8,6 @@ public class ChargeOrderVO {
     public String orderNum;
     public Double payMoney;
     public String tn;
+
+    public AlipayOrderVO orders;
 }

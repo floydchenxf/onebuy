@@ -25,7 +25,6 @@ import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
-import com.unionpay.UPPayAssistEx;
 
 import java.util.List;
 
@@ -245,12 +244,8 @@ public class PayPoolActivity extends BasePayActivity implements View.OnClickList
 
                     @Override
                     public void onSuccess(OrderVO orderVO) {
-                        if (payTypeChecked == 6) {
-                            UPPayAssistEx.startPay(PayPoolActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
-                        } else {
-                            Toast.makeText(PayPoolActivity.this, "捐款成功", Toast.LENGTH_SHORT).show();
-                            PayPoolActivity.this.finish();
-                        }
+                        Toast.makeText(PayPoolActivity.this, "捐款成功", Toast.LENGTH_SHORT).show();
+                        PayPoolActivity.this.finish();
                     }
 
                     @Override

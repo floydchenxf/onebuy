@@ -46,7 +46,6 @@ import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
 import com.yyg365.pullrefresh.widget.PullToRefreshBase;
 import com.yyg365.pullrefresh.widget.PullToRefreshListView;
-import com.unionpay.UPPayAssistEx;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -371,7 +370,7 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
                     public void onSuccess(OrderVO orderVO) {
                         if (payType == 6) {
                             FundBuyCarActivity.this.orderNum = orderVO.orderNum;
-                            UPPayAssistEx.startPay(FundBuyCarActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+//                            UPPayAssistEx.startPay(FundBuyCarActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
                         } else {
                             FundBuyCarActivity.this.orderNum = orderVO.orderNum;
                             buySuccessCall();

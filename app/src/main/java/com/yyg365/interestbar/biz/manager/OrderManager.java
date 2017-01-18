@@ -1,23 +1,32 @@
 package com.yyg365.interestbar.biz.manager;
 
+import android.app.Activity;
+import android.content.Context;
 import android.text.TextUtils;
 
+import com.alipay.sdk.app.PayTask;
 import com.google.gson.reflect.TypeToken;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.aync.AsyncJob;
 import com.yyg365.interestbar.aync.Func;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.constants.BuyCarType;
 import com.yyg365.interestbar.biz.tools.SignTool;
+import com.yyg365.interestbar.biz.vo.json.AlipayOrderVO;
 import com.yyg365.interestbar.biz.vo.json.ChargeOrderVO;
 import com.yyg365.interestbar.biz.vo.json.ChargeVO;
 import com.yyg365.interestbar.biz.vo.json.OrderPayVO;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
+import com.yyg365.interestbar.biz.vo.pay.PayResult;
 import com.yyg365.interestbar.channel.request.HttpMethod;
 import com.yyg365.interestbar.ui.share.ShareConstants;
+import com.yyg365.interestbar.utils.SignUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -250,9 +259,70 @@ public class OrderManager {
             request.nonceStr = noncestr;
         }
 
-        String sign = SignTool.generateWxSign(params, "e10adc3849ba56abbe56e056f20f8831").toUpperCase();
+        String sign = SignTool.generateWxSign(params, ShareConstants.WX_KEY).toUpperCase();
         request.sign = sign;
         api.sendReq(request);
+    }
+
+    public static AsyncJob<PayResult> payByAlipay(final Activity context, AlipayOrderVO vo) {
+        String orderInfo = getOrderInfo(vo);
+
+        /**
+         * 特别注意，这里的签名逻辑需要放在服务端，切勿将私钥泄露在代码中！
+         */
+        String sign =  SignUtils.sign(orderInfo, ShareConstants.ALIPAY_RSA_PRIVATE);
+        try {
+            sign = URLEncoder.encode(sign, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        final String payInfo = orderInfo + "&sign=\"" + sign + "\"&sign_type=\"RSA\"";
+
+        AsyncJob<PayResult> job = new AsyncJob<PayResult>() {
+            @Override
+            public void start(ApiCallback<PayResult> callback) {
+                PayTask alipay = new PayTask(context);
+                String result = alipay.pay(payInfo, true);
+                PayResult payResult = new PayResult(result);
+                callback.onSuccess(payResult);
+            }
+        }.threadOn();
+        return job;
+    }
+
+
+    private static String getOrderInfo(AlipayOrderVO vo) {
+        // 签约合作者身份ID
+        String orderInfo = "partner=" + "\"" + ShareConstants.ALIPAY_PARTNER + "\"";
+        // 签约卖家支付宝账号
+        orderInfo += "&seller_id=" + "\"" + ShareConstants.ALIPAY_PARTNER + "\"";
+        // 商户网站唯一订单号
+        orderInfo += "&out_trade_no=" + "\"" + vo.out_trade_no + "\"";
+        // 商品名称
+        orderInfo += "&subject=" + "\"" + vo.subject + "\"";
+        // 商品详情
+        orderInfo += "&body=" + "\"" + vo.body + "\"";
+        // 商品金额
+        orderInfo += "&total_fee=" + "\"" + vo.total_fee + "\"";
+        // 服务器异步通知页面路径
+        orderInfo += "&notify_url=" + "\"" + vo.notify_url + "\"";
+        // 服务接口名称， 固定值
+        orderInfo += "&service=\""+vo.service+"\"";
+        // 支付类型， 固定值
+        orderInfo += "&payment_type=\"1\"";
+        // 参数编码， 固定值
+        orderInfo += "&_input_charset=\""+vo.input_charset+"\"";
+        // 设置未付款交易的超时时间
+        // 默认30分钟，一旦超时，该笔交易就会自动被关闭。
+        // 取值范围：1m～15d。
+        // m-分钟，h-小时，d-天，1c-当天（无论交易何时创建，都在0点关闭）。
+        // 该参数数值不接受小数点，如1.5h，可转换为90m。
+        orderInfo += "&it_b_pay=\"30m\"";
+
+        // 支付宝处理完请求后，当前页面跳转到商户指定页面的路径，可空
+//        orderInfo += "&return_url=\"m.alipay.com\"";
+        return orderInfo;
     }
 
 

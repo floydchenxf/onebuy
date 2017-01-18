@@ -15,4 +15,5 @@ public class CalRecordsVO {
     public String Result;//计算结果
     public String Formula1;
     public String Formula2;
+    public String LotteryName; //彩票名称
 }

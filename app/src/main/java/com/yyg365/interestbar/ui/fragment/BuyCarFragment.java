@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +22,19 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.unionpay.UPPayAssistEx;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.constants.BuyCarType;
 import com.yyg365.interestbar.biz.manager.CarManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.manager.OrderManager;
+import com.yyg365.interestbar.biz.vo.json.AlipayOrderVO;
 import com.yyg365.interestbar.biz.vo.json.CarItemVO;
 import com.yyg365.interestbar.biz.vo.json.CarListVO;
 import com.yyg365.interestbar.biz.vo.json.CarPayChannel;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
 import com.yyg365.interestbar.biz.vo.json.UserVO;
+import com.yyg365.interestbar.biz.vo.pay.PayResult;
 import com.yyg365.interestbar.event.BuyCarNumEvent;
 import com.yyg365.interestbar.event.PaySuccessEvent;
 import com.yyg365.interestbar.event.TabSwitchEvent;
@@ -208,6 +210,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     public void onResume() {
         super.onResume();
+        initedFooter = false;
         loadData(true);
     }
 
@@ -262,6 +265,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 }
 
                 if (!initedFooter) {
+                    payTypeLayout.removeAllViews();
                     List<CarPayChannel> payChannels = carListVO.PayChannel;
                     if (payChannels != null && !payChannels.isEmpty()) {
                         final RadioButton[] rbArray = new RadioButton[payChannels.size()];
@@ -308,11 +312,6 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                             imageView.setImageUrl(channel.getPicUrl(), mImageLoader);
                             TextView payNameView = (TextView) v.findViewById(R.id.pay_name_view);
                             StringBuilder sb = new StringBuilder(channel.Name);
-//                            if (channel.ID == 1) {
-//                                sb.append(" (￥").append(carListVO.UserInfo.Amount).append(")");
-//                            } else if (channel.ID == 2) {
-//                                sb.append(" (").append(carListVO.UserInfo.JiFen).append(")");
-//                            }
                             payNameView.setText(sb.toString());
                             RadioButton rb = (RadioButton) v.findViewById(R.id.wx_radio);
                             rb.setTag(channel.ID);
@@ -438,10 +437,37 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     @Override
                     public void onSuccess(OrderVO orderVO) {
                         BuyCarFragment.this.orderNum = orderVO.orderNum;
-                        if (payType == 6) {
-                            UPPayAssistEx.startPay(getActivity(), null, null, orderVO.tn, APIConstants.PAY_MODE);
-                        } else if (payType == 4) { //微信
+                        if (payType == 4) { //微信
                             OrderManager.pay(orderVO.tn, iwxapi);
+                        } else if (payType == 3) {
+                            AlipayOrderVO payVO = orderVO.orders;
+                            OrderManager.payByAlipay(getActivity(), payVO).startUI(new ApiCallback<PayResult>() {
+                                @Override
+                                public void onError(int code, String errorInfo) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(PayResult payResult) {
+                                    String resultStatus = payResult.getResultStatus();
+                                    if (TextUtils.equals(resultStatus, "9000")) {
+                                        if (!getActivity().isFinishing()) {
+                                            buySuccessCall();
+                                        }
+                                    } else {
+                                        if (TextUtils.equals(resultStatus, "8000")) {
+                                            Toast.makeText(getActivity(), "支付结果确认中", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getActivity(), "支付失败", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onProgress(int progress) {
+
+                                }
+                            });
                         } else {
                             buySuccessCall();
                         }

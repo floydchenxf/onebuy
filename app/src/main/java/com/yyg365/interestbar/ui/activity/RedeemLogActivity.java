@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,17 +13,24 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.manager.LoginManager;
+import com.yyg365.interestbar.biz.manager.OrderManager;
 import com.yyg365.interestbar.biz.manager.PawnManager;
+import com.yyg365.interestbar.biz.vo.json.AlipayOrderVO;
 import com.yyg365.interestbar.biz.vo.json.PawnRedeemVO;
 import com.yyg365.interestbar.biz.vo.json.RedeemInfoVO;
 import com.yyg365.interestbar.biz.vo.json.PayChannelVO;
+import com.yyg365.interestbar.biz.vo.json.RedeemOrderVO;
+import com.yyg365.interestbar.biz.vo.pay.PayResult;
 import com.yyg365.interestbar.ui.DialogCreator;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.adapter.PayChannelAdapter;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
+import com.yyg365.interestbar.ui.share.ShareConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +67,8 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
 
     private Double pawnMsPrice = 0d;
 
+    private IWXAPI iwxapi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +82,9 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
 
         pawnId = getIntent().getLongExtra(PAWN_ID, 0l);
         userId = LoginManager.getLoginInfo(this).ID;
+
+        iwxapi = WXAPIFactory.createWXAPI(this, ShareConstants.WX_APP_ID);
+        iwxapi.registerApp(ShareConstants.WX_APP_ID);
 
         mImageLoader = ImageLoaderFactory.createImageLoader();
 
@@ -161,7 +174,7 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
                 Spanned ratioSpanned = Html.fromHtml("会员优惠价:&nbsp;<font color=\"red\">" + ((int) (info.RealRedeemPrice * ratio)) / 100 + "&nbsp;元");
                 redeemRatioPriceView.setText(ratioSpanned);
 
-                Spanned tipInfoSpanned = Html.fromHtml("赎回价格:&nbsp;<font color=\"red\">" + ((int) (info.RealRedeemPrice * ratio)) / 100 + "&nbsp;元");
+                Spanned tipInfoSpanned = Html.fromHtml("赎回价格:&nbsp;<font color=\"red\">" + info.RealRedeemPrice + "&nbsp;元");
                 redeemPriceTipView.setText(tipInfoSpanned);
             }
 
@@ -177,9 +190,9 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.redeem_button:
                 dataLoadingDialog.show();
-                Long payChannelId = mAdapter.getCheckedId();
+                final Long payChannelId = mAdapter.getCheckedId();
 
-                PawnManager.createRedeemLog(pawnId, userId, payChannelId).startUI(new ApiCallback<Long>() {
+                PawnManager.createRedeemLog(pawnId, userId, payChannelId).startUI(new ApiCallback<RedeemOrderVO>() {
                     @Override
                     public void onError(int code, String errorInfo) {
                         dataLoadingDialog.dismiss();
@@ -187,11 +200,44 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
                     }
 
                     @Override
-                    public void onSuccess(Long aBoolean) {
+                    public void onSuccess(RedeemOrderVO orderVO) {
                         dataLoadingDialog.dismiss();
-                        Toast.makeText(RedeemLogActivity.this, "赎回成功!", Toast.LENGTH_SHORT).show();
-                        RedeemLogActivity.this.finish();
-                        //TODO
+                        if (payChannelId == 3) { //支付宝
+                            AlipayOrderVO payVO = orderVO.orders;
+                            OrderManager.payByAlipay(RedeemLogActivity.this, payVO).startUI(new ApiCallback<PayResult>() {
+                                @Override
+                                public void onError(int code, String errorInfo) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(PayResult payResult) {
+                                    String resultStatus = payResult.getResultStatus();
+                                    if (TextUtils.equals(resultStatus, "9000")) {
+                                        if (!RedeemLogActivity.this.isFinishing()) {
+                                            Toast.makeText(RedeemLogActivity.this, "赎回成功", Toast.LENGTH_SHORT).show();
+                                            RedeemLogActivity.this.finish();
+                                        }
+                                    } else {
+                                        if (TextUtils.equals(resultStatus, "8000")) {
+                                            Toast.makeText(RedeemLogActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(RedeemLogActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onProgress(int progress) {
+
+                                }
+                            });
+                        } else if (payChannelId == 4) { //微信
+                            OrderManager.pay(orderVO.tn, iwxapi);
+                        } else {
+                            Toast.makeText(RedeemLogActivity.this, "赎回成功!", Toast.LENGTH_SHORT).show();
+                            RedeemLogActivity.this.finish();
+                        }
                     }
 
                     @Override
@@ -205,5 +251,10 @@ public class RedeemLogActivity extends Activity implements View.OnClickListener 
                 this.finish();
                 break;
         }
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        iwxapi.unregisterApp();
     }
 }

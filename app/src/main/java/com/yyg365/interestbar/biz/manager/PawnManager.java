@@ -9,6 +9,7 @@ import com.yyg365.interestbar.biz.vo.json.PawnLevelVO;
 import com.yyg365.interestbar.biz.vo.json.PawnLogInfoVO;
 import com.yyg365.interestbar.biz.vo.json.PawnLogVO;
 import com.yyg365.interestbar.biz.vo.json.RedeemInfoVO;
+import com.yyg365.interestbar.biz.vo.json.RedeemOrderVO;
 import com.yyg365.interestbar.channel.request.HttpMethod;
 
 import java.lang.reflect.Type;
@@ -115,22 +116,14 @@ public class PawnManager {
      * @param paychannel
      * @return 返回Id
      */
-    public static AsyncJob<Long> createRedeemLog(Long id, Long uid, Long paychannel) {
+    public static AsyncJob<RedeemOrderVO> createRedeemLog(Long id, Long uid, Long paychannel) {
         String url = APIConstants.HOST_API_PATH + APIConstants.PAWN_SHOP_MODULE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("pageType", "Redeem");
         params.put("userid", uid + "");
         params.put("id", id + "");
         params.put("paychannel", paychannel + "");
-        Type type = new TypeToken<Map<String, Long>>() {
-        }.getType();
-        AsyncJob<Map<String, Long>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, type);
-        return job.map(new Func<Map<String, Long>, Long>() {
-            @Override
-            public Long call(Map<String, Long> stringLongMap) {
-                return stringLongMap.get("RealRedeemPrice");
-            }
-        });
+        return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.GET, RedeemOrderVO.class);
     }
 
 }

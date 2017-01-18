@@ -21,7 +21,7 @@ public class JsonHttpJobFactory {
 
     private static final String TAG = "JsonHttpJobFactory";
     public static <T> AsyncJob<T> getJsonAsyncJob(String url, Map<String, String> params, HttpMethod httpMethod, final Type type) {
-        return HttpJobFactory.createHttpJob(url, params, HttpMethod.POST).map(new StringFunc()).flatMap(new Func<String, AsyncJob<T>>() {
+        return HttpJobFactory.createHttpJob(url, params, httpMethod).map(new StringFunc()).flatMap(new Func<String, AsyncJob<T>>() {
             @Override
             public AsyncJob<T> call(final String s) {
                 return new AsyncJob<T>() {
@@ -51,7 +51,7 @@ public class JsonHttpJobFactory {
     }
 
     public static <T> AsyncJob<T> getJsonAsyncJob(String url, Map<String, String> params, Map<String, FileItem> files, HttpMethod httpMethod, final Type type) {
-        return HttpJobFactory.createFileJob(url, params, files, HttpMethod.POST).map(new StringFunc()).flatMap(new Func<String, AsyncJob<T>>() {
+        return HttpJobFactory.createFileJob(url, params, files, httpMethod).map(new StringFunc()).flatMap(new Func<String, AsyncJob<T>>() {
             @Override
             public AsyncJob<T> call(final String s) {
                 return new AsyncJob<T>() {

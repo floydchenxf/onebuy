@@ -116,7 +116,7 @@ public class WinnerCalActivity extends Activity {
 
                     StringBuilder sb2 = new StringBuilder("2. 最近下一期(")
                             .append(vo.Phase)
-                            .append("期)\"时时彩\"开奖号码 ")
+                            .append("期)\""+vo.LotteryName+"\"开奖号码 ")
                             .append(vo.LotteryResult);
                     step2View.setText(sb2.toString());
 
