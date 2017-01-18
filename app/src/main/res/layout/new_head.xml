@@ -396,27 +396,29 @@
             android:text="最热"
             android:textColor="@drawable/word_selector" />
 
-        <CheckedTextView
-            android:id="@+id/fastest_view"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/red_line_button_bg"
-            android:gravity="center"
-            android:text="最快"
-            android:textColor="@drawable/word_selector" />
+            android:layout_weight="1">
 
-        <CheckedTextView
-            android:id="@+id/price_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/red_line_button_bg"
-            android:gravity="center"
-            android:text="价格"
-            android:textColor="@drawable/word_selector" />
+            <CheckedTextView
+                android:id="@+id/price_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/red_line_button_bg"
+                android:gravity="center"
+                android:text="价格"
+                android:textColor="@drawable/word_selector" />
 
+            <ImageView
+                android:id="@+id/price_status_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/price_normal" />
+        </RelativeLayout>
     </LinearLayout>
-
-
 </RelativeLayout>

@@ -66,7 +66,6 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
 
     private CheckedTextView lastestView; //按照最新排序
     private CheckedTextView hottestView; //按照最热排序
-    private CheckedTextView fastestView; //按照最快排序
     private CheckedTextView priceView; //按照价格排序
 
     private CheckedTextView[] checkedTextViews;
@@ -97,16 +96,14 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
 
         lastestView = (CheckedTextView) view.findViewById(R.id.lastest_view);
         hottestView = (CheckedTextView) view.findViewById(R.id.hottest_view);
-        fastestView = (CheckedTextView) view.findViewById(R.id.fastest_view);
         priceView = (CheckedTextView) view.findViewById(R.id.price_view);
 
         checkedTextViews = new CheckedTextView[]{
-                lastestView, hottestView, fastestView, priceView
+                lastestView, hottestView, priceView, priceView
         };
 
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
-        fastestView.setOnClickListener(this);
         priceView.setOnClickListener(this);
 
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
@@ -313,13 +310,6 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 sortType = 2;
                 pageNo = 1;
                 needClear = true;
-                checkSortType(sortType);
-                loadPageData();
-                break;
-            case R.id.fastest_view:
-                sortType = 3;
-                needClear = true;
-                pageNo = 1;
                 checkSortType(sortType);
                 loadPageData();
                 break;

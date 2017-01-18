@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -108,8 +109,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private CheckedTextView lastestView;
     private CheckedTextView hottestView;
-    private CheckedTextView fastestView;
     private CheckedTextView priceView;
+
+    private ImageView priceStatusView;
 
     private CheckedTextView[] checkedTextViews;
 
@@ -145,6 +147,8 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private ViewFlipper mFlipper;
     private LinearLayout viewFlipperLayout;
+
+    private int priceStatus; // 0:未选中 1:up 2:down
 
     private Handler mChangeViewPagerHandler = new Handler() {
         @Override
@@ -185,13 +189,28 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     private void checkSortType(int type) {
         for (int i = 0; i < checkedTextViews.length; i++) {
             CheckedTextView checkedTextView = checkedTextViews[i];
-            if (i == type - 1) {
+            if (i == type) {
                 checkedTextView.setChecked(true);
             } else {
                 checkedTextView.setChecked(false);
             }
+
+            if (type == 2) {
+                priceStatus = 1;
+                priceStatusView.setImageResource(R.drawable.price_high);
+                checkedTextViews[2].setChecked(true);
+            } else if (type == 3) {
+                priceStatus = 2;
+                priceStatusView.setImageResource(R.drawable.price_low);
+                checkedTextViews[2].setChecked(true);
+            } else {
+                priceStatus = 0;
+                priceStatusView.setImageResource(R.drawable.price_normal);
+            }
         }
-        this.sortType = type;
+
+
+        this.sortType = type + 1;
         this.pageNo = 1;
         this.needClear = true;
     }
@@ -245,17 +264,16 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         lastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.lastest_view);
         hottestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.hottest_view);
-        fastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.fastest_view);
         priceView = (CheckedTextView) mNavigationContainer.findViewById(R.id.price_view);
 
+        priceStatusView = (ImageView) mNavigationContainer.findViewById(R.id.price_status_view);
         checkedTextViews = new CheckedTextView[]{
-                lastestView, hottestView, fastestView, priceView
+                lastestView, hottestView, priceView, priceView
         };
 
         lastestView.setChecked(true);
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
-        fastestView.setOnClickListener(this);
         priceView.setOnClickListener(this);
 
     }
@@ -558,19 +576,19 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lastest_view:
-                checkSortType(1);
+                checkSortType(0);
                 loadProductLssueVO();
                 break;
             case R.id.hottest_view:
-                checkSortType(2);
-                loadProductLssueVO();
-                break;
-            case R.id.fastest_view:
-                checkSortType(3);
+                checkSortType(1);
                 loadProductLssueVO();
                 break;
             case R.id.price_view:
-                checkSortType(4);
+                if (priceStatus == 0 || priceStatus == 2) {
+                    checkSortType(2);
+                } else if (priceStatus == 1) {
+                    checkSortType(3);
+                }
                 loadProductLssueVO();
                 break;
             case R.id.act_ls_fail_layout:
