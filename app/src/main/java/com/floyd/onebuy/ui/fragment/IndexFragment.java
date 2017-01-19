@@ -107,6 +107,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private CheckedTextView lastestView;
     private CheckedTextView hottestView;
+    private CheckedTextView fastestView;
     private CheckedTextView priceView;
     private CheckedTextView fastestView;
 
