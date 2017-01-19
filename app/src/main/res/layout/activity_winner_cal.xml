@@ -44,7 +44,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/home_nomal"
+                android:src="@drawable/index_home"
                 android:textSize="14sp" />
         </LinearLayout>
         <View
