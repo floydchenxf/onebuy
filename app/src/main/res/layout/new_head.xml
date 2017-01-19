@@ -39,8 +39,8 @@
         android:paddingTop="6dp">
 
         <RelativeLayout
-            android:layout_width="0dp"
             android:id="@+id/type1_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -52,11 +52,12 @@
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/type1_imageView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                   android:layout_height="42dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/ten_index" />
 
                 <RelativeLayout
@@ -89,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:paddingTop="50dp"
                 android:text="十元专区"
                 android:textColor="#999999"
@@ -97,8 +98,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="0dp"
             android:id="@+id/type2_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -110,11 +111,12 @@
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/type2_imageView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                   android:layout_height="42dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/hun_index" />
 
                 <RelativeLayout
@@ -147,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:paddingTop="50dp"
                 android:text="百元特享"
                 android:textColor="#999999"
@@ -155,8 +157,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="0dp"
             android:id="@+id/type3_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -168,11 +170,12 @@
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/type3_imageView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                   android:layout_height="42dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/gongyi_index" />
 
                 <RelativeLayout
@@ -205,7 +208,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:paddingTop="50dp"
                 android:text="公益"
                 android:textColor="#999999"
@@ -213,8 +216,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="0dp"
             android:id="@+id/type4_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -227,11 +230,12 @@
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/type4_imageView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="42dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/shandan_index" />
 
                 <RelativeLayout
@@ -265,7 +269,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:paddingTop="50dp"
                 android:text="晒单"
                 android:textColor="#999999"
@@ -287,11 +291,12 @@
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/type5_imageView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                   android:layout_height="42dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/fri_index" />
 
                 <RelativeLayout
@@ -325,7 +330,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:paddingTop="50dp"
                 android:text="快乐星期五"
                 android:textColor="#999999"
@@ -362,16 +367,16 @@
         android:id="@+id/news_pic_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/viewflipper_layout"
+        android:layout_marginTop="10dp"
         android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/navigation_container"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/news_pic_view"
+        android:layout_marginTop="10dp"
         android:background="#ffffff"
         android:gravity="center_vertical">
 
@@ -381,10 +386,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/red_line_button_bg"
+            android:checked="false"
             android:gravity="center"
             android:text="最新"
-            android:textColor="@drawable/word_selector"
-            android:checked="false" />
+            android:textColor="@drawable/word_selector" />
 
         <CheckedTextView
             android:id="@+id/hottest_view"
@@ -424,10 +429,10 @@
                 android:id="@+id/price_status_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/price_normal" />
         </RelativeLayout>
     </LinearLayout>

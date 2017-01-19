@@ -68,7 +68,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/line1"
-            android:layout_marginTop="20dp"
             android:gravity="center">
 
             <TextView
@@ -108,10 +107,9 @@
 
 
         <RelativeLayout
-
+            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/check_code_desc"

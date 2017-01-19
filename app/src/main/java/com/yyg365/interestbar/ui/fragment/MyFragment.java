@@ -220,7 +220,7 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
         feeView.setText("金币：" + vo.Amount);
         jiFengView.setText("积分：" + vo.JiFen);
         commissionView.setText("金豆: " + vo.Commission);
-        clientLevelView.setText(vo.getLevel());
+        clientLevelView.setText(vo.ClientLevelName);
     }
 
     @Override

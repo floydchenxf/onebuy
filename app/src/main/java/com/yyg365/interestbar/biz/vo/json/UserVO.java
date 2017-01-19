@@ -23,6 +23,7 @@ public class UserVO {
     public Double Commission; //佣金
     public String Token; //Token
     public String InviterCode;//邀请code
+    public String ClientLevelName;
 
 
     public String getFullPic() {

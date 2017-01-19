@@ -26,9 +26,9 @@
 
         <TextView
             android:id="@+id/pay_price_num_view"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="支付金额"
             android:textColor="#666666"
@@ -75,8 +75,8 @@
                 android:src="@drawable/wxpay_icon" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/wx_icon"
@@ -86,12 +86,12 @@
 
             <RadioButton
                 android:id="@+id/wx_radio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/radio_check"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:layout_alignParentRight="true"
-                android:button="@null"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:background="@drawable/radio_check"
+                android:button="@null" />
         </RelativeLayout>
 
         <View
@@ -125,12 +125,12 @@
 
             <RadioButton
                 android:id="@+id/alipay_radio"
-                android:layout_width="wrap_content"
-                android:background="@drawable/radio_check"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:layout_alignParentRight="true"
-                android:button="@null"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:background="@drawable/radio_check"
+                android:button="@null" />
         </RelativeLayout>
 
         <View

@@ -22,8 +22,8 @@
 
         <RadioButton
             android:id="@+id/pawn_level_choose"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/radio_width"
+            android:layout_height="@dimen/radio_height"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/radio_check"

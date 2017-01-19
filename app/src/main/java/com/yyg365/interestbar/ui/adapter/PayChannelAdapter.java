@@ -46,12 +46,13 @@ public class PayChannelAdapter extends BaseDataAdapter<PayChannelVO> {
 
     @Override
     int[] cacheViews() {
-        return new int[]{R.id.pay_image_view, R.id.pay_name_view, R.id.pay_choose};
+        return new int[]{R.id.pay_image_view, R.id.pay_name_view, R.id.pay_choose, R.id.pawn_level_layout};
     }
 
     @Override
     void processHolder(Map<Integer, View> holder, final PayChannelVO vo) {
 
+        View layout = holder.get(R.id.pawn_level_layout);
         NetworkImageView payImageView = (NetworkImageView) holder.get(R.id.pay_image_view);
         TextView payNameView = (TextView) holder.get(R.id.pay_name_view);
         final RadioButton payChooseView = (RadioButton) holder.get(R.id.pay_choose);
@@ -72,6 +73,19 @@ public class PayChannelAdapter extends BaseDataAdapter<PayChannelVO> {
 
                 payId = id;
                 states.put(id, payChooseView.isChecked());
+                PayChannelAdapter.this.notifyDataSetChanged();
+            }
+        });
+
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Long key : states.keySet()) {
+                    states.put(key, false);
+                }
+
+                payId = id;
+                states.put(id, true);
                 PayChannelAdapter.this.notifyDataSetChanged();
             }
         });

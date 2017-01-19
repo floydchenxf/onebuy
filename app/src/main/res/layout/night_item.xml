@@ -17,16 +17,17 @@
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:scaleType="center" />
 
         <TextView
             android:id="@+id/ItemText1"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:textColor="@color/gray_content"
             android:layout_below="@+id/ItemImage"
             android:gravity="center"
-            android:text="TextView01" />
+            android:text="TextView01"
+            android:textColor="@color/gray_content" />
 
         <View
             android:layout_width="match_parent"
@@ -51,17 +52,19 @@
             android:id="@+id/ItemImage2"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:scaleType="center" />
 
         <TextView
             android:id="@+id/ItemText2"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:textColor="@color/gray_content"
             android:layout_below="@+id/ItemImage"
             android:gravity="center"
-            android:text="TextView02" />
+            android:text="TextView02"
+            android:textColor="@color/gray_content" />
 
         <View
             android:layout_width="match_parent"
@@ -86,8 +89,10 @@
             android:id="@+id/ItemImage3"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:scaleType="center" />
 
         <TextView
             android:id="@+id/ItemText3"
@@ -95,8 +100,8 @@
             android:layout_height="30dp"
             android:layout_below="@+id/ItemImage"
             android:gravity="center"
-            android:textColor="@color/gray_content"
-            android:text="TextView03" />
+            android:text="TextView03"
+            android:textColor="@color/gray_content" />
 
         <View
             android:layout_width="match_parent"
