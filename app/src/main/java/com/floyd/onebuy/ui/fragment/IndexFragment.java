@@ -107,6 +107,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private CheckedTextView lastestView;
     private CheckedTextView hottestView;
+    private CheckedTextView fastestView;
     private CheckedTextView priceView;
     private CheckedTextView fastestView;
 
@@ -270,6 +271,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         lastestView.setChecked(true);
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
+        fastestView.setOnClickListener(this);
         priceView.setOnClickListener(this);
 
     }
@@ -570,11 +572,15 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 checkSortType(1);
                 loadProductLssueVO();
                 break;
+            case R.id.fastest_view:
+                checkSortType(2);
+                loadProductLssueVO();
+                break;
             case R.id.price_view:
                 if (priceStatus == 0 || priceStatus == 2) {
-                    checkSortType(2);
-                } else if (priceStatus == 1) {
                     checkSortType(3);
+                } else if (priceStatus == 1) {
+                    checkSortType(4);
                 }
                 loadProductLssueVO();
                 break;
