@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -62,11 +63,16 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
     private int pageNo = 1;
     private boolean needClear;
 
+    private int priceStatus; // 0:未选中 1:up 2:down
+
     private LinearLayout banneLayout;
 
     private CheckedTextView lastestView; //按照最新排序
     private CheckedTextView hottestView; //按照最热排序
+    private CheckedTextView fastestView; //按照最快排序
     private CheckedTextView priceView; //按照价格排序
+
+    private ImageView priceStatusView;
 
     private CheckedTextView[] checkedTextViews;
 
@@ -96,14 +102,18 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
 
         lastestView = (CheckedTextView) view.findViewById(R.id.lastest_view);
         hottestView = (CheckedTextView) view.findViewById(R.id.hottest_view);
+        fastestView = (CheckedTextView) view.findViewById(R.id.fastest_view);
         priceView = (CheckedTextView) view.findViewById(R.id.price_view);
 
+        priceStatusView = (ImageView) view.findViewById(R.id.price_status_view);
+
         checkedTextViews = new CheckedTextView[]{
-                lastestView, hottestView, priceView, priceView
+                lastestView, hottestView, fastestView, priceView, priceView
         };
 
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
+        fastestView.setOnClickListener(this);
         priceView.setOnClickListener(this);
 
         mPullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.product_list);
@@ -204,13 +214,26 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
     }
 
     private void checkSortType(int type) {
-        this.sortType = type;
+        this.sortType = type + 1;
         for (int i = 0; i < checkedTextViews.length; i++) {
             CheckedTextView checkedTextView = checkedTextViews[i];
-            if (i == type - 1) {
+            if (i == type ) {
                 checkedTextView.setChecked(true);
             } else {
                 checkedTextView.setChecked(false);
+            }
+
+            if (type == 3) {
+                priceStatus = 1;
+                priceStatusView.setImageResource(R.drawable.price_high);
+                checkedTextViews[3].setChecked(true);
+            } else if (type == 4) {
+                priceStatus = 2;
+                priceStatusView.setImageResource(R.drawable.price_low);
+                checkedTextViews[3].setChecked(true);
+            } else {
+                priceStatus = 0;
+                priceStatusView.setImageResource(R.drawable.price_normal);
             }
         }
         pageNo = 1;
@@ -300,24 +323,32 @@ public class AllProductFragemnt extends BackHandledFragment implements View.OnCl
                 break;
 
             case R.id.lastest_view:
-                sortType = 1;
                 needClear = true;
                 pageNo = 1;
-                checkSortType(sortType);
+                checkSortType(0);
                 loadPageData();
                 break;
             case R.id.hottest_view:
-                sortType = 2;
                 pageNo = 1;
                 needClear = true;
-                checkSortType(sortType);
+                checkSortType(1);
+                loadPageData();
+                break;
+            case R.id.fastest_view:
+                pageNo = 1;
+                needClear = true;
+                checkSortType(2);
                 loadPageData();
                 break;
             case R.id.price_view:
-                sortType = 4;
                 needClear = true;
                 pageNo = 1;
-                checkSortType(sortType);
+                if (priceStatus == 0 || priceStatus == 2) {
+                    checkSortType(3);
+                } else if (priceStatus == 1) {
+                    checkSortType(4);
+                }
+
                 loadPageData();
                 break;
         }

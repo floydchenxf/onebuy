@@ -109,6 +109,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
     private CheckedTextView lastestView;
     private CheckedTextView hottestView;
+    private CheckedTextView fastestView;
     private CheckedTextView priceView;
 
     private ImageView priceStatusView;
@@ -195,14 +196,14 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 checkedTextView.setChecked(false);
             }
 
-            if (type == 2) {
+            if (type == 3) {
                 priceStatus = 1;
                 priceStatusView.setImageResource(R.drawable.price_high);
-                checkedTextViews[2].setChecked(true);
-            } else if (type == 3) {
+                checkedTextViews[3].setChecked(true);
+            } else if (type == 4) {
                 priceStatus = 2;
                 priceStatusView.setImageResource(R.drawable.price_low);
-                checkedTextViews[2].setChecked(true);
+                checkedTextViews[3].setChecked(true);
             } else {
                 priceStatus = 0;
                 priceStatusView.setImageResource(R.drawable.price_normal);
@@ -264,16 +265,18 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
 
         lastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.lastest_view);
         hottestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.hottest_view);
+        fastestView = (CheckedTextView) mNavigationContainer.findViewById(R.id.fastest_view);
         priceView = (CheckedTextView) mNavigationContainer.findViewById(R.id.price_view);
 
         priceStatusView = (ImageView) mNavigationContainer.findViewById(R.id.price_status_view);
         checkedTextViews = new CheckedTextView[]{
-                lastestView, hottestView, priceView, priceView
+                lastestView, hottestView, fastestView, priceView, priceView
         };
 
         lastestView.setChecked(true);
         lastestView.setOnClickListener(this);
         hottestView.setOnClickListener(this);
+        fastestView.setOnClickListener(this);
         priceView.setOnClickListener(this);
 
     }
@@ -583,11 +586,15 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 checkSortType(1);
                 loadProductLssueVO();
                 break;
+            case R.id.fastest_view:
+                checkSortType(2);
+                loadProductLssueVO();
+                break;
             case R.id.price_view:
                 if (priceStatus == 0 || priceStatus == 2) {
-                    checkSortType(2);
-                } else if (priceStatus == 1) {
                     checkSortType(3);
+                } else if (priceStatus == 1) {
+                    checkSortType(4);
                 }
                 loadProductLssueVO();
                 break;
