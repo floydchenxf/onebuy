@@ -662,7 +662,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         public void onClick(View v) {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put(APIConstants.INDEX_PRODUCT_TYPE_ID, typeId);
-            EventBus.getDefault().post(new TabSwitchEvent(2, data));
+            EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_all_product, data));
         }
     }
 

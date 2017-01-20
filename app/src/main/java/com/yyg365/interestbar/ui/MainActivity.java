@@ -240,7 +240,7 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     @Subscribe
     public void onEventMainThread(TabSwitchEvent event) {
         if (!this.isFinishing()) {
-            if (event.tabId >=3 && !LoginManager.isLogin(this)) {
+            if (event.tabId >=3 && event.tabId != R.id.tab_all_product && !LoginManager.isLogin(this)) {
                 return;
             }
 
