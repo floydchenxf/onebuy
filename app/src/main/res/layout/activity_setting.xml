@@ -7,220 +7,278 @@
         android:id="@+id/title_layout"
         layout="@layout/title_frame" />
 
-    <LinearLayout
-        android:id="@+id/layout1"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_layout"
-        android:layout_marginTop="6dp"
-        android:background="#ffffff"
-        android:orientation="vertical"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_layout">
 
-        <TextView
-            android:id="@+id/notice_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:drawableRight="@drawable/jiantou_next"
-            android:gravity="center_vertical"
-            android:text="重要公告"
-            android:textColor="#666666"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#33000000" />
-
-
-        <TextView
-            android:id="@+id/faq_view"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:drawableRight="@drawable/jiantou_next"
-            android:gravity="center_vertical"
-            android:text="常见问题"
-            android:textColor="#666666"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout1"
-        android:layout_marginTop="6dp"
-        android:background="#ffffff"
-        android:orientation="vertical"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp">
-
-        <TextView
-            android:id="@+id/about_us_view"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:drawableRight="@drawable/jiantou_next"
-            android:gravity="center_vertical"
-            android:text="关于我们"
-            android:textColor="#666666"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#33000000" />
-
-        <RelativeLayout
-            android:id="@+id/contact_us_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/layout1"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:drawableRight="@drawable/jiantou_next"
-                android:gravity="center_vertical"
-                android:text="联系客服"
-                android:textColor="#666666" />
-
-            <TextView
-                android:id="@+id/phoneNum"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="24dp"
-                android:gravity="center_vertical"
-                android:text="400-000-000"
-                android:textColor="#666666"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#33000000" />
-
-        <TextView
-            android:id="@+id/suggestion_view"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:drawableRight="@drawable/jiantou_next"
-            android:gravity="center_vertical"
-            android:text="意见反馈"
-            android:textColor="#666666"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#33000000" />
-
-        <RelativeLayout
-            android:id="@+id/msg_setting_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/msg_setting_view"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:text="消息推送"
-                android:textColor="#666666"
-                android:textSize="14sp" />
-
-            <Switch
-                android:id="@+id/msg_switch_view"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:checked="true"
-                android:switchTextAppearance="@style/switch_text_appearance"
-                android:textOff="关"
-                android:textOn="开" />
-        </RelativeLayout>
+                android:layout_marginTop="6dp"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#33000000" />
+                <TextView
+                    android:id="@+id/notice_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_line_width"
+                    android:drawableRight="@drawable/jiantou_next"
+                    android:gravity="center_vertical"
+                    android:text="重要公告"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
 
 
-        <RelativeLayout
-            android:id="@+id/version_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/faq_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_line_width"
+                    android:drawableRight="@drawable/jiantou_next"
+                    android:gravity="center_vertical"
+                    android:text="常见问题"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/version_desc"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+
+                <TextView
+                    android:id="@+id/buy_guide_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_line_width"
+                    android:drawableRight="@drawable/jiantou_next"
+                    android:gravity="center_vertical"
+                    android:text="购物指南"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout2"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:text="版本信息"
-                android:textColor="#666666"
-                android:textSize="14sp" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout1"
+                android:layout_marginTop="6dp"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp">
+
+                <TextView
+                    android:id="@+id/about_us_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_line_width"
+                    android:drawableRight="@drawable/jiantou_next"
+                    android:gravity="center_vertical"
+                    android:text="关于我们"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+                <RelativeLayout
+                    android:id="@+id/contact_us_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:drawableRight="@drawable/jiantou_next"
+                        android:gravity="center_vertical"
+                        android:text="联系客服"
+                        android:textColor="#666666" />
+
+                    <TextView
+                        android:id="@+id/phoneNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="24dp"
+                        android:gravity="center_vertical"
+                        android:text="0571-86671730"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+                <RelativeLayout
+                    android:id="@+id/contact_qq_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:drawableRight="@drawable/jiantou_next"
+                        android:gravity="center_vertical"
+                        android:text="客服QQ"
+                        android:textColor="#666666" />
+
+                    <TextView
+                        android:id="@+id/qqNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="24dp"
+                        android:gravity="center_vertical"
+                        android:text="2846549768"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+                <RelativeLayout
+                    android:id="@+id/msg_setting_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/msg_setting_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:gravity="center_vertical"
+                        android:text="消息推送"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+
+                    <Switch
+                        android:id="@+id/msg_switch_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:checked="true"
+                        android:switchTextAppearance="@style/switch_text_appearance"
+                        android:textOff="关"
+                        android:textOn="开" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+
+                <RelativeLayout
+                    android:id="@+id/version_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/version_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:gravity="center_vertical"
+                        android:text="版本信息"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/version_info_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:text="1.0版本"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+                <TextView
+                    android:id="@+id/suggestion_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_line_width"
+                    android:drawableRight="@drawable/jiantou_next"
+                    android:gravity="center_vertical"
+                    android:text="意见反馈"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#33000000" />
+
+                <RelativeLayout
+                    android:id="@+id/clear_cache_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/clear_cache_vew"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:drawableRight="@drawable/jiantou_next"
+                        android:gravity="center_vertical"
+                        android:text="清除缓存"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/file_size_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/setting_line_width"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="24dp"
+                        android:gravity="center_vertical"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/version_info_view"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:text="1.0版本"
-                android:textColor="#666666"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#33000000" />
-
-        <RelativeLayout
-            android:id="@+id/clear_cache_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/clear_cache_vew"
+                android:id="@+id/noLogin"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:drawableRight="@drawable/jiantou_next"
-                android:gravity="center_vertical"
-                android:text="清除缓存"
-                android:textColor="#666666"
-                android:textSize="14sp" />
+                android:layout_height="39dp"
+                android:layout_below="@+id/layout2"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/common_round_red_bg"
+                android:gravity="center"
+                android:text="退出登录"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
 
-            <TextView
-                android:id="@+id/file_size_view"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="24dp"
-                android:gravity="center_vertical"
-                android:textColor="#666666"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/noLogin"
-        android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:layout_below="@+id/layout2"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/common_round_red_bg"
-        android:gravity="center"
-        android:text="退出登录"
-        android:textColor="#ffffff"
-        android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

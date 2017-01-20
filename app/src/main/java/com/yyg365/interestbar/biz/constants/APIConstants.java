@@ -38,6 +38,7 @@ public class APIConstants {
     public static final String ABOUT_US = APIConstants.HOST+"app/aboutUs.aspx";
     public static final String USER_AGREEMENT = APIConstants.HOST + "app/agreement.aspx";
     public static final String FAQ = APIConstants.HOST + "app/faq.aspx";
+    public static final String BUY_GUIDE = APIConstants.HOST + "/app/shoppingdirectory.aspx";
 
     public static final String NEWS_DETAIL_URL_FORMAT = APIConstants.HOST + "app/newsinfo.aspx?id=%d";
 

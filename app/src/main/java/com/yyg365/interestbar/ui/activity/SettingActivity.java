@@ -3,9 +3,13 @@ package com.yyg365.interestbar.ui.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -40,10 +44,12 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private TextView aboutUsView; //关于我们
     private View contactUsLayout; //联系我们
     private TextView phoneNumView; //客服电话
+    private TextView buyGuideView; //购物指南
     private TextView suggestView; //意见反馈
     private Switch msgSwitch; //消息设置
     private View clearLayout; //清除
     private TextView fileSizeView; //文本大小
+    private View contactQQView; //联系qq客服
 
     private Dialog dataloadingDialog;
     private TextView exitButton;
@@ -70,11 +76,14 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         msgSwitch = (Switch) findViewById(R.id.msg_switch_view);
         clearLayout = findViewById(R.id.clear_cache_layout);
         fileSizeView = (TextView) findViewById(R.id.file_size_view);
+        buyGuideView = (TextView) findViewById(R.id.buy_guide_view);
+        contactQQView = findViewById(R.id.contact_qq_layout);
 
         noticeView.setOnClickListener(this);
         faqView.setOnClickListener(this);
         aboutUsView.setOnClickListener(this);
         contactUsLayout.setOnClickListener(this);
+        buyGuideView.setOnClickListener(this);
         suggestView.setOnClickListener(this);
         msgSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -84,6 +93,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         });
 
         clearLayout.setOnClickListener(this);
+        contactQQView.setOnClickListener(this);
 
         AsyncJob<String> job = new AsyncJob<String>() {
             @Override
@@ -240,8 +250,15 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.contact_us_layout:
                 UIAlertDialog.Builder contactus = new UIAlertDialog.Builder(this);
-                SpannableString tipMessage = new SpannableString("客服热线：400-000-000");
-                contactus.setMessage(tipMessage).setCancelable(true).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                SpannableString tipMessage = new SpannableString("客服热线：0571-86671730");
+                contactus.setMessage(tipMessage).setCancelable(true).setPositiveButton(R.string.call_phone, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:057186671730"));
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -250,7 +267,44 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 AlertDialog b = contactus.create();
                 b.show();
                 break;
+            case R.id.buy_guide_view:
+                Intent guideIntent = new Intent(SettingActivity.this, H5Activity.class);
+                H5Activity.H5Data guideH5Data = new H5Activity.H5Data();
+                guideH5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                guideH5Data.data = APIConstants.BUY_GUIDE;
+                guideH5Data.showProcess = true;
+                guideH5Data.showNav = true;
+                guideH5Data.title = "购物指南";
+                guideIntent.putExtra(H5Activity.H5Data.H5_DATA, guideH5Data);
+                startActivity(guideIntent);
+                break;
+            case R.id.contact_qq_layout:
+                if (checkIsApkInstalledByPkgName(this, "com.tencent.mobileqq")) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=2846549768&card_type=person&source=qrcode"));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SettingActivity.this, "请安装手机QQ", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
         }
 
+    }
+
+
+    public static boolean checkIsApkInstalledByPkgName(Context context, String packageName) {
+        PackageInfo packageInfo;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        if (packageInfo != null) {
+            return true;
+        }
+        return false;
     }
 }

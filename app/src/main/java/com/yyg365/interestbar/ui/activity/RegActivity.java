@@ -36,6 +36,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int checkType;
     private CheckBox agreeView;
+    private TextView agreeDescView;
     private TextView agreemenetView;//用户协议
 
     @Override
@@ -55,6 +56,8 @@ public class RegActivity extends Activity implements View.OnClickListener {
         regButton.setOnClickListener(this);
         checkCodeButtonView.setOnClickListener(this);
         agreeView = (CheckBox) findViewById(R.id.agress_view);
+        agreeDescView = (TextView) findViewById(R.id.agree_desc_view);
+        agreeDescView.setOnClickListener(this);
         agreemenetView = (TextView) findViewById(R.id.agreement_view);
         agreemenetView.setOnClickListener(this);
         regButton.setOnClickListener(this);
@@ -177,6 +180,11 @@ public class RegActivity extends Activity implements View.OnClickListener {
                 agreeIntent.putExtra(H5Activity.H5Data.H5_DATA, faqH5Data);
                 startActivity(agreeIntent);
                 break;
+            case R.id.agree_desc_view:
+                boolean checked =  agreeView.isChecked();
+                agreeView.setChecked(!checked);
+                break;
+
         }
     }
 }

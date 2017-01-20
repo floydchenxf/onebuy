@@ -68,6 +68,7 @@
     <string name="title_activity_new_task">NewTaskActivity</string>
     <string name="confirm_order">继续抢单</string>
     <string name="confirm">确认</string>
+    <string name="call_phone">拨打</string>
     <string name="cancel">取消</string>
     <string name="title_activity_my_task">MyTaskActivity</string>
     <string name="title_activity_task_process">TaskProcessActivity</string>

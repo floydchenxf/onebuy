@@ -22,4 +22,5 @@
     <dimen name="normal_font">14sp</dimen>
     <dimen name="radio_width">20dp</dimen>
     <dimen name="radio_height">20dp</dimen>
+    <dimen name="setting_line_width">40dp</dimen>
 </resources>

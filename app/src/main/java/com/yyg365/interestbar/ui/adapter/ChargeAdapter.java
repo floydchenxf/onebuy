@@ -47,8 +47,10 @@ public class ChargeAdapter extends BaseDataAdapter<ChargeVO> {
         moneyPayStatus.append("<font color=\"red\">").append(chargeVO.Money).append("</font>").append("/");
         if (chargeStatus == 0) {
             moneyPayStatus.append("未支付");
+            payTimeView.setVisibility(View.INVISIBLE);
         } else {
             moneyPayStatus.append("已支付");
+            payTimeView.setVisibility(View.VISIBLE);
         }
 
         Spanned s = Html.fromHtml(moneyPayStatus.toString());

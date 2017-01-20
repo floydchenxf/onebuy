@@ -107,9 +107,9 @@
 
 
         <RelativeLayout
-            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/check_code_desc"
@@ -138,15 +138,15 @@
 
             <TextView
                 android:id="@+id/check_code_button"
-                android:layout_width="120dp"
-                android:layout_height="30dp"
+                android:layout_width="100dp"
+                android:layout_height="28dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:background="@drawable/common_red_round_bord_bg"
                 android:gravity="center"
                 android:text="获取验证码"
                 android:textColor="@color/red"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
@@ -167,9 +167,19 @@
 
             <CheckBox
                 android:id="@+id/agress_view"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/radio_check"
+                android:button="@null"
+                android:checked="false"
+                android:textColor="@color/gray_sub_title"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/agree_desc_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"
+                android:layout_marginLeft="4dp"
                 android:text="我同意"
                 android:textColor="@color/gray_sub_title"
                 android:textSize="14sp" />
@@ -181,19 +191,19 @@
                 android:layout_marginLeft="4dp"
                 android:text="《趣玩吧用户协议》"
                 android:textColor="@color/red"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
 
         <TextView
             android:id="@+id/next_step"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="36dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/common_round_red_bg"
             android:gravity="center"
             android:text="@string/phone_reg"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 </RelativeLayout>
