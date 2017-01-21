@@ -51,7 +51,7 @@ public class DiamodApplication extends Application {
             XGPushManager.registerPush(getApplicationContext(), new XGIOperateCallback() {
                 @Override
                 public void onSuccess(Object data, int flag) {
-                    Log.w(Constants.LogTag,
+                    Log.e(Constants.LogTag,
                             "+++ register push sucess. token:" + data);
                     LoginManager.saveDeviceId(DiamodApplication.this, data.toString());
                 }

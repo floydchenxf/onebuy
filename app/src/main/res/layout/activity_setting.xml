@@ -171,16 +171,14 @@
                         android:textColor="#666666"
                         android:textSize="14sp" />
 
-                    <Switch
+                    <CheckBox
                         android:id="@+id/msg_switch_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:checked="true"
-                        android:switchTextAppearance="@style/switch_text_appearance"
-                        android:textOff="关"
-                        android:textOn="开" />
+                        android:background="@drawable/switch_button"
+                        android:button="@null"/>
                 </RelativeLayout>
 
                 <View

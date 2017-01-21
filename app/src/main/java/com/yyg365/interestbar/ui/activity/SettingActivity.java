@@ -16,7 +16,10 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +49,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private TextView phoneNumView; //客服电话
     private TextView buyGuideView; //购物指南
     private TextView suggestView; //意见反馈
-    private Switch msgSwitch; //消息设置
+    private CheckBox msgSwitch; //消息设置
     private View clearLayout; //清除
     private TextView fileSizeView; //文本大小
     private View contactQQView; //联系qq客服
@@ -73,7 +76,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         contactUsLayout.setOnClickListener(this);
         phoneNumView = (TextView) findViewById(R.id.phoneNum);
         suggestView = (TextView) findViewById(R.id.suggestion_view);
-        msgSwitch = (Switch) findViewById(R.id.msg_switch_view);
+        msgSwitch = (CheckBox) findViewById(R.id.msg_switch_view);
         clearLayout = findViewById(R.id.clear_cache_layout);
         fileSizeView = (TextView) findViewById(R.id.file_size_view);
         buyGuideView = (TextView) findViewById(R.id.buy_guide_view);
@@ -85,10 +88,10 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         contactUsLayout.setOnClickListener(this);
         buyGuideView.setOnClickListener(this);
         suggestView.setOnClickListener(this);
+
         msgSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
             }
         });
 
