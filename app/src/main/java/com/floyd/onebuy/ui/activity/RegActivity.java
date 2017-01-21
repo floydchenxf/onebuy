@@ -32,6 +32,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
     private EditText passwordView;
     private TextView regButton;
     private EditText phoneNumView;
+    private TextView agreeDescView;
     private int time = 0;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int checkType;
@@ -58,6 +59,9 @@ public class RegActivity extends Activity implements View.OnClickListener {
         agreemenetView = (TextView) findViewById(R.id.agreement_view);
         agreemenetView.setOnClickListener(this);
         regButton.setOnClickListener(this);
+
+        agreeDescView = (TextView) findViewById(R.id.agree_desc_view);
+        agreeDescView.setOnClickListener(this);
     }
 
 
@@ -88,6 +92,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
                 checkCodeButtonView.setEnabled(false);
                 String usernick2 = userNickView.getText().toString();
                 if (TextUtils.isEmpty(usernick2)) {
+                    checkCodeButtonView.setEnabled(true);
                     Toast.makeText(RegActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -176,6 +181,10 @@ public class RegActivity extends Activity implements View.OnClickListener {
                 faqH5Data.title = "用户协议";
                 agreeIntent.putExtra(H5Activity.H5Data.H5_DATA, faqH5Data);
                 startActivity(agreeIntent);
+                break;
+            case R.id.agree_desc_view:
+                boolean checked =  agreeView.isChecked();
+                agreeView.setChecked(!checked);
                 break;
         }
     }

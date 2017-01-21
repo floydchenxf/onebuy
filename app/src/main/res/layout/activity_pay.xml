@@ -86,8 +86,8 @@
 
             <RadioButton
                 android:id="@+id/wx_radio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:background="@drawable/radio_check"
                 android:layout_alignParentRight="true"
                 android:button="@null"
@@ -125,9 +125,9 @@
 
             <RadioButton
                 android:id="@+id/alipay_radio"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:background="@drawable/radio_check"
-                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:button="@null"
                 android:layout_centerVertical="true" />

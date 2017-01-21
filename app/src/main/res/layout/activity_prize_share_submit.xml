@@ -41,8 +41,8 @@
 
             <RadioButton
                 android:id="@+id/type_pic_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/radio_check"
@@ -66,8 +66,8 @@
 
             <RadioButton
                 android:id="@+id/type_video_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/radio_width"
+                android:layout_height="@dimen/radio_height"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/radio_check"
