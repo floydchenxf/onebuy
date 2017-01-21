@@ -117,6 +117,7 @@ public class BuyCarAdapter extends BaseAdapter {
             holder.proudctImageView = (NetworkImageView) convertView.findViewById(R.id.product_image_view);
             holder.totalLeftView = (TextView) convertView.findViewById(R.id.time_info_view);
             holder.subView = (TextView) convertView.findViewById(R.id.sub_view);
+            holder.productTitleView = (TextView) convertView.findViewById(R.id.product_title_view);
             holder.addView = (TextView) convertView.findViewById(R.id.add_view);
             holder.numberView = (EditText) convertView.findViewById(R.id.number_view);
             holder.buyLeftView = (CheckedTextView) convertView.findViewById(R.id.buy_left_view);
@@ -159,6 +160,8 @@ public class BuyCarAdapter extends BaseAdapter {
             holder.radioButton.setVisibility(View.GONE);
             holder.radioButton.setOnCheckedChangeListener(null);
         }
+
+        holder.productTitleView.setText(info.ProName);
 
         holder.subView.setTag(info);
         holder.subView.setOnClickListener(new View.OnClickListener() {
@@ -243,6 +246,7 @@ public class BuyCarAdapter extends BaseAdapter {
         public NetworkImageView proudctImageView;
         public TextView totalLeftView;
         public TextView subView;
+        public TextView productTitleView;
         public TextView addView;
         public EditText numberView;
         public CheckedTextView buyLeftView;
