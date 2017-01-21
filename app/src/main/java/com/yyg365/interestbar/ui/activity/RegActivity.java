@@ -91,6 +91,7 @@ public class RegActivity extends Activity implements View.OnClickListener {
                 checkCodeButtonView.setEnabled(false);
                 String usernick2 = userNickView.getText().toString();
                 if (TextUtils.isEmpty(usernick2)) {
+                    checkCodeButtonView.setEnabled(true);
                     Toast.makeText(RegActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
