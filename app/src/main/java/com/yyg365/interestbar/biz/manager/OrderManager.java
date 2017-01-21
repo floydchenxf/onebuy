@@ -283,7 +283,13 @@ public class OrderManager {
             @Override
             public void start(ApiCallback<PayResult> callback) {
                 PayTask alipay = new PayTask(context);
-                String result = alipay.pay(payInfo, true);
+                String result = null;
+                try {
+                    result = alipay.pay(payInfo, true);
+                } catch (Exception e) {
+                    callback.onError(-1, "调用支付宝异常");
+                    return;
+                }
                 PayResult payResult = new PayResult(result);
                 callback.onSuccess(payResult);
             }
