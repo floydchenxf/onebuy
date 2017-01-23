@@ -8,7 +8,7 @@ android {
         applicationId "com.yyg365.interestbar.ui"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 2
+        versionCode 3
         versionName "2.0"
     }
 
