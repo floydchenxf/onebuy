@@ -1,6 +1,5 @@
 package com.floyd.onebuy.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,8 +15,6 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
-import com.floyd.onebuy.aync.AsyncJob;
-import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.manager.CarManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
@@ -28,11 +25,10 @@ import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.unionpay.UPPayAssistEx;
 
 import java.util.List;
 
-public class PayChargeActivity extends BasePayActivity implements View.OnClickListener {
+public class PayChargeActivity extends BaseJDPayActivity implements View.OnClickListener {
 
     private static final String TAG = "PayChargeActivity";
     public static final String IS_RECHARGE = "IS_RECHARGE";
@@ -253,7 +249,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
 
                         @Override
                         public void onSuccess(ChargeOrderVO chargeOrderVO) {
-                            UPPayAssistEx.startPay(PayChargeActivity.this, null, null, chargeOrderVO.tn, APIConstants.PAY_MODE);
+                            OrderManager.jdPay(PayChargeActivity.this, chargeOrderVO.orderNum);
                         }
 
                         @Override
@@ -271,7 +267,7 @@ public class PayChargeActivity extends BasePayActivity implements View.OnClickLi
                         @Override
                         public void onSuccess(OrderVO orderVO) {
                             if (payTypeChecked == 6) {
-                                UPPayAssistEx.startPay(PayChargeActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                                OrderManager.jdPay(PayChargeActivity.this, orderVO.tn);
                             } else {
                                 if (isRecharge) {
                                     Toast.makeText(PayChargeActivity.this, "充值成功", Toast.LENGTH_SHORT).show();

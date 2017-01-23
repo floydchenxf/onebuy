@@ -14,4 +14,6 @@ public class ShareConstants {
 
     public static final String WINNING_DETAIL_SHARE_TITLE = "苏城云购的好东西，必须分享！";
     public static final String WINNING_DETAIL_SHARE_URL_FORMAT = APIConstants.HOST + "buydetailForApp.aspx?id=%d";
+
+    public static final String MECHANT_ID = "110223136002";
 }

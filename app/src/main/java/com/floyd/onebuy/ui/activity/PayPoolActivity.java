@@ -25,11 +25,10 @@ import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.unionpay.UPPayAssistEx;
 
 import java.util.List;
 
-public class PayPoolActivity extends BasePayActivity implements View.OnClickListener {
+public class PayPoolActivity extends BaseJDPayActivity implements View.OnClickListener {
 
     private static final String TAG = "PayChargeActivity";
     public static final String PRODUCT_ID = "PRODUCT_ID";
@@ -246,7 +245,7 @@ public class PayPoolActivity extends BasePayActivity implements View.OnClickList
                     @Override
                     public void onSuccess(OrderVO orderVO) {
                         if (payTypeChecked == 6) {
-                            UPPayAssistEx.startPay(PayPoolActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                            OrderManager.jdPay(PayPoolActivity.this, orderVO.tn);
                         } else {
                             Toast.makeText(PayPoolActivity.this, "捐款成功", Toast.LENGTH_SHORT).show();
                             PayPoolActivity.this.finish();

@@ -42,7 +42,7 @@ import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.multiimage.common.OnCheckChangedListener;
-import com.unionpay.UPPayAssistEx;
+import com.wangyin.payment.jdpaysdk.JDPay;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -422,7 +422,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     public void onSuccess(OrderVO orderVO) {
                         if (payType == 6) {
                             BuyCarFragment.this.orderNum = orderVO.orderNum;
-                            UPPayAssistEx.startPay(getActivity(), null, null, orderVO.tn, APIConstants.PAY_MODE);
+                            OrderManager.jdPay(getActivity(), orderVO.tn);
                         } else {
                             BuyCarFragment.this.orderNum = orderVO.orderNum;
                             buySuccessCall();
@@ -491,30 +491,8 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String msg = "";
-        String str = data.getExtras().getString(PAY_RESULT);
-        if (str.equalsIgnoreCase("success")) {
-            EventBus.getDefault().post(new PaySuccessEvent());
-            return;
-        }
-
-        if (str.equalsIgnoreCase("fail")) {
-            msg = "支付失败！";
-        } else if (str.equalsIgnoreCase("cancel")) {
-            msg = "用户取消了支付";
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("支付结果通知");
-        builder.setMessage(msg);
-        builder.setInverseBackgroundForced(true);
-        // builder.setCustomTitle();
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
+        super.onActivityResult(requestCode, resultCode, data);
+        Object dataObj = data.getExtras().get(JDPay.JDPAY_RESULT);
+        Toast.makeText(getActivity(), dataObj.toString(), Toast.LENGTH_SHORT).show();
     }
 }

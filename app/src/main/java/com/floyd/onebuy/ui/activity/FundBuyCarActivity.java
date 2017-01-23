@@ -1,10 +1,8 @@
 package com.floyd.onebuy.ui.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -21,34 +19,23 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.BuyCarType;
-import com.floyd.onebuy.biz.manager.AddressManager;
 import com.floyd.onebuy.biz.manager.CarManager;
-import com.floyd.onebuy.biz.manager.DBManager;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
 import com.floyd.onebuy.biz.vo.json.CarPayChannel;
-import com.floyd.onebuy.biz.vo.json.GoodsAddressVO;
-import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.biz.vo.json.UserVO;
-import com.floyd.onebuy.biz.vo.model.WinningInfo;
-import com.floyd.onebuy.event.PayFirdaySuccessEvent;
 import com.floyd.onebuy.event.PayFundSuccessEvent;
 import com.floyd.onebuy.event.PaySuccessEvent;
-import com.floyd.onebuy.event.TabSwitchEvent;
 import com.floyd.onebuy.ui.ImageLoaderFactory;
 import com.floyd.onebuy.ui.MainActivity;
 import com.floyd.onebuy.ui.R;
 import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
-import com.floyd.pullrefresh.widget.PullToRefreshBase;
-import com.floyd.pullrefresh.widget.PullToRefreshListView;
-import com.unionpay.UPPayAssistEx;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +43,7 @@ import java.util.Set;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
-public class FundBuyCarActivity extends Activity implements View.OnClickListener {
+public class FundBuyCarActivity extends BaseJDPayActivity implements View.OnClickListener {
 
     public static final String PAY_RESULT = "pay_result";
 
@@ -371,7 +358,7 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
                     public void onSuccess(OrderVO orderVO) {
                         if (payType == 6) {
                             FundBuyCarActivity.this.orderNum = orderVO.orderNum;
-                            UPPayAssistEx.startPay(FundBuyCarActivity.this, null, null, orderVO.tn, APIConstants.PAY_MODE);
+                            OrderManager.jdPay(FundBuyCarActivity.this, orderVO.tn);
                         } else {
                             FundBuyCarActivity.this.orderNum = orderVO.orderNum;
                             buySuccessCall();

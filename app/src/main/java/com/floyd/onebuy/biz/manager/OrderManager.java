@@ -1,5 +1,6 @@
 package com.floyd.onebuy.biz.manager;
 
+import android.app.Activity;
 import android.text.TextUtils;
 
 import com.floyd.onebuy.aync.ApiCallback;
@@ -13,8 +14,11 @@ import com.floyd.onebuy.biz.vo.json.OrderPayVO;
 import com.floyd.onebuy.biz.vo.json.OrderVO;
 import com.floyd.onebuy.biz.vo.json.PayResultList;
 import com.floyd.onebuy.channel.request.HttpMethod;
+import com.floyd.onebuy.ui.share.ShareConstants;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.Result;
+import com.wangyin.payment.jdpaysdk.JDPay;
+import com.wangyin.payment.jdpaysdk.open.model.JDPOpenPayParam;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -226,6 +230,14 @@ public class OrderManager {
         params.put("id", orderId+"");
         params.put("userid", userId + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, Boolean.class);
+    }
+
+
+    public static void jdPay(Activity context, String orderId) {
+        JDPOpenPayParam params = new JDPOpenPayParam();
+        params.merchant = ShareConstants.MECHANT_ID;
+        params.orderId = orderId;
+        JDPay.openPay(context, params);
     }
 
 
