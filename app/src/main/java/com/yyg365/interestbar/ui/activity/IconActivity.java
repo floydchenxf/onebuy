@@ -1,4 +1,4 @@
-package com.yyg365.interestbar.ui.activity;
+   package com.yyg365.interestbar.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
