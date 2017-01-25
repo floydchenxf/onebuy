@@ -249,7 +249,7 @@ public class PayChargeActivity extends BaseJDPayActivity implements View.OnClick
 
                         @Override
                         public void onSuccess(ChargeOrderVO chargeOrderVO) {
-                            OrderManager.jdPay(PayChargeActivity.this, chargeOrderVO.orderNum);
+                            OrderManager.jdPay(PayChargeActivity.this, chargeOrderVO.tn);
                         }
 
                         @Override

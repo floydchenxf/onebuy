@@ -23,6 +23,7 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.CarManager;
+import com.floyd.onebuy.biz.manager.GsonHelper;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.manager.OrderManager;
 import com.floyd.onebuy.biz.vo.json.CarItemVO;
@@ -42,14 +43,18 @@ import com.floyd.onebuy.ui.adapter.BuyCarAdapter;
 import com.floyd.onebuy.ui.loading.DataLoadingView;
 import com.floyd.onebuy.ui.loading.DefaultDataLoadingView;
 import com.floyd.onebuy.ui.multiimage.common.OnCheckChangedListener;
+import com.google.gson.reflect.TypeToken;
 import com.wangyin.payment.jdpaysdk.JDPay;
+import com.wangyin.payment.jdpaysdk.front.common.Constant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.greenrobot.event.EventBus;
@@ -420,7 +425,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
 
                     @Override
                     public void onSuccess(OrderVO orderVO) {
-                        if (payType == 6) {
+                        if (payType == 8) {
                             BuyCarFragment.this.orderNum = orderVO.orderNum;
                             OrderManager.jdPay(getActivity(), orderVO.tn);
                         } else {
@@ -487,12 +492,5 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                 EventBus.getDefault().post(new TabSwitchEvent(R.id.tab_index_page, new HashMap<String, Object>()));
                 break;
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Object dataObj = data.getExtras().get(JDPay.JDPAY_RESULT);
-        Toast.makeText(getActivity(), dataObj.toString(), Toast.LENGTH_SHORT).show();
     }
 }

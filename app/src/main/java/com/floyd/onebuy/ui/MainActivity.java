@@ -25,6 +25,7 @@ import com.floyd.onebuy.aync.ApiCallback;
 import com.floyd.onebuy.biz.constants.APIConstants;
 import com.floyd.onebuy.biz.constants.BuyCarType;
 import com.floyd.onebuy.biz.manager.CarManager;
+import com.floyd.onebuy.biz.manager.GsonHelper;
 import com.floyd.onebuy.biz.manager.LoginManager;
 import com.floyd.onebuy.biz.vo.json.CarItemVO;
 import com.floyd.onebuy.biz.vo.json.CarListVO;
@@ -43,10 +44,14 @@ import com.floyd.onebuy.ui.fragment.FragmentTabAdapter;
 import com.floyd.onebuy.ui.fragment.IndexFragment;
 import com.floyd.onebuy.ui.fragment.MyFragment;
 import com.floyd.onebuy.ui.fragment.NewOwnerFragment;
+import com.google.gson.reflect.TypeToken;
+import com.wangyin.payment.jdpaysdk.JDPay;
+import com.wangyin.payment.jdpaysdk.front.common.Constant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -314,34 +319,20 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
             return;
         }
 
-        if (requestCode == 10) {
-            String msg = "";
-            String str = data.getExtras().getString(PAY_RESULT);
-            if (str.equalsIgnoreCase("success")) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Constant.PAY_RESPONSE_CODE) {
+            String json = data.getStringExtra(JDPay.JDPAY_RESULT);
+            Type type = new TypeToken<Map<String, String>>(){}.getType();
+            Map<String, String> kk = GsonHelper.getGson().fromJson(json, type);
+            String payStatus = kk.get("payStatus");
+            if ("JDP_PAY_FAIL".equals(payStatus)) {
+                Toast.makeText(this, "支付失败", Toast.LENGTH_SHORT).show();
+            } else if ("JDP_PAY_SUCCESS".equals(payStatus)) {
                 EventBus.getDefault().post(new PaySuccessEvent());
-                return;
+            } else {
+                Toast.makeText(this, "用户取消了支付", Toast.LENGTH_SHORT).show();
             }
-
-            if (str.equalsIgnoreCase("fail")) {
-                msg = "支付失败！";
-            } else if (str.equalsIgnoreCase("cancel")) {
-                msg = "用户取消了支付";
-            }
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("支付结果通知");
-            builder.setMessage(msg);
-            builder.setInverseBackgroundForced(true);
-            // builder.setCustomTitle();
-            builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            builder.create().show();
         }
-
     }
 
     private boolean verify(String dataOrg, String sign, String payMode) {

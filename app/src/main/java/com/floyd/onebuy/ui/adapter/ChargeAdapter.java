@@ -47,13 +47,15 @@ public class ChargeAdapter extends BaseDataAdapter<ChargeVO> {
         moneyPayStatus.append("<font color=\"red\">").append(chargeVO.Money).append("</font>").append("/");
         if (chargeStatus == 0) {
             moneyPayStatus.append("未支付");
+            payTimeView.setVisibility(View.INVISIBLE);
         } else {
             moneyPayStatus.append("已支付");
+            payTimeView.setVisibility(View.VISIBLE);
+            String dateTimeStr = DateUtil.getDateTime("yy/MM/dd HH:mm", chargeVO.getPayTime());
+            payTimeView.setText(dateTimeStr);
         }
 
         Spanned s = Html.fromHtml(moneyPayStatus.toString());
         moneyView.setText(s);
-        String dateTimeStr = DateUtil.getDateTime("yy/MM/dd HH:mm", chargeVO.getPayTime());
-        payTimeView.setText(dateTimeStr);
     }
 }
