@@ -227,6 +227,7 @@ public class IMImageCache implements ImageLoader.ImageCache {
     @Override
     public void putBitmap(String url, final Bitmap bitmap) {
         final String md5Name = WXUtil.getMD5Value(url);
+        final boolean isPng = url.endsWith("png") || url.endsWith("PNG");
 
         if (md5Name == null || bitmap == null) {
             return;
@@ -242,7 +243,7 @@ public class IMImageCache implements ImageLoader.ImageCache {
             @Override
             public void run() {
                 synchronized (FileTools.class) {
-                    FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, bitmap, 100);
+                    FileTools.writeBitmap(EnvConstants.imageRootPath + File.separator + md5Name, isPng, bitmap, 100);
                 }
             }
         });

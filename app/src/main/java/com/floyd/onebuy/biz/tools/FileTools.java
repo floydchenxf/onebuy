@@ -234,16 +234,7 @@ public class FileTools {
 		}
 	}
 
-	
-	public static void writeBitmap(String pathName, Bitmap bitmap,
-			int compressRate) {
-		if (null == bitmap || null == pathName)
-			return;
-		boolean bPng = false;
-		if (pathName.endsWith(".png")) {
-			bPng = true;
-		}
-
+	public static void writeBitmap(String pathName, boolean isPng, Bitmap bitmap, int compressRate) {
 		File _file = new File(pathName);
 		boolean bNew = true;
 		if (_file.exists()) {
@@ -255,7 +246,7 @@ public class FileTools {
 		boolean bOK = false;
 		try {
 			fos = new FileOutputStream(_file);
-			if (bPng) {
+			if (isPng) {
 				bitmap.compress(Bitmap.CompressFormat.PNG, compressRate, fos);
 			} else {
 				bitmap.compress(Bitmap.CompressFormat.JPEG, compressRate, fos);
@@ -276,6 +267,19 @@ public class FileTools {
 				}
 			}
 		}
+	}
+
+	
+	public static void writeBitmap(String pathName, Bitmap bitmap,
+			int compressRate) {
+		if (null == bitmap || null == pathName)
+			return;
+		boolean bPng = false;
+		if (pathName.endsWith(".png")) {
+			bPng = true;
+		}
+
+		writeBitmap(pathName, bPng, bitmap, compressRate);
 	}
 	
 	// 返回删除的文件的大小

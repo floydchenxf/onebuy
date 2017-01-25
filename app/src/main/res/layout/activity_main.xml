@@ -35,6 +35,7 @@
                 android:paddingTop="6dp"
                 android:singleLine="true"
                 android:text="首页"
+                android:textSize="14sp"
                 android:textColor="@drawable/word_selector" />
 
             <RadioButton
@@ -45,6 +46,7 @@
                 android:button="@null"
                 android:drawableTop="@drawable/product_selector"
                 android:gravity="center"
+                android:textSize="14sp"
                 android:paddingTop="6dp"
                 android:text="全部"
                 android:textColor="@drawable/word_selector" />
@@ -58,6 +60,7 @@
                 android:drawableTop="@drawable/prize_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
+                android:textSize="14sp"
                 android:text="最新揭晓"
                 android:textColor="@drawable/word_selector" />
 
@@ -71,6 +74,7 @@
                 android:drawableTop="@drawable/buycar_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
+                android:textSize="14sp"
                 android:text="购物车"
                 android:textColor="@drawable/word_selector" />
 
@@ -84,6 +88,7 @@
                 android:drawableTop="@drawable/my_selector"
                 android:gravity="center"
                 android:paddingTop="6dp"
+                android:textSize="14sp"
                 android:text="我的"
                 android:textColor="@drawable/word_selector" />
         </RadioGroup>
