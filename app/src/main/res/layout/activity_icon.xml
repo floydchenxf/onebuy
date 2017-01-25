@@ -24,7 +24,7 @@
             android:layout_below="@+id/icon"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
-            android:text="豆亨网络    版权所有    @2017"
+            android:text="豆亨网络  版权所有  ©2017"
             android:textColor="@color/gray_content"
             android:textSize="14sp" />
     </RelativeLayout>
