@@ -73,6 +73,8 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
         TextView goodsAddressView = (TextView) holder.get(R.id.goods_address);
         TextView pawnStatusView = (TextView) holder.get(R.id.pawn_status_view);
 
+        pawnStatusView.setVisibility(View.GONE);
+
         if (isSelf) {
             shareLayout.setVisibility(View.VISIBLE);
             int isShared = vo.IsShow;
@@ -111,6 +113,32 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
                             }
                         });
                     }
+
+                    pawnStatusView.setVisibility(View.VISIBLE);
+                    if (vo.isPawn()) {
+                        pawnStatusView.setText("已當");
+                        pawnStatusView.setBackgroundResource(R.drawable.common_round_bg);
+                        pawnStatusView.setOnClickListener(null);
+                    } else {
+                        pawnStatusView.setBackgroundResource(R.drawable.common_round_red_bg);
+                        pawnStatusView.setText("當");
+                        pawnStatusView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent it = new Intent(mContext, PawnLogActivity.class);
+                                it.putExtra(PawnLogActivity.PAWN_PRODUCT_ID, vo.ProID);
+                                it.putExtra(PawnLogActivity.PAWN_PRODUCT_LSSUE_ID, vo.ProductLssueID);
+                                mContext.startActivity(it);
+                            }
+                        });
+                    }
+
+                    if (vo.isRedeem()) {
+                        pawnStatusView.setText("已赎回");
+                        pawnStatusView.setBackgroundResource(R.drawable.common_round_bg);
+                        pawnStatusView.setOnClickListener(null);
+                    }
+
                     break;
                 case 1://配送中
                 case 2://发货中
@@ -161,34 +189,6 @@ public class LuckRecordAdapter extends BaseDataAdapter<ProductLssueWithWinnerVO>
                     goodsAddressView.setText("确认收货");
                     goodsAddressView.setOnClickListener(null);
                     break;
-
-
-            }
-
-
-            pawnStatusView.setVisibility(View.VISIBLE);
-            if (vo.isPawn()) {
-                pawnStatusView.setText("已當");
-                pawnStatusView.setBackgroundResource(R.drawable.common_round_bg);
-                pawnStatusView.setOnClickListener(null);
-            } else {
-                pawnStatusView.setBackgroundResource(R.drawable.common_round_red_bg);
-                pawnStatusView.setText("當");
-                pawnStatusView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent it = new Intent(mContext, PawnLogActivity.class);
-                        it.putExtra(PawnLogActivity.PAWN_PRODUCT_ID, vo.ProID);
-                        it.putExtra(PawnLogActivity.PAWN_PRODUCT_LSSUE_ID, vo.ProductLssueID);
-                        mContext.startActivity(it);
-                    }
-                });
-            }
-
-            if (vo.isRedeem()) {
-                pawnStatusView.setText("已赎回");
-                pawnStatusView.setBackgroundResource(R.drawable.common_round_bg);
-                pawnStatusView.setOnClickListener(null);
             }
         } else {
             pawnStatusView.setVisibility(View.GONE);
