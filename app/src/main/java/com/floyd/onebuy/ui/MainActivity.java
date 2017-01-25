@@ -76,6 +76,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
     private List<Fragment> fragments = new ArrayList<Fragment>();
     private FragmentTabAdapter tabAdapter;
 
+    private IndexFragment indexFragment;
+
     private long exitTime = 0;
 
     private TextView redRotNumView;
@@ -110,7 +112,8 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         }
 
         EventBus.getDefault().register(this);
-        fragments.add(new IndexFragment());
+        indexFragment = new IndexFragment();
+        fragments.add(indexFragment);
         fragments.add(new AllProductFragemnt());
         fragments.add(new NewOwnerFragment());
         fragments.add(new BuyCarFragment());
@@ -127,6 +130,11 @@ public class MainActivity extends FragmentActivity implements BackHandledInterfa
         tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
             @Override
             public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
+                if (index == 0) {
+                    indexFragment.startIndexView();
+                } else {
+                    indexFragment.stopIndexView();
+                }
             }
         });
 

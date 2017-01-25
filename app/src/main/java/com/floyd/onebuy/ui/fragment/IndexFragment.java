@@ -319,7 +319,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                     viewFlipperLayout.setVisibility(View.VISIBLE);
                     for (final WordNewsVO vo : wordList) {
                         TextView tv = new TextView(IndexFragment.this.getActivity());
-                        tv.setTextSize(16);
+                        tv.setTextSize(12);
                         tv.setPadding(10, 10, 10, 10);
                         tv.setTextColor(Color.RED);
                         tv.setText(vo.Title);
@@ -548,15 +548,9 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (isShowBanner && firstVisibleItem >= mListView.getHeaderViewsCount()) {
-            stopBannerAutoLoop();
-            if (mFlipper != null) {
-                mFlipper.stopFlipping();
-            }
+            stopIndexView();
         } else {
-            startBannerAutoLoop();
-            if (mFlipper != null) {
-                mFlipper.startFlipping();
-            }
+            startIndexView();
         }
     }
 
@@ -634,6 +628,20 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 break;
         }
 
+    }
+
+    public void startIndexView() {
+        startBannerAutoLoop();
+        if (mFlipper != null) {
+            mFlipper.startFlipping();
+        }
+    }
+
+    public void stopIndexView() {
+        stopBannerAutoLoop();
+        if (mFlipper != null) {
+            mFlipper.stopFlipping();
+        }
     }
 
 
