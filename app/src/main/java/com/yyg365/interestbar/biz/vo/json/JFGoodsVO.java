@@ -10,7 +10,7 @@ public class JFGoodsVO {
     public String Name;
     public String SmallTitle;
     public String FirstPicture;
-    public Integer JiFen;
+    public Long JiFen;
     public Long PublishTime;
 
     public Long PayJiFen;

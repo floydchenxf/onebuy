@@ -160,7 +160,7 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                 Spanned jfScore = Html.fromHtml("兑换积分:&nbsp;<font color=\"red\">" + jfvo.PayJiFen + "</font>");
                 jfPriceView.setText(jfScore);
 
-                Spanned discount = Html.fromHtml("优惠积分:&nbsp;<font color=\"red\">" + ((int) (jfvo.PayJiFen * userInfo.ClientLevelRatio / 100)) + "</font>");
+                Spanned discount = Html.fromHtml("优惠积分:&nbsp;<font color=\"red\">" + ((Long) (jfvo.PayJiFen * userInfo.ClientLevelRatio / 100)) + "</font>");
                 jfDiscountView.setText(discount);
                 jfTipView.setText(jfScore);
 
@@ -200,15 +200,15 @@ public class PayJFGoodsActivity extends Activity implements View.OnClickListener
                 this.finish();
                 break;
             case R.id.duihuan_button:
-                if (addressId == 0l) {
-                    Toast.makeText(PayJFGoodsActivity.this, "请先设置收货地址才能兑换,方便商品能够正常接收!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 dataLoadingDialog.show();
                 //实体
                 if (proType == 1) {
                     phone = "";
+					
+					if (addressId == 0l) {
+						Toast.makeText(PayJFGoodsActivity.this, "请先设置收货地址才能兑换,方便商品能够正常接收!", Toast.LENGTH_SHORT).show();
+						return;
+					}
                 } else if (proType == 2) {
                     addressId = 0l;
                 }
