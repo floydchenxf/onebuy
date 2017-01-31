@@ -187,6 +187,13 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mTopBannerList = new ArrayList<AdvVO>();
     }
 
+    public void onResume() {
+        super.onResume();
+        needClear = true;
+        pageNo = 1;
+        loadData(true);
+    }
+
     private void checkSortType(int type) {
         for (int i = 0; i < checkedTextViews.length; i++) {
             CheckedTextView checkedTextView = checkedTextViews[i];
@@ -230,7 +237,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
         mListView.setOnScrollListener(this);
         initListViewHeader();
         initButton();
-        loadData(true);
         init(view);
         indexProductAdapter = new ProductLssueAdapter(BuyCarType.NORMAL, this.getActivity(), new ArrayList<WinningInfo>(), mImageLoader, null);
         mListView.setAdapter(indexProductAdapter);
@@ -306,6 +312,7 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
             dataLoadingView.startLoading();
         }
 
+        stopIndexView();
         ProductManager.fetchIndexData().startUI(new ApiCallback<NewIndexVO>() {
             @Override
             public void onError(int code, String errorInfo) {
@@ -329,20 +336,24 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                         tv.setPadding(10, 10, 10, 10);
                         tv.setTextColor(Color.RED);
                         tv.setText(vo.Title);
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent h5Activity = new Intent(IndexFragment.this.getActivity(), H5Activity.class);
-                                H5Activity.H5Data h5Data = new H5Activity.H5Data();
-                                h5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
-                                h5Data.data = vo.Url;
-                                h5Data.showProcess = true;
-                                h5Data.showNav = true;
-                                h5Data.title = "公告";
-                                h5Activity.putExtra(H5Activity.H5Data.H5_DATA, h5Data);
-                                startActivity(h5Activity);
-                            }
-                        });
+                        if (TextUtils.isEmpty(vo.Url)) {
+                            tv.setOnClickListener(null);
+                        } else {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent h5Activity = new Intent(IndexFragment.this.getActivity(), H5Activity.class);
+                                    H5Activity.H5Data h5Data = new H5Activity.H5Data();
+                                    h5Data.dataType = H5Activity.H5Data.H5_DATA_TYPE_URL;
+                                    h5Data.data = vo.Url;
+                                    h5Data.showProcess = true;
+                                    h5Data.showNav = true;
+                                    h5Data.title = "公告";
+                                    h5Activity.putExtra(H5Activity.H5Data.H5_DATA, h5Data);
+                                    startActivity(h5Activity);
+                                }
+                            });
+                        }
                         mFlipper.addView(tv);
                         mFlipper.setAutoStart(true);
                         mFlipper.startFlipping();
@@ -384,7 +395,6 @@ public class IndexFragment extends BackHandledFragment implements AbsListView.On
                 }
 
                 mNavigationContainer.setVisibility(View.VISIBLE);
-
                 categoryLayout.setVisibility(View.VISIBLE);
                 List<ProductTypeVO> productTypes = indexVO.typeList;
                 if (productTypes != null && !productTypes.isEmpty()) {
