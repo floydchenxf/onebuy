@@ -1,10 +1,15 @@
 package com.yyg365.interestbar.ui.adapter;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
@@ -15,15 +20,10 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.yyg365.interestbar.biz.constants.BuyCarType;
-import com.yyg365.interestbar.biz.manager.DBManager;
-import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.vo.json.CarItemVO;
-import com.yyg365.interestbar.biz.vo.json.UserVO;
-import com.yyg365.interestbar.biz.vo.model.WinningInfo;
-import com.yyg365.interestbar.channel.threadpool.WxDefaultExecutor;
 import com.yyg365.interestbar.ui.R;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,19 +36,22 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class BuyCarAdapter extends BaseAdapter {
 
+    private static final String TAG = "BuyCarAdapter";
+
     private Context mContext;
     private ImageLoader mImageLoader;
     private List<CarItemVO> records = new ArrayList<CarItemVO>();
 
-    private BuyClickListener buyClickListener;
+    private BuyNumListener buyClickListener;
     private CheckedListener checkedListener;
     private boolean shwoRadio = false;
 
     private Set<Long> deleteList = new ConcurrentSkipListSet<>();
 
     private static byte[] lock = new byte[0];
+    private int index = -1;
 
-    public BuyCarAdapter(Context context, List<CarItemVO> args, ImageLoader imageLoader, BuyClickListener buyClickListener, CheckedListener checkedListener) {
+    public BuyCarAdapter(Context context, List<CarItemVO> args, ImageLoader imageLoader, BuyNumListener buyClickListener, CheckedListener checkedListener) {
         this.mContext = context;
         if (args != null && !args.isEmpty()) {
             this.records.addAll(args);
@@ -131,7 +134,36 @@ public class BuyCarAdapter extends BaseAdapter {
         holder.proudctImageView.setDefaultImageResId(R.drawable.default_image);
         holder.proudctImageView.setImageUrl(info.getPicUrl(), mImageLoader);
         holder.totalLeftView.setText(Html.fromHtml("总需" + info.TotalCount + "次, 剩余<font color=\"#ffaa66\">" + (info.TotalCount - info.JoinedCount) + "</font>次"));
+
+        BuyNumWatcher textWatcher = (BuyNumWatcher) holder.numberView.getTag(R.id.number_view);
+        if (textWatcher == null) {
+            textWatcher = new BuyNumWatcher();
+            holder.numberView.setTag(R.id.number_view, textWatcher);
+        }
+
+        holder.numberView.removeTextChangedListener(textWatcher);
+        textWatcher.buyNumListener = buyClickListener;
+        textWatcher.textRef = new SoftReference<EditText>(holder.numberView);
+        holder.numberView.addTextChangedListener(textWatcher);
+        holder.numberView.setTag(info);
+        holder.numberView.setFocusable(true);
+
+        holder.numberView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    index= position;
+                }
+                return false;
+            }
+        });
+
         holder.numberView.setText(info.CarCount + "");
+        holder.numberView.clearFocus();
+
+        if(index!= -1 && index == position) {
+            holder.numberView.requestFocus();
+        }
+
         if (shwoRadio) {
             final long carId = info.CarID;
             holder.radioButton.setVisibility(View.VISIBLE);
@@ -163,7 +195,6 @@ public class BuyCarAdapter extends BaseAdapter {
 
         holder.productTitleView.setText(info.ProName);
 
-        holder.subView.setTag(info);
         holder.subView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,13 +210,9 @@ public class BuyCarAdapter extends BaseAdapter {
 
                 int nn = --num;
                 holder.numberView.setText(nn + "");
-                if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.subView, holder.numberView, info.ProductLssueID, nn, info.CarCount);
-                }
             }
         });
 
-        holder.addView.setTag(info);
         holder.addView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,9 +229,6 @@ public class BuyCarAdapter extends BaseAdapter {
 
                 int nn = ++num;
                 holder.numberView.setText(nn + "");
-                if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.addView, holder.numberView, info.ProductLssueID, nn, info.CarCount);
-                }
             }
         });
 
@@ -215,7 +239,6 @@ public class BuyCarAdapter extends BaseAdapter {
             holder.buyLeftView.setChecked(true);
         }
 
-        holder.buyLeftView.setTag(info);
         holder.buyLeftView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,9 +248,6 @@ public class BuyCarAdapter extends BaseAdapter {
                     holder.buyLeftView.setChecked(false);
                 } else {
                     holder.buyLeftView.setChecked(true);
-                }
-                if (buyClickListener != null) {
-                    buyClickListener.onClick(holder.buyLeftView, holder.numberView, info.ProductLssueID, left, info.CarCount);
                 }
             }
         });
@@ -254,11 +274,54 @@ public class BuyCarAdapter extends BaseAdapter {
 
     }
 
-    public interface BuyClickListener {
-        void onClick(View v, EditText numberView, long lssueId, int currentNum, int buyCount);
+    public interface BuyNumListener {
+        void onChange(EditText numberView, long lssueId, int currentNum, int buyCount);
     }
 
     public interface CheckedListener {
         void onChecked(View v, boolean isChecked);
+    }
+
+    private class BuyNumWatcher implements TextWatcher {
+
+        public BuyNumListener buyNumListener;
+        public SoftReference<EditText> textRef;
+
+        public BuyNumWatcher() {
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            EditText text = textRef.get();
+            String tt = s.toString();
+            if (buyNumListener != null && text != null && !TextUtils.isEmpty(tt)) {
+                CarItemVO vo = (CarItemVO) text.getTag();
+                Integer currentNum = Integer.parseInt(s.toString());
+                Log.i(TAG, "currentNum:" + currentNum + "----buyCount:" + vo.CarCount);
+                if (currentNum < 1) {
+                    Toast.makeText(mContext, "数据必须大于1", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (currentNum > vo.TotalCount - vo.JoinedCount) {
+                    Toast.makeText(mContext, "数量必须小于剩余数", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (currentNum != vo.CarCount) {
+                    buyNumListener.onChange(textRef.get(), vo.ProductLssueID, currentNum, vo.CarCount);
+                }
+            }
+        }
     }
 }

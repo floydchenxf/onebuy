@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -21,33 +20,23 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.yyg365.interestbar.aync.ApiCallback;
 import com.yyg365.interestbar.biz.constants.APIConstants;
 import com.yyg365.interestbar.biz.constants.BuyCarType;
-import com.yyg365.interestbar.biz.manager.AddressManager;
 import com.yyg365.interestbar.biz.manager.CarManager;
-import com.yyg365.interestbar.biz.manager.DBManager;
 import com.yyg365.interestbar.biz.manager.LoginManager;
 import com.yyg365.interestbar.biz.manager.OrderManager;
 import com.yyg365.interestbar.biz.vo.json.CarItemVO;
 import com.yyg365.interestbar.biz.vo.json.CarListVO;
 import com.yyg365.interestbar.biz.vo.json.CarPayChannel;
-import com.yyg365.interestbar.biz.vo.json.GoodsAddressVO;
-import com.yyg365.interestbar.biz.vo.json.OrderPayVO;
 import com.yyg365.interestbar.biz.vo.json.OrderVO;
 import com.yyg365.interestbar.biz.vo.json.UserVO;
-import com.yyg365.interestbar.biz.vo.model.WinningInfo;
-import com.yyg365.interestbar.event.PayFirdaySuccessEvent;
 import com.yyg365.interestbar.event.PayFundSuccessEvent;
 import com.yyg365.interestbar.event.PaySuccessEvent;
-import com.yyg365.interestbar.event.TabSwitchEvent;
 import com.yyg365.interestbar.ui.ImageLoaderFactory;
 import com.yyg365.interestbar.ui.MainActivity;
 import com.yyg365.interestbar.ui.R;
 import com.yyg365.interestbar.ui.adapter.BuyCarAdapter;
 import com.yyg365.interestbar.ui.loading.DataLoadingView;
 import com.yyg365.interestbar.ui.loading.DefaultDataLoadingView;
-import com.yyg365.pullrefresh.widget.PullToRefreshBase;
-import com.yyg365.pullrefresh.widget.PullToRefreshListView;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -104,9 +93,9 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
         bottomLayout = findViewById(R.id.bottom_layout);
 
         mListView = (ListView) findViewById(R.id.buy_car_list);
-        mBuyCarAdapter = new BuyCarAdapter(this, null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
+        mBuyCarAdapter = new BuyCarAdapter(this, null, mImageLoader, new BuyCarAdapter.BuyNumListener() {
             @Override
-            public void onClick(final View v, final EditText numberView, final long lssueId, final int currentNum, final int buyNumber) {
+            public void onChange(final EditText numberView, final long lssueId, final int currentNum, final int buyNumber) {
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
                 for (CarItemVO info : mBuyCarAdapter.getRecords()) {
@@ -125,7 +114,7 @@ public class FundBuyCarActivity extends Activity implements View.OnClickListener
                     @Override
                     public void onSuccess(Boolean aBoolean) {
                         if (aBoolean) {
-                            CarItemVO cv = (CarItemVO) (v.getTag());
+                            CarItemVO cv = (CarItemVO) (numberView.getTag());
                             cv.CarCount = currentNum;
                             int productNum = mBuyCarAdapter.getRecords().size();
                             int totalPrice = 0;

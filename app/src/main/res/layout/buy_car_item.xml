@@ -73,6 +73,7 @@
                     android:background="@drawable/common_bord"
                     android:gravity="center"
                     android:text="-"
+                    android:textColor="@color/gray_content"
                     android:textSize="20sp" />
 
                 <EditText
@@ -80,10 +81,11 @@
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/two_line"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:gravity="center"
                     android:inputType="number"
-                    android:maxLength="8"
-                    android:numeric="integer" />
+                    android:maxLength="8" />
 
                 <TextView
                     android:id="@+id/add_view"
@@ -92,6 +94,7 @@
                     android:background="@drawable/common_bord"
                     android:gravity="center"
                     android:text="+"
+                    android:textColor="@color/gray_content"
                     android:textSize="20sp" />
             </LinearLayout>
 

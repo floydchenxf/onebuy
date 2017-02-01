@@ -1,7 +1,5 @@
 package com.yyg365.interestbar.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -9,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -122,9 +121,9 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         bottomLayout = view.findViewById(R.id.bottom_layout);
 
         mListView = (ListView) view.findViewById(R.id.buy_car_list);
-        mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyClickListener() {
+        mBuyCarAdapter = new BuyCarAdapter(this.getActivity(), null, mImageLoader, new BuyCarAdapter.BuyNumListener() {
             @Override
-            public void onClick(final View v, final EditText numberView, final long lssueId, final int currentNum, final int buyNumber) {
+            public void onChange(final EditText numberView, final long lssueId, final int currentNum, final int buyNumber) {
                 int productNum = mBuyCarAdapter.getRecords().size();
                 int totalPrice = 0;
                 for (CarItemVO info : mBuyCarAdapter.getRecords()) {
@@ -143,7 +142,7 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
                     @Override
                     public void onSuccess(Boolean aBoolean) {
                         if (aBoolean) {
-                            CarItemVO cv = (CarItemVO)(v.getTag());
+                            CarItemVO cv = (CarItemVO)(numberView.getTag());
                             cv.CarCount = currentNum;
                             int productNum = mBuyCarAdapter.getRecords().size();
                             int totalPrice = 0;
@@ -533,32 +532,32 @@ public class BuyCarFragment extends BackHandledFragment implements View.OnClickL
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String msg = "";
-        String str = data.getExtras().getString(PAY_RESULT);
-        if (str.equalsIgnoreCase("success")) {
-            EventBus.getDefault().post(new PaySuccessEvent());
-            return;
-        }
-
-        if (str.equalsIgnoreCase("fail")) {
-            msg = "支付失败！";
-        } else if (str.equalsIgnoreCase("cancel")) {
-            msg = "用户取消了支付";
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("支付结果通知");
-        builder.setMessage(msg);
-        builder.setInverseBackgroundForced(true);
-        // builder.setCustomTitle();
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        String msg = "";
+//        String str = data.getExtras().getString(PAY_RESULT);
+//        if (str.equalsIgnoreCase("success")) {
+//            EventBus.getDefault().post(new PaySuccessEvent());
+//            return;
+//        }
+//
+//        if (str.equalsIgnoreCase("fail")) {
+//            msg = "支付失败！";
+//        } else if (str.equalsIgnoreCase("cancel")) {
+//            msg = "用户取消了支付";
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle("支付结果通知");
+//        builder.setMessage(msg);
+//        builder.setInverseBackgroundForced(true);
+//        // builder.setCustomTitle();
+//        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.create().show();
+//    }
 }
