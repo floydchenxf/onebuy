@@ -40,6 +40,7 @@ public class LoginManager {
 
     public static final String LOGIN_INFO = "LOGIN_INFO";
     public static final String DEVICE_TOKEN_INFO = "DEVICE_TOKEN_INFO";
+    public static final String LASTTEST_COUNT = "LASTTEST_COUNT";
 
     public static UserVO getLoginInfo(Context context) {
         String data = PrefsTools.getStringPrefs(context, LOGIN_INFO, "");
@@ -67,6 +68,7 @@ public class LoginManager {
     public static void saveLoginInfo(Context context, UserVO vo) {
         Gson gson = new Gson();
         String data = gson.toJson(vo);
+        PrefsTools.setStringPrefs(context, LASTTEST_COUNT, vo.Mobile);
         PrefsTools.setStringPrefs(context, LOGIN_INFO, data);
     }
 
@@ -76,6 +78,10 @@ public class LoginManager {
 
     public static String getDeviceId(Context context) {
         return PrefsTools.getStringPrefs(context, DEVICE_TOKEN_INFO, "0000");
+    }
+
+    public static String getLasttestCount(Context context) {
+        return PrefsTools.getStringPrefs(context, LASTTEST_COUNT);
     }
 
     /**

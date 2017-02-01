@@ -9,43 +9,6 @@
         layout="@layout/title_frame" />
 
 
-    <LinearLayout
-        android:id="@+id/mobile_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_layout"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:gravity="center"
-            android:text="帐号"
-            android:textColor="#333333"
-            android:textSize="16sp" />
-
-
-        <EditText
-            android:id="@+id/user_name"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:hint="@string/phone_num"
-            android:inputType="phone"
-            android:paddingLeft="8dp"
-            android:textColorHint="#afafaf"
-            android:textSize="14sp" />
-    </LinearLayout>
-
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
@@ -139,6 +102,43 @@
         android:text="@string/register"
         android:textColor="@color/red"
         android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/mobile_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_below="@+id/title_layout"
+        android:layout_alignLeft="@+id/line1"
+        android:layout_alignStart="@+id/line1">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:text="帐号"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:hint="@string/phone_num"
+            android:inputType="phone"
+            android:paddingLeft="8dp"
+            android:textColorHint="#afafaf"
+            android:textSize="14sp" />
+    </LinearLayout>
 
 
 </RelativeLayout>

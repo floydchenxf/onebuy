@@ -47,6 +47,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginView = (TextView) findViewById(R.id.login);
         loginView.setOnClickListener(this);
         forgetPasswordView.setOnClickListener(this);
+        loadData();
+    }
+
+    private void loadData() {
+        String lasttestCount = LoginManager.getLasttestCount(this);
+        if (!TextUtils.isEmpty(lasttestCount)) {
+            userNameView.setText(lasttestCount);
+        }
     }
 
     @Override
