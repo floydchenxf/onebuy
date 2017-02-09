@@ -40,6 +40,7 @@ import com.yyg365.interestbar.ui.activity.ChargeListActivity;
 import com.yyg365.interestbar.ui.activity.FridayActivity;
 import com.yyg365.interestbar.ui.activity.InviteFriendActivity;
 import com.yyg365.interestbar.ui.activity.JiFengActivity;
+import com.yyg365.interestbar.ui.activity.MsgBoxActivity;
 import com.yyg365.interestbar.ui.activity.MyCommonwealActivity;
 import com.yyg365.interestbar.ui.activity.MyInfoActivity;
 import com.yyg365.interestbar.ui.activity.MyJFGoodsActivity;
@@ -66,20 +67,13 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
     private static final String TAG = "MyFragment";
 
-    private static final int CODE_GALLERY_REQUEST = 80;
-    private static final int CROP_PICTURE_REQUEST = 81;
-
     private static final int SCANNIN_GREQUEST_CODE = 100;
 
     private List<NavigationVO> lstImageItem = new ArrayList<NavigationVO>();
 
-
-    private ProgressDialog avatorDialog;
-
     private ImageLoader mImageLoader;
 
     private DataLoadingView dataLoadingView;
-    private Dialog dataLoadingDialog;
 
     private TextView userNameView;
     private TextView feeView;
@@ -90,6 +84,9 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
     private ListView operateListView;
     private ImageView saomiaoView;
     private ImageView settingView;
+    private ImageView msgBoxView;
+    private ImageView unreadDotView;//红点
+
     private NetworkImageView headImageView;
     private NetworkImageView bgHeadView;
 
@@ -139,7 +136,6 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
         dataLoadingView = new DefaultDataLoadingView();
         dataLoadingView.initView(view, this);
-        dataLoadingDialog = DialogCreator.createDataLoadingDialog(this.getActivity());
 
         View headView = View.inflate(getActivity(), R.layout.my_head, null);
 
@@ -165,6 +161,11 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
 
         settingView = (ImageView) view.findViewById(R.id.setting_view);
         settingView.setOnClickListener(this);
+
+        msgBoxView = (ImageView) view.findViewById(R.id.msgbox_view);
+        msgBoxView.setOnClickListener(this);
+
+        unreadDotView = (ImageView) view.findViewById(R.id.unread_dot_view);
 
         loadData(true, true);
         return view;
@@ -216,6 +217,12 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
             }
         });
 
+        if (vo.UnreadMessageNum > 0) {
+            unreadDotView.setVisibility(View.VISIBLE);
+        } else {
+            unreadDotView.setVisibility(View.GONE);
+        }
+
         userNameView.setText(vo.getUserName());
         feeView.setText("金币：" + vo.Amount);
         jiFengView.setText("积分：" + vo.JiFen);
@@ -247,6 +254,11 @@ public class MyFragment extends BackHandledFragment implements View.OnClickListe
             case R.id.setting_view:
                 Intent settingIntent = new Intent(this.getActivity(), SettingActivity.class);
                 startActivity(settingIntent);
+                break;
+            case R.id.msgbox_view:
+                Intent msgboxIntent = new Intent(getActivity(), MsgBoxActivity.class);
+                msgboxIntent.putExtra(MsgBoxActivity.CURRENT_USER_ID, LoginManager.getLoginInfo(getActivity()).ID);
+                startActivity(msgboxIntent);
                 break;
         }
 

@@ -17,6 +17,7 @@ import com.yyg365.interestbar.biz.tools.PrefsTools;
 import com.yyg365.interestbar.biz.vo.json.CommissionVO;
 import com.yyg365.interestbar.biz.vo.json.InviteFriendRecordVO;
 import com.yyg365.interestbar.biz.vo.json.InviteVO;
+import com.yyg365.interestbar.biz.vo.json.MsgItemVO;
 import com.yyg365.interestbar.biz.vo.json.ProductLssueVO;
 import com.yyg365.interestbar.biz.vo.json.UserVO;
 import com.yyg365.interestbar.channel.request.FileItem;
@@ -327,6 +328,28 @@ public class LoginManager {
         params.put("pageNum", pageNo + "");
         params.put("pageSize", pageSize + "");
         return JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, CommissionVO.class);
+    }
+
+    public static AsyncJob<List<MsgItemVO>> fetchUserMsgs(Long userId, int type, int pageNo, int pageSize) {
+        String url = APIConstants.HOST_API_PATH + APIConstants.USER_MODULE;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("pageType", "messagelist");
+        params.put("userId", userId + "");
+        params.put("type", type+"");
+        params.put("pageNum", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        Type resultType = new TypeToken<Map<String, Object>>(){}.getType();
+        AsyncJob<Map<String, Object>> job = JsonHttpJobFactory.getJsonAsyncJob(url, params, HttpMethod.POST, resultType);
+
+        return job.map(new Func<Map<String, Object>, List<MsgItemVO>>() {
+            @Override
+            public List<MsgItemVO> call(Map<String, Object> map) {
+                Object a =  map.get("list");
+                Gson gson = GsonHelper.getGson();
+                Type listType = new TypeToken<List<MsgItemVO>>(){}.getType();
+                return gson.fromJson(gson.toJson(a), listType);
+            }
+        });
     }
 
 

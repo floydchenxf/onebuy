@@ -24,7 +24,7 @@ public class UserVO {
     public String Token; //Token
     public String InviterCode;//邀请code
     public String ClientLevelName;
-
+    public int UnreadMessageNum;
 
     public String getFullPic() {
         if (Pic != null && Pic.startsWith(File.separator)) {
