@@ -35,8 +35,29 @@ public class AsyncJobHelper {
         };
     }
 
-    public static <T> AsyncJob<T> concat(AsyncJob<T> job1, AsyncJob<T> job2) {
-        return null;
+    public static <T> AsyncJob<T> concat(final AsyncJob<T> job1, final AsyncJob<T> job2) {
+        return new AsyncJob<T>() {
+            @Override
+            public void start(final ApiCallback<T> callback) {
+                job1.start(new ApiCallback<T>() {
+                    @Override
+                    public void onError(int code, String errorInfo) {
+                        callback.onError(code, errorInfo);
+                    }
+
+                    @Override
+                    public void onSuccess(T t) {
+                        callback.onSuccess(t);
+                        job2.start(callback);
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+                        callback.onProgress(progress);
+                    }
+                });
+            }
+        };
     }
 
     public static <T1, T2, R> AsyncJob<R> zip(final AsyncJob<T1> job1, final AsyncJob<T2> job2, final Func2<T1, T2, R> func2) {
@@ -71,5 +92,4 @@ public class AsyncJobHelper {
         });
         return resultJob;
     }
-
 }
